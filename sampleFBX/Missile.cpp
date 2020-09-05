@@ -10,11 +10,8 @@
 #include "System.h"
 
 // マクロ定義
-#define PATH_MISSILE	"data/model/FA-18/sparrow.fbx"
 #define SPEED			50.0f		// 速さ
 
-// 外部グローバル変数 (model.cpp)
-extern CFbxLight	g_light;		// 光源情報
 
 // コンストラクタ
 Bullet::Bullet() : m_nStat(0), m_nLife(0) {
@@ -22,7 +19,7 @@ Bullet::Bullet() : m_nStat(0), m_nLife(0) {
 
 // デストラクタ
 Bullet::~Bullet() {
-	//SAFE_DELETE(m_pEnemy);
+
 }
 
 
@@ -66,6 +63,42 @@ void Bullet::Update() {
 	m_transform->_41 = m_transform->_42 = m_transform->_43 = 0.0f;
 	//PrintDebugProc("Missile={%.3f,%.3f,%.3f}\n",
 	//	vP.x, vP.y, vP.z);
+
+	//// ターゲットが有効か?
+	//if (m_pEnemy) {
+	//	// 敵機へのベクトルを求める
+	//	XMFLOAT3 vPP = m_pEnemy->GetPos();
+	//	XMVECTOR vTarget = XMVectorSet(vPP.x - vP.x,
+	//		vPP.y - vP.y, vPP.z - vP.z, 0.0f);
+	//	// 正規化
+	//	vTarget = XMVector3Normalize(vTarget);
+
+	//	// 進行方向との角度を求める
+	//	float fDot;
+	//	XMStoreFloat(&fDot, XMVector3Dot(
+	//		XMLoadFloat3(&vZ), vTarget));
+	//	// 計算誤差で範囲外になる場合に丸める
+	//	if (fDot < -1.0f) fDot = -1.0f;
+	//	if (fDot > 1.0f) fDot = 1.0f;
+	//	float fAngle = XMConvertToDegrees(acosf(fDot));
+	//	if (fAngle < -3.0f) fAngle = -3.0f;
+	//	if (fAngle > 3.0f) fAngle = 3.0f;
+
+	//	// 回転軸を求める
+	//	XMVECTOR vAxis = XMVector3Cross(
+	//		XMLoadFloat3(&vZ), vTarget);
+	//	// 正規化
+	//	vAxis = XMVector3Normalize(vAxis);
+
+	//	// ワールド変換を回転
+	//	XMMATRIX rotate = XMMatrixRotationAxis(
+	//		vAxis, XMConvertToRadians(fAngle));
+	//	XMMATRIX world = XMLoadFloat4x4(&m_world);
+	//	world = XMMatrixMultiply(world, rotate);
+	//	XMStoreFloat4x4(&m_world, world);
+	//	//PrintDebugProc("World={%.3f,%.3f,%.3f}\n",
+	//	//	m_world._41, m_world._42, m_world._43);
+	//}
 
 	// 速度を座標に反映
 	if (1) {

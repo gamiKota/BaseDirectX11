@@ -6,7 +6,6 @@
 class CEnemy : public Component {
 public:
 
-	XMFLOAT4X4 *m_transform;		// ワールド マトリックス
 	int m_nStat;				// 0:未使用, 1:使用中, 2:爆発中
 	int m_nLife;				// 寿命
 

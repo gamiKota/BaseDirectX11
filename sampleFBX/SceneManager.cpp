@@ -81,7 +81,7 @@ void SceneManager::Update() {
 		}
 		m_isChange = false;
 	}
-
+	CCamera::Get()->Update();
 	m_scene->Update();
 }
 

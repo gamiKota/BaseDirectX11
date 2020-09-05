@@ -17,8 +17,9 @@
 static const float VAL_ANGLE_Z = 2.f;
 static const float MAX_ANGLE_Z = 45.f;
 
-// 外部グローバル変数 (model.cpp)
-extern CFbxLight	g_light;		// 光源情報
+
+XMFLOAT3 g_playerPos;
+
 
 // コンストラクタ
 CPlayer::CPlayer() : m_roll(0.f), m_vMove(XMFLOAT3()) {
@@ -35,7 +36,7 @@ void CPlayer::Awake() {
 
 // 初期化
 void CPlayer::Start() {
-
+	g_playerPos = { m_transform->_41, m_transform->_42, m_transform->_43 };
 }
 
 // 終了処理
@@ -93,15 +94,12 @@ void CPlayer::Update()
 	}
 
 	// 座標をワールド行列に反映
-	m_transform->_41 += m_vMove.x;
-	m_transform->_42 += m_vMove.y; 
-	m_transform->_43 += m_vMove.z + VAL_MOVE_PLAYER;	// 常に前進
+	g_playerPos.x += m_vMove.x;
+	g_playerPos.y += m_vMove.y; 
+	g_playerPos.z += m_vMove.z + VAL_MOVE_PLAYER;	// 常に前進
 
 	// モデルの更新
 	ModelManager::GetInstance().Update(E_MODEL_PLAYER);
-	
-	// カメラ注視点を更新
-	//CCamera::Get()->SetLook({ m_transform->_41, m_transform->_42, m_transform->_43 });
 
 	// ホーミングミサイル発射
 	if (Input::isTrigger(VK_SPACE)) {
@@ -116,10 +114,12 @@ void CPlayer::Update()
 
 	GameObject* sky = GameObject::Find("Sky");
 	if (sky != nullptr) {
-		sky->GetComponent<CSky>()->SetPos({ m_transform->_41, m_transform->_42, m_transform->_43 });
+		sky->GetComponent<CSky>()->SetPos({ g_playerPos });
 	}
 
 	PrintDebugProc("roll = %.2f\n", m_roll);
+
+
 }
 
 // 描画

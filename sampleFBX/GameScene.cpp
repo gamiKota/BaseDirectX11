@@ -141,7 +141,6 @@ void GameScene::Update() {
 	if (Input::isTrigger('3')) {
 		CCamera::Set(&g_cameraTP);
 	}
-	CCamera::Get()->Update();
 
 	bool isClear = true;
 	for (auto obj : m_listObject) {
