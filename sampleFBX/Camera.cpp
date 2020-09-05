@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "D3DClass.h"
 #include "Graphics.h"
+#include "debugproc.h"
 #include "System.h"
 
 // ê√ìIÉÅÉìÉo
@@ -57,4 +58,8 @@ void CCamera::Update()
 	XMStoreFloat4x4(&m_mProj,
 		XMMatrixPerspectiveFovLH(m_fFOVY, m_fAspect,
 			m_fNearZ, m_fFarZ));
+
+	PrintDebugProc("CameraPos = %0.2f, %0.2f, %0.2f\n", m_vNowEye.x, m_vNowEye.y, m_vNowEye.z);
+	PrintDebugProc("CameraLook = %0.2f, %0.2f, %0.2f\n", m_vNowLook.x, m_vNowLook.y, m_vNowLook.z);
+	PrintDebugProc("CameraUp = %0.2f, %0.2f, %0.2f\n", m_vNowUp.x, m_vNowUp.y, m_vNowUp.z);
 }

@@ -101,7 +101,7 @@ void CPlayer::Update()
 	ModelManager::GetInstance().Update(E_MODEL_PLAYER);
 	
 	// カメラ注視点を更新
-	CCamera::Get()->SetLook({ m_transform->_41, m_transform->_42, m_transform->_43 });
+	//CCamera::Get()->SetLook({ m_transform->_41, m_transform->_42, m_transform->_43 });
 
 	// ホーミングミサイル発射
 	if (Input::isTrigger(VK_SPACE)) {
