@@ -21,7 +21,7 @@ static const float MAX_ANGLE_Z = 45.f;
 extern CFbxLight	g_light;		// 光源情報
 
 // コンストラクタ
-CPlayer::CPlayer() : m_roll(0.f) {
+CPlayer::CPlayer() : m_roll(0.f), m_vMove(XMFLOAT3()) {
 }
 
 // デストラクタ
@@ -30,8 +30,7 @@ CPlayer::~CPlayer() {
 
 
 void CPlayer::Awake() {
-	m_transform = &m_gameObject->m_transform;
-	m_vMove = XMFLOAT3();
+
 }
 
 // 初期化

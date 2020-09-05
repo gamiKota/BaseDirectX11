@@ -12,7 +12,7 @@
 
 
 Component::Component() : Object("Component") {
-	m_transform = &m_gameObject->m_transform;
+
 }
 
 Component::~Component() {

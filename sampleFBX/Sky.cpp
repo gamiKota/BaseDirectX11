@@ -20,7 +20,7 @@ CSky::~CSky() {
 
 
 void CSky::Awake() {
-	m_transform = &m_gameObject->m_transform;
+
 }
 
 // ‰Šú‰»

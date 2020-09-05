@@ -20,7 +20,7 @@ CEnemy::~CEnemy() {
 
 
 void CEnemy::Awake() {
-	m_transform = &m_gameObject->m_transform;
+
 }
 
 

@@ -43,7 +43,7 @@ Collision::~Collision() {
 }
 
 void Collision::Awake() {
-	m_transform = &m_gameObject->m_transform;
+
 }
 
 // ‰Šú‰»
