@@ -22,8 +22,6 @@
 #include "Sky.h"
 #include "Collision.h"
 #include "Enemy.h"
-#include "Number.h"
-#include "Score.h"
 
 #include "debugproc.h"
 #include "input.h"
@@ -36,8 +34,8 @@ static const float VAL_ENEMY_POS_Z = 2000.f;
 static const float MAX_ENEMY_POS_Z = 3000.f;
 
 
-CTPCamera					g_cameraTP;
-CFPCamera					g_cameraFP;
+TPCamera					g_cameraTP;
+FPCamera					g_cameraFP;
 
 
 int GetRandom(int min, int max)
@@ -57,14 +55,10 @@ GameScene::~GameScene() {
 
 void GameScene::Init() {
 
-	HRESULT hr;
-
 	// カメラ初期化
-	hr = g_cameraTP.Init();
-	hr = g_cameraFP.Init();
+	g_cameraTP.Init();
+	g_cameraFP.Init();
 	CCamera::Set(&g_cameraTP);
-
-	InitNumber();
 
 	GameObject* obj;
 
@@ -96,10 +90,6 @@ void GameScene::Init() {
 		m_listObject.push_back(obj);
 	}
 
-	obj = new GameObject("Score");
-	obj->AddComponent<Score>();
-	m_listUI.push_back(obj);
-
 	// push_backの順番でUIの描画のバッファが変わる
 	// 最初に背景などのUI
 	// 次に3Dオブジェクト
@@ -113,8 +103,6 @@ void GameScene::Init() {
 void GameScene::Uninit() {
 	Scene::Uninit();
 	
-
-	UninitNumber();
 	// カメラ終了処理
 	g_cameraFP.Uninit();
 	g_cameraTP.Uninit();

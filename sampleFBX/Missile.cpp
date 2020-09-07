@@ -121,7 +121,9 @@ void Bullet::Update() {
 			if (Collision::AABB(*m_gameObject->GetComponent<Collision>(), *obj->GetComponent<Collision>())) {
 				Destroy(obj);
 				Destroy(m_gameObject);
-				GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);
+				if (GameObject::Find("Score") != nullptr) {
+					GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);
+				}
 			}
 		}
 	}

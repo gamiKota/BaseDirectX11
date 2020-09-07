@@ -28,7 +28,6 @@ protected:
 
 public:
 	std::list<GameObject*> m_listObject;	//!< オブジェクトリスト
-	std::list<GameObject*> m_listUI;		//!< UIリスト
 	Scene();
 	~Scene();
 	virtual void Init();

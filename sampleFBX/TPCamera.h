@@ -2,10 +2,10 @@
 #pragma once
 #include "Camera.h"
 
-class CTPCamera : public CCamera
+class TPCamera : public CCamera
 {
 public:
-	HRESULT Init();
+	void Init();
 	void Uninit();
 	void Update();
 };

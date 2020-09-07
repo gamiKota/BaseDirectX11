@@ -8,7 +8,6 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "D3DClass.h"
-#include "Score.h"
 #include "System.h"
 
 
@@ -25,13 +24,8 @@ SceneManager::~SceneManager() {
 
 
 void SceneManager::Init() {
-	if (FAILED(m_camera->Init())) {
-		MessageBoxA(System::GetInstance().GetWnd(), "failed MainCamera", "error init", MB_OK | MB_TOPMOST | MB_ICONWARNING);
-		exit(1);
-	}
-	else {
-		CCamera::Set(m_camera);
-	}
+	m_camera->Init();
+	CCamera::Set(m_camera);
 
 	ModelManager::GetInstance().Init();
 	

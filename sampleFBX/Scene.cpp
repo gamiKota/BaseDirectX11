@@ -21,28 +21,16 @@ Scene::~Scene() {
 	for (auto obj : m_listObject) {
 		delete obj;
 	}
-	for (auto obj : m_listUI) {
-		delete obj;
-	}
 	m_listObject.clear();
-	m_listUI.clear();
 }
 
 
 void Scene::Init() {
 	m_isUpdate = true;
 
-	for (auto obj : SceneManager::GetInstance().m_DontDestroyObject) {
-		m_listUI.push_back(obj);
-	}
-
 	auto buff = m_listObject;
 	for (auto obj : buff) {
 		obj->Start();	// Start? Init? ‚Ç‚Á‚¿H
-	}
-	buff = m_listUI;
-	for (auto obj : buff) {
-		obj->Start();
 	}
 
 	// ‰Šú‰»‚ÌI—¹
@@ -54,17 +42,10 @@ void Scene::Uninit() {
 	for (auto obj : buff) {
 		obj->Uninit();
 	}
-	buff = m_listUI;
-	for (auto obj : buff) {
-		obj->Uninit();
-	}
 }
 
 void Scene::Update() {
 	auto buff = m_listObject;
-	for (auto obj : buff)
-		obj->Update();
-	buff = m_listUI;
 	for (auto obj : buff)
 		obj->Update();
 
@@ -76,12 +57,6 @@ void Scene::Update() {
 	for (auto obj : buff) {
 		if (obj->GetActive())	continue;
 		m_listObject.remove(obj);
-		delete obj;
-	}
-	buff = m_listUI;
-	for (auto obj : buff) {
-		if (obj->GetActive())	continue;
-		m_listUI.remove(obj);
 		delete obj;
 	}
 
@@ -117,20 +92,14 @@ void Scene::Draw() {
 	D3DClass::GetInstance().SetZBuffer(false);
 
 	// 2DUI
-	buff = m_listUI;
-	for (auto obj : buff)
-		obj->Draw();
 }
 
 
 void Scene::Shutdown() {
 	for (auto obj : m_listObject)
 		delete obj;
-	for (auto obj : m_listUI)
-		delete obj;
 
 	m_listObject.clear();
-	m_listUI.clear();
 }
 
 

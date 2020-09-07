@@ -15,9 +15,8 @@ namespace {
 };
 
 // 初期化
-HRESULT CTPCamera::Init()
+void TPCamera::Init()
 {
-	HRESULT hr = S_OK;
 	m_vEye = g_vEye;
 	m_vLook = g_vLook;
 	m_vUp = g_vUp;
@@ -26,17 +25,16 @@ HRESULT CTPCamera::Init()
 	m_fNearZ = 10.0f;
 	m_fFarZ = 10000.0f;
 	Update();
-	return hr;
 }
 
 // 終了処理
-void CTPCamera::Uninit()
+void TPCamera::Uninit()
 {
 	CCamera::Uninit();
 }
 
 // 更新
-void CTPCamera::Update()
+void TPCamera::Update()
 {
 	// 視点と注視点を移動、上方ベクトルを回転
 	GameObject* player = GameObject::Find("Player");

@@ -14,9 +14,8 @@ namespace {
 };
 
 // 初期化
-HRESULT CFPCamera::Init()
+void FPCamera::Init()
 {
-	HRESULT hr = S_OK;
 	m_vEye = g_vEye;
 	m_vLook = g_vLook;
 	m_vUp = g_vUp;
@@ -25,17 +24,16 @@ HRESULT CFPCamera::Init()
 	m_fNearZ = 10.0f;
 	m_fFarZ = 10000.0f;
 	Update();
-	return hr;
 }
 
 // 終了処理
-void CFPCamera::Uninit()
+void FPCamera::Uninit()
 {
 	CCamera::Uninit();
 }
 
 // 更新
-void CFPCamera::Update()
+void FPCamera::Update()
 {
 	// 視点と注視点を移動、上方ベクトルを回転
 	GameObject* player = GameObject::Find("Player");

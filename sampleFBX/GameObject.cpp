@@ -90,22 +90,12 @@ GameObject* GameObject::Find(std::string name) {
 			return objectList;
 		}
 	}
-	for (auto objectList : SceneManager::GetInstance().m_scene->m_listUI) {
-		if (objectList->m_name == name) {
-			return objectList;
-		}
-	}
 	return nullptr;
 }
 
 
 GameObject* GameObject::FindGameObjectWithTag(std::string tag) {
 	for (auto objectList : SceneManager::GetInstance().m_scene->m_listObject) {
-		if (objectList->m_tag == tag) {
-			return objectList;
-		}
-	}
-	for (auto objectList : SceneManager::GetInstance().m_scene->m_listUI) {
 		if (objectList->m_tag == tag) {
 			return objectList;
 		}
@@ -117,11 +107,6 @@ GameObject* GameObject::FindGameObjectWithTag(std::string tag) {
 std::list<GameObject*> GameObject::FindGameObjectsWithTag(std::string tag) {
 	m_listFinds.clear();
 	for (auto obj : SceneManager::GetInstance().m_scene->m_listObject) {
-		if (obj->m_tag == tag) {
-			m_listFinds.push_back(obj);
-		}
-	}
-	for (auto obj : SceneManager::GetInstance().m_scene->m_listUI) {
 		if (obj->m_tag == tag) {
 			m_listFinds.push_back(obj);
 		}
