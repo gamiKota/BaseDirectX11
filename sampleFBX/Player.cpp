@@ -104,9 +104,9 @@ void CPlayer::Update()
 		obj->AddComponent<Bullet>();
 		obj->AddComponent<Collision>();
 		obj->GetComponent<Collision>()->Init(E_MODEL_MISSILE);
-		GameObject::Instance(obj);
-		obj->m_transform = m_gameObject->m_transform;
-		obj->GetComponent<Bullet>()->Fire(obj->m_transform.m_world, XMFLOAT3());
+		GameObject::Instance(obj, { m_transform->m_world._41, m_transform->m_world._42, m_transform->m_world._43 });
+		obj->GetComponent<Collision>()->Update();
+		obj->GetComponent<Bullet>()->Fire(obj->m_transform->m_world, XMFLOAT3());
 	}
 
 	GameObject* sky = GameObject::Find("Sky");

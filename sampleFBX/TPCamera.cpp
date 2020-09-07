@@ -41,7 +41,7 @@ void CTPCamera::Update()
 	// 視点と注視点を移動、上方ベクトルを回転
 	GameObject* player = GameObject::Find("Player");
 	if (player != nullptr) {
-		XMMATRIX world = XMLoadFloat4x4(&player->m_transform.m_world);
+		XMMATRIX world = XMLoadFloat4x4(&player->m_transform->m_world);
 		XMStoreFloat3(&m_vEye, XMVector3TransformCoord(
 			XMLoadFloat3(&g_vEye), world));
 		XMStoreFloat3(&m_vLook, XMVector3TransformCoord(

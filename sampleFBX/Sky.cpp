@@ -39,7 +39,7 @@ void CSky::Update() {
 // •`‰æ
 void CSky::Draw()
 {
-	ModelManager::GetInstance().Draw(E_MODEL_SKY, m_gameObject->m_transform.m_world);
+	ModelManager::GetInstance().Draw(E_MODEL_SKY, m_gameObject->m_transform->m_world);
 }
 
 

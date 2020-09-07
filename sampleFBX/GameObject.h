@@ -37,7 +37,7 @@ private:
 
 public:
 	std::list<Component*>			m_listComponent;	//!< オブジェクトが持つコンポーネントリスト
-	Transform						m_transform;		//!< トランスフォーム
+	Transform*						m_transform;		//!< トランスフォーム
 
 public:
 	/**
@@ -134,7 +134,7 @@ public:
 	T* AddComponent() {
 		T* buff = new T();
 		buff->m_gameObject = this;
-		buff->m_transform = &m_transform;
+		buff->m_transform = m_transform;
 		m_listComponent.push_back(buff);
 		buff->Awake();
 		if (SceneManager::GetInstance().m_scene->GetGameUpdate()) {

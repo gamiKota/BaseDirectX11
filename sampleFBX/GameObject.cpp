@@ -21,12 +21,13 @@ using namespace DirectX;
 std::list<GameObject*>	GameObject::m_listFinds = std::list<GameObject*>();		//!< •¡”ƒŠƒXƒgŽæ“¾—p
 
 
-GameObject::GameObject() : Object("GameObject"), m_tag("none"), m_transform(Transform()) {
-	
+GameObject::GameObject() : Object("GameObject"), m_tag("none") {
+	m_transform = AddComponent<Transform>();
 }
 
 
-GameObject::GameObject(std::string name, std::string tag) : Object(name), m_tag(tag), m_transform(Transform()) {
+GameObject::GameObject(std::string name, std::string tag) : Object(name), m_tag(tag) {
+	m_transform = AddComponent<Transform>();
 }
 
 
@@ -62,7 +63,7 @@ void GameObject::Uninit() {
 void GameObject::Update() {
 
 	PrintDebugProc("name = %s, Instance = %d, pos = %.2f, %.2f, %.2f\n", ToString(), GetInstanceID(),
-		m_transform.m_world._41, m_transform.m_world._42, m_transform.m_world._43);
+		m_transform->m_world._41, m_transform->m_world._42, m_transform->m_world._43);
 
 	auto buff = m_listComponent;
 	for (auto com : buff)
@@ -125,9 +126,9 @@ std::list<GameObject*> GameObject::FindGameObjectsWithTag(std::string tag) {
 void GameObject::Instance(GameObject* obj, XMFLOAT3 transform) {
 	if (obj == nullptr)	return;
 
-	obj->m_transform.m_world._41 = transform.x;
-	obj->m_transform.m_world._42 = transform.y;
-	obj->m_transform.m_world._43 = transform.z;
+	obj->m_transform->m_world._41 = transform.x;
+	obj->m_transform->m_world._42 = transform.y;
+	obj->m_transform->m_world._43 = transform.z;
 
 	SceneManager::GetInstance().m_scene->m_listObject.push_back(obj);
 }

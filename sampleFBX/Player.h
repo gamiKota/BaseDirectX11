@@ -4,7 +4,7 @@
 
 
 static const float MAX_MOVE_WIDTH = 500.f;
-static const float VAL_MOVE_PLAYER = 0.f;
+static const float VAL_MOVE_PLAYER = 2.f;
 
 class Collision;
 

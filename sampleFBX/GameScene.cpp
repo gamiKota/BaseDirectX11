@@ -97,7 +97,7 @@ void GameScene::Init() {
 		mWorld._41 = (float)GetRandom((int)(-MAX_MOVE_WIDTH + 30.f), (int)(MAX_MOVE_WIDTH - 30.f));
 		mWorld._43 = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 
-		obj->m_transform.m_world = mWorld;
+		obj->m_transform->m_world = mWorld;
 		obj->AddComponent<CEnemy>();
 		obj->AddComponent<Collision>();
 		obj->GetComponent<Collision>()->Init(E_MODEL_ENEMY);

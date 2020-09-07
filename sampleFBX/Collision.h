@@ -11,6 +11,7 @@ public:
 	XMFLOAT3	m_vCenter;		// 境界ボックス中心座標
 	XMFLOAT3	m_vBBox;		// 境界ボックス サイズ
 	XMFLOAT3	m_vPosBBox;		// 境界ボックス中心座標(ワールド空間)
+	XMFLOAT4X4	m_world;		//!< 当たり判定用行列
 	bool		m_bHit;			// 衝突有無
 
 	ID3D11Buffer* m_pVertexBuffer;			// 頂点バッファ
@@ -34,7 +35,7 @@ public:
 	void SetColor(XMFLOAT4* pColor) { m_color = *pColor; }
 
 	void SetWorld(XMFLOAT4X4 world);
-	void Init(E_MODEL model);
 
+	void Init(E_MODEL model);
 	static bool AABB(Collision obj1, Collision obj2);
 };

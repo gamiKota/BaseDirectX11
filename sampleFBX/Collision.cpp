@@ -74,14 +74,14 @@ void Collision::Uninit()
 void Collision::Update()
 {
 	// 境界ボックス(AABB)の移動
-	//XMStoreFloat3(&m_vPosBBox,
-	//	XMVector3TransformCoord(
-	//		XMLoadFloat3(&m_vCenter),
-	//		XMLoadFloat4x4(&m_gameObject->m_transform)));
-	//XMFLOAT4X4 matrix;
-	//XMStoreFloat4x4(&matrix, XMMatrixTranslation(
-	//	m_vPosBBox.x, m_vPosBBox.y, m_vPosBBox.z));
-	//SetWorld(matrix);
+	XMStoreFloat3(&m_vPosBBox,
+		XMVector3TransformCoord(
+			XMLoadFloat3(&m_vCenter),
+			XMLoadFloat4x4(&m_gameObject->m_transform->m_world)));
+	XMFLOAT4X4 matrix;
+	XMStoreFloat4x4(&matrix, XMMatrixTranslation(
+		m_vPosBBox.x, m_vPosBBox.y, m_vPosBBox.z));
+	SetWorld(matrix);
 }
 
 // 描画
@@ -117,7 +117,7 @@ void Collision::Draw() {
 	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	// 定数バッファ設定
 	SHADER_GLOBAL cb;
-	XMMATRIX mtxWorld = XMLoadFloat4x4(&m_transform->m_world);
+	XMMATRIX mtxWorld = XMLoadFloat4x4(&m_world);
 	CCamera* pCamera = CCamera::Get();
 	cb.mWVP = XMMatrixTranspose(mtxWorld *
 		XMLoadFloat4x4(&pCamera->GetView()) *
@@ -149,7 +149,7 @@ void Collision::Draw() {
 
 
 void Collision::SetWorld(XMFLOAT4X4 world) {
-	m_transform->m_world = world;
+	m_world = world;
 }
 
 
@@ -244,16 +244,16 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 	bool hit = false;
 
 	// 衝突判定(AABB)
-	float& Ax = obj1.m_transform->m_world._41;
-	float& Ay = obj1.m_transform->m_world._42;
-	float& Az = obj1.m_transform->m_world._43;
+	float& Ax = obj1.m_world._41;
+	float& Ay = obj1.m_world._42;
+	float& Az = obj1.m_world._43;
 	float& Aw = obj1.m_vBBox.x;
 	float& Ah = obj1.m_vBBox.y;
 	float& Ad = obj1.m_vBBox.z;
 	
-	float& Bx = obj2.m_transform->m_world._41;
-	float& By = obj2.m_transform->m_world._42;
-	float& Bz = obj2.m_transform->m_world._43;
+	float& Bx = obj2.m_world._41;
+	float& By = obj2.m_world._42;
+	float& Bz = obj2.m_world._43;
 	float& Bw = obj2.m_vBBox.x;
 	float& Bh = obj2.m_vBBox.y;
 	float& Bd = obj2.m_vBBox.z;
