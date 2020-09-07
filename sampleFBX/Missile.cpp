@@ -54,13 +54,13 @@ void Bullet::Update() {
 	}
 
 	// モデル座標軸取得
-	XMFLOAT3 vX = { m_transform->_11, m_transform->_12, m_transform->_13 };
-	XMFLOAT3 vY = { m_transform->_21, m_transform->_22, m_transform->_23 };
-	XMFLOAT3 vZ = { m_transform->_31, m_transform->_32, m_transform->_33 };
+	XMFLOAT3 vX = { m_transform->m_world._11, m_transform->m_world._12, m_transform->m_world._13 };
+	XMFLOAT3 vY = { m_transform->m_world._21, m_transform->m_world._22, m_transform->m_world._23 };
+	XMFLOAT3 vZ = { m_transform->m_world._31, m_transform->m_world._32, m_transform->m_world._33 };
 
 	// 座標の取得とクリア
-	XMFLOAT3 vP = { m_transform->_41, m_transform->_42, m_transform->_43 };
-	m_transform->_41 = m_transform->_42 = m_transform->_43 = 0.0f;
+	XMFLOAT3 vP = { m_transform->m_world._41, m_transform->m_world._42, m_transform->m_world._43 };
+	m_transform->m_world._41 = m_transform->m_world._42 = m_transform->m_world._43 = 0.0f;
 	//PrintDebugProc("Missile={%.3f,%.3f,%.3f}\n",
 	//	vP.x, vP.y, vP.z);
 
@@ -107,9 +107,9 @@ void Bullet::Update() {
 		vP.z += vZ.z * SPEED;
 	}
 	// 座標をワールド行列に反映
-	m_transform->_41 = vP.x;
-	m_transform->_42 = vP.y;
-	m_transform->_43 = vP.z;
+	m_transform->m_world._41 = vP.x;
+	m_transform->m_world._42 = vP.y;
+	m_transform->m_world._43 = vP.z;
 
 	// モデルの更新
 	ModelManager::GetInstance().Update(E_MODEL_MISSILE);
@@ -133,7 +133,7 @@ void Bullet::Draw()
 		return;
 	}
 
-	XMMATRIX matrix = XMLoadFloat4x4(m_transform);	// 行列(拡縮、回転、座標を手動で変更する場合)
+	XMMATRIX matrix = XMLoadFloat4x4(&m_transform->m_world);	// 行列(拡縮、回転、座標を手動で変更する場合)
 
 	// 拡縮の変更
 	//matrix = XMMatrixMultiply(XMMatrixScaling(0.5f, 0.5f, 0.5f), matrix);
@@ -162,10 +162,10 @@ void Bullet::Fire(XMFLOAT4X4 pWorld, XMFLOAT3 pOffset) {
 			XMLoadFloat3(&pOffset),
 			XMLoadFloat4x4(&pWorld)));
 
-	*m_transform = pWorld;
-	m_transform->_41 = vPos.x;
-	m_transform->_42 = vPos.y;
-	m_transform->_43 = vPos.z;
+	m_transform->m_world = pWorld;
+	m_transform->m_world._41 = vPos.x;
+	m_transform->m_world._42 = vPos.y;
+	m_transform->m_world._43 = vPos.z;
 
 	m_nLife = 1 * 60;	// 5秒
 	m_nStat = 1;		// 追尾中

@@ -18,9 +18,6 @@ static const float VAL_ANGLE_Z = 2.f;
 static const float MAX_ANGLE_Z = 45.f;
 
 
-XMFLOAT3 g_playerPos;
-
-
 // コンストラクタ
 CPlayer::CPlayer() : m_roll(0.f), m_vMove(XMFLOAT3()) {
 }
@@ -36,7 +33,7 @@ void CPlayer::Awake() {
 
 // 初期化
 void CPlayer::Start() {
-	g_playerPos = { m_transform->_41, m_transform->_42, m_transform->_43 };
+
 }
 
 // 終了処理
@@ -51,7 +48,7 @@ void CPlayer::Update()
 
 	// 移動
 	if (Input::isPress('A')) {
-		if (m_transform->_41 > -MAX_MOVE_WIDTH) {
+		if (m_transform->m_world._41 > -MAX_MOVE_WIDTH) {
 			m_vMove.x = -SPEED;
 		}
 		else {
@@ -64,7 +61,7 @@ void CPlayer::Update()
 		}
 	}
 	else if (Input::isPress('D')) {
-		if (m_transform->_41 < MAX_MOVE_WIDTH) {
+		if (m_transform->m_world._41 < MAX_MOVE_WIDTH) {
 			m_vMove.x = SPEED;
 		}
 		else {
@@ -94,9 +91,9 @@ void CPlayer::Update()
 	}
 
 	// 座標をワールド行列に反映
-	g_playerPos.x += m_vMove.x;
-	g_playerPos.y += m_vMove.y; 
-	g_playerPos.z += m_vMove.z + VAL_MOVE_PLAYER;	// 常に前進
+	m_transform->m_world._41 += m_vMove.x;
+	m_transform->m_world._42 += m_vMove.y; 
+	m_transform->m_world._43 += m_vMove.z + VAL_MOVE_PLAYER;	// 常に前進
 
 	// モデルの更新
 	ModelManager::GetInstance().Update(E_MODEL_PLAYER);
@@ -109,23 +106,21 @@ void CPlayer::Update()
 		obj->GetComponent<Collision>()->Init(E_MODEL_MISSILE);
 		GameObject::Instance(obj);
 		obj->m_transform = m_gameObject->m_transform;
-		obj->GetComponent<Bullet>()->Fire(obj->m_transform, XMFLOAT3());
+		obj->GetComponent<Bullet>()->Fire(obj->m_transform.m_world, XMFLOAT3());
 	}
 
 	GameObject* sky = GameObject::Find("Sky");
 	if (sky != nullptr) {
-		sky->GetComponent<CSky>()->SetPos({ g_playerPos });
+		sky->GetComponent<CSky>()->SetPos({ m_transform->m_world._41, m_transform->m_world._42, m_transform->m_world._43 });
 	}
 
 	PrintDebugProc("roll = %.2f\n", m_roll);
-
-
 }
 
 // 描画
 void CPlayer::Draw()
 {
-	XMMATRIX matrix = XMLoadFloat4x4(m_transform);	// 行列(拡縮、回転、座標を手動で変更する場合)
+	XMMATRIX matrix = XMLoadFloat4x4(&m_transform->m_world);	// 行列(拡縮、回転、座標を手動で変更する場合)
 
 	// 拡縮の変更
 	//matrix = XMMatrixMultiply(XMMatrixScaling(0.5f, 0.5f, 0.5f), matrix);

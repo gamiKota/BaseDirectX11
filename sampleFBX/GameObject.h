@@ -18,6 +18,7 @@
 #include "main.h"
 #include <DirectXMath.h>
 #include "SceneManager.h"
+#include "Transform.h"
 
 
 /**
@@ -36,7 +37,7 @@ private:
 
 public:
 	std::list<Component*>			m_listComponent;	//!< オブジェクトが持つコンポーネントリスト
-	DirectX::XMFLOAT4X4				m_transform;		//!< トランスフォーム
+	Transform						m_transform;		//!< トランスフォーム
 
 public:
 	/**

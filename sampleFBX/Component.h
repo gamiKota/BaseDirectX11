@@ -22,6 +22,7 @@
  * @forward declaration
  */
 class GameObject;
+class Transform;
 
 
 /**
@@ -30,7 +31,7 @@ class GameObject;
 class Component : public Object {
 public:
 	GameObject*				m_gameObject;	//!< 親オブジェクト
-	DirectX::XMFLOAT4X4*	m_transform;	//!< トランスフォーム
+	Transform*				m_transform;	//!< トランスフォーム
 
 public:
 	Component();

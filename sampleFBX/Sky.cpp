@@ -39,12 +39,12 @@ void CSky::Update() {
 // •`‰æ
 void CSky::Draw()
 {
-	ModelManager::GetInstance().Draw(E_MODEL_SKY, m_gameObject->m_transform);
+	ModelManager::GetInstance().Draw(E_MODEL_SKY, m_gameObject->m_transform.m_world);
 }
 
 
 void CSky::SetPos(XMFLOAT3 pos) {
-	m_transform->_41 = pos.x;
-	m_transform->_42 = pos.y;
-	m_transform->_43 = pos.z;
+	m_transform->m_world._41 = pos.x;
+	m_transform->m_world._42 = pos.y;
+	m_transform->m_world._43 = pos.z;
 }
