@@ -35,6 +35,10 @@ void Component::Update() {
 
 }
 
+void Component::LastUpdate() {
+
+}
+
 void Component::Draw() {
 
 }

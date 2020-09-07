@@ -81,23 +81,15 @@ void GameScene::Init() {
 	m_listObject.push_back(obj);
 
 	// ìGã@èâä˙âª
-	XMFLOAT4X4 mWorld(
-		-1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, -1.0f, 0.0f,
-		0.0f, 0.0f, VAL_ENEMY_POS_Z, 1.0f);
+	XMFLOAT3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
 	for (int i = 0; i < MAX_ENEMY; ++i) {
 		obj = new GameObject("Enemy (" + std::to_string(i) + ")", "Enemy");
 
-		//float size = (float)GetRandom(1, 10) * 0.1f;
-		//mWorld._11 = size;
-		//mWorld._22 = size;
-		//mWorld._33 = size;
+		vEnemyPos.x = (float)GetRandom((int)(-MAX_MOVE_WIDTH + 30.f), (int)(MAX_MOVE_WIDTH - 30.f));
+		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 
-		mWorld._41 = (float)GetRandom((int)(-MAX_MOVE_WIDTH + 30.f), (int)(MAX_MOVE_WIDTH - 30.f));
-		mWorld._43 = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
-
-		obj->m_transform->m_world = mWorld;
+		obj->m_transform->m_position = vEnemyPos;
+		obj->m_transform->m_rotate.y = 180;
 		obj->AddComponent<CEnemy>();
 		obj->AddComponent<Collision>();
 		obj->GetComponent<Collision>()->Init(E_MODEL_ENEMY);

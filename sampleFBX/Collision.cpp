@@ -77,7 +77,7 @@ void Collision::Update()
 	XMStoreFloat3(&m_vPosBBox,
 		XMVector3TransformCoord(
 			XMLoadFloat3(&m_vCenter),
-			XMLoadFloat4x4(&m_gameObject->m_transform->m_world)));
+			XMLoadFloat4x4(&m_gameObject->m_transform->GetMatrix())));
 	XMFLOAT4X4 matrix;
 	XMStoreFloat4x4(&matrix, XMMatrixTranslation(
 		m_vPosBBox.x, m_vPosBBox.y, m_vPosBBox.z));

@@ -48,7 +48,7 @@ void CPlayer::Update()
 
 	// 移動
 	if (Input::isPress('A')) {
-		if (m_transform->m_world._41 > -MAX_MOVE_WIDTH) {
+		if (m_transform->m_position.x > -MAX_MOVE_WIDTH) {
 			m_vMove.x = -SPEED;
 		}
 		else {
@@ -61,7 +61,7 @@ void CPlayer::Update()
 		}
 	}
 	else if (Input::isPress('D')) {
-		if (m_transform->m_world._41 < MAX_MOVE_WIDTH) {
+		if (m_transform->m_position.x < MAX_MOVE_WIDTH) {
 			m_vMove.x = SPEED;
 		}
 		else {
@@ -91,9 +91,11 @@ void CPlayer::Update()
 	}
 
 	// 座標をワールド行列に反映
-	m_transform->m_world._41 += m_vMove.x;
-	m_transform->m_world._42 += m_vMove.y; 
-	m_transform->m_world._43 += m_vMove.z + VAL_MOVE_PLAYER;	// 常に前進
+	m_transform->m_position.x += m_vMove.x;
+	m_transform->m_position.y += m_vMove.y; 
+	m_transform->m_position.z += m_vMove.z + VAL_MOVE_PLAYER;	// 常に前進
+
+	m_transform->m_rotate.z = m_roll;
 
 	// モデルの更新
 	ModelManager::GetInstance().Update(E_MODEL_PLAYER);
@@ -104,14 +106,15 @@ void CPlayer::Update()
 		obj->AddComponent<Bullet>();
 		obj->AddComponent<Collision>();
 		obj->GetComponent<Collision>()->Init(E_MODEL_MISSILE);
-		GameObject::Instance(obj, { m_transform->m_world._41, m_transform->m_world._42, m_transform->m_world._43 });
+		GameObject::Instance(obj, m_transform->m_position);
 		obj->GetComponent<Collision>()->Update();
-		obj->GetComponent<Bullet>()->Fire(obj->m_transform->m_world, XMFLOAT3());
+		obj->GetComponent<Collision>()->LastUpdate();
+		obj->GetComponent<Bullet>()->Fire(obj->m_transform->GetMatrix(), XMFLOAT3());
 	}
 
 	GameObject* sky = GameObject::Find("Sky");
 	if (sky != nullptr) {
-		sky->GetComponent<CSky>()->SetPos({ m_transform->m_world._41, m_transform->m_world._42, m_transform->m_world._43 });
+		sky->GetComponent<CSky>()->SetPos(m_transform->m_position);
 	}
 
 	PrintDebugProc("roll = %.2f\n", m_roll);
@@ -120,19 +123,19 @@ void CPlayer::Update()
 // 描画
 void CPlayer::Draw()
 {
-	XMMATRIX matrix = XMLoadFloat4x4(&m_transform->m_world);	// 行列(拡縮、回転、座標を手動で変更する場合)
+	//XMMATRIX matrix = XMLoadFloat4x4(&m_transform->GetMatrix());	// 行列(拡縮、回転、座標を手動で変更する場合)
 
-	// 拡縮の変更
-	//matrix = XMMatrixMultiply(XMMatrixScaling(0.5f, 0.5f, 0.5f), matrix);
-	// 回転軸の変更
-	matrix = XMMatrixMultiply(XMMatrixRotationZ(XMConvertToRadians(m_roll)), matrix);
-	// 座標の変更
-	//matrix = XMMatrixMultiply(XMMatrixTranslation(0.f, 175.f, 0.f), matrix);
+	//// 拡縮の変更
+	////matrix = XMMatrixMultiply(XMMatrixScaling(0.5f, 0.5f, 0.5f), matrix);
+	//// 回転軸の変更
+	//matrix = XMMatrixMultiply(XMMatrixRotationZ(XMConvertToRadians(m_roll)), matrix);
+	//// 座標の変更
+	////matrix = XMMatrixMultiply(XMMatrixTranslation(0.f, 175.f, 0.f), matrix);
 
-	XMFLOAT4X4 world;
-	XMStoreFloat4x4(&world, matrix);
+	//XMFLOAT4X4 world;
+	//XMStoreFloat4x4(&world, matrix);
 
-	ModelManager::GetInstance().Draw(E_MODEL_PLAYER, world);
+	ModelManager::GetInstance().Draw(E_MODEL_PLAYER, m_transform->GetMatrix());
 }
 
 //// 座標取得

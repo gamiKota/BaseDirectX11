@@ -39,13 +39,13 @@ void CEnemy::Update() {
 
 	ModelManager::GetInstance().Update(E_MODEL_ENEMY);
 
-	if (m_transform->m_world._43 < GameObject::Find("Player")->m_transform->m_world._43) {
-		Destroy(m_gameObject);
-	}
+	//if (m_transform->m_position.z < GameObject::Find("Player")->m_transform->m_position.z) {
+	//	Destroy(m_gameObject);
+	//}
 }
 
 // •`‰æ
 void CEnemy::Draw() {
 
-	ModelManager::GetInstance().Draw(E_MODEL_ENEMY, m_gameObject->m_transform->m_world);
+	ModelManager::GetInstance().Draw(E_MODEL_ENEMY, m_gameObject->m_transform->GetMatrix());
 }

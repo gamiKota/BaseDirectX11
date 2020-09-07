@@ -54,13 +54,14 @@ void Bullet::Update() {
 	}
 
 	// ƒ‚ƒfƒ‹À•WŽ²Žæ“¾
-	XMFLOAT3 vX = { m_transform->m_world._11, m_transform->m_world._12, m_transform->m_world._13 };
-	XMFLOAT3 vY = { m_transform->m_world._21, m_transform->m_world._22, m_transform->m_world._23 };
-	XMFLOAT3 vZ = { m_transform->m_world._31, m_transform->m_world._32, m_transform->m_world._33 };
+	XMFLOAT3 vX = { m_transform->GetMatrix()._11, m_transform->GetMatrix()._12, m_transform->GetMatrix()._13 };
+	XMFLOAT3 vY = { m_transform->GetMatrix()._21, m_transform->GetMatrix()._22, m_transform->GetMatrix()._23 };
+	XMFLOAT3 vZ = { m_transform->GetMatrix()._31, m_transform->GetMatrix()._32, m_transform->GetMatrix()._33 };
 
 	// À•W‚ÌŽæ“¾‚ÆƒNƒŠƒA
-	XMFLOAT3 vP = { m_transform->m_world._41, m_transform->m_world._42, m_transform->m_world._43 };
-	m_transform->m_world._41 = m_transform->m_world._42 = m_transform->m_world._43 = 0.0f;
+	XMFLOAT3 vP = { m_transform->m_position.x, m_transform->m_position.y, m_transform->m_position.z };
+	m_transform->m_position = XMFLOAT3();
+	//m_transform->GetMatrix()._41 = m_transform->GetMatrix()._42 = m_transform->GetMatrix()._43 = 0.0f;
 	//PrintDebugProc("Missile={%.3f,%.3f,%.3f}\n",
 	//	vP.x, vP.y, vP.z);
 
@@ -93,11 +94,11 @@ void Bullet::Update() {
 	//	// ƒ[ƒ‹ƒh•ÏŠ·‚ð‰ñ“]
 	//	XMMATRIX rotate = XMMatrixRotationAxis(
 	//		vAxis, XMConvertToRadians(fAngle));
-	//	XMMATRIX world = XMLoadFloat4x4(&m_world);
+	//	XMMATRIX world = XMLoadFloat4x4(&GetMatrix());
 	//	world = XMMatrixMultiply(world, rotate);
-	//	XMStoreFloat4x4(&m_world, world);
+	//	XMStoreFloat4x4(&GetMatrix(), world);
 	//	//PrintDebugProc("World={%.3f,%.3f,%.3f}\n",
-	//	//	m_world._41, m_world._42, m_world._43);
+	//	//	GetMatrix()._41, GetMatrix()._42, GetMatrix()._43);
 	//}
 
 	// ‘¬“x‚ðÀ•W‚É”½‰f
@@ -107,9 +108,9 @@ void Bullet::Update() {
 		vP.z += vZ.z * SPEED;
 	}
 	// À•W‚ðƒ[ƒ‹ƒhs—ñ‚É”½‰f
-	m_transform->m_world._41 = vP.x;
-	m_transform->m_world._42 = vP.y;
-	m_transform->m_world._43 = vP.z;
+	m_transform->m_position.x = vP.x;
+	m_transform->m_position.y = vP.y;
+	m_transform->m_position.z = vP.z;
 
 	// ƒ‚ƒfƒ‹‚ÌXV
 	ModelManager::GetInstance().Update(E_MODEL_MISSILE);
@@ -133,19 +134,19 @@ void Bullet::Draw()
 		return;
 	}
 
-	XMMATRIX matrix = XMLoadFloat4x4(&m_transform->m_world);	// s—ñ(ŠgkA‰ñ“]AÀ•W‚ðŽè“®‚Å•ÏX‚·‚éê‡)
+	//XMMATRIX matrix = XMLoadFloat4x4(&m_transform->GetMatrix());	// s—ñ(ŠgkA‰ñ“]AÀ•W‚ðŽè“®‚Å•ÏX‚·‚éê‡)
 
-	// Šgk‚Ì•ÏX
-	//matrix = XMMatrixMultiply(XMMatrixScaling(0.5f, 0.5f, 0.5f), matrix);
-	// ‰ñ“]Ž²‚Ì•ÏX
-	matrix = XMMatrixMultiply(XMMatrixRotationY(XMConvertToRadians(180)), matrix);
-	// À•W‚Ì•ÏX
-	//matrix = XMMatrixMultiply(XMMatrixTranslation(0.f, 175.f, 0.f), matrix);
+	//// Šgk‚Ì•ÏX
+	////matrix = XMMatrixMultiply(XMMatrixScaling(0.5f, 0.5f, 0.5f), matrix);
+	//// ‰ñ“]Ž²‚Ì•ÏX
+	//matrix = XMMatrixMultiply(XMMatrixRotationY(XMConvertToRadians(180)), matrix);
+	//// À•W‚Ì•ÏX
+	////matrix = XMMatrixMultiply(XMMatrixTranslation(0.f, 175.f, 0.f), matrix);
 
-	XMFLOAT4X4 world;
-	XMStoreFloat4x4(&world, matrix);
+	//XMFLOAT4X4 world;
+	//XMStoreFloat4x4(&world, matrix);
 
-	ModelManager::GetInstance().Draw(E_MODEL_MISSILE, world);
+	ModelManager::GetInstance().Draw(E_MODEL_MISSILE, m_transform->GetMatrix());
 }
 
 //void Bullet::OnCollision(GameObject* obj) {
@@ -162,10 +163,10 @@ void Bullet::Fire(XMFLOAT4X4 pWorld, XMFLOAT3 pOffset) {
 			XMLoadFloat3(&pOffset),
 			XMLoadFloat4x4(&pWorld)));
 
-	m_transform->m_world = pWorld;
-	m_transform->m_world._41 = vPos.x;
-	m_transform->m_world._42 = vPos.y;
-	m_transform->m_world._43 = vPos.z;
+	m_transform->GetMatrix() = pWorld;
+	m_transform->GetMatrix()._41 = vPos.x;
+	m_transform->GetMatrix()._42 = vPos.y;
+	m_transform->GetMatrix()._43 = vPos.z;
 
 	m_nLife = 1 * 60;	// 5•b
 	m_nStat = 1;		// ’Ç”ö’†

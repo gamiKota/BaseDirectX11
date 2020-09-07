@@ -61,13 +61,19 @@ void GameObject::Uninit() {
 
 
 void GameObject::Update() {
-
-	PrintDebugProc("name = %s, Instance = %d, pos = %.2f, %.2f, %.2f\n", ToString(), GetInstanceID(),
-		m_transform->m_world._41, m_transform->m_world._42, m_transform->m_world._43);
-
 	auto buff = m_listComponent;
 	for (auto com : buff)
 		com->Update();
+}
+
+
+void GameObject::LastUpdate() {
+	PrintDebugProc("name = %s, Instance = %d, pos = %.2f, %.2f, %.2f\n", ToString(), GetInstanceID(),
+		m_transform->m_position.x, m_transform->m_position.y, m_transform->m_position.z);
+
+	auto buff = m_listComponent;
+	for (auto com : buff)
+		com->LastUpdate();
 }
 
 
@@ -126,9 +132,7 @@ std::list<GameObject*> GameObject::FindGameObjectsWithTag(std::string tag) {
 void GameObject::Instance(GameObject* obj, XMFLOAT3 transform) {
 	if (obj == nullptr)	return;
 
-	obj->m_transform->m_world._41 = transform.x;
-	obj->m_transform->m_world._42 = transform.y;
-	obj->m_transform->m_world._43 = transform.z;
+	obj->m_transform->m_position = transform;
 
 	SceneManager::GetInstance().m_scene->m_listObject.push_back(obj);
 }

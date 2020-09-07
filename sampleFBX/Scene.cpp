@@ -69,6 +69,10 @@ void Scene::Update() {
 		obj->Update();
 
 	buff = m_listObject;
+	for (auto obj : buff)
+		obj->LastUpdate();
+
+	buff = m_listObject;
 	for (auto obj : buff) {
 		if (obj->GetActive())	continue;
 		m_listObject.remove(obj);

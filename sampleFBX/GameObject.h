@@ -79,6 +79,11 @@ public:
 	virtual void Update();
 
 	/**
+	 * @brief ÅIXVˆ—
+	 */
+	virtual void LastUpdate();
+
+	/**
 	 * @brief •`‰æˆ—
 	 */
 	virtual void Draw();

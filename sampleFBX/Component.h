@@ -46,6 +46,7 @@ public:
 	virtual void Start();
 	virtual void Uninit();
 	virtual void Update();
+	virtual void LastUpdate();
 	virtual void Draw();
 
 
