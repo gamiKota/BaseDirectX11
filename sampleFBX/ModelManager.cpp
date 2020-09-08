@@ -55,7 +55,7 @@ void ModelManager::Init() {
 		m_pModel[i] = new CFbxModel();
 		hr = m_pModel[i]->Init(pDevice, pDeviceContext, name[i]);
 		if (SUCCEEDED(hr)) {
-			m_pModel[i]->SetCamera(CCamera::Get()->GetEye());
+			//m_pModel[i]->SetCamera(CCamera::Get()->GetEye());
 			if (i == E_MODEL_SKY) {
 				m_pModel[i]->SetLight(m_lightOff);
 			}

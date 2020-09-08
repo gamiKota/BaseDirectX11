@@ -9,33 +9,27 @@
  */
 
 
-//*****************************************************************************
-// インクルード部
-//*****************************************************************************
-#include "GameScene.h"		// 自身のヘッダー
-#include "D3DClass.h"
-#include "GameObject.h"
+/**
+ * @include
+ */
+#include "GameScene.h"	// 自身の定義
+#include "GameObject.h"	// GameObject
 
-#include "TPCamera.h"
-#include "FPCamera.h"
-#include "Player.h"
-#include "Sky.h"
-#include "Collision.h"
-#include "Enemy.h"
-
-#include "debugproc.h"
-#include "input.h"
-
-#include "System.h"
+/**
+ * @Component
+ */
+#include "TPCamera.h"	// TPSカメラ
+#include "FPCamera.h"	// FPSカメラ
+#include "Sky.h"		// スカイドーム
+#include "Player.h"		// プレイヤー
+#include "Enemy.h"		// 敵
+#include "Collision.h"	// 当たり判定
+#include "System.h"		// メモリ監視
 
 
 static const int MAX_ENEMY = 10;
 static const float VAL_ENEMY_POS_Z = 2000.f;
 static const float MAX_ENEMY_POS_Z = 3000.f;
-
-
-TPCamera					g_cameraTP;
-FPCamera					g_cameraFP;
 
 
 int GetRandom(int min, int max)
@@ -44,23 +38,16 @@ int GetRandom(int min, int max)
 }
 
 
-GameScene::GameScene() : Scene() {
-}
-
-
-GameScene::~GameScene() {
-	Scene::~Scene();
-}
-
-
 void GameScene::Init() {
 
-	// カメラ初期化
-	g_cameraTP.Init();
-	g_cameraFP.Init();
-	CCamera::Set(&g_cameraTP);
+	GameObject* obj;	//!< オブジェクト
 
-	GameObject* obj;
+	// TPS視点カメラ
+	obj = new GameObject("TPSCamera");
+	obj->AddComponent<TPCamera>();
+	CCamera::Set(obj->GetComponent<TPCamera>());
+	m_listObject.push_back(obj);
+
 
 	// スカイドーム
 	obj = new GameObject("Sky");
@@ -90,6 +77,8 @@ void GameScene::Init() {
 		m_listObject.push_back(obj);
 	}
 
+
+
 	// push_backの順番でUIの描画のバッファが変わる
 	// 最初に背景などのUI
 	// 次に3Dオブジェクト
@@ -97,49 +86,6 @@ void GameScene::Init() {
 
 	// お前は最後
 	Scene::Init();
-}
-
-
-void GameScene::Uninit() {
-	Scene::Uninit();
-	
-	// カメラ終了処理
-	g_cameraFP.Uninit();
-	g_cameraTP.Uninit();
-}
-
-
-void GameScene::Update() {
-
-	// カメラ更新
-	if (Input::isTrigger('1')) {
-		CCamera::Set(SceneManager::GetInstance().m_camera);
-	}
-	if (Input::isTrigger('2')) {
-		CCamera::Set(&g_cameraFP);
-	}
-	if (Input::isTrigger('3')) {
-		CCamera::Set(&g_cameraTP);
-	}
-
-	bool isClear = true;
-	for (auto obj : m_listObject) {
-		if (obj->GetComponent<CEnemy>() != nullptr) {	// 敵が一機でも生きていたら
-			isClear = false;
-		}
-	}
-	if (isClear) {
-		SceneManager::GetInstance().LoadScene(E_SCENE::RESULT);
-	}
-
-	Scene::Update();
-}
-
-
-void GameScene::Draw() {
-
-	// シーンの描画
-	Scene::Draw();
 }
 
 

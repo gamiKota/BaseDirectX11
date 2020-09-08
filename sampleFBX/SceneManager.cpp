@@ -5,30 +5,27 @@
 #include "GameScene.h"
 #include "ResultScene.h"
 #include "ModelManager.h"
-#include "Camera.h"
 #include "GameObject.h"
 #include "D3DClass.h"
+#include "input.h"
 #include "System.h"
 
 
 
-SceneManager::SceneManager() : m_scene(new TitleScene()), m_camera(new CCamera()) {
+SceneManager::SceneManager() : m_scene(new TitleScene()) {
 
 }
 
 
 SceneManager::~SceneManager() {
-	delete m_camera;
 	delete m_scene;
 }
 
 
 void SceneManager::Init() {
-	m_camera->Init();
-	CCamera::Set(m_camera);
 
 	ModelManager::GetInstance().Init();
-	
+
 	m_scene->Init();
 }
 
@@ -38,8 +35,6 @@ void SceneManager::Uninit() {
 	m_scene->Uninit();
 	
 	ModelManager::GetInstance().Uninit();
-
-	m_camera->Uninit();
 }
 
 
@@ -49,7 +44,6 @@ void SceneManager::Update() {
 		switch (m_nowScene)
 		{
 		case E_SCENE::TITLE:
-			CCamera::Set(m_camera);
 			m_scene->Uninit();
 			SAFE_DELETE(m_scene);
 			m_scene = new TitleScene();
@@ -57,7 +51,6 @@ void SceneManager::Update() {
 			break;
 
 		case E_SCENE::GAME:
-			CCamera::Set(m_camera);
 			m_scene->Uninit();
 			SAFE_DELETE(m_scene);
 			m_scene = new GameScene();
@@ -65,7 +58,6 @@ void SceneManager::Update() {
 			break;
 
 		case E_SCENE::RESULT:
-			CCamera::Set(m_camera);
 			m_scene->Uninit();
 			SAFE_DELETE(m_scene);
 			m_scene = new ResultScene();
@@ -75,7 +67,17 @@ void SceneManager::Update() {
 		}
 		m_isChange = false;
 	}
-	CCamera::Get()->Update();
+
+	if (Input::isTrigger('1')) {
+		LoadScene(E_SCENE::TITLE);
+	}
+	if (Input::isTrigger('2')) {
+		LoadScene(E_SCENE::GAME);
+	}
+	if (Input::isTrigger('3')) {
+		LoadScene(E_SCENE::RESULT);
+	}
+
 	m_scene->Update();
 }
 

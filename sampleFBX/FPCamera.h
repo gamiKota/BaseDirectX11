@@ -5,7 +5,8 @@
 class FPCamera : public CCamera
 {
 public:
-	void Init();
+	void Awake();
+	void Start();
 	void Uninit();
 	void Update();
 };

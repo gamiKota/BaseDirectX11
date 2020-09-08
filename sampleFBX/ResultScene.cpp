@@ -14,46 +14,24 @@
  //*****************************************************************************
 #include "ResultScene.h"		// 自身のヘッダー
 #include "D3DClass.h"
-#include "GameObject.h"
-
-#include "debugproc.h"
 #include "input.h"
-
+#include "debugproc.h"
+#include "GameObject.h"
+#include "Camera.h"
 #include "System.h"
 
 
-ResultScene::ResultScene() : Scene() {
-}
-
-
-ResultScene::~ResultScene() {
-	Scene::~Scene();
-}
-
-
 void ResultScene::Init() {
+	GameObject* obj;
+	obj = new GameObject;
+	obj->AddComponent<CCamera>();
+	CCamera::Set(obj->GetComponent<CCamera>());
+	m_listObject.push_back(obj);
+
 	// お前は最後
 	Scene::Init();
 }
 
-
-void ResultScene::Uninit() {
-	Scene::Uninit();
-}
-
-void ResultScene::Update() {
-	PrintDebugProc("ResultScene");
-	if (Input::isTrigger(VK_SPACE)) {
-		SceneManager::GetInstance().LoadScene(E_SCENE::TITLE);
-	}
-	Scene::Update();
-}
-
-
-void ResultScene::Draw() {
-	// シーンの描画
-	Scene::Draw();
-}
 
 
 // EOF

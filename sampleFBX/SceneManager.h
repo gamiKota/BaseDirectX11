@@ -3,7 +3,6 @@
 #include "Singleton.h"
 #include "Scene.h"
 
-class CCamera;
 class GameObject;
 
 enum class E_SCENE {
@@ -18,7 +17,6 @@ public:
 
 public:
 	Scene* m_scene;
-	CCamera* m_camera;	//!< ŒÅ’èƒJƒƒ‰
 	bool m_isChange;
 	E_SCENE m_nowScene;
 

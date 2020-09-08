@@ -12,7 +12,7 @@ XMFLOAT3 CCamera::m_vNowLook;	// 現在の注視点
 XMFLOAT3 CCamera::m_vNowUp;		// 現在の上方ベクトル
 
 // 初期化
-void CCamera::Init()
+void CCamera::Start()
 {
 	m_vEye = XMFLOAT3(0.0f, 200.0f, -400.0f);
 	m_vLook = XMFLOAT3(0.0f, 0.0f, 0.0f);

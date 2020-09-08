@@ -15,7 +15,19 @@ namespace {
 };
 
 // èâä˙âª
-void TPCamera::Init()
+void TPCamera::Awake()
+{
+	m_vEye = g_vEye;
+	m_vLook = g_vLook;
+	m_vUp = g_vUp;
+	m_fFOVY = XMConvertToRadians(45);
+	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
+	m_fNearZ = 10.0f;
+	m_fFarZ = 10000.0f;
+	Update();
+}
+
+void TPCamera::Start()
 {
 	m_vEye = g_vEye;
 	m_vLook = g_vLook;

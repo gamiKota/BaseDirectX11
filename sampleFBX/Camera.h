@@ -23,7 +23,7 @@ private:
 	static CCamera*	m_pCamera;	// Œ»İ—LŒø‚ÈƒJƒƒ‰
 
 public:
-	virtual void Init();
+	virtual void Start();
 	virtual void Uninit();
 	virtual void Update();
 	//virtual void Draw();

@@ -9,12 +9,7 @@
 class GameScene : public Scene
 {
 public:
-	GameScene();
-	~GameScene();
 	void Init();
-	void Uninit();
-	void Update();
-	void Draw();
 };
 
 

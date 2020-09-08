@@ -14,7 +14,7 @@ namespace {
 };
 
 // ‰Šú‰»
-void FPCamera::Init()
+void FPCamera::Awake()
 {
 	m_vEye = g_vEye;
 	m_vLook = g_vLook;
@@ -24,6 +24,10 @@ void FPCamera::Init()
 	m_fNearZ = 10.0f;
 	m_fFarZ = 10000.0f;
 	Update();
+}
+
+void FPCamera::Start() {
+
 }
 
 // I—¹ˆ—

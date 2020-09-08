@@ -31,9 +31,9 @@ public:
 	Scene();
 	~Scene();
 	virtual void Init();
-	virtual void Uninit();
-	virtual void Update();
-	virtual void Draw();
+	void Uninit();
+	void Update();
+	void Draw();
 
 	void Shutdown();
 
