@@ -6,8 +6,6 @@
 #include "ModelManager.h"
 #include "System.h"
 
-// マクロ定義
-#define PATH_MODELSKY	"data/model/sky.fbx"
 
 // コンストラクタ
 CSky::CSky() {
@@ -36,11 +34,7 @@ void CSky::Update() {
 	ModelManager::GetInstance().Update(E_MODEL_MISSILE);
 }
 
-// 描画
-void CSky::Draw()
-{
-	ModelManager::GetInstance().Draw(E_MODEL_SKY, m_gameObject->m_transform->GetMatrix());
-}
+
 
 
 void CSky::SetPos(XMFLOAT3 pos) {

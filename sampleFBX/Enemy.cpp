@@ -18,12 +18,6 @@ CEnemy::CEnemy() : Component() {
 CEnemy::~CEnemy() {
 }
 
-
-void CEnemy::Awake() {
-
-}
-
-
 // ‰Šú‰»
 void CEnemy::Start() {
 	
@@ -36,16 +30,10 @@ void CEnemy::Uninit() {
 
 // XV
 void CEnemy::Update() {
-
-	ModelManager::GetInstance().Update(E_MODEL_ENEMY);
-
 	//if (m_transform->m_position.z < GameObject::Find("Player")->m_transform->m_position.z) {
 	//	Destroy(m_gameObject);
 	//}
 }
 
-// •`‰æ
-void CEnemy::Draw() {
 
-	ModelManager::GetInstance().Draw(E_MODEL_ENEMY, m_gameObject->m_transform->GetMatrix());
-}
+// EOF

@@ -21,11 +21,6 @@ using namespace DirectX;
 std::list<GameObject*>	GameObject::m_listFinds = std::list<GameObject*>();		//!< 複数リスト取得用
 
 
-GameObject::GameObject() : Object("GameObject"), m_tag("none") {
-	m_transform = AddComponent<Transform>();
-}
-
-
 GameObject::GameObject(std::string name, std::string tag) : Object(name), m_tag(tag) {
 	m_transform = AddComponent<Transform>();
 }
@@ -38,15 +33,7 @@ GameObject::~GameObject() {
 }
 
 
-void GameObject::Awake() {
-	// Awakeのタイミングとか処理順がわかんにゃい...
-	//auto buff = List;
-	//for (auto com : buff)
-	//	com->Awake();
-}
-
-
-void GameObject::Start() {
+void GameObject::Init() {
 	auto buff = m_listComponent;
 	for (auto com : buff)
 		com->Start();
@@ -78,9 +65,7 @@ void GameObject::LastUpdate() {
 
 
 void GameObject::Draw() {
-	auto buff = m_listComponent;
-	for (auto com : m_listComponent)
-		com->Draw();
+	
 }
 
 

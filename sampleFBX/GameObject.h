@@ -42,31 +42,20 @@ public:
 public:
 	/**
 	 * @brief コンストラクタ
-	 */
-	GameObject();
-
-	/**
-	 * @brief コンストラクタ
 	 * @param[in] name
 	 * @param[in] tag
 	 */
-	GameObject(std::string name, std::string tag = "none");
+	GameObject(std::string name = "GameObject", std::string tag = "none");
 
 	/**
 	 * @brief デストラクタ
 	 */
 	virtual ~GameObject();
 
-
-	/**
-	 * @brief 初期化処理
-	 */
-	virtual void Awake();
-
 	/**
 	 * @brief 初期処理
 	 */
-	virtual void Start();
+	virtual void Init();
 
 	/**
 	 * @終了処理

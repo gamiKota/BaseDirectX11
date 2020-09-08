@@ -29,7 +29,7 @@ public:
 	void Start();
 	void Uninit();
 	void Update();
-	void Draw();
+	void DebugDraw();
 
 	XMFLOAT4& GetColor() { return m_color; }
 	void SetColor(XMFLOAT4* pColor) { m_color = *pColor; }

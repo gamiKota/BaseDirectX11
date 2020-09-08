@@ -13,9 +13,7 @@ public:
 	CEnemy();		// コンストラクタ
 	~CEnemy();		// デストラクタ
 
-	void Awake();
 	void Start();	// 初期化
 	void Uninit();	// 終了処理
 	void Update();	// 更新
-	void Draw();	// 描画
 };

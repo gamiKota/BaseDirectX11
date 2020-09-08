@@ -1,6 +1,6 @@
 ﻿// 自機クラス [Player.cpp]
 #include "Player.h"
-#include "GameObject.h"
+#include "GameObject3D.h"
 #include "input.h"
 #include "ModelManager.h"
 #include "debugproc.h"
@@ -97,12 +97,10 @@ void CPlayer::Update()
 
 	m_transform->m_rotate.z = m_roll;
 
-	// モデルの更新
-	ModelManager::GetInstance().Update(E_MODEL_PLAYER);
 
 	// ホーミングミサイル発射
 	if (Input::isTrigger(VK_SPACE)) {
-		GameObject* obj = new GameObject("Missile");
+		GameObject* obj = new GameObject3D(E_MODEL_MISSILE, "Missile");
 		obj->AddComponent<Bullet>();
 		obj->AddComponent<Collision>();
 		obj->GetComponent<Collision>()->Init(E_MODEL_MISSILE);
@@ -120,53 +118,6 @@ void CPlayer::Update()
 	PrintDebugProc("roll = %.2f\n", m_roll);
 }
 
-// 描画
-void CPlayer::Draw()
-{
-	//XMMATRIX matrix = XMLoadFloat4x4(&m_transform->GetMatrix());	// 行列(拡縮、回転、座標を手動で変更する場合)
 
-	//// 拡縮の変更
-	////matrix = XMMatrixMultiply(XMMatrixScaling(0.5f, 0.5f, 0.5f), matrix);
-	//// 回転軸の変更
-	//matrix = XMMatrixMultiply(XMMatrixRotationZ(XMConvertToRadians(m_roll)), matrix);
-	//// 座標の変更
-	////matrix = XMMatrixMultiply(XMMatrixTranslation(0.f, 175.f, 0.f), matrix);
 
-	//XMFLOAT4X4 world;
-	//XMStoreFloat4x4(&world, matrix);
-
-	ModelManager::GetInstance().Draw(E_MODEL_PLAYER, m_transform->GetMatrix());
-}
-
-//// 座標取得
-//XMFLOAT3 CPlayer::GetPos()
-//{
-//	extern CPlayer g_player;	// main.cpp
-//	XMFLOAT3 vPos(g_player.m_transform->_41,
-//				  g_player.m_transform->_42,
-//				  g_player.m_transform->_43);
-//	return vPos;
-//}
-//
-//// ワールド変換取得
-//XMFLOAT4X4& CPlayer::GetWorld()
-//{
-//	extern CPlayer g_player;	// main.cpp
-//	return g_player.m_transform;
-//}
-//
-//// 境界ボックス情報取得
-//void CPlayer::GetBBoxInfo(XMFLOAT3& vPos,
-//						  XMFLOAT3& vBox)
-//{
-//	extern CPlayer g_player;	// main.cpp
-//	vPos = g_player.m_box->m_vPos;	// 位置(ワールド空間)
-//	vBox = g_player.m_box->m_vBBox;	// 大きさ(縦横奥行÷2)
-//}
-//
-//// 衝突有無
-//void CPlayer::SetHit(bool bHit)
-//{
-//	extern CPlayer g_player;	// main.cpp
-//	g_player.m_bHit = bHit;
-//}
+// EOF

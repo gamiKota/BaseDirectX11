@@ -39,10 +39,6 @@ void Component::LastUpdate() {
 
 }
 
-void Component::Draw() {
-
-}
-
 
 
 // EOF

@@ -30,7 +30,7 @@ void Scene::Init() {
 
 	auto buff = m_listObject;
 	for (auto obj : buff) {
-		obj->Start();	// Start? Init? ‚Ç‚Á‚¿H
+		obj->Init();
 	}
 
 	// ‰Šú‰»‚ÌI—¹

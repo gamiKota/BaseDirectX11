@@ -85,7 +85,7 @@ void Collision::Update()
 }
 
 // •`‰æ
-void Collision::Draw() {
+void Collision::DebugDraw() {
 #if _DEBUG
 
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// ”w–ÊƒJƒŠƒ“ƒO(— ‚ð•`‚©‚È‚¢)

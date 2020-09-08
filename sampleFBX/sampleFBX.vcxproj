@@ -160,6 +160,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />

@@ -129,27 +129,7 @@ void Bullet::Update() {
 	}
 }
 
-// •`‰æ
-void Bullet::Draw()
-{
-	if (m_nStat == 0) {
-		return;
-	}
 
-	//XMMATRIX matrix = XMLoadFloat4x4(&m_transform->GetMatrix());	// s—ñ(ŠgkA‰ñ“]AÀ•W‚ğè“®‚Å•ÏX‚·‚éê‡)
-
-	//// Šgk‚Ì•ÏX
-	////matrix = XMMatrixMultiply(XMMatrixScaling(0.5f, 0.5f, 0.5f), matrix);
-	//// ‰ñ“]²‚Ì•ÏX
-	//matrix = XMMatrixMultiply(XMMatrixRotationY(XMConvertToRadians(180)), matrix);
-	//// À•W‚Ì•ÏX
-	////matrix = XMMatrixMultiply(XMMatrixTranslation(0.f, 175.f, 0.f), matrix);
-
-	//XMFLOAT4X4 world;
-	//XMStoreFloat4x4(&world, matrix);
-
-	ModelManager::GetInstance().Draw(E_MODEL_MISSILE, m_transform->GetMatrix());
-}
 
 //void Bullet::OnCollision(GameObject* obj) {
 //	if (obj->GetTag() == "Enemy") {

@@ -18,7 +18,6 @@ public:
 	void Start();	// ‰Šú‰»
 	void Uninit();	// I—¹ˆ—
 	void Update();	// XV
-	void Draw();	// •`‰æ
 
 	void Fire(XMFLOAT4X4 pWorld, XMFLOAT3 pOffset);	// ”­Ë
 

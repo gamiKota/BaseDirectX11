@@ -15,7 +15,6 @@ public:
 	void Start();
 	void Uninit();
 	void Update();
-	void Draw();
 
 	void SetPos(DirectX::XMFLOAT3 pos);
 };

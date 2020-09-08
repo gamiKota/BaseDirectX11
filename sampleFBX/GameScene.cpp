@@ -12,8 +12,8 @@
 /**
  * @include
  */
-#include "GameScene.h"	// 自身の定義
-#include "GameObject.h"	// GameObject
+#include "GameScene.h"		// 自身の定義
+#include "GameObject3D.h"	// 3Dオブジェクト
 
 /**
  * @Component
@@ -43,19 +43,19 @@ void GameScene::Init() {
 	GameObject* obj;	//!< オブジェクト
 
 	// TPS視点カメラ
-	obj = new GameObject("TPSCamera");
+	obj = new GameObject3D(E_MODEL_NONE, "TPSCamera");
 	obj->AddComponent<TPCamera>();
 	CCamera::Set(obj->GetComponent<TPCamera>());
 	m_listObject.push_back(obj);
 
 
 	// スカイドーム
-	obj = new GameObject("Sky");
+	obj = new GameObject3D(E_MODEL_SKY, "Sky");
 	obj->AddComponent<CSky>();
 	m_listObject.push_back(obj);
 	
 	// 自機
-	obj = new GameObject("Player");
+	obj = new GameObject3D(E_MODEL_PLAYER, "Player");
 	obj->AddComponent<CPlayer>();
 	obj->AddComponent<Collision>();
 	obj->GetComponent<Collision>()->Init(E_MODEL_PLAYER);
@@ -64,7 +64,7 @@ void GameScene::Init() {
 	// 敵機初期化
 	XMFLOAT3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
 	for (int i = 0; i < MAX_ENEMY; ++i) {
-		obj = new GameObject("Enemy (" + std::to_string(i) + ")", "Enemy");
+		obj = new GameObject3D(E_MODEL_ENEMY, "Enemy (" + std::to_string(i) + ")", "Enemy");
 
 		vEnemyPos.x = (float)GetRandom((int)(-MAX_MOVE_WIDTH + 30.f), (int)(MAX_MOVE_WIDTH - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
@@ -76,7 +76,6 @@ void GameScene::Init() {
 		obj->GetComponent<Collision>()->Init(E_MODEL_ENEMY);
 		m_listObject.push_back(obj);
 	}
-
 
 
 	// push_backの順番でUIの描画のバッファが変わる
