@@ -1,5 +1,5 @@
 /**
- * @file GameObject3D.h
+ * @file GameObjectUI.h
  */
 
 
@@ -13,33 +13,41 @@
  * @include
  */
 #include "GameObject.h"
-#include "ModelManager.h"
+#include "TextureManager.h"
+
+
+enum class E_LAYER {
+	BACKGROUND	= 0,
+	UI			= 5,
+	MAX			= 10,
+};
 
 
 /**
  * @class GameObject3D : inheritance GameObject
  */
-class GameObject3D : public GameObject {
+class GameObjectUI : public GameObject {
 public:
-	E_MODEL m_model;	//!< モデル(いつかコンポーネント化)
+	E_TEXTURE	m_texture;
+	E_LAYER		m_layer;
 
 public:
 	/**
 	 * @brief コンストラクタ
 	 */
-	GameObject3D();
+	GameObjectUI(E_LAYER layer);
 
 	/**
 	 * @brief コンストラクタ
 	 * @param[in] name
 	 * @param[in] tag
 	 */
-	GameObject3D(E_MODEL m_model = E_MODEL_NONE, std::string name = "GameObject3D", std::string tag = "none");
+	GameObjectUI(E_LAYER layer, E_TEXTURE texture = E_TEXTURE_NONE, std::string name = "GameObjectUI", std::string tag = "none");
 
 	/**
 	 * @brief デストラクタ
 	 */
-	virtual ~GameObject3D();
+	virtual ~GameObjectUI();
 
 	/**
 	 * @brief 初期処理

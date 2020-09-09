@@ -10,13 +10,14 @@
 #include "Collision.h"
 
 
-GameObject3D::GameObject3D(E_MODEL m_model) : m_model(m_model), GameObject("GameObject3D") {
-	
+GameObject3D::GameObject3D() : m_model(E_MODEL_NONE), GameObject("GameObject3D") {
+	m_transform->m_scale = { 1.f, 1.f, 1. };
 }
 
 
 GameObject3D::GameObject3D(E_MODEL m_model, std::string name, std::string tag) : 
 	m_model(m_model), GameObject(name, tag) {
+	m_transform->m_scale = { 1.f, 1.f, 1. };
 }
 
 
@@ -51,5 +52,7 @@ void GameObject3D::Draw() {
 	if (GetComponent<Collision>() != nullptr) {
 		GetComponent<Collision>()->DebugDraw();
 	}
-	//GameObject::Draw();
+	GameObject::Draw();
 }
+
+// EOF

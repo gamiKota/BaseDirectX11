@@ -8,6 +8,8 @@
  */
 #include "Scene.h"
 #include "GameObject.h"
+#include "GameObject3D.h"
+#include "GameObjectUI.h"
 #include "D3DClass.h"
 #include "Collision.h"
 #include "System.h"
@@ -76,15 +78,25 @@ void Scene::Update() {
 }
 
 void Scene::Draw() {
+
 	// îwåiÇ»Ç«ÇÃUI
+	auto buff = m_listObject;
+	for (auto obj : buff) {
+		GameObjectUI* background = dynamic_cast<GameObjectUI*>(obj);
+		if (background != nullptr && background->m_layer < E_LAYER::UI) {
+			obj->Draw();
+		}
+	}
 
 	// ëOñ ÉJÉäÉìÉO (FBXÇÕï\ó†Ç™îΩì]Ç∑ÇÈÇΩÇﬂ)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 
 	// 3DÉÇÉfÉã
-	auto buff = m_listObject;
-	for (auto obj : buff)
-		obj->Draw();
+	buff = m_listObject;
+	for (auto obj : buff) {
+		if (dynamic_cast<GameObject3D*>(obj) != nullptr)
+			obj->Draw();
+	}
 
 	// îwñ ÉJÉäÉìÉO (í èÌÇÕï\ñ ÇÃÇ›ï`âÊ)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
@@ -92,6 +104,13 @@ void Scene::Draw() {
 	D3DClass::GetInstance().SetZBuffer(false);
 
 	// 2DUI
+	buff = m_listObject;
+	for (auto obj : buff) {
+		GameObjectUI* UI = dynamic_cast<GameObjectUI*>(obj);
+		if (UI != nullptr && UI->m_layer >= E_LAYER::UI) {
+			obj->Draw();
+		}
+	}
 }
 
 

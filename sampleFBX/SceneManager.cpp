@@ -5,6 +5,7 @@
 #include "GameScene.h"
 #include "ResultScene.h"
 #include "ModelManager.h"
+#include "TextureManager.h"
 #include "GameObject.h"
 #include "D3DClass.h"
 #include "input.h"
@@ -23,18 +24,16 @@ SceneManager::~SceneManager() {
 
 
 void SceneManager::Init() {
-
+	TextureManager::GetInstance().Initialize();
 	ModelManager::GetInstance().Init();
-
 	m_scene->Init();
 }
 
 
 void SceneManager::Uninit() {
-
-	m_scene->Uninit();
-	
-	ModelManager::GetInstance().Uninit();
+	m_scene->Uninit();							// シーン処理の終了
+	ModelManager::GetInstance().Uninit();		// モデル解放
+	TextureManager::GetInstance().Shutdown();	// テクスチャ解放
 }
 
 

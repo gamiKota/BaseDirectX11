@@ -14,6 +14,7 @@
  */
 #include "GameScene.h"		// 自身の定義
 #include "GameObject3D.h"	// 3Dオブジェクト
+#include "GameObjectUI.h"
 
 /**
  * @Component
@@ -40,43 +41,43 @@ int GetRandom(int min, int max)
 
 void GameScene::Init() {
 
-	GameObject* obj;	//!< オブジェクト
-
 	// TPS視点カメラ
-	obj = new GameObject3D(E_MODEL_NONE, "TPSCamera");
-	obj->AddComponent<TPCamera>();
-	CCamera::Set(obj->GetComponent<TPCamera>());
-	m_listObject.push_back(obj);
+	m_empty = new GameObject("TPSCamera");
+	m_empty->AddComponent<TPCamera>();
+	CCamera::Set(m_empty->GetComponent<TPCamera>());
+	m_listObject.push_back(m_empty);
 
 
 	// スカイドーム
-	obj = new GameObject3D(E_MODEL_SKY, "Sky");
-	obj->AddComponent<CSky>();
-	m_listObject.push_back(obj);
+	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky");
+	m_object3D->AddComponent<CSky>();
+	m_listObject.push_back(m_object3D);
 	
 	// 自機
-	obj = new GameObject3D(E_MODEL_PLAYER, "Player");
-	obj->AddComponent<CPlayer>();
-	obj->AddComponent<Collision>();
-	obj->GetComponent<Collision>()->Init(E_MODEL_PLAYER);
-	m_listObject.push_back(obj);
+	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player");
+	m_object3D->AddComponent<CPlayer>();
+	m_object3D->AddComponent<Collision>();
+	m_object3D->GetComponent<Collision>()->Init(E_MODEL_PLAYER);
+	m_listObject.push_back(m_object3D);
 
 	// 敵機初期化
 	XMFLOAT3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
 	for (int i = 0; i < MAX_ENEMY; ++i) {
-		obj = new GameObject3D(E_MODEL_ENEMY, "Enemy (" + std::to_string(i) + ")", "Enemy");
+		m_object3D = new GameObject3D(E_MODEL_ENEMY, "Enemy (" + std::to_string(i) + ")", "Enemy");
 
 		vEnemyPos.x = (float)GetRandom((int)(-MAX_MOVE_WIDTH + 30.f), (int)(MAX_MOVE_WIDTH - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 
-		obj->m_transform->m_position = vEnemyPos;
-		obj->m_transform->m_rotate.y = 180;
-		obj->AddComponent<CEnemy>();
-		obj->AddComponent<Collision>();
-		obj->GetComponent<Collision>()->Init(E_MODEL_ENEMY);
-		m_listObject.push_back(obj);
+		m_object3D->m_transform->m_position = vEnemyPos;
+		m_object3D->m_transform->m_rotate.y = 180;
+		m_object3D->AddComponent<CEnemy>();
+		m_object3D->AddComponent<Collision>();
+		m_object3D->GetComponent<Collision>()->Init(E_MODEL_ENEMY);
+		m_listObject.push_back(m_object3D);
 	}
 
+	m_UI = new GameObjectUI(E_LAYER::UI, E_TEXTURE_NONE, "UI", "UI");
+	m_listObject.push_back(m_UI);
 
 	// push_backの順番でUIの描画のバッファが変わる
 	// 最初に背景などのUI

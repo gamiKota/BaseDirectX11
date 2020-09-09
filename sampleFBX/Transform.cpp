@@ -1,7 +1,7 @@
 #include "Transform.h"
 
 
-Transform::Transform() : m_position(DirectX::XMFLOAT3()), m_rotate(XMFLOAT3()), m_scale(XMFLOAT3(1.f, 1.f, 1.f)) {
+Transform::Transform() : m_position(DirectX::XMFLOAT3()), m_rotate(XMFLOAT3()), m_scale(XMFLOAT3()) {
 	DirectX::XMStoreFloat4x4(&m_world, DirectX::XMMatrixIdentity());
 }
 

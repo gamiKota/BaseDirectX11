@@ -47,8 +47,6 @@ void Score::Start() {
 	CreateTextureFromFile(pDevice,				// デバイスへのポインタ
 		TEXTURE_FRAME_SCORE,	// ファイルの名前
 		&m_pTexture);			// 読み込むメモリー
-
-	DontDestroyOnLoad(m_gameObject);
 }
 
 void Score::Uninit() {

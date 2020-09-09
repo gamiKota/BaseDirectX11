@@ -28,7 +28,7 @@ static const char* name[E_MODEL_MAX] = {
 
 
 extern CFbxLight	g_light;		// ŒõŒ¹î•ñ
-CFbxLight			m_lightOff;	// ŒõŒ¹–³Œø
+CFbxLight			m_lightOff;		// ŒõŒ¹–³Œø
 
 
 ModelManager::ModelManager() {
