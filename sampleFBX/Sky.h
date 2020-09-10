@@ -2,6 +2,7 @@
 #pragma once
 #include "main.h"
 #include "Component.h"
+#include "Transform.h"
 
 class CSky : public Component
 {
@@ -16,6 +17,6 @@ public:
 	void Uninit();
 	void Update();
 
-	void SetPos(DirectX::XMFLOAT3 pos);
+	void SetPos(float3 pos);
 };
 

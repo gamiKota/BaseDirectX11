@@ -4,7 +4,7 @@
 using namespace DirectX;
 
 
-Transform::Transform() : m_position(XMFLOAT3()), m_rotate(XMFLOAT3()), m_scale(XMFLOAT3()) {
+Transform::Transform() : m_position(float3()), m_rotate(float3()), m_scale(float3()) {
 	XMStoreFloat4x4(&m_world, XMMatrixIdentity());
 }
 

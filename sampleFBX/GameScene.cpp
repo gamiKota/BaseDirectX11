@@ -61,7 +61,7 @@ void GameScene::Init() {
 	m_listObject.push_back(m_object3D);
 
 	// ìGã@èâä˙âª
-	XMFLOAT3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
+	float3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
 	for (int i = 0; i < MAX_ENEMY; ++i) {
 		m_object3D = new GameObject3D(E_MODEL_ENEMY, "Enemy (" + std::to_string(i) + ")", "Enemy");
 

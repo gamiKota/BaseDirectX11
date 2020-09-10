@@ -15,8 +15,7 @@ namespace {
 };
 
 // 初期化
-void TPCamera::Awake()
-{
+void TPCamera::Awake() {
 	m_vEye = g_vEye;
 	m_vLook = g_vLook;
 	m_vUp = g_vUp;
@@ -24,24 +23,23 @@ void TPCamera::Awake()
 	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 	m_fNearZ = 10.0f;
 	m_fFarZ = 10000.0f;
-	Update();
 }
 
-void TPCamera::Start()
-{
-	m_vEye = g_vEye;
-	m_vLook = g_vLook;
-	m_vUp = g_vUp;
-	m_fFOVY = XMConvertToRadians(45);
-	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
-	m_fNearZ = 10.0f;
-	m_fFarZ = 10000.0f;
+void TPCamera::Start() {
+	m_player = GameObject::Find("Player");
+	if (m_player == nullptr) {
+		MessageBoxA(
+			System::GetInstance().GetWnd(),
+			"error player nullptr\nload title scene", "TPCamera.cpp",
+			MB_OK | MB_ICONERROR | MB_TOPMOST
+		);
+		SceneManager::GetInstance().LoadScene(E_SCENE::TITLE);
+	}
 	Update();
 }
 
 // 終了処理
-void TPCamera::Uninit()
-{
+void TPCamera::Uninit() {
 	CCamera::Uninit();
 }
 
@@ -53,16 +51,13 @@ void TPCamera::Update()
 	// 座標はターゲットとプレイヤーのベクトル上の少し後ろでプレイヤーのY軸から真横に移動
 
 	// 視点と注視点を移動、上方ベクトルを回転
-	GameObject* player = GameObject::Find("Player");
-	if (player != nullptr) {
-		XMMATRIX world = XMLoadFloat4x4(&player->m_transform->GetMatrix());
-		XMStoreFloat3(&m_vEye, XMVector3TransformCoord(
-			XMLoadFloat3(&g_vEye), world));
-		XMStoreFloat3(&m_vLook, XMVector3TransformCoord(
-			XMLoadFloat3(&g_vLook), world));
-		XMStoreFloat3(&m_vUp, XMVector3TransformNormal(
-			XMLoadFloat3(&g_vUp), world));
-	}
+	XMMATRIX world = XMLoadFloat4x4(&m_player->m_transform->GetMatrix());
+	// 座標
+	XMStoreFloat3(&m_vEye, XMVector3TransformCoord(XMLoadFloat3(&g_vEye), world));
+	// 注視点
+	XMStoreFloat3(&m_vLook, XMVector3TransformCoord(XMLoadFloat3(&g_vLook), world));
+	// 上方ベクトル
+	XMStoreFloat3(&m_vUp, XMVector3TransformNormal(XMLoadFloat3(&g_vUp), world));
 	//行列更新
 	CCamera::Update();
 }

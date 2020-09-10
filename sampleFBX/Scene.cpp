@@ -15,7 +15,7 @@
 #include "System.h"
 
 
-Scene::Scene() : m_isUpdate(true) {
+Scene::Scene() : m_isUpdate(false) {
 }
 
 
@@ -28,7 +28,6 @@ Scene::~Scene() {
 
 
 void Scene::Init() {
-	m_isUpdate = true;
 
 	auto buff = m_listObject;
 	for (auto obj : buff) {
@@ -36,7 +35,7 @@ void Scene::Init() {
 	}
 
 	// ‰Šú‰»‚ÌI—¹
-	m_isUpdate = false;
+	m_isUpdate = true;
 }
 
 void Scene::Uninit() {

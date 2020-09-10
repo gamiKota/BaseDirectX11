@@ -53,17 +53,7 @@ void Bullet::Update() {
 		return;
 	}
 
-	// Œ»ÝˆÊ’uŽæ“¾
-	//XMFLOAT3 pos = m_transform->m_position;
-	//XMFLOAT3 vZ(m_transform->GetMatrix()._31, m_transform->GetMatrix()._32, m_transform->GetMatrix()._33);
-	//// Œü‚«~‘¬‚³(‘¬“x)‚ðŒ»ÝˆÊ’u‚É‰ÁŽZ
-	//m_transform->m_position.x = pos.x + vZ.x * SPEED;
-	//m_transform->m_position.y = pos.y + vZ.y * SPEED;
-	//m_transform->m_position.z = pos.z + vZ.z * SPEED;
-	XMFLOAT3 vec(m_transform->m_forward.x * SPEED, m_transform->m_forward.y * SPEED, m_transform->m_forward.z * SPEED);
-	m_transform->m_position.x += vec.x;
-	m_transform->m_position.y += vec.y;
-	m_transform->m_position.z += vec.z;
+	m_transform->m_position += m_transform->m_forward * SPEED;
 }
 
 

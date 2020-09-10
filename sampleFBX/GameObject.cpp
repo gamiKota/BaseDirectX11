@@ -106,7 +106,7 @@ std::list<GameObject*> GameObject::FindGameObjectsWithTag(std::string tag) {
 	return m_listFinds;
 }
 
-void GameObject::Instance(GameObject* obj, XMFLOAT3 transform) {
+void GameObject::Instance(GameObject* obj, float3 transform) {
 	if (obj == nullptr)	return;
 
 	obj->m_transform->m_position = transform;

@@ -107,7 +107,7 @@ public:
 	/**
 	 * @brief Instance
 	 */
-	static void Instance(GameObject* obj, DirectX::XMFLOAT3 transform = DirectX::XMFLOAT3());
+	static void Instance(GameObject* obj, float3 transform = float3());
 
 	/**
 	 * @brief オブジェクトが持っているコンポーネントを取得

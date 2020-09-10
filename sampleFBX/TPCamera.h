@@ -4,6 +4,9 @@
 
 class TPCamera : public CCamera
 {
+protected:
+	GameObject* m_player;
+
 public:
 	void Awake();
 	void Start();

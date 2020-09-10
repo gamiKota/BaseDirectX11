@@ -37,6 +37,6 @@ void CSky::Update() {
 
 
 
-void CSky::SetPos(XMFLOAT3 pos) {
+void CSky::SetPos(float3 pos) {
 	m_transform->m_position = pos;
 }
