@@ -70,8 +70,12 @@ void Collision::Uninit()
 	SAFE_RELEASE(m_pVertexShader);
 }
 
+void Collision::Update() {
+
+}
+
 // 更新
-void Collision::Update()
+void Collision::LastUpdate()
 {
 	// 境界ボックス(AABB)の移動
 	XMStoreFloat3(&m_vPosBBox,
@@ -82,6 +86,15 @@ void Collision::Update()
 	XMStoreFloat4x4(&matrix, XMMatrixTranslation(
 		m_vPosBBox.x, m_vPosBBox.y, m_vPosBBox.z));
 	SetWorld(matrix);
+	m_world._11 = m_transform->GetMatrix()._11;
+	m_world._12 = m_transform->GetMatrix()._12;
+	m_world._13 = m_transform->GetMatrix()._13;
+	m_world._21 = m_transform->GetMatrix()._21;
+	m_world._22 = m_transform->GetMatrix()._22;
+	m_world._23 = m_transform->GetMatrix()._23;
+	m_world._31 = m_transform->GetMatrix()._31;
+	m_world._32 = m_transform->GetMatrix()._32;
+	m_world._33 = m_transform->GetMatrix()._33;
 }
 
 // 描画
@@ -265,17 +278,36 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 		Az - Ad <= Bz + Bd &&
 		Bz - Bd <= Az + Ad;
 
-	return hit;
+	// 境界ボックスの色
+	if (hit) {
+		XMFLOAT4 vRed(1.0f, 0.0f, 0.0f, 0.5f);
+		obj1.SetColor(&vRed);
+		obj2.SetColor(&vRed);
+	} else {
+		XMFLOAT4 vGreen(0.0f, 1.0f, 0.0f, 0.5f);
+		obj1.SetColor(&vGreen);
+		obj2.SetColor(&vGreen);
+	}
 
-	//// 境界ボックスの色
-	//if (hit) {
-	//	XMFLOAT4 vRed(1.0f, 0.0f, 0.0f, 0.5f);
-	//	m_box.SetColor(&vRed);
-	//	CPlayer::SetHit(true);
-	//} else {
-	//	XMFLOAT4 vGreen(0.0f, 1.0f, 0.0f, 0.5f);
-	//	m_box.SetColor(&vGreen);
+	//XMFLOAT3   t1, t2;
+	////判定する辺を目立たせる処理（衝突判定とは関係なし）
+	// r1 = obj1の頂点 (2、0)
+	// r2 = obj1の頂点 (3、1)
+	// p1 = obj2の頂点 (0、2)
+	// p2 = obj2の頂点 (1、3)
+	////衝突判定計算
+	//t1 = (r1.x - r2.x)*(p1.y - r1.y) + (r1.y - r2.y)*(r1.x - p1.x);
+	//t2 = (r1.x - r2.x)*(p2.y - r1.y) + (r1.y - r2.y)*(r1.x - p2.x);
+	////それぞれの正負が異なる（積が負になる）か、0（点が直線上にある）
+	////ならクロスしている
+	//if (t1*t2 < 0 || t1 == 0 || t2 == 0) {
+	//	return(true); //クロスしている
 	//}
+	//else {
+	//	return(false); //クロスしない
+	//}
+
+	return hit;
 }
 
 

@@ -89,6 +89,12 @@ void CPlayer::Update()
 			}
 		}
 	}
+	if (Input::isPress(VK_LEFT)) {
+		m_transform->m_rotate.y -= 1.f;
+	}
+	if (Input::isPress(VK_RIGHT)) {
+		m_transform->m_rotate.y += 1.f;
+	}
 
 	// 座標をワールド行列に反映
 	m_transform->m_position.x += m_vMove.x;
@@ -107,7 +113,7 @@ void CPlayer::Update()
 		GameObject::Instance(obj, m_transform->m_position);
 		obj->GetComponent<Collision>()->Update();
 		obj->GetComponent<Collision>()->LastUpdate();
-		obj->GetComponent<Bullet>()->Fire(obj->m_transform->GetMatrix(), XMFLOAT3());
+		obj->GetComponent<Bullet>()->Fire(*m_transform);
 	}
 
 	GameObject* sky = GameObject::Find("Sky");

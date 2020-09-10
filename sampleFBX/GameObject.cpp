@@ -69,6 +69,13 @@ void GameObject::Draw() {
 }
 
 
+void GameObject::OnCollision(GameObject* obj) {
+	auto buff = m_listComponent;
+	for (auto com : buff)
+		com->OnCollision(obj);
+}
+
+
 GameObject* GameObject::Find(std::string name) {
 	for (auto objectList : SceneManager::GetInstance().m_scene->m_listObject) {
 		if (objectList->m_name == name) {

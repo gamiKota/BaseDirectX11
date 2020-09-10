@@ -78,10 +78,15 @@ public:
 	virtual void Draw();
 
 	/**
+	 * @brief Õ“Ëˆ—
+	 */
+	virtual void OnCollision(GameObject* obj);
+
+	/**
 	 * @brief GetTag
 	 */
-	const char* GetTag() {
-		return m_tag.c_str();
+	std::string GetTag() {
+		return m_tag;
 	}
 
 	/**

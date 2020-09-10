@@ -1,6 +1,5 @@
 // ホーミングミサイルクラス [Missile.h]
 #pragma once
-#include "main.h"
 #include "Component.h"
 
 
@@ -15,13 +14,14 @@ public:
 	~Bullet();	// デストラクタ
 
 	void Awake();
-	void Start();	// 初期化
-	void Uninit();	// 終了処理
-	void Update();	// 更新
+	void Start();		// 初期化
+	void Uninit();		// 終了処理
+	void Update();		// 更新
 
-	void Fire(XMFLOAT4X4 pWorld, XMFLOAT3 pOffset);	// 発射
+	void OnCollision(GameObject* obj);
 
-	//void OnCollision(GameObject* obj);
+	void Fire(Transform transform);	// 発射
+
 
 	//XMFLOAT3 GetPos();		// 座標取得
 	//void SetPos(XMFLOAT3& vPos);

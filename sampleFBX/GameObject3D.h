@@ -47,7 +47,7 @@ public:
 	virtual void Init();
 
 	/**
-	 * @I—¹ˆ—
+	 * @brief I—¹ˆ—
 	 */
 	virtual void Uninit();
 

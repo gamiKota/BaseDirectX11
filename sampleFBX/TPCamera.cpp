@@ -48,6 +48,10 @@ void TPCamera::Uninit()
 // 更新
 void TPCamera::Update()
 {
+	// メモ
+	// 注視点はロックオンされているターゲット(ロックオンしてない時はプレイヤー)
+	// 座標はターゲットとプレイヤーのベクトル上の少し後ろでプレイヤーのY軸から真横に移動
+
 	// 視点と注視点を移動、上方ベクトルを回転
 	GameObject* player = GameObject::Find("Player");
 	if (player != nullptr) {

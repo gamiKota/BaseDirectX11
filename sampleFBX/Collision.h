@@ -29,6 +29,7 @@ public:
 	void Start();
 	void Uninit();
 	void Update();
+	void LastUpdate();
 	void DebugDraw();
 
 	XMFLOAT4& GetColor() { return m_color; }

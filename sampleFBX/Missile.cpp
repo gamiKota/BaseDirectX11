@@ -53,102 +53,37 @@ void Bullet::Update() {
 		return;
 	}
 
-	// モデル座標軸取得
-	XMFLOAT3 vX = { m_transform->GetMatrix()._11, m_transform->GetMatrix()._12, m_transform->GetMatrix()._13 };
-	XMFLOAT3 vY = { m_transform->GetMatrix()._21, m_transform->GetMatrix()._22, m_transform->GetMatrix()._23 };
-	XMFLOAT3 vZ = { m_transform->GetMatrix()._31, m_transform->GetMatrix()._32, m_transform->GetMatrix()._33 };
+	// 現在位置取得
+	//XMFLOAT3 pos = m_transform->m_position;
+	//XMFLOAT3 vZ(m_transform->GetMatrix()._31, m_transform->GetMatrix()._32, m_transform->GetMatrix()._33);
+	//// 向き×速さ(＝速度)を現在位置に加算
+	//m_transform->m_position.x = pos.x + vZ.x * SPEED;
+	//m_transform->m_position.y = pos.y + vZ.y * SPEED;
+	//m_transform->m_position.z = pos.z + vZ.z * SPEED;
+	XMFLOAT3 vec(m_transform->m_forward.x * SPEED, m_transform->m_forward.y * SPEED, m_transform->m_forward.z * SPEED);
+	m_transform->m_position.x += vec.x;
+	m_transform->m_position.y += vec.y;
+	m_transform->m_position.z += vec.z;
+}
 
-	// 座標の取得とクリア
-	XMFLOAT3 vP = { m_transform->m_position.x, m_transform->m_position.y, m_transform->m_position.z };
-	m_transform->m_position = XMFLOAT3();
-	//m_transform->GetMatrix()._41 = m_transform->GetMatrix()._42 = m_transform->GetMatrix()._43 = 0.0f;
-	//PrintDebugProc("Missile={%.3f,%.3f,%.3f}\n",
-	//	vP.x, vP.y, vP.z);
 
-	//// ターゲットが有効か?
-	//if (m_pEnemy) {
-	//	// 敵機へのベクトルを求める
-	//	XMFLOAT3 vPP = m_pEnemy->GetPos();
-	//	XMVECTOR vTarget = XMVectorSet(vPP.x - vP.x,
-	//		vPP.y - vP.y, vPP.z - vP.z, 0.0f);
-	//	// 正規化
-	//	vTarget = XMVector3Normalize(vTarget);
-
-	//	// 進行方向との角度を求める
-	//	float fDot;
-	//	XMStoreFloat(&fDot, XMVector3Dot(
-	//		XMLoadFloat3(&vZ), vTarget));
-	//	// 計算誤差で範囲外になる場合に丸める
-	//	if (fDot < -1.0f) fDot = -1.0f;
-	//	if (fDot > 1.0f) fDot = 1.0f;
-	//	float fAngle = XMConvertToDegrees(acosf(fDot));
-	//	if (fAngle < -3.0f) fAngle = -3.0f;
-	//	if (fAngle > 3.0f) fAngle = 3.0f;
-
-	//	// 回転軸を求める
-	//	XMVECTOR vAxis = XMVector3Cross(
-	//		XMLoadFloat3(&vZ), vTarget);
-	//	// 正規化
-	//	vAxis = XMVector3Normalize(vAxis);
-
-	//	// ワールド変換を回転
-	//	XMMATRIX rotate = XMMatrixRotationAxis(
-	//		vAxis, XMConvertToRadians(fAngle));
-	//	XMMATRIX world = XMLoadFloat4x4(&GetMatrix());
-	//	world = XMMatrixMultiply(world, rotate);
-	//	XMStoreFloat4x4(&GetMatrix(), world);
-	//	//PrintDebugProc("World={%.3f,%.3f,%.3f}\n",
-	//	//	GetMatrix()._41, GetMatrix()._42, GetMatrix()._43);
-	//}
-
-	// 速度を座標に反映
-	if (1) {
-		vP.x += vZ.x * SPEED;
-		vP.y += vZ.y * SPEED;
-		vP.z += vZ.z * SPEED;
-	}
-	// 座標をワールド行列に反映
-	m_transform->m_position.x = vP.x;
-	m_transform->m_position.y = vP.y;
-	m_transform->m_position.z = vP.z;
-
-	// モデルの更新
-	ModelManager::GetInstance().Update(E_MODEL_MISSILE);
-
-	std::list<GameObject*> list = GameObject::FindGameObjectsWithTag("Enemy");
-	for (auto obj : list) {
-		if (m_gameObject->GetComponent<Collision>() != nullptr && obj->GetComponent<Collision>() != nullptr) {
-			if (Collision::AABB(*m_gameObject->GetComponent<Collision>(), *obj->GetComponent<Collision>())) {
-				Destroy(obj);
-				Destroy(m_gameObject);
-				if (GameObject::Find("Score") != nullptr) {
-					GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);
-				}
-			}
+void Bullet::OnCollision(GameObject* obj) {
+	if (obj->GetTag() == "Enemy") {
+		GameObject::Destroy(obj);
+		Destroy(m_gameObject);
+		if (GameObject::Find("Score") != nullptr) {
+			GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);
 		}
 	}
 }
 
-
-
-//void Bullet::OnCollision(GameObject* obj) {
-//	if (obj->GetTag() == "Enemy") {
-//		GameObject::Destroy(obj);
-//	}
-//}
-
 // 発射
-void Bullet::Fire(XMFLOAT4X4 pWorld, XMFLOAT3 pOffset) {
-	XMFLOAT3 vPos;
-	XMStoreFloat3(&vPos,
-		XMVector3TransformCoord(
-			XMLoadFloat3(&pOffset),
-			XMLoadFloat4x4(&pWorld)));
+void Bullet::Fire(Transform transform) {
 
-	m_transform->GetMatrix() = pWorld;
-	m_transform->GetMatrix()._41 = vPos.x;
-	m_transform->GetMatrix()._42 = vPos.y;
-	m_transform->GetMatrix()._43 = vPos.z;
+	m_transform->m_position = transform.m_position;
+	m_transform->m_rotate = transform.m_rotate;
+	m_transform->m_scale = { 1.f, 1.f, 1.f };
+
 
 	m_nLife = 1 * 60;	// 5秒
 	m_nStat = 1;		// 追尾中

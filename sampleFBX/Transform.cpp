@@ -1,8 +1,11 @@
 #include "Transform.h"
 
 
-Transform::Transform() : m_position(DirectX::XMFLOAT3()), m_rotate(XMFLOAT3()), m_scale(XMFLOAT3()) {
-	DirectX::XMStoreFloat4x4(&m_world, DirectX::XMMatrixIdentity());
+using namespace DirectX;
+
+
+Transform::Transform() : m_position(XMFLOAT3()), m_rotate(XMFLOAT3()), m_scale(XMFLOAT3()) {
+	XMStoreFloat4x4(&m_world, XMMatrixIdentity());
 }
 
 
@@ -14,10 +17,16 @@ void Transform::LastUpdate() {
 	matrix = XMMatrixMultiply(XMMatrixTranslation(m_position.x, m_position.y, m_position.z), matrix);
 	// 回転軸の変更
 	matrix = XMMatrixMultiply(
-		XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_rotate.x), XMConvertToRadians(m_rotate.y), XMConvertToRadians(m_rotate.z)),
+		XMMatrixRotationRollPitchYaw(
+			XMConvertToRadians(m_rotate.x),
+			XMConvertToRadians(m_rotate.y),
+			XMConvertToRadians(m_rotate.z)),
 		matrix);
 	// 行列に反映
 	XMStoreFloat4x4(&m_world, matrix);
+
+	// 前方向の更新
+	m_forward = { m_world._31, m_world._32, m_world._33 };
 }
 
 // EOF

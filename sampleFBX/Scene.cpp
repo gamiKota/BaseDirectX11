@@ -63,18 +63,20 @@ void Scene::Update() {
 	}
 
 	// Collisionコンポーネントを持つオブジェクトの総当たり判定
-	//std::list<GameObject*> *collisionList = &m_listObject;
-	//for (auto i = collisionList->begin(); i != collisionList->end(); i++) {
-	//	for (auto j = i; j != collisionList->end(); j++) {
-	//		if (j == i)	continue;	// うんち処理
-	//		GameObject *temp1 = *i;
-	//		GameObject *temp2 = *j;
-	//		if (temp1->GetComponent<Collision>() != nullptr && temp2->GetComponent<Collision>() != nullptr) {
-	//			if (Collision::AABB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
-	//			}
-	//		}
-	//	}
-	//}
+	std::list<GameObject*> *collisionList = &m_listObject;
+	for (auto i = collisionList->begin(); i != collisionList->end(); i++) {
+		for (auto j = i; j != collisionList->end(); j++) {
+			if (j == i)	continue;	// うんち処理
+			GameObject *temp1 = *i;
+			GameObject *temp2 = *j;
+			if (temp1->GetComponent<Collision>() != nullptr && temp2->GetComponent<Collision>() != nullptr) {
+				if (Collision::AABB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
+					temp1->OnCollision(temp2);
+					temp2->OnCollision(temp1);
+				}
+			}
+		}
+	}
 }
 
 void Scene::Draw() {

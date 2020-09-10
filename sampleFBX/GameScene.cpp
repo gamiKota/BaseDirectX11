@@ -76,8 +76,8 @@ void GameScene::Init() {
 		m_listObject.push_back(m_object3D);
 	}
 
-	m_UI = new GameObjectUI(E_LAYER::UI, E_TEXTURE_NONE, "UI", "UI");
-	m_listObject.push_back(m_UI);
+	//m_UI = new GameObjectUI(E_LAYER::UI, E_TEXTURE_NONE, "UI", "UI");
+	//m_listObject.push_back(m_UI);
 
 	// push_backの順番でUIの描画のバッファが変わる
 	// 最初に背景などのUI
