@@ -7,14 +7,14 @@ static const float MAX_MOVE_WIDTH = 500.f;
 static const float VAL_MOVE_PLAYER = 0.f;
 
 class Collision;
-class CEnemy;
+class GameObject;
 
 class CPlayer : public Component
 {
 public:
 	DirectX::XMFLOAT3	m_vMove;	//!< 移動量
 	float				m_roll;		//!< 傾き(Z軸)
-	CEnemy*				m_target;	//!< ターゲット
+	GameObject*			m_target;	//!< ターゲット
 
 public:
 	CPlayer();		// コンストラクタ

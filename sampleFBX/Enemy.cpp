@@ -1,8 +1,5 @@
 // “G‹@ƒNƒ‰ƒX [Enemy.cpp]
 #include "Enemy.h"
-#include "input.h"
-#include "D3DClass.h"
-#include "ModelManager.h"
 #include "GameObject.h"
 #include "System.h"
 

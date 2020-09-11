@@ -54,13 +54,6 @@ void Scene::Update() {
 	for (auto obj : buff)
 		obj->LastUpdate();
 
-	buff = m_listObject;
-	for (auto obj : buff) {
-		if (obj->GetActive())	continue;
-		m_listObject.remove(obj);
-		delete obj;
-	}
-
 	// Collisionコンポーネントを持つオブジェクトの総当たり判定
 	std::list<GameObject*> *collisionList = &m_listObject;
 	for (auto i = collisionList->begin(); i != collisionList->end(); i++) {
@@ -75,6 +68,13 @@ void Scene::Update() {
 				}
 			}
 		}
+	}
+
+	buff = m_listObject;
+	for (auto obj : buff) {
+		if (obj->GetActive())	continue;
+		m_listObject.remove(obj);
+		SAFE_DELETE(obj);
 	}
 }
 

@@ -2,10 +2,7 @@
 #include "Player.h"
 #include "GameObject3D.h"
 #include "input.h"
-#include "ModelManager.h"
 #include "debugproc.h"
-#include "SceneManager.h"
-#include "Camera.h"
 #include "Missile.h"
 #include "Scene.h"
 #include "Collision.h"
@@ -19,11 +16,13 @@ static const float MAX_ANGLE_Z = 45.f;
 
 
 // コンストラクタ
-CPlayer::CPlayer() : m_roll(0.f), m_vMove(XMFLOAT3()) {
+CPlayer::CPlayer() : m_roll(0.f), m_vMove(XMFLOAT3()), m_target(nullptr) {
+
 }
 
 // デストラクタ
 CPlayer::~CPlayer() {
+
 }
 
 
@@ -33,12 +32,16 @@ void CPlayer::Awake() {
 
 // 初期化
 void CPlayer::Start() {
-
+	m_target = nullptr;
+	GameObject* obj = GameObject::FindGameObjectWithTag("Enemy");
+	if (obj != nullptr) {
+		m_target = obj;
+	}
 }
 
 // 終了処理
 void CPlayer::Uninit() {
-	// 境界ボックス終了処理
+
 }
 
 // 更新
@@ -102,6 +105,15 @@ void CPlayer::Update()
 	m_transform->m_position.z += m_vMove.z + VAL_MOVE_PLAYER;	// 常に前進
 
 	m_transform->m_rotate.z = m_roll;
+
+
+	// ターゲットロックオン
+	if (m_target != nullptr) {
+		//float3 vec = float3(m_target->m_transform->m_position.x - )
+		m_transform->m_rotate.y = XMConvertToDegrees(atan2f(
+			m_target->m_transform->m_position.x - m_transform->m_position.x,
+			m_target->m_transform->m_position.z - m_transform->m_position.z));
+	}
 
 
 	// ホーミングミサイル発射

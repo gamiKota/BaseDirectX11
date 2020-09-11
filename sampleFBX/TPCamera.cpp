@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "D3DClass.h"
 #include "Graphics.h"
-#include "GameObject.h"
+#include "GameObject3D.h"
 #include "System.h"
 
 
@@ -44,20 +44,36 @@ void TPCamera::Uninit() {
 }
 
 // 更新
-void TPCamera::Update()
+void TPCamera::LastUpdate()
 {
 	// メモ
 	// 注視点はロックオンされているターゲット(ロックオンしてない時はプレイヤー)
 	// 座標はターゲットとプレイヤーのベクトル上の少し後ろでプレイヤーのY軸から真横に移動
 
-	// 視点と注視点を移動、上方ベクトルを回転
-	XMMATRIX world = XMLoadFloat4x4(&m_player->m_transform->GetMatrix());
-	// 座標
-	XMStoreFloat3(&m_vEye, XMVector3TransformCoord(XMLoadFloat3(&g_vEye), world));
-	// 注視点
-	XMStoreFloat3(&m_vLook, XMVector3TransformCoord(XMLoadFloat3(&g_vLook), world));
-	// 上方ベクトル
-	XMStoreFloat3(&m_vUp, XMVector3TransformNormal(XMLoadFloat3(&g_vUp), world));
+	if (m_player->GetComponent<CPlayer>()->m_target == nullptr) {
+		// 視点と注視点を移動、上方ベクトルを回転
+		XMMATRIX world = XMLoadFloat4x4(&m_player->m_transform->GetMatrix());
+		// 座標
+		XMStoreFloat3(&m_vEye, XMVector3TransformCoord(XMLoadFloat3(&g_vEye), world));
+		// 注視点
+		XMStoreFloat3(&m_vLook, XMVector3TransformCoord(XMLoadFloat3(&g_vLook), world));
+		// 上方ベクトル
+		XMStoreFloat3(&m_vUp, XMVector3TransformNormal(XMLoadFloat3(&g_vUp), world));
+	}
+	else {	// ターゲットロックオン状態
+		float3 eye = m_player->m_transform->m_position;
+		eye -= m_player->m_transform->m_forward * 400.f;
+		m_vEye = XMFLOAT3(eye.x, eye.y + 100.f, eye.z);
+
+		XMFLOAT3 look = XMFLOAT3(
+			m_player->GetComponent<CPlayer>()->m_target->m_transform->m_position.x,
+			m_player->GetComponent<CPlayer>()->m_target->m_transform->m_position.y,
+			m_player->GetComponent<CPlayer>()->m_target->m_transform->m_position.z);
+		m_vLook = look;
+
+		m_vUp = XMFLOAT3(0.f, 1.f, 0.f);
+	}
+
 	//行列更新
 	CCamera::Update();
 }

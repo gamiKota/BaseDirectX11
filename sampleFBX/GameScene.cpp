@@ -28,7 +28,7 @@
 #include "System.h"		// ƒƒ‚ƒŠŠÄŽ‹
 
 
-static const int MAX_ENEMY = 10;
+static const int MAX_ENEMY = 1;
 static const float VAL_ENEMY_POS_Z = 2000.f;
 static const float MAX_ENEMY_POS_Z = 3000.f;
 
@@ -42,9 +42,8 @@ int GetRandom(int min, int max)
 void GameScene::Init() {
 
 	// TPSŽ‹“_ƒJƒƒ‰
-	m_empty = new GameObject("TPSCamera");
+	m_empty = new GameObject("MainCamera");
 	m_empty->AddComponent<TPCamera>();
-	CCamera::Set(m_empty->GetComponent<TPCamera>());
 	m_listObject.push_back(m_empty);
 
 

@@ -1,12 +1,9 @@
 // ホーミングミサイルクラス [Missile.cpp]
 #include "Missile.h"
 #include "GameObject.h"
-#include "Camera.h"
-#include "D3DClass.h"
-#include "ModelManager.h"
 #include "Collision.h"
 #include "Score.h"
-//#include "debugproc.h"
+#include "Player.h"
 #include "System.h"
 
 // マクロ定義
@@ -52,7 +49,7 @@ void Bullet::Update() {
 		GameObject::Destroy(m_gameObject);
 		return;
 	}
-
+	// 前に進む
 	m_transform->m_position += m_transform->m_forward * SPEED;
 }
 
@@ -63,6 +60,10 @@ void Bullet::OnCollision(GameObject* obj) {
 		Destroy(m_gameObject);
 		if (GameObject::Find("Score") != nullptr) {
 			GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);
+		}
+		if (GameObject::Find("Player") != nullptr) {
+			if (obj == GameObject::Find("Player")->GetComponent<CPlayer>()->m_target)
+				GameObject::Find("Player")->GetComponent<CPlayer>()->m_target = nullptr;
 		}
 	}
 }
