@@ -11,5 +11,5 @@ public:
 	void Awake();
 	void Start();
 	void Uninit();
-	void LastUpdate();
+	void Update();
 };

@@ -33,10 +33,6 @@ void CPlayer::Awake() {
 // 初期化
 void CPlayer::Start() {
 	m_target = nullptr;
-	GameObject* obj = GameObject::FindGameObjectWithTag("Enemy");
-	if (obj != nullptr) {
-		m_target = obj;
-	}
 }
 
 // 終了処理
@@ -76,6 +72,14 @@ void CPlayer::Update()
 			m_roll -= VAL_ANGLE_Z;
 		}
 	}
+	// 上昇、下降
+	if (Input::isPress(VK_UP)) {
+		m_vMove.y = SPEED * 0.5f;
+	}
+	else if (Input::isPress(VK_DOWN)) {
+		m_vMove.y = -SPEED * 0.5f;
+	}
+	// 移動停止
 	if ((!Input::isPress('A') && !Input::isPress('D')) || !move) {
 		if (m_vMove.x > 0.f) {
 			m_vMove.x--;
@@ -92,11 +96,8 @@ void CPlayer::Update()
 			}
 		}
 	}
-	if (Input::isPress(VK_LEFT)) {
-		m_transform->m_rotate.y -= 1.f;
-	}
-	if (Input::isPress(VK_RIGHT)) {
-		m_transform->m_rotate.y += 1.f;
+	if (!Input::isPress(VK_UP) && !Input::isPress(VK_DOWN)) {
+		m_vMove.y = 0;
 	}
 
 	// 座標をワールド行列に反映
@@ -106,13 +107,26 @@ void CPlayer::Update()
 
 	m_transform->m_rotate.z = m_roll;
 
+	//m_transform->m_rotate.x = m_roll;
 
+	if (Input::isTrigger('T')) {
+		GameObject* obj = GameObject::FindGameObjectWithTag("Enemy");
+		if (obj != nullptr) {
+			m_target = obj;
+		}
+	}
 	// ターゲットロックオン
 	if (m_target != nullptr) {
-		//float3 vec = float3(m_target->m_transform->m_position.x - )
 		m_transform->m_rotate.y = XMConvertToDegrees(atan2f(
 			m_target->m_transform->m_position.x - m_transform->m_position.x,
 			m_target->m_transform->m_position.z - m_transform->m_position.z));
+		m_transform->m_rotate.x = XMConvertToDegrees(-atan2f(
+			m_target->m_transform->m_position.y - m_transform->m_position.y,
+			m_target->m_transform->m_position.z - m_transform->m_position.z));
+	}
+	else {
+		m_transform->m_rotate.x = 0.f;
+		m_transform->m_rotate.y = 0.f;
 	}
 
 

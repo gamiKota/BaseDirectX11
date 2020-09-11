@@ -29,8 +29,8 @@
 
 
 static const int MAX_ENEMY = 1;
-static const float VAL_ENEMY_POS_Z = 2000.f;
-static const float MAX_ENEMY_POS_Z = 3000.f;
+static const float VAL_ENEMY_POS_Z = 800.f;
+static const float MAX_ENEMY_POS_Z = 1000.f;
 
 
 int GetRandom(int min, int max)
@@ -44,6 +44,7 @@ void GameScene::Init() {
 	// TPSŽ‹“_ƒJƒƒ‰
 	m_empty = new GameObject("MainCamera");
 	m_empty->AddComponent<TPCamera>();
+	CCamera::Set(m_empty->GetComponent<TPCamera>());
 	m_listObject.push_back(m_empty);
 
 
@@ -54,6 +55,7 @@ void GameScene::Init() {
 	
 	// Ž©‹@
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player");
+	m_object3D->m_transform->m_position = float3(0.f, 100.f, 0.f);
 	m_object3D->AddComponent<CPlayer>();
 	m_object3D->AddComponent<Collision>();
 	m_object3D->GetComponent<Collision>()->Init(E_MODEL_PLAYER);

@@ -56,7 +56,9 @@ void GameObject::Update() {
 
 void GameObject::LastUpdate() {
 	PrintDebugProc("name = %s, Instance = %d, pos = %.2f, %.2f, %.2f\n", ToString(), GetInstanceID(),
-		m_transform->m_position.x, m_transform->m_position.y, m_transform->m_position.z);
+		m_transform->m_position.x,
+		m_transform->m_position.y,
+		m_transform->m_position.z);
 
 	auto buff = m_listComponent;
 	for (auto com : buff)

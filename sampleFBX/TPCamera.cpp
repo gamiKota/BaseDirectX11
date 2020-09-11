@@ -44,23 +44,21 @@ void TPCamera::Uninit() {
 }
 
 // 更新
-void TPCamera::LastUpdate()
+void TPCamera::Update()
 {
 	// メモ
 	// 注視点はロックオンされているターゲット(ロックオンしてない時はプレイヤー)
 	// 座標はターゲットとプレイヤーのベクトル上の少し後ろでプレイヤーのY軸から真横に移動
+	// 視点と注視点を移動、上方ベクトルを回転
+	XMMATRIX world = XMLoadFloat4x4(&m_player->m_transform->GetMatrix());
+	// 座標
+	XMStoreFloat3(&m_vEye, XMVector3TransformCoord(XMLoadFloat3(&g_vEye), world));
+	// 注視点
+	XMStoreFloat3(&m_vLook, XMVector3TransformCoord(XMLoadFloat3(&g_vLook), world));
+	// 上方ベクトル
+	XMStoreFloat3(&m_vUp, XMVector3TransformNormal(XMLoadFloat3(&g_vUp), world));
 
-	if (m_player->GetComponent<CPlayer>()->m_target == nullptr) {
-		// 視点と注視点を移動、上方ベクトルを回転
-		XMMATRIX world = XMLoadFloat4x4(&m_player->m_transform->GetMatrix());
-		// 座標
-		XMStoreFloat3(&m_vEye, XMVector3TransformCoord(XMLoadFloat3(&g_vEye), world));
-		// 注視点
-		XMStoreFloat3(&m_vLook, XMVector3TransformCoord(XMLoadFloat3(&g_vLook), world));
-		// 上方ベクトル
-		XMStoreFloat3(&m_vUp, XMVector3TransformNormal(XMLoadFloat3(&g_vUp), world));
-	}
-	else {	// ターゲットロックオン状態
+	if (m_player->GetComponent<CPlayer>()->m_target != nullptr) {	// ターゲットロックオン状態
 		float3 eye = m_player->m_transform->m_position;
 		eye -= m_player->m_transform->m_forward * 400.f;
 		m_vEye = XMFLOAT3(eye.x, eye.y + 100.f, eye.z);
