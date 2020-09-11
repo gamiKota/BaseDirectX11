@@ -43,8 +43,13 @@ void GameScene::Init() {
 
 	// TPSŽ‹“_ƒJƒƒ‰
 	m_empty = new GameObject("MainCamera");
+#if 0
+	m_empty->AddComponent<CCamera>();
+	CCamera::Set(m_empty->GetComponent<CCamera>());
+#else
 	m_empty->AddComponent<TPCamera>();
 	CCamera::Set(m_empty->GetComponent<TPCamera>());
+#endif
 	m_listObject.push_back(m_empty);
 
 
@@ -55,7 +60,7 @@ void GameScene::Init() {
 	
 	// Ž©‹@
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player");
-	m_object3D->m_transform->m_position = float3(0.f, 100.f, 0.f);
+	m_object3D->m_transform->m_position = float3(0.f, 0.f, 0.f);
 	m_object3D->AddComponent<CPlayer>();
 	m_object3D->AddComponent<Collision>();
 	m_object3D->GetComponent<Collision>()->Init(E_MODEL_PLAYER);

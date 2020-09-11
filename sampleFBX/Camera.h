@@ -25,7 +25,7 @@ private:
 public:
 	virtual void Start();
 	virtual void Uninit();
-	virtual void Update();
+	virtual void LastUpdate();
 	//virtual void Draw();
 
 	XMFLOAT4X4& GetView() { return m_mView; }

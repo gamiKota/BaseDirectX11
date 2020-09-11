@@ -120,6 +120,8 @@ public:
 	Transform();
 	void LastUpdate();
 
+	void LookAt(Transform* target);
+
 	DirectX::XMFLOAT4X4& GetMatrix() {
 		return m_world;
 	}

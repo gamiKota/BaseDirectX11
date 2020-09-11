@@ -16,7 +16,7 @@ static const float MAX_ANGLE_Z = 45.f;
 
 
 // コンストラクタ
-CPlayer::CPlayer() : m_roll(0.f), m_vMove(XMFLOAT3()), m_target(nullptr) {
+CPlayer::CPlayer() : m_roll(0.f), m_vMove(float3()), m_target(nullptr) {
 
 }
 
@@ -72,6 +72,12 @@ void CPlayer::Update()
 			m_roll -= VAL_ANGLE_Z;
 		}
 	}
+	else if (Input::isPress('W')) {
+		m_vMove.z = SPEED;
+	}
+	else if (Input::isPress('S')) {
+		m_vMove.z = -SPEED;
+	}
 	// 上昇、下降
 	if (Input::isPress(VK_UP)) {
 		m_vMove.y = SPEED * 0.5f;
@@ -96,18 +102,44 @@ void CPlayer::Update()
 			}
 		}
 	}
+	if (!Input::isPress('W') && !Input::isPress('S')) {
+		m_vMove.z = 0.f;
+	}
 	if (!Input::isPress(VK_UP) && !Input::isPress(VK_DOWN)) {
 		m_vMove.y = 0;
 	}
 
 	// 座標をワールド行列に反映
+	//if (m_target != nullptr) {
+	//	float3 vX = float3(m_transform->GetMatrix()._11, m_transform->GetMatrix()._12, m_transform->GetMatrix()._13);
+	//	float3 vY = float3(m_transform->GetMatrix()._21, m_transform->GetMatrix()._22, m_transform->GetMatrix()._23);
+	//	float y = m_transform->m_position.y;
+	//	if (Input::isPress('W')) {
+	//		m_transform->m_position += m_transform->m_forward * SPEED;
+	//	}
+	//	else if (Input::isPress('A')) {
+	//		m_transform->m_position -= vX * SPEED;
+	//		m_transform->m_position.y = y;
+	//	}
+	//	else if (Input::isPress('D')) {
+	//		m_transform->m_position += vX * SPEED;
+	//		m_transform->m_position.y = y;
+	//	}
+	//	else if (Input::isPress(VK_DOWN)) {
+	//		m_transform->m_position -= vY * SPEED;
+	//	}
+	//	else if (Input::isPress(VK_UP)) {
+	//		m_transform->m_position += vY * SPEED;
+	//	}
+	//	//m_transform->m_position.y += m_vMove.y;
+	//}
+	//else {
+	//}
 	m_transform->m_position.x += m_vMove.x;
-	m_transform->m_position.y += m_vMove.y; 
-	m_transform->m_position.z += m_vMove.z + VAL_MOVE_PLAYER;	// 常に前進
-
+	m_transform->m_position.y += m_vMove.y;
+	m_transform->m_position.z += m_vMove.z;
 	m_transform->m_rotate.z = m_roll;
 
-	//m_transform->m_rotate.x = m_roll;
 
 	if (Input::isTrigger('T')) {
 		GameObject* obj = GameObject::FindGameObjectWithTag("Enemy");
@@ -117,12 +149,7 @@ void CPlayer::Update()
 	}
 	// ターゲットロックオン
 	if (m_target != nullptr) {
-		m_transform->m_rotate.y = XMConvertToDegrees(atan2f(
-			m_target->m_transform->m_position.x - m_transform->m_position.x,
-			m_target->m_transform->m_position.z - m_transform->m_position.z));
-		m_transform->m_rotate.x = XMConvertToDegrees(-atan2f(
-			m_target->m_transform->m_position.y - m_transform->m_position.y,
-			m_target->m_transform->m_position.z - m_transform->m_position.z));
+		m_transform->LookAt(m_target->m_transform);
 	}
 	else {
 		m_transform->m_rotate.x = 0.f;

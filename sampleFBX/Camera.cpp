@@ -33,7 +33,7 @@ void CCamera::Uninit()
 }
 
 // 更新
-void CCamera::Update()
+void CCamera::LastUpdate()
 {
 	// 視点、注視点、上方ベクトルを近づける
 	m_vNowEye.x = m_vNowEye.x * 0.5f + m_vEye.x * 0.5f;

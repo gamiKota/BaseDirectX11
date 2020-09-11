@@ -44,7 +44,7 @@ void TPCamera::Uninit() {
 }
 
 // 更新
-void TPCamera::Update()
+void TPCamera::LastUpdate()
 {
 	// メモ
 	// 注視点はロックオンされているターゲット(ロックオンしてない時はプレイヤー)
@@ -60,8 +60,8 @@ void TPCamera::Update()
 
 	if (m_player->GetComponent<CPlayer>()->m_target != nullptr) {	// ターゲットロックオン状態
 		float3 eye = m_player->m_transform->m_position;
-		eye -= m_player->m_transform->m_forward * 400.f;
-		m_vEye = XMFLOAT3(eye.x, eye.y + 100.f, eye.z);
+		eye -= m_player->m_transform->m_forward * 600.f;
+		m_vEye = XMFLOAT3(eye.x, eye.y + 300.f, eye.z);
 
 		XMFLOAT3 look = XMFLOAT3(
 			m_player->GetComponent<CPlayer>()->m_target->m_transform->m_position.x,
@@ -73,5 +73,5 @@ void TPCamera::Update()
 	}
 
 	//行列更新
-	CCamera::Update();
+	CCamera::LastUpdate();
 }

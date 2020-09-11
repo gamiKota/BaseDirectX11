@@ -71,7 +71,7 @@ void Collision::Uninit()
 }
 
 void Collision::Update() {
-
+	m_bHit = false;
 }
 
 // XV
