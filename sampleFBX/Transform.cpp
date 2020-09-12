@@ -28,6 +28,10 @@ void Transform::LastUpdate() {
 
 	// 前方向の更新
 	m_forward = { m_world._31, m_world._32, m_world._33 };
+	// 横方向の更新
+	m_right = { m_world._11, m_world._12, m_world._13 };
+	// 上方向の更新
+	m_up = { m_world._21, m_world._22, m_world._23 };
 }
 
 

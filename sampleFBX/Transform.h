@@ -111,6 +111,8 @@ public:
 	float3	m_rotate;		//!< ‰ñ“]
 	float3	m_scale;		//!< Šgk
 	float3	m_forward;		//!< ‘O•ûŒü
+	float3	m_right;		//!< ‰E•ûŒü
+	float3	m_up;			//!< ã•ûŒü
 
 private:
 	DirectX::XMFLOAT4X4 m_world;		//!< ƒ[ƒ‹ƒhs—ñ

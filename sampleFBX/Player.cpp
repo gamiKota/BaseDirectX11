@@ -43,117 +43,115 @@ void CPlayer::Uninit() {
 // 更新
 void CPlayer::Update()
 {
-	bool move = true;
+	//bool move = true;
 
 	// 移動
+	//if (Input::isPress('A')) {
+	//	if (m_transform->m_position.x > -MAX_MOVE_WIDTH) {
+	//		m_vMove.x = -SPEED;
+	//	}
+	//	else {
+	//		move = false;
+	//	}
+	//	if (m_roll < MAX_ANGLE_Z)
+	//		m_roll += VAL_ANGLE_Z;
+	//	if (m_roll < 0) {
+	//		m_roll += VAL_ANGLE_Z;
+	//	}
+	//}
+	//else if (Input::isPress('D')) {
+	//	if (m_transform->m_position.x < MAX_MOVE_WIDTH) {
+	//		m_vMove.x = SPEED;
+	//	}
+	//	else {
+	//		move = false;
+	//	}
+	//	if (m_roll > -MAX_ANGLE_Z)
+	//		m_roll -= VAL_ANGLE_Z;
+	//	if (m_roll > 0) {
+	//		m_roll -= VAL_ANGLE_Z;
+	//	}
+	//}
+	//else if (Input::isPress('W')) {
+	//	m_vMove.z = SPEED;
+	//}
+	//else if (Input::isPress('S')) {
+	//	m_vMove.z = -SPEED;
+	//}
+	//// 上昇、下降
+	//if (Input::isPress(VK_UP)) {
+	//	m_vMove.y = SPEED * 0.5f;
+	//}
+	//else if (Input::isPress(VK_DOWN)) {
+	//	m_vMove.y = -SPEED * 0.5f;
+	//}
+	//// 移動停止
+	//if ((!Input::isPress('A') && !Input::isPress('D')) || !move) {
+	//	if (m_vMove.x > 0.f) {
+	//		m_vMove.x--;
+	//	}
+	//	else if (m_vMove.x < 0.f) {
+	//		m_vMove.x++;
+	//	}
+	//	if (move) {
+	//		if (m_roll > 0.f) {
+	//			m_roll -= VAL_ANGLE_Z * 0.5f;
+	//		}
+	//		else if (m_roll < 0.f) {
+	//			m_roll += VAL_ANGLE_Z * 0.5f;
+	//		}
+	//	}
+	//}
+	//if (!Input::isPress('W') && !Input::isPress('S')) {
+	//	m_vMove.z = 0.f;
+	//}
+	//if (!Input::isPress(VK_UP) && !Input::isPress(VK_DOWN)) {
+	//	m_vMove.y = 0;
+	//}
+
+
+	//m_transform->m_position.x += m_vMove.x;
+	//m_transform->m_position.y += m_vMove.y;
+	//m_transform->m_position.z += m_vMove.z;
+	//m_transform->m_rotate.z = m_roll;
+
+	if (Input::isPress('W')) {
+		m_transform->m_position += m_transform->m_forward * SPEED;
+	}
+	if (Input::isPress('S')) {
+		m_transform->m_position -= m_transform->m_forward * SPEED;
+	}
+	if (Input::isPress('D')) {
+		m_transform->m_position += m_transform->m_right * SPEED;
+	}
 	if (Input::isPress('A')) {
-		if (m_transform->m_position.x > -MAX_MOVE_WIDTH) {
-			m_vMove.x = -SPEED;
-		}
-		else {
-			move = false;
-		}
-		if (m_roll < MAX_ANGLE_Z)
-			m_roll += VAL_ANGLE_Z;
-		if (m_roll < 0) {
-			m_roll += VAL_ANGLE_Z;
-		}
+		m_transform->m_position -= m_transform->m_right * SPEED;
 	}
-	else if (Input::isPress('D')) {
-		if (m_transform->m_position.x < MAX_MOVE_WIDTH) {
-			m_vMove.x = SPEED;
-		}
-		else {
-			move = false;
-		}
-		if (m_roll > -MAX_ANGLE_Z)
-			m_roll -= VAL_ANGLE_Z;
-		if (m_roll > 0) {
-			m_roll -= VAL_ANGLE_Z;
-		}
-	}
-	else if (Input::isPress('W')) {
-		m_vMove.z = SPEED;
-	}
-	else if (Input::isPress('S')) {
-		m_vMove.z = -SPEED;
-	}
-	// 上昇、下降
 	if (Input::isPress(VK_UP)) {
-		m_vMove.y = SPEED * 0.5f;
+		m_transform->m_position += m_transform->m_up * SPEED;
 	}
-	else if (Input::isPress(VK_DOWN)) {
-		m_vMove.y = -SPEED * 0.5f;
-	}
-	// 移動停止
-	if ((!Input::isPress('A') && !Input::isPress('D')) || !move) {
-		if (m_vMove.x > 0.f) {
-			m_vMove.x--;
-		}
-		else if (m_vMove.x < 0.f) {
-			m_vMove.x++;
-		}
-		if (move) {
-			if (m_roll > 0.f) {
-				m_roll -= VAL_ANGLE_Z * 0.5f;
-			}
-			else if (m_roll < 0.f) {
-				m_roll += VAL_ANGLE_Z * 0.5f;
-			}
-		}
-	}
-	if (!Input::isPress('W') && !Input::isPress('S')) {
-		m_vMove.z = 0.f;
-	}
-	if (!Input::isPress(VK_UP) && !Input::isPress(VK_DOWN)) {
-		m_vMove.y = 0;
+	if (Input::isPress(VK_DOWN)) {
+		m_transform->m_position -= m_transform->m_up * SPEED;
 	}
 
-	// 座標をワールド行列に反映
-	//if (m_target != nullptr) {
-	//	float3 vX = float3(m_transform->GetMatrix()._11, m_transform->GetMatrix()._12, m_transform->GetMatrix()._13);
-	//	float3 vY = float3(m_transform->GetMatrix()._21, m_transform->GetMatrix()._22, m_transform->GetMatrix()._23);
-	//	float y = m_transform->m_position.y;
-	//	if (Input::isPress('W')) {
-	//		m_transform->m_position += m_transform->m_forward * SPEED;
-	//	}
-	//	else if (Input::isPress('A')) {
-	//		m_transform->m_position -= vX * SPEED;
-	//		m_transform->m_position.y = y;
-	//	}
-	//	else if (Input::isPress('D')) {
-	//		m_transform->m_position += vX * SPEED;
-	//		m_transform->m_position.y = y;
-	//	}
-	//	else if (Input::isPress(VK_DOWN)) {
-	//		m_transform->m_position -= vY * SPEED;
-	//	}
-	//	else if (Input::isPress(VK_UP)) {
-	//		m_transform->m_position += vY * SPEED;
-	//	}
-	//	//m_transform->m_position.y += m_vMove.y;
-	//}
-	//else {
-	//}
-	m_transform->m_position.x += m_vMove.x;
-	m_transform->m_position.y += m_vMove.y;
-	m_transform->m_position.z += m_vMove.z;
-	m_transform->m_rotate.z = m_roll;
 
-
-	if (Input::isTrigger('T')) {
-		GameObject* obj = GameObject::FindGameObjectWithTag("Enemy");
-		if (obj != nullptr) {
-			m_target = obj;
-		}
-	}
 	// ターゲットロックオン
+	if (Input::isTrigger('T')) {
+		if (m_target == nullptr) {
+			GameObject* obj = GameObject::FindGameObjectWithTag("Enemy");
+			if (obj != nullptr) {
+				m_target = obj;
+			}
+		}
+		else if (m_target != nullptr) {
+			m_target = nullptr;
+		}
+	}
 	if (m_target != nullptr) {
 		m_transform->LookAt(m_target->m_transform);
 	}
 	else {
-		m_transform->m_rotate.x = 0.f;
-		m_transform->m_rotate.y = 0.f;
+		m_transform->m_rotate = float3();
 	}
 
 
