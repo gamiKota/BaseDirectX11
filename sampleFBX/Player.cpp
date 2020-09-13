@@ -103,8 +103,7 @@ void Player::Update()
 		obj->AddComponent<Bullet>();
 		obj->AddComponent<Collision>();
 		obj->GetComponent<Collision>()->Init(E_MODEL_MISSILE);
-		GameObject::Instance(obj, m_transform->m_position);
-		obj->GetComponent<Bullet>()->Fire(*m_transform);
+		GameObject::Instance(obj, m_transform->m_position, m_transform->m_rotate);
 	}
 
 	PrintDebugProc("roll = %.2f\n", m_roll);

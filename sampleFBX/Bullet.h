@@ -30,7 +30,6 @@ public:
 	void Update();		// XV
 
 	void OnCollision(GameObject* obj);
-	void Fire(Transform transform);	// ”­Ë
 };
 
 

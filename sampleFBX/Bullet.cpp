@@ -22,8 +22,10 @@ static const char	LIFE_TIME	= 5;		// ¶‘¶ŽžŠÔ
 
 
 void Bullet::Start() {
-	m_nLife = 0;
-	m_nStat = 0;
+	//m_nLife = 0;
+	//m_nStat = 0;
+	m_nLife = LIFE_TIME * 60;	// 5•b
+	m_nStat = 1;				// ’Ç”ö’†
 }
 
 
@@ -59,17 +61,6 @@ void Bullet::OnCollision(GameObject* obj) {
 		//		GameObject::Find("Player")->GetComponent<CPlayer>()->m_target = nullptr;
 		//}
 	}
-}
-
-
-void Bullet::Fire(Transform transform) {
-
-	m_transform->m_position = transform.m_position;
-	m_transform->m_rotate = transform.m_rotate;
-	m_transform->m_scale = { 0.5f, 0.5f, 0.5f };
-
-	m_nLife = LIFE_TIME * 60;	// 5•b
-	m_nStat = 1;				// ’Ç”ö’†
 }
 
 

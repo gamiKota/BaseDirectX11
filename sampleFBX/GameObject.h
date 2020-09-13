@@ -107,7 +107,7 @@ public:
 	/**
 	 * @brief Instance
 	 */
-	static void Instance(GameObject* obj, float3 transform = float3());
+	static void Instance(GameObject* obj, float3 transform = float3(), float3 rotate = float3(), float3 scale = float3(1.f, 1.f, 1.f));
 
 	/**
 	 * @brief オブジェクトが持っているコンポーネントを取得

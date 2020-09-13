@@ -108,10 +108,12 @@ std::list<GameObject*> GameObject::FindGameObjectsWithTag(std::string tag) {
 	return m_listFinds;
 }
 
-void GameObject::Instance(GameObject* obj, float3 transform) {
+void GameObject::Instance(GameObject* obj, float3 transform, float3 rotate, float3 scale) {
 	if (obj == nullptr)	return;
 
-	obj->m_transform->m_position = transform;
+	obj->m_transform->m_position	= transform;
+	obj->m_transform->m_rotate		= rotate;
+	obj->m_transform->m_scale		= scale;
 
 	SceneManager::GetInstance().m_scene->m_listObject.push_back(obj);
 }
