@@ -1,7 +1,23 @@
-// OlÌƒJƒƒ‰ [TPCamera.h]
+/**
+ * @file TPCamera.h
+ */
+
+
+/**
+ * @include guard
+ */
 #pragma once
+
+
+/**
+ * @include
+ */
 #include "Camera.h"
 
+
+/**
+ * @class TPCamera : inheritance CCamera
+ */
 class TPCamera : public CCamera
 {
 protected:
@@ -13,3 +29,6 @@ public:
 	void Uninit();
 	void LastUpdate();
 };
+
+
+// EOF

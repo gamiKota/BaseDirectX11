@@ -1,4 +1,11 @@
-// 三人称カメラ [TPCamera.cpp]
+/**
+ * TPCamera.cpp
+ */
+
+
+/**
+ * @include
+ */
 #include "TPCamera.h"
 #include "Player.h"
 #include "D3DClass.h"
@@ -9,12 +16,12 @@
 
 // 定数
 namespace {
-	const XMFLOAT3 g_vEye = XMFLOAT3(0.0f, 150.0f, -500.0f);	// X-wing
-	const XMFLOAT3 g_vLook = XMFLOAT3(0.0f, 120.0f, 0.0f);
-	const XMFLOAT3 g_vUp(0.0f, 1.0f, 0.0f);
+	const float3 g_vEye  = float3(0.0f, 150.0f, -500.0f);	// X-wing
+	const float3 g_vLook = float3(0.0f, 120.0f, 0.0f);
+	const float3 g_vUp(0.0f, 1.0f, 0.0f);
 };
 
-// 初期化
+
 void TPCamera::Awake() {
 	m_vEye = g_vEye;
 	m_vLook = g_vLook;
@@ -24,6 +31,7 @@ void TPCamera::Awake() {
 	m_fNearZ = 10.0f;
 	m_fFarZ = 10000.0f;
 }
+
 
 void TPCamera::Start() {
 	m_player = GameObject::Find("Player");
@@ -38,12 +46,12 @@ void TPCamera::Start() {
 	Update();
 }
 
-// 終了処理
+
 void TPCamera::Uninit() {
 	CCamera::Uninit();
 }
 
-// 更新
+
 void TPCamera::LastUpdate()
 {
 	// メモ
@@ -58,20 +66,16 @@ void TPCamera::LastUpdate()
 	// 上方ベクトル
 	XMStoreFloat3(&m_vUp, XMVector3TransformNormal(XMLoadFloat3(&g_vUp), world));
 
-	if (m_player->GetComponent<CPlayer>()->m_target != nullptr) {	// ターゲットロックオン状態
+	if (m_player->GetComponent<Player>()->m_target != nullptr) {	// ターゲットロックオン状態
 		float3 eye = m_player->m_transform->m_position;
 		eye -= m_player->m_transform->m_forward * 600.f;
-		m_vEye = XMFLOAT3(eye.x, eye.y + 300.f, eye.z);
-
-		XMFLOAT3 look = XMFLOAT3(
-			m_player->GetComponent<CPlayer>()->m_target->m_transform->m_position.x,
-			m_player->GetComponent<CPlayer>()->m_target->m_transform->m_position.y,
-			m_player->GetComponent<CPlayer>()->m_target->m_transform->m_position.z);
-		m_vLook = look;
-
-		m_vUp = XMFLOAT3(0.f, 1.f, 0.f);
+		m_vEye = float3(eye.x, eye.y + 300.f, eye.z);
+		m_vLook = m_player->GetComponent<Player>()->m_target->m_transform->m_position;
+		m_vUp = float3(0.f, 1.f, 0.f);
 	}
 
 	//行列更新
 	CCamera::LastUpdate();
 }
+
+// EOF

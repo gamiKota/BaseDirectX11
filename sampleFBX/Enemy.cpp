@@ -1,35 +1,23 @@
-// 敵機クラス [Enemy.cpp]
+/**
+ * @file Enemy.cpp
+ */
+
+
+/**
+ * @include
+ */
 #include "Enemy.h"
 #include "GameObject.h"
 #include "System.h"
 
-// マクロ定義
-#define SPEED			15.0f	// 速さ
 
-
-// コンストラクタ
-CEnemy::CEnemy() : Component() {
-}
-
-// デストラクタ
-CEnemy::~CEnemy() {
-}
-
-// 初期化
-void CEnemy::Start() {
+void Enemy::Start() {
 	
 }
 
-// 終了処理
-void CEnemy::Uninit() {
 
-}
+void Enemy::Update() {
 
-// 更新
-void CEnemy::Update() {
-	//if (m_transform->m_position.z < GameObject::Find("Player")->m_transform->m_position.z) {
-	//	Destroy(m_gameObject);
-	//}
 }
 
 

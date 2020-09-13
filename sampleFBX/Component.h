@@ -14,8 +14,7 @@
  * @include
  */
 #include "Object.h"
-#include "main.h"
-#include <DirectXMath.h>
+#include "Data.h"
 
 
 /**

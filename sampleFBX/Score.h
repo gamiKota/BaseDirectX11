@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Component.h"
+#include <d3d11.h>
 
 class Score : public Component {
 public:

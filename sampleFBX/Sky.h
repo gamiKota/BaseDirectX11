@@ -1,22 +1,29 @@
-// スカイドーム/スカイボックス [Sky.h]
+/**
+ * @file Sky.h
+ */
+
+
+/**
+ * @include guard
+ */
 #pragma once
-#include "main.h"
+
+
+/**
+ * @include
+ */
 #include "Component.h"
-#include "Transform.h"
 
-class CSky : public Component
+
+/**
+ * @class SkyDome : inheritance Component
+ */
+class SkyDome : public Component
 {
-private:
-
 public:
-	CSky();
-	~CSky();
-
-	void Awake();
 	void Start();
-	void Uninit();
 	void Update();
-
-	void SetPos(float3 pos);
 };
 
+
+// EOF

@@ -7,16 +7,16 @@
 
 // 静的メンバ
 CCamera* CCamera::m_pCamera = nullptr;
-XMFLOAT3 CCamera::m_vNowEye;	// 現在の視点
-XMFLOAT3 CCamera::m_vNowLook;	// 現在の注視点
-XMFLOAT3 CCamera::m_vNowUp;		// 現在の上方ベクトル
+float3 CCamera::m_vNowEye;		// 現在の視点
+float3 CCamera::m_vNowLook;		// 現在の注視点
+float3 CCamera::m_vNowUp;		// 現在の上方ベクトル
 
 // 初期化
 void CCamera::Start()
 {
-	m_vEye = XMFLOAT3(0.0f, 200.0f, -400.0f);
-	m_vLook = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_vUp = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	m_vEye	= float3(0.0f, 200.0f, -400.0f);
+	m_vLook = float3(0.0f, 0.0f, 0.0f);
+	m_vUp	= float3(0.0f, 1.0f, 0.0f);
 	m_fFOVY = XMConvertToRadians(45);
 	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 	m_fNearZ = 10.0f;

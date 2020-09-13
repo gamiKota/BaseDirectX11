@@ -1,16 +1,32 @@
-// 自機クラス [Player.h]
+/**
+ * @file Player.h
+ */
+
+
+/**
+ * @include guard
+ */
 #pragma once
+
+
+/**
+ * @include
+ */
 #include "Component.h"
 #include "Transform.h"
 
 
+/**
+ * @constant
+ */
 static const float MAX_MOVE_WIDTH = 1000.f;
 static const float VAL_MOVE_PLAYER = 0.f;
 
-class Collision;
-class GameObject;
 
-class CPlayer : public Component
+/**
+ * @class Player : inheritance Component
+ */
+class Player : public Component
 {
 public:
 	float3			m_vMove;	//!< 移動量
@@ -18,11 +34,9 @@ public:
 	GameObject*		m_target;	//!< ターゲット
 
 public:
-	CPlayer();		// コンストラクタ
-	~CPlayer();		// デストラクタ
-
-	void Awake();
-	void Start();	// 初期化
-	void Uninit();	// 終了処理
-	void Update();	// 更新
+	void Start();
+	void Update();
 };
+
+
+// EOF

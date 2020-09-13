@@ -55,13 +55,13 @@ void GameScene::Init() {
 
 	// スカイドーム
 	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky");
-	m_object3D->AddComponent<CSky>();
+	m_object3D->AddComponent<SkyDome>();
 	m_listObject.push_back(m_object3D);
 	
 	// 自機
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, 0.f);
-	m_object3D->AddComponent<CPlayer>();
+	m_object3D->AddComponent<Player>();
 	m_object3D->AddComponent<Collision>();
 	m_object3D->GetComponent<Collision>()->Init(E_MODEL_PLAYER);
 	m_listObject.push_back(m_object3D);
@@ -76,7 +76,7 @@ void GameScene::Init() {
 
 		m_object3D->m_transform->m_position = vEnemyPos;
 		m_object3D->m_transform->m_rotate.y = 180;
-		m_object3D->AddComponent<CEnemy>();
+		m_object3D->AddComponent<Enemy>();
 		m_object3D->AddComponent<Collision>();
 		m_object3D->GetComponent<Collision>()->Init(E_MODEL_ENEMY);
 		m_listObject.push_back(m_object3D);

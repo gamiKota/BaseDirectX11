@@ -8,9 +8,9 @@
 
 // íËêî
 namespace {
-	const XMFLOAT3 g_vEye = XMFLOAT3(0.0f, 14.69f, 24.42f);	// X-wing
-	const XMFLOAT3 g_vLook = XMFLOAT3(0.0f, 14.69f, 124.42f);	// X-wing
-	const XMFLOAT3 g_vUp(0.0f, 1.0f, 0.0f);
+	const float3 g_vEye  = float3(0.0f, 14.69f, 24.42f);	// X-wing
+	const float3 g_vLook = float3(0.0f, 14.69f, 124.42f);	// X-wing
+	const float3 g_vUp(0.0f, 1.0f, 0.0f);
 };
 
 // èâä˙âª
