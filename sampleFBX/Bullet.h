@@ -21,8 +21,7 @@
 class Bullet : public Component
 {
 private:
-	int			m_nStat;		// 0:未使用, 1:使用中, 2:爆発中
-	int			m_nLife;		// 寿命
+	int	m_nLife;	//!< 寿命
 
 public:
 

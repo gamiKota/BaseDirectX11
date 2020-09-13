@@ -11,6 +11,7 @@
 #include "Collision.h"
 #include "Score.h"
 #include "Player.h"
+#include "Frame.h"
 #include "System.h"
 
 
@@ -22,24 +23,13 @@ static const char	LIFE_TIME	= 5;		// 生存時間
 
 
 void Bullet::Start() {
-	//m_nLife = 0;
-	//m_nStat = 0;
-	m_nLife = LIFE_TIME * 60;	// 5秒
-	m_nStat = 1;				// 追尾中
+	m_nLife = LIFE_TIME * Frame::GetInstance().GetFrame();	// 5秒
 }
 
 
 void Bullet::Update() {
-	// 未使用?
-	if (m_nStat == 0) {
-		return;
-	}
-	// 追尾中 (m_nStat == 1)
 	--m_nLife;
 	if (m_nLife <= 0) {
-		// 爆発開始
-		m_nLife = 3 * 60;
-		m_nStat = 0;
 		GameObject::Destroy(m_gameObject);
 		return;
 	}

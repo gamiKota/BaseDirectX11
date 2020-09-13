@@ -270,7 +270,7 @@
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
     <ClInclude Include="Data.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

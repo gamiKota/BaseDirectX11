@@ -16,7 +16,7 @@
 
 
 /**
- @abridgement namespace
+ @ abridgement namespace
  */
 using namespace DirectX;
 
@@ -65,10 +65,10 @@ void Player::Update()
 			m_roll += VAL_ANGLE_Z;
 	}
 	if (Input::isPress(VK_UP)) {
-		m_transform->m_position += up * SPEED;
+		m_transform->m_position.y += SPEED;
 	}
 	if (Input::isPress(VK_DOWN)) {
-		m_transform->m_position -= up * SPEED;
+		m_transform->m_position.y -= SPEED;
 	}
 
 	// 移動停止
