@@ -23,6 +23,8 @@ static const char	LIFE_TIME	= 5;		// ¶‘¶ŽžŠÔ
 
 
 void Bullet::Start() {
+	m_gameObject->AddComponent<Collision>();
+	m_gameObject->GetComponent<Collision>()->Init(E_MODEL_MISSILE);
 	m_nLife = LIFE_TIME * Frame::GetInstance().GetFrame();	// 5•b
 }
 

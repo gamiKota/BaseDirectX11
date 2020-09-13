@@ -30,6 +30,9 @@ static const float MAX_ANGLE_Z	= 30.f;
 
 
 void Player::Start() {
+	m_gameObject->AddComponent<Collision>();
+	m_gameObject->GetComponent<Collision>()->Init(E_MODEL_PLAYER);
+
 	m_roll		= 0.f;
 	m_vMove		= float3();
 	m_target	= nullptr;
@@ -107,8 +110,6 @@ void Player::Update()
 	if (Input::isTrigger(VK_SPACE)) {
 		GameObject* obj = new GameObject3D(E_MODEL_MISSILE, "Missile");
 		obj->AddComponent<Bullet>();
-		obj->AddComponent<Collision>();
-		obj->GetComponent<Collision>()->Init(E_MODEL_MISSILE);
 		GameObject::Instance(obj, m_transform->m_position, m_transform->m_rotate);
 	}
 
