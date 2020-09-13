@@ -1,4 +1,11 @@
-// カメラ [Camera.cpp]
+/**
+ * @file Camera.cpp
+ */
+
+
+/**
+ * @include
+ */
 #include "Camera.h"
 #include "D3DClass.h"
 #include "Graphics.h"
@@ -11,7 +18,7 @@ float3 CCamera::m_vNowEye;		// 現在の視点
 float3 CCamera::m_vNowLook;		// 現在の注視点
 float3 CCamera::m_vNowUp;		// 現在の上方ベクトル
 
-// 初期化
+
 void CCamera::Start()
 {
 	m_vEye	= float3(0.0f, 200.0f, -400.0f);
@@ -27,12 +34,12 @@ void CCamera::Start()
 	Update();
 }
 
-// 終了処理
+
 void CCamera::Uninit()
 {
 }
 
-// 更新
+
 void CCamera::LastUpdate()
 {
 	// 視点、注視点、上方ベクトルを近づける
@@ -59,3 +66,6 @@ void CCamera::LastUpdate()
 		XMMatrixPerspectiveFovLH(m_fFOVY, m_fAspect,
 			m_fNearZ, m_fFarZ));
 }
+
+
+// EOF

@@ -1,8 +1,23 @@
-// ƒJƒƒ‰ [Camera.h]
+/**
+ * @file Camera.h
+ */
+
+
+/**
+ * @include guard
+ */
 #pragma once
+
+
+/**
+ * @include
+ */
 #include "Component.h"
 
 
+/**
+ * @class CCamera : inheritance Component
+ */
 class CCamera : public Component
 {
 protected:
@@ -39,3 +54,5 @@ public:
 	static CCamera* Get() { return m_pCamera; }
 };
 
+
+// EOF

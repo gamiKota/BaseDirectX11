@@ -6,7 +6,9 @@
 //=============================================================================
 #pragma once
 
-#include "main.h"
+
+#include <DirectXMath.h>
+
 
 //*****************************************************************************
 // マクロ定義
@@ -17,8 +19,8 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT InitNumber(void);
+void InitNumber(void);
 void UninitNumber(void);
 
-void DrawNumber(XMFLOAT2* pPos, unsigned uNumber, int nWidth,
+void DrawNumber(DirectX::XMFLOAT2* pPos, unsigned uNumber, int nWidth,
 	float fSizeX = NUMBER_SIZE_X, float fSizeY = NUMBER_SIZE_Y);

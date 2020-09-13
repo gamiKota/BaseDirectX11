@@ -15,6 +15,10 @@
  */
 #include <list>
 
+
+/**
+ * @forward declaration
+ */
 class GameObject;
 class GameObject3D;
 class GameObjectUI;

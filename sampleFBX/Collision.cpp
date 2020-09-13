@@ -1,4 +1,11 @@
-// 境界ボックス デバッグ表示 [Box.cpp]
+/**
+ * @file Collision.cpp
+ */
+
+
+/**
+ * @include
+ */
 #include "Collision.h"
 #include "Shader.h"
 #include "Camera.h"
@@ -6,6 +13,8 @@
 #include "D3DClass.h"
 #include "GameObject.h"
 #include "System.h"
+
+using namespace DirectX;
 
 extern CFbxLight	g_light;		// 光源
 

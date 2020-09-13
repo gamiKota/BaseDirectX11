@@ -15,7 +15,6 @@
  */
 #include "Object.h"
 #include <list>
-#include "main.h"
 #include <DirectXMath.h>
 #include "SceneManager.h"
 #include "Transform.h"

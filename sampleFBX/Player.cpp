@@ -16,6 +16,12 @@
 
 
 /**
+ @abridgement namespace
+ */
+using namespace DirectX;
+
+
+/**
  * @constant
  */
 static const float SPEED		= 15.0f;	// 速さ

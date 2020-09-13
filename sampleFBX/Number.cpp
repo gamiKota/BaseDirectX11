@@ -29,15 +29,16 @@ static ID3D11ShaderResourceView*	g_pTexture;			// テクスチャへのポインタ
 //=============================================================================
 // 数値表示の初期化処理
 //=============================================================================
-HRESULT InitNumber(void)
+void InitNumber(void)
 {
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	HRESULT hr = S_OK;
 
 	// テクスチャの読み込み
 	hr = CreateTextureFromFile(pDevice, NUMBER_TEXTURENAME, &g_pTexture);
-
-	return hr;
+	if (FAILED(hr)) {
+		MessageBoxA(System::GetInstance().GetWnd(), "error\nload texture", "Number.cpp", MB_OK | MB_ICONERROR | MB_TOPMOST);
+	}
 }
 
 //=============================================================================
