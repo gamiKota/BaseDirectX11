@@ -14,7 +14,7 @@
  */
 #include "GameScene.h"		// 自身の定義
 #include "GameObject3D.h"	// 3Dオブジェクト
-#include "GameObjectUI.h"
+#include "GameObjectUI.h"	// UIオブジェクト
 
 /**
  * @Component

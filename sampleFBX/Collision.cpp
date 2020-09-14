@@ -11,7 +11,8 @@
 #include "Camera.h"
 #include "FbxModel.h"
 #include "D3DClass.h"
-#include "GameObject.h"
+#include "GameObjectUI.h"
+#include "GameObject3D.h"
 #include "System.h"
 
 using namespace DirectX;
@@ -44,7 +45,7 @@ struct SHADER_GLOBAL2 {
 };
 
 // コンストラクタ
-Collision::Collision() : m_color(1.0f, 1.0f, 1.0f, 0.5f), m_model(E_MODEL_NONE), m_bHit(false) {
+Collision::Collision() : m_color(1.0f, 1.0f, 1.0f, 0.5f), m_model(E_MODEL_NONE), m_bHit(false), m_isInit(false) {
 }
 
 // デストラクタ
@@ -52,12 +53,12 @@ Collision::~Collision() {
 }
 
 void Collision::Awake() {
-
+	
 }
 
 // 初期化
 void Collision::Start() {
-
+	
 }
 
 // 終了処理
@@ -86,29 +87,41 @@ void Collision::Update() {
 // 更新
 void Collision::LastUpdate()
 {
-	// 境界ボックス(AABB)の移動
-	XMStoreFloat3(&m_vPosBBox,
-		XMVector3TransformCoord(
-			XMLoadFloat3(&m_vCenter),
-			XMLoadFloat4x4(&m_gameObject->m_transform->GetMatrix())));
-	XMFLOAT4X4 matrix;
-	XMStoreFloat4x4(&matrix, XMMatrixTranslation(
-		m_vPosBBox.x, m_vPosBBox.y, m_vPosBBox.z));
-	SetWorld(matrix);
-	m_world._11 = m_transform->GetMatrix()._11;
-	m_world._12 = m_transform->GetMatrix()._12;
-	m_world._13 = m_transform->GetMatrix()._13;
-	m_world._21 = m_transform->GetMatrix()._21;
-	m_world._22 = m_transform->GetMatrix()._22;
-	m_world._23 = m_transform->GetMatrix()._23;
-	m_world._31 = m_transform->GetMatrix()._31;
-	m_world._32 = m_transform->GetMatrix()._32;
-	m_world._33 = m_transform->GetMatrix()._33;
+	if (!m_isInit) {
+		GameObject3D* obj = dynamic_cast<GameObject3D*>(GameObject::Find(m_gameObject->m_name));
+		if (obj != nullptr) {
+			Init(obj->m_model);
+			m_isInit = true;
+		}
+	}
+	
+	if (m_isInit) {
+		// 境界ボックス(AABB)の移動
+		XMStoreFloat3(&m_vPosBBox,
+			XMVector3TransformCoord(
+				XMLoadFloat3(&m_vCenter),
+				XMLoadFloat4x4(&m_gameObject->m_transform->GetMatrix())));
+		XMFLOAT4X4 matrix;
+		XMStoreFloat4x4(&matrix, XMMatrixTranslation(
+			m_vPosBBox.x, m_vPosBBox.y, m_vPosBBox.z));
+		SetWorld(matrix);
+		m_world._11 = m_transform->GetMatrix()._11;
+		m_world._12 = m_transform->GetMatrix()._12;
+		m_world._13 = m_transform->GetMatrix()._13;
+		m_world._21 = m_transform->GetMatrix()._21;
+		m_world._22 = m_transform->GetMatrix()._22;
+		m_world._23 = m_transform->GetMatrix()._23;
+		m_world._31 = m_transform->GetMatrix()._31;
+		m_world._32 = m_transform->GetMatrix()._32;
+		m_world._33 = m_transform->GetMatrix()._33;
+	}
 }
 
 // 描画
 void Collision::DebugDraw() {
 #if _DEBUG
+
+	if (!m_isInit)	return;
 
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
 

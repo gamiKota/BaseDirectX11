@@ -37,6 +37,9 @@ public:
 	ID3D11PixelShader* m_pPixelShader;		//!< ピクセルシェーダ
 	ID3D11Buffer* m_pIndexBuffer;			//!< インデックスバッファ				// インデックスバッファインターフェースへのポインタ
 
+private:
+	bool m_isInit;
+
 public:
 	Collision();
 	~Collision();
@@ -51,10 +54,11 @@ public:
 	DirectX::XMFLOAT4& GetColor() { return m_color; }
 	void SetColor(DirectX::XMFLOAT4* pColor) { m_color = *pColor; }
 
-	void SetWorld(DirectX::XMFLOAT4X4 world);
-
-	void Init(E_MODEL model);
 	static bool AABB(Collision obj1, Collision obj2);
+
+private:
+	void Init(E_MODEL model);
+	void SetWorld(DirectX::XMFLOAT4X4 world);
 };
 
 
