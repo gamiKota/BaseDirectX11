@@ -108,7 +108,7 @@ void Player::Update()
 
 	// ホーミングミサイル発射
 	if (Input::isTrigger(VK_SPACE)) {
-		GameObject* obj = new GameObject3D(E_MODEL_MISSILE, "Missile");
+		GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet");
 		obj->AddComponent<Bullet>();
 		GameObject::Instance(obj, m_transform->m_position, m_transform->m_rotate);
 	}
