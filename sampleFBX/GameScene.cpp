@@ -23,7 +23,7 @@
 #include "FPCamera.h"	// FPSカメラ
 #include "Sky.h"		// スカイドーム
 #include "Player.h"		// プレイヤー
-#include "Enemy.h"		// 敵
+#include "FixedEnemy.h"	// 敵
 #include "Collision.h"	// 当たり判定
 #include "System.h"		// メモリ監視
 
@@ -52,7 +52,6 @@ void GameScene::Init() {
 #endif
 	m_listObject.push_back(m_empty);
 
-
 	// スカイドーム
 	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky");
 	m_object3D->AddComponent<SkyDome>();
@@ -73,8 +72,8 @@ void GameScene::Init() {
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 
 		m_object3D->m_transform->m_position = vEnemyPos;
-		m_object3D->m_transform->m_rotate.y = 180;
-		m_object3D->AddComponent<Enemy>();
+		m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 180, 0.f);
+		m_object3D->AddComponent<FixedEnemy>();
 		m_listObject.push_back(m_object3D);
 	}
 
@@ -88,6 +87,9 @@ void GameScene::Init() {
 
 	// お前は最後
 	Scene::Init();
+
+
+
 }
 
 

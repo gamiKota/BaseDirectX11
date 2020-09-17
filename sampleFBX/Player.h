@@ -36,6 +36,9 @@ public:
 public:
 	void Start();
 	void Update();
+
+private:
+	void Operation();
 };
 
 

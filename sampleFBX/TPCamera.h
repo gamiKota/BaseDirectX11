@@ -27,6 +27,7 @@ public:
 	void Awake();
 	void Start();
 	void Uninit();
+	void Update();
 	void LastUpdate();
 };
 

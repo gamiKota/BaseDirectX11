@@ -19,8 +19,7 @@ float3 CCamera::m_vNowLook;		// 現在の注視点
 float3 CCamera::m_vNowUp;		// 現在の上方ベクトル
 
 
-void CCamera::Start()
-{
+void CCamera::Start() {
 	m_vEye	= float3(0.0f, 200.0f, -400.0f);
 	m_vLook = float3(0.0f, 0.0f, 0.0f);
 	m_vUp	= float3(0.0f, 1.0f, 0.0f);
@@ -35,32 +34,31 @@ void CCamera::Start()
 }
 
 
-void CCamera::Uninit()
-{
+void CCamera::Uninit() {
+	
 }
 
 
-void CCamera::LastUpdate()
-{
+void CCamera::LastUpdate() {
 	// 視点、注視点、上方ベクトルを近づける
-	m_vNowEye.x = m_vNowEye.x * 0.5f + m_vEye.x * 0.5f;
-	m_vNowEye.y = m_vNowEye.y * 0.5f + m_vEye.y * 0.5f;
-	m_vNowEye.z = m_vNowEye.z * 0.5f + m_vEye.z * 0.5f;
-	m_vNowLook.x = m_vNowLook.x * 0.5f + m_vLook.x * 0.5f;
-	m_vNowLook.y = m_vNowLook.y * 0.5f + m_vLook.y * 0.5f;
-	m_vNowLook.z = m_vNowLook.z * 0.5f + m_vLook.z * 0.5f;
-	m_vNowUp.x = m_vNowUp.x * 0.5f + m_vUp.x * 0.5f;
-	m_vNowUp.y = m_vNowUp.y * 0.5f + m_vUp.y * 0.5f;
-	m_vNowUp.z = m_vNowUp.z * 0.5f + m_vUp.z * 0.5f;
-	XMStoreFloat3(&m_vNowUp,
-		XMVector3Normalize(XMLoadFloat3(&m_vNowUp)));
+	//m_vNowEye.x = m_vNowEye.x * 0.5f + m_vEye.x * 0.5f;
+	//m_vNowEye.y = m_vNowEye.y * 0.5f + m_vEye.y * 0.5f;
+	//m_vNowEye.z = m_vNowEye.z * 0.5f + m_vEye.z * 0.5f;
+	//m_vNowLook.x = m_vNowLook.x * 0.5f + m_vLook.x * 0.5f;
+	//m_vNowLook.y = m_vNowLook.y * 0.5f + m_vLook.y * 0.5f;
+	//m_vNowLook.z = m_vNowLook.z * 0.5f + m_vLook.z * 0.5f;
+	//m_vNowUp.x = m_vNowUp.x * 0.5f + m_vUp.x * 0.5f;
+	//m_vNowUp.y = m_vNowUp.y * 0.5f + m_vUp.y * 0.5f;
+	//m_vNowUp.z = m_vNowUp.z * 0.5f + m_vUp.z * 0.5f;
+	XMStoreFloat3(&m_vUp,
+		XMVector3Normalize(XMLoadFloat3(&m_vUp)));
 
 
 	// ビュー変換更新
 	XMStoreFloat4x4(&m_mView, XMMatrixLookAtLH(
-		XMLoadFloat3(&m_vNowEye),
-		XMLoadFloat3(&m_vNowLook),
-		XMLoadFloat3(&m_vNowUp)));
+		XMLoadFloat3(&m_vEye),
+		XMLoadFloat3(&m_vLook),
+		XMLoadFloat3(&m_vUp)));
 	// 射影変換更新
 	XMStoreFloat4x4(&m_mProj,
 		XMMatrixPerspectiveFovLH(m_fFOVY, m_fAspect,

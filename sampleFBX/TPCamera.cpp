@@ -11,6 +11,8 @@
 #include "D3DClass.h"
 #include "Graphics.h"
 #include "GameObject3D.h"
+#include "input.h"
+#include "debugproc.h"
 #include "System.h"
 
 
@@ -23,9 +25,6 @@ namespace {
 
 
 void TPCamera::Awake() {
-	m_vEye = g_vEye;
-	m_vLook = g_vLook;
-	m_vUp = g_vUp;
 	m_fFOVY = XMConvertToRadians(45);
 	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 	m_fNearZ = 10.0f;
@@ -43,6 +42,11 @@ void TPCamera::Start() {
 		);
 		SceneManager::GetInstance().LoadScene(E_SCENE::TITLE);
 	}
+	m_vEye		= float3(0.f, 500.f, -800.f);
+	//m_vLook		= float3(0.f, -500.f, 800.f);
+	m_vLook		= float3(0.f, 0.f, 0.f);
+	//m_vLook		= m_player->m_transform->m_position;
+	m_vUp		= float3(0.f, 1.f, 0.f);
 	Update();
 }
 
@@ -52,8 +56,42 @@ void TPCamera::Uninit() {
 }
 
 
-void TPCamera::LastUpdate()
-{
+void TPCamera::Update() {
+	//float deg = 0.5f;
+	// 横移動もaxisを今の姿勢に合わせた上方ベクトルにする
+	//if (Input::isPress(VK_RIGHT)) {
+	//	float3 axis = m_vUp;			//!< 回転させる軸
+	//	float rad = -deg * 3.14f / 180;	//!< 回転角度
+	//	m_vEye = RotateQuaternionPosition(axis, m_vEye, rad);
+	//}
+	//if (Input::isPress(VK_LEFT)) {
+	//	float3 axis = m_vUp;			//!< 回転させる軸
+	//	float rad = deg * 3.14f / 180;	//!< 回転角度
+	//	m_vEye = RotateQuaternionPosition(axis, m_vEye, rad);
+	//}
+	//if (Input::isPress(VK_UP)) {
+	//	float3 axis = { 0,1,0 };		//!< 回転させる軸
+	//	float rad = deg * 3.14f / 180;	//!< 回転角度
+	//	axis.x = m_vEye.y * m_vUp.z - m_vEye.z * m_vUp.y;
+	//	axis.y = m_vEye.z * m_vUp.x - m_vEye.x * m_vUp.z;
+	//	axis.z = m_vEye.x * m_vUp.y - m_vEye.y * m_vUp.x;
+	//	m_vEye = RotateQuaternionPosition(axis, m_vEye, rad);
+	//	m_vUp  = RotateQuaternionPosition(axis, m_vUp, rad);
+	//}
+	//if (Input::isPress(VK_DOWN)) {
+	//	float3 axis = { 0,1,0 };		//!< 回転させる軸
+	//	float rad = -deg * 3.14f / 180;	//!< 回転角度
+	//	axis.x = m_vEye.y * m_vUp.z - m_vEye.z * m_vUp.y;
+	//	axis.y = m_vEye.z * m_vUp.x - m_vEye.x * m_vUp.z;
+	//	axis.z = m_vEye.x * m_vUp.y - m_vEye.y * m_vUp.x;
+	//	m_vEye = RotateQuaternionPosition(axis, m_vEye, rad);
+	//	m_vUp = RotateQuaternionPosition(axis, m_vUp, rad);
+	//}
+	//PrintDebugProc("vecUp = %.2f, %.2f, %.2f\n", m_vUp.x, m_vUp.y, m_vUp.z);
+}
+
+
+void TPCamera::LastUpdate() {
 	// メモ
 	// 注視点はロックオンされているターゲット(ロックオンしてない時はプレイヤー)
 	// 座標はターゲットとプレイヤーのベクトル上の少し後ろでプレイヤーのY軸から真横に移動
@@ -66,14 +104,13 @@ void TPCamera::LastUpdate()
 	// 上方ベクトル
 	XMStoreFloat3(&m_vUp, XMVector3TransformNormal(XMLoadFloat3(&g_vUp), world));
 
-	if (m_player->GetComponent<Player>()->m_target != nullptr) {	// ターゲットロックオン状態
+	if (m_player != nullptr) {	// ターゲットロックオン状態
 		float3 eye = m_player->m_transform->m_position;
-		eye -= m_player->m_transform->m_forward * 600.f;
-		m_vEye = float3(eye.x, eye.y + 300.f, eye.z);
-		m_vLook = m_player->GetComponent<Player>()->m_target->m_transform->m_position;
+		eye -= m_player->m_transform->m_forward * 500.f;
+		m_vEye = float3(eye.x, eye.y + 200.f, eye.z);
+		m_vLook = m_player->m_transform->m_position;
 		m_vUp = float3(0.f, 1.f, 0.f);
 	}
-
 	//行列更新
 	CCamera::LastUpdate();
 }

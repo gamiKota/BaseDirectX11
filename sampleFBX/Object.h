@@ -14,6 +14,7 @@
  * @include
  */
 #include <string>
+#include "Data.h"
 
 
 /**
@@ -42,6 +43,11 @@ public:
 	const unsigned int GetInstanceID() { return m_ID; }
 	const bool GetActive() { return m_isActive; }
 	bool isDintDestroy() { return m_isDontDestroy; }
+
+	/**
+	 * @brief Instantiate
+	 */
+	static void Instantiate(GameObject* obj, float3 transform = float3(), Quaternion rotate = Quaternion(), float3 scale = float3(1.f, 1.f, 1.f));
 
 	/**
 	 : @brief Destroy

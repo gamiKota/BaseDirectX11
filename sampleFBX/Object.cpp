@@ -14,6 +14,17 @@
 #include "System.h"
 
 
+void Object::Instantiate(GameObject* obj, float3 transform, Quaternion rotate, float3 scale) {
+	if (obj == nullptr)	return;
+
+	obj->m_transform->m_position = transform;
+	obj->m_transform->m_rotate = rotate;
+	obj->m_transform->m_scale = scale;
+
+	SceneManager::GetInstance().m_scene->m_listObject.push_back(obj);
+}
+
+
 void Object::Destroy(GameObject* obj) {
 	if (obj == nullptr)	return;
 	

@@ -161,6 +161,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Data.cpp" />
+    <ClCompile Include="FixedEnemy.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectUI.cpp" />
     <ClCompile Include="Number.cpp" />
@@ -201,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h" />
+    <ClInclude Include="FixedEnemy.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GameObjectUI.h" />
     <ClInclude Include="TextureManager.h" />

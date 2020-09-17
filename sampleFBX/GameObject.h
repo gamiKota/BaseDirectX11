@@ -104,11 +104,6 @@ public:
 	static std::list<GameObject*> FindGameObjectsWithTag(std::string tag);
 
 	/**
-	 * @brief Instance
-	 */
-	static void Instance(GameObject* obj, float3 transform = float3(), float3 rotate = float3(), float3 scale = float3(1.f, 1.f, 1.f));
-
-	/**
 	 * @brief オブジェクトが持っているコンポーネントを取得
 	 * @template <class T>
 	 * @return class T or nullptr
