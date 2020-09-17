@@ -31,7 +31,7 @@ void Object::Destroy(GameObject* obj) {
 	// こっちのが安全だわイテレータうんち
 	std::list<GameObject*> *objectList = &SceneManager::GetInstance().m_scene->m_listObject;
 	for (auto temp : SceneManager::GetInstance().m_scene->m_listObject) {
-		if (temp->GetInstanceID() == obj->GetInstanceID()) {
+		if (temp == obj) {
 			temp->m_isActive = false;
 		}
 	}

@@ -58,6 +58,14 @@ public:
 	 * @brief DontDestroyOnLoad
 	 */
 	static void DontDestroyOnLoad(GameObject* obj);
+
+
+	bool operator == (Object object) {
+		return this->m_ID == object.m_ID ? true : false;
+	}
+	bool operator != (Object object) {
+		return !(*this == object);
+	}
 };
 
 

@@ -31,7 +31,7 @@ void Bullet::Start() {
 void Bullet::Update() {
 	--m_nLife;
 	if (m_nLife <= 0) {
-		GameObject::Destroy(m_gameObject);
+		Destroy(m_gameObject);
 		return;
 	}
 	// ‘O‚Éi‚Þ
@@ -41,15 +41,15 @@ void Bullet::Update() {
 
 void Bullet::OnCollision(GameObject* obj) {
 	if (obj->GetTag() == "Enemy") {
-		//GameObject::Destroy(obj);
-		//Destroy(m_gameObject);
+		//Destroy(obj);
+		Destroy(m_gameObject);
 		obj->GetComponent<Collision>()->m_bHit = true;
 		if (GameObject::Find("Score") != nullptr) {
 			GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);
 		}
 		//if (GameObject::Find("Player") != nullptr) {
-		//	if (obj == GameObject::Find("Player")->GetComponent<CPlayer>()->m_target)
-		//		GameObject::Find("Player")->GetComponent<CPlayer>()->m_target = nullptr;
+		//	if (obj == GameObject::Find("Player")->GetComponent<Player>()->m_target)
+		//		GameObject::Find("Player")->GetComponent<Player>()->m_target = nullptr;
 		//}
 	}
 }
