@@ -333,4 +333,74 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 }
 
 
+bool Collision::OBB(Collision obj1, Collision obj2) {
+	bool hit = false;
+
+	// ワールド空間上のOBB中心座標を求める
+	XMFLOAT3 vPos1, vPos2;
+	XMStoreFloat3(&vPos1, XMVector3TransformCoord(
+		XMLoadFloat3(&obj1.m_vCenter), XMLoadFloat4x4(&obj1.m_gameObject->m_transform->GetMatrix())));
+	XMStoreFloat3(&vPos2, XMVector3TransformCoord(
+		XMLoadFloat3(&obj1.m_vCenter), XMLoadFloat4x4(&obj2.m_gameObject->m_transform->GetMatrix())));
+	// 中心座標間のベクトルを求める
+	XMVECTOR vD = XMVectorSet(vPos2.x - vPos1.x,
+		vPos2.y - vPos1.y,
+		vPos2.z - vPos1.z, 0.0f);
+	// モデル座標軸を求める
+	XMFLOAT3 v[6];
+	v[0] = XMFLOAT3(obj1.m_gameObject->m_transform->GetMatrix()._11, obj1.m_gameObject->m_transform->GetMatrix()._12, obj1.m_gameObject->m_transform->GetMatrix()._13);
+	v[1] = XMFLOAT3(obj1.m_gameObject->m_transform->GetMatrix()._21, obj1.m_gameObject->m_transform->GetMatrix()._22, obj1.m_gameObject->m_transform->GetMatrix()._23);
+	v[2] = XMFLOAT3(obj1.m_gameObject->m_transform->GetMatrix()._31, obj1.m_gameObject->m_transform->GetMatrix()._32, obj1.m_gameObject->m_transform->GetMatrix()._33);
+	v[3] = XMFLOAT3(obj2.m_gameObject->m_transform->GetMatrix()._11, obj2.m_gameObject->m_transform->GetMatrix()._12, obj2.m_gameObject->m_transform->GetMatrix()._13);
+	v[4] = XMFLOAT3(obj2.m_gameObject->m_transform->GetMatrix()._21, obj2.m_gameObject->m_transform->GetMatrix()._22, obj2.m_gameObject->m_transform->GetMatrix()._23);
+	v[5] = XMFLOAT3(obj2.m_gameObject->m_transform->GetMatrix()._31, obj2.m_gameObject->m_transform->GetMatrix()._32, obj2.m_gameObject->m_transform->GetMatrix()._33);
+	XMVECTOR vN[6];
+	for (int i = 0; i < 6; ++i)
+		vN[i] = XMLoadFloat3(&v[i]);
+	// OBBの大きさ(半分)の長さを掛けたベクトルを求める
+	XMVECTOR vL[6];
+	vL[0] = XMVectorSet(v[0].x * obj1.m_vBBox.x, v[0].y * obj1.m_vBBox.x, v[0].z * obj1.m_vBBox.x, 0.0f);
+	vL[1] = XMVectorSet(v[1].x * obj1.m_vBBox.y, v[1].y * obj1.m_vBBox.y, v[1].z * obj1.m_vBBox.y, 0.0f);
+	vL[2] = XMVectorSet(v[2].x * obj1.m_vBBox.z, v[2].y * obj1.m_vBBox.z, v[2].z * obj1.m_vBBox.z, 0.0f);
+	vL[3] = XMVectorSet(v[3].x * obj2.m_vBBox.x, v[3].y * obj2.m_vBBox.x, v[3].z * obj2.m_vBBox.x, 0.0f);
+	vL[4] = XMVectorSet(v[4].x * obj2.m_vBBox.y, v[4].y * obj2.m_vBBox.y, v[4].z * obj2.m_vBBox.y, 0.0f);
+	vL[5] = XMVectorSet(v[5].x * obj2.m_vBBox.z, v[5].y * obj2.m_vBBox.z, v[5].z * obj2.m_vBBox.z, 0.0f);
+	// 分離軸候補はモデル座標軸
+	float fL, fD;
+	for (int i = 0; i < 6; ++i) {
+		XMVECTOR& vS = vN[i];	// 分離軸候補(正規化済のはず)
+		// OBBの影(半分)の合計
+		fL = 0.0f;
+		for (int j = 0; j < 6; ++j) {
+			XMStoreFloat(&fD, XMVector3Dot(vS, vL[j]));
+			fL += fabsf(fD);
+		}
+		// 影の合計と中心間の距離の比較
+		XMStoreFloat(&fD, XMVector3Dot(vS, vD));
+		if (fL < fabsf(fD))
+			return false;	// 当たっていない
+	}
+	// 分離軸候補は2辺の直交ベクトル
+	XMVECTOR vS;	// 分離軸候補
+	for (int i = 0; i < 3; ++i) {
+		for (int j = 3; j < 6; ++j) {
+			// 分離軸候補を求める
+			vS = XMVector3Normalize(XMVector3Cross(vN[i], vN[j]));
+			// OBBの影(半分)の合計
+			fL = 0.0f;
+			for (int k = 0; k < 6; ++k) {
+				XMStoreFloat(&fD, XMVector3Dot(vS, vL[k]));
+				fL += fabsf(fD);
+			}
+			// 影の合計と中心間の距離の比較
+			XMStoreFloat(&fD, XMVector3Dot(vS, vD));
+			if (fL < fabsf(fD))
+				return false;	// 当たっていない
+		}
+	}
+
+	return true;	// 当たっている
+}
+
+
 // EOF

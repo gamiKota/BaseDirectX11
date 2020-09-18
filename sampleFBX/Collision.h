@@ -55,6 +55,7 @@ public:
 	void SetColor(DirectX::XMFLOAT4* pColor) { m_color = *pColor; }
 
 	static bool AABB(Collision obj1, Collision obj2);
+	static bool OBB(Collision obj1, Collision obj2);
 
 private:
 	void Init(E_MODEL model);

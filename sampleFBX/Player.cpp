@@ -80,16 +80,16 @@ void Player::Operation() {
 	}
 	
 	// 移動停止
-	//if ((!Input::isPress('A') && !Input::isPress('D'))) {
-	//	if (m_roll > 0.f) {
-	//		m_roll -= VAL_ANGLE_Z * 0.5f;
-	//	}
-	//	else if (m_roll < 0.f) {
-	//		m_roll += VAL_ANGLE_Z * 0.5f;
-	//	}
-	//}
+	if ((!Input::isPress('A') && !Input::isPress('D'))) {
+		if (m_roll > 0.f) {
+			m_roll -= VAL_ANGLE_Z * 0.5f;
+		}
+		else if (m_roll < 0.f) {
+			m_roll += VAL_ANGLE_Z * 0.5f;
+		}
+	}
 	
-	//m_transform->m_rotate.z = m_roll;
+	m_transform->m_rotate.z = XMConvertToRadians(m_roll);
 
 	// ターゲットロックオン
 	if (Input::isTrigger('T')) {

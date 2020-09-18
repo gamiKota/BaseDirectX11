@@ -62,7 +62,7 @@ void Scene::Update() {
 			GameObject *temp1 = *i;
 			GameObject *temp2 = *j;
 			if (temp1->GetComponent<Collision>() != nullptr && temp2->GetComponent<Collision>() != nullptr) {
-				if (Collision::AABB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
+				if (Collision::OBB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
 					temp1->OnCollision(temp2);
 					temp2->OnCollision(temp1);
 				}
