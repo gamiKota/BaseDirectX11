@@ -122,4 +122,9 @@ void Player::Operation() {
 }
 
 
+void Player::OnCollision(GameObject* obj) {
+	PrintDebugProc("HIT!!!!!!!!!!");
+}
+
+
 // EOF

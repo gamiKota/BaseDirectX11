@@ -36,6 +36,7 @@ public:
 public:
 	void Start();
 	void Update();
+	void OnCollision(GameObject* obj);
 
 private:
 	void Operation();

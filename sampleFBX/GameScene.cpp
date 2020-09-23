@@ -33,8 +33,7 @@ static const float VAL_ENEMY_POS_Z = 800.f;
 static const float MAX_ENEMY_POS_Z = 1000.f;
 
 
-int GetRandom(int min, int max)
-{
+int GetRandom(int min, int max) {
 	return min + (int)(rand()*(max - min + 1.0) / (1.0 + RAND_MAX));
 }
 
@@ -87,9 +86,6 @@ void GameScene::Init() {
 
 	// Ç®ëOÇÕç≈å„
 	Scene::Init();
-
-
-
 }
 
 
