@@ -16,10 +16,10 @@ void FixedEnemy::Start() {
 
 
 void FixedEnemy::Update() {
-	//GameObject* target = GameObject::Find("Player");
-	//if (target != nullptr) {
-	//	m_transform->LookAt(target->m_transform);
-	//}
+	GameObject* target = GameObject::Find("Player");
+	if (target != nullptr) {
+		m_transform->LookAt(target->m_transform);
+	}
 }
 
 

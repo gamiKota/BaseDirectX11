@@ -20,8 +20,7 @@ public:
 	float3		m_forward;		//!< 前方向
 	float3		m_right;		//!< 右方向
 	float3		m_up;			//!< 上方向
-	float3		m_eulerAngles;	//!< オイラー角
-
+	
 	Interpolation m_DORotate;	//!< DOTween出来たらいいなぁ
 
 private:

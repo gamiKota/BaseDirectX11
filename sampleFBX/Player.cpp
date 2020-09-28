@@ -29,9 +29,6 @@ static const float VAL_ANGLE_Z	= 2.f;
 static const float MAX_ANGLE_Z	= 30.f;
 
 
-Quaternion q;
-
-
 void Player::Start() {
 	m_gameObject->AddComponent<Collision>();
 
@@ -49,6 +46,26 @@ void Player::Update() {
 
 
 void Player::Operation() {
+
+	// ターゲットロックオン
+	if (Input::isTrigger('T')) {
+		if (m_target == nullptr) {
+			GameObject* obj = GameObject::FindGameObjectWithTag("Enemy");
+			if (obj != nullptr) {
+				m_target = obj;
+			}
+		}
+		else if (m_target != nullptr) {
+			m_target = nullptr;
+		}
+	}
+	if (m_target != nullptr) {
+		m_transform->LookAt(m_target->m_transform);
+	}
+	else {
+		m_transform->m_rotate = Quaternion();
+	}
+
 	// モデル姿勢に依存しない平行移動
 	XMFLOAT4X4 mtx = XMFLOAT4X4();
 	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(m_transform->m_rotate.x, m_transform->m_rotate.y, 0.f));
@@ -91,24 +108,11 @@ void Player::Operation() {
 	
 	m_transform->m_rotate.z = XMConvertToRadians(m_roll);
 
-	// ターゲットロックオン
-	if (Input::isTrigger('T')) {
-		if (m_target == nullptr) {
-			GameObject* obj = GameObject::FindGameObjectWithTag("Enemy");
-			if (obj != nullptr) {
-				m_target = obj;
-			}
-		}
-		else if (m_target != nullptr) {
-			m_target = nullptr;
-		}
+	if (Input::isTrigger('P')) {
+		
 	}
-	if (m_target != nullptr) {
-		m_transform->LookAt(m_target->m_transform);
-	}
-	else {
-		m_transform->m_rotate = Quaternion();
-	}
+	PrintDebugProc("MyQuaternion = %.2f, %.2f, %.2f, %.2f\n",
+		m_transform->m_rotate.x, m_transform->m_rotate.y, m_transform->m_rotate.z, m_transform->m_rotate.w);
 
 
 	// ホーミングミサイル発射
@@ -117,8 +121,6 @@ void Player::Operation() {
 		Instantiate(obj, m_transform->m_position, m_transform->m_rotate);
 		obj->AddComponent<Bullet>();
 	}
-	
-	//PrintDebugProc("roll = %.2f\n", m_roll);
 }
 
 

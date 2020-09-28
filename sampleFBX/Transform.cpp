@@ -39,12 +39,6 @@ void Transform::LastUpdate() {
 	m_right = { m_world._11, m_world._12, m_world._13 };
 	// 上方向の更新
 	m_up = { m_world._21, m_world._22, m_world._23 };
-
-	// オイラー角の更新
-	m_eulerAngles = float3(XMConvertToDegrees(m_rotate.x), XMConvertToDegrees(m_rotate.y), XMConvertToDegrees(m_rotate.z));
-
-	PrintDebugProc("%s, rotate = %.2f, %.2f, %.2f\n", m_gameObject->m_name.c_str(), m_rotate.x, m_rotate.y, m_rotate.z);
-	PrintDebugProc("%s, euler  = %.2f, %.2f, %.2f\n", m_gameObject->m_name.c_str(), m_eulerAngles.x, m_eulerAngles.y, m_eulerAngles.z);
 }
 
 

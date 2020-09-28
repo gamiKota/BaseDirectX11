@@ -13,8 +13,12 @@
 using namespace DirectX;
 
 
+const Quaternion Quaternion::identity = Quaternion(0.f, 0.f, 0.f, 1.f);
+
+
 Quaternion Quaternion::Euler(float3 vec) {
-	return Quaternion(0.f, XMConvertToRadians(vec.x), XMConvertToRadians(vec.y), XMConvertToRadians(vec.z));
+	Quaternion q = Quaternion(XMConvertToRadians(vec.x), XMConvertToRadians(vec.y), XMConvertToRadians(vec.z), 1.f);
+	return q;
 }
 Quaternion Quaternion::Euler(float x, float y, float z) {
 	return Euler(float3(x, y, z));

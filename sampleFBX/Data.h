@@ -120,20 +120,27 @@ public:
  */
 class Quaternion {
 public:
-	float w;
 	float x;
 	float y;
 	float z;
+	float w;
+
+	static const Quaternion identity;	//!< 恒等回転（無回転状態）
 
 public:
 	Quaternion() {
-		w = x = y = z = 0.f;
+		x = y = z = 0.f;
+		w = 1.f;
 	}
-	Quaternion(float w, float x, float y, float z) {
-		this->w = w;
+	Quaternion(float x, float y, float z, float w) {
 		this->x = x;
 		this->y = y;
 		this->z = z;
+		this->w = w;
+	}
+
+	float3 Euler() {
+		float3(DirectX::XMConvertToDegrees(x), DirectX::XMConvertToDegrees(y), DirectX::XMConvertToDegrees(z));
 	}
 
 	/**
@@ -150,40 +157,40 @@ public:
 	static Quaternion Euler(float x, float y, float z);
 
 
-	//Quaternion operator * (Quaternion data) {
-	//	Quaternion quaternion;
-	//	float   num1, num2, num3, num4;
-	//
-	//	num1 = this->w * data.w;
-	//	num2 = -this->x * data.x;
-	//	num3 = -this->y * data.y;
-	//	num4 = -this->z * data.z;
-	//	quaternion.w = num1 + num2 + num3 + num4;
-	//
-	//	num1 = this->w * data.x;
-	//	num2 = this->x * data.w;
-	//	num3 = this->y * data.z;
-	//	num4 = -this->z * data.y;
-	//	quaternion.x = num1 + num2 + num3 + num4;
-	//
-	//	num1 = this->w * data.y;
-	//	num2 = this->y * data.w;
-	//	num3 = this->z * data.x;
-	//	num4 = -this->x * data.z;
-	//	quaternion.y = num1 + num2 + num3 + num4;
-	//
-	//	num1 = this->w * data.z;
-	//	num2 = this->z * data.w;
-	//	num3 = this->x * data.y;
-	//	num4 = -this->y * data.x;
-	//	quaternion.z = num1 + num2 + num3 + num4;
-	//
-	//	// q1 * q2 = s1 * s2 - v1 * v2 + s1 * v2 + s2 * v1 + v1 * v2
-	//	// q1とq2、v1とv2はベクトル
-	//	// s1とs2はQuaternionのスカラー成分
-	//
-	//	return   quaternion;
-	//}
+	Quaternion operator * (Quaternion data) {
+		Quaternion quaternion;
+		float   num1, num2, num3, num4;
+	
+		num1 = this->w * data.w;
+		num2 = -this->x * data.x;
+		num3 = -this->y * data.y;
+		num4 = -this->z * data.z;
+		quaternion.w = num1 + num2 + num3 + num4;
+	
+		num1 = this->w * data.x;
+		num2 = this->x * data.w;
+		num3 = this->y * data.z;
+		num4 = -this->z * data.y;
+		quaternion.x = num1 + num2 + num3 + num4;
+	
+		num1 = this->w * data.y;
+		num2 = this->y * data.w;
+		num3 = this->z * data.x;
+		num4 = -this->x * data.z;
+		quaternion.y = num1 + num2 + num3 + num4;
+	
+		num1 = this->w * data.z;
+		num2 = this->z * data.w;
+		num3 = this->x * data.y;
+		num4 = -this->y * data.x;
+		quaternion.z = num1 + num2 + num3 + num4;
+	
+		// q1 * q2 = s1 * s2 - v1 * v2 + s1 * v2 + s2 * v1 + v1 * v2
+		// q1とq2、v1とv2はベクトル
+		// s1とs2はQuaternionのスカラー成分
+	
+		return   quaternion;
+	}
 };
 
 
