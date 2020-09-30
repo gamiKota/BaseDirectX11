@@ -55,10 +55,27 @@ void GameObject::Update() {
 
 
 void GameObject::LastUpdate() {
-	PrintDebugProc("name = %s, Instance = %d, pos = %.2f, %.2f, %.2f\n", ToString(), GetInstanceID(),
-		m_transform->m_position.x,
-		m_transform->m_position.y,
-		m_transform->m_position.z);
+	//PrintDebugProc("name = %s, Instance = %d, pos = %.2f, %.2f, %.2f\n", ToString(), GetInstanceID(),
+	//	m_transform->m_position.x,
+	//	m_transform->m_position.y,
+	//	m_transform->m_position.z);
+	//for (auto com : m_listComponent) {
+	//	Transform* p = dynamic_cast<Transform*>(com);
+	//	if (p != nullptr) {
+	//		PrintDebugProc("name = %s, Instance = %d, pos = %.2f, %.2f, %.2f\n", ToString(), GetInstanceID(),
+	//			p->m_transform->m_position.x,
+	//			p->m_transform->m_position.y,
+	//			p->m_transform->m_position.z);
+	//		PrintDebugProc("name = %s, Instance = %d, pos = %.2f, %.2f, %.2f\n", ToString(), GetInstanceID(),
+	//			p->m_gameObject->m_transform->m_position.x,
+	//			p->m_gameObject->m_transform->m_position.y,
+	//			p->m_gameObject->m_transform->m_position.z);
+	//		PrintDebugProc("name = %s, Instance = %d, pos = %.2f, %.2f, %.2f\n", ToString(), GetInstanceID(),
+	//			p->m_position.x,
+	//			p->m_position.y,
+	//			p->m_position.z);
+	//	}
+	//}
 
 	auto buff = m_listComponent;
 	for (auto com : buff)

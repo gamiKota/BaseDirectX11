@@ -127,7 +127,13 @@ public:
 	T* AddComponent() {
 		T* buff = new T();
 		buff->m_gameObject = this;
-		buff->m_transform = m_transform;
+		Transform* p = dynamic_cast<Transform*>(buff);
+		if (p != nullptr) {
+			buff->m_transform = p;
+		}
+		else {
+			buff->m_transform = m_transform;
+		}
 		m_listComponent.push_back(buff);
 		buff->Awake();
 		if (SceneManager::GetInstance().m_scene->GetGameUpdate()) {

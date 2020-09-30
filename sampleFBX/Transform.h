@@ -21,8 +21,6 @@ public:
 	float3		m_right;		//!< 右方向
 	float3		m_up;			//!< 上方向
 	
-	Interpolation m_DORotate;	//!< DOTween出来たらいいなぁ
-
 private:
 	DirectX::XMFLOAT4X4 m_world;		//!< ワールド行列
 

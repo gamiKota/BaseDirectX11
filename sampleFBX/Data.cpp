@@ -24,6 +24,56 @@ Quaternion Quaternion::Euler(float x, float y, float z) {
 	return Euler(float3(x, y, z));
 }
 
+Quaternion Quaternion::Inverse(Quaternion rotation) {
+	Quaternion Result;
+	float LengthSq = rotation.x * rotation.x + rotation.y * rotation.y + rotation.z * rotation.z + rotation.w * rotation.w;
+	Result.x = -rotation.x / LengthSq;
+	Result.y = -rotation.y / LengthSq;
+	Result.z = -rotation.z / LengthSq;
+	Result.w = rotation.w / LengthSq;
+	return Result;
+}
+
+Quaternion Quaternion::Slerp(Quaternion q1, Quaternion q2, float t) {
+	XMFLOAT4 f1, f2, result;
+	Quaternion out = Quaternion();
+	f1.w = q1.w; f1.x = q1.x; f1.y = q1.y; f1.z = q1.z;
+	f2.w = q2.w; f2.x = q2.x; f2.y = q2.y; f2.z = q2.z;
+	XMStoreFloat4(&result, XMQuaternionSlerp(XMLoadFloat4(&f1), XMLoadFloat4(&f2), t));
+	out.x = result.x; out.y = result.y; out.z = result.z; out.w = result.w;
+	return out;
+}
+
+Quaternion Quaternion::Dot(Quaternion q1, Quaternion q2) {
+	XMFLOAT4 f1, f2, result;
+	Quaternion out = Quaternion();
+	f1.w = q1.w; f1.x = q1.x; f1.y = q1.y; f1.z = q1.z;
+	f2.w = q2.w; f2.x = q2.x; f2.y = q2.y; f2.z = q2.z;
+	XMStoreFloat4(&result, XMQuaternionDot(XMLoadFloat4(&f1), XMLoadFloat4(&f2)));
+	out.x = result.x; out.y = result.y; out.z = result.z; out.w = result.w;
+	return out;
+}
+
+// バグではないけど、挙動が可笑しい(というより回転角度が小さい)
+// 一回転出来ないなんで？
+// 一周が720°なんだけどうんこ
+Quaternion Quaternion::AngleAxis(float angle, float3 axis) {
+	if (axis.x == 0.f && axis.y == 0.f && axis.z == 0.f) return Quaternion();
+	float RadiansAngle = XMConvertToRadians(angle);
+	XMVECTOR axisRot; //回転用軸
+	XMFLOAT4 result;
+	Quaternion out = Quaternion();
+	
+	axisRot = XMVector3Normalize(XMVectorSet(axis.x, axis.y, axis.z, 1.f));
+	XMStoreFloat4(&result, XMQuaternionRotationAxis(axisRot, RadiansAngle));
+
+	out.x = result.x;
+	out.y = result.y;
+	out.z = result.z;
+	out.w = result.w;
+	return out;
+}
+
 
  /**
   * @brief   クォータニオン作成

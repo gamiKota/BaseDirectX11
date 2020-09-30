@@ -6,6 +6,9 @@
 
 using namespace DirectX;
 
+bool transformRotMatToQuaternion(Quaternion &q, XMFLOAT4X4 matrix);
+void transformQuaternionToRotMat(XMFLOAT4X4 &matrix, Quaternion q);
+
 
 float lerp(float3 start, float3 end, float t) {
 	return ((1 - t) * start.y + t * end.y);
@@ -39,6 +42,8 @@ void Transform::LastUpdate() {
 	m_right = { m_world._11, m_world._12, m_world._13 };
 	// 上方向の更新
 	m_up = { m_world._21, m_world._22, m_world._23 };
+
+	//transformRotMatToQuaternion(m_rotate, m_world);
 }
 
 
@@ -54,6 +59,95 @@ void Transform::LookAt(Transform* target) {
 	m_rotate.x = rotate.x;
 	m_rotate.y = rotate.y;
 }
+
+
+///////////////////////////////////////////////
+// クォータニオン→回転行列変換
+//
+// m11-m33 : 回転行列成分（出力）
+// qx, qy, qz, qw : クォータニオン成分
+//
+// ※注意：
+// 行列成分はDirectX形式（行方向が軸の向き）です
+// OpenGL形式（列方向が軸の向き）の場合は
+// 転置した値を格納するようにして下さい。
+
+void transformQuaternionToRotMat(XMFLOAT4X4 &matrix, Quaternion q) {
+	matrix._11 = 1.0f - 2.0f * q.y * q.y - 2.0f * q.z * q.z;
+	matrix._12 = 2.0f * q.x * q.y + 2.0f * q.w * q.z;
+	matrix._13 = 2.0f * q.x * q.z - 2.0f * q.w * q.y;
+
+	matrix._21 = 2.0f * q.x * q.y - 2.0f * q.w * q.z;
+	matrix._22 = 1.0f - 2.0f * q.x * q.x - 2.0f * q.z * q.z;
+	matrix._23 = 2.0f * q.y * q.z + 2.0f * q.w * q.x;
+
+	matrix._31 = 2.0f * q.x * q.z + 2.0f * q.w * q.y;
+	matrix._32 = 2.0f * q.y * q.z - 2.0f * q.w * q.x;
+	matrix._33 = 1.0f - 2.0f * q.x * q.x - 2.0f * q.y * q.y;
+}
+
+
+///////////////////////////////////////////////
+// 回転行列→クォータニオン変換
+//
+// qx, qy, qz, qw : クォータニオン成分（出力）
+// m11-m33 : 回転行列成分
+//
+// ※注意：
+// 行列成分はDirectX形式（行方向が軸の向き）です
+// OpenGL形式（列方向が軸の向き）の場合は
+// 転置した値を入れて下さい。
+
+bool transformRotMatToQuaternion(Quaternion &q, XMFLOAT4X4 matrix) {
+	// 最大成分を検索
+	float elem[4]; // 0:x, 1:y, 2:z, 3:w
+	elem[0] = matrix._11 - matrix._22 - matrix._33 + 1.0f;
+	elem[1] = -matrix._11 + matrix._22 - matrix._33 + 1.0f;
+	elem[2] = -matrix._11 - matrix._22 + matrix._33 + 1.0f;
+	elem[3] = matrix._11 + matrix._22 + matrix._33 + 1.0f;
+
+	unsigned biggestIndex = 0;
+	for (int i = 1; i < 4; i++) {
+		if (elem[i] > elem[biggestIndex])
+			biggestIndex = i;
+	}
+
+	if (elem[biggestIndex] < 0.0f)
+		return false; // 引数の行列に間違いあり！
+
+	// 最大要素の値を算出
+	float *pq[4] = { &q.x, &q.y, &q.z, &q.w };
+	float v = sqrtf(elem[biggestIndex]) * 0.5f;
+	*pq[biggestIndex] = v;
+	float mult = 0.25f / v;
+
+	switch (biggestIndex) {
+	case 0: // x
+		*pq[1] = (matrix._12 + matrix._21) * mult;
+		*pq[2] = (matrix._31 + matrix._13) * mult;
+		*pq[3] = (matrix._23 - matrix._32) * mult;
+		break;
+	case 1: // y
+		*pq[0] = (matrix._12 + matrix._21) * mult;
+		*pq[2] = (matrix._23 + matrix._32) * mult;
+		*pq[3] = (matrix._31 - matrix._13) * mult;
+		break;
+	case 2: // z
+		*pq[0] = (matrix._31 + matrix._13) * mult;
+		*pq[1] = (matrix._23 + matrix._32) * mult;
+		*pq[3] = (matrix._12 - matrix._21) * mult;
+		break;
+	case 3: // w
+		*pq[0] = (matrix._23 - matrix._32) * mult;
+		*pq[1] = (matrix._31 - matrix._13) * mult;
+		*pq[2] = (matrix._12 - matrix._21) * mult;
+		break;
+	}
+
+	return true;
+}
+
+
 
 
 void Transform::LookAtA(Transform* target) {

@@ -139,19 +139,51 @@ public:
 		this->w = w;
 	}
 
-	float3 Euler() {
-		float3(DirectX::XMConvertToDegrees(x), DirectX::XMConvertToDegrees(y), DirectX::XMConvertToDegrees(z));
+	float3 EulerAngle() {
+		return float3(DirectX::XMConvertToDegrees(x), DirectX::XMConvertToDegrees(y), DirectX::XMConvertToDegrees(z));
 	}
 
 	/**
+	 * @brief 逆クォータニオン
+	 * @param[in] rotation
+	 * @return 引数の逆クォータニオン
+	 */
+	static Quaternion Inverse(Quaternion rotation);
+
+	/**
+	 * @brief 球面線形補間
+	 * @param[in] q1
+	 * @param[in] q2
+	 * @param[in] t
+	 * @return 算出されたQuaternion
+	 */
+	static Quaternion Slerp(Quaternion q1, Quaternion q2, float t);
+
+	/**
+	 * @brief 2つのQuaternionの内積
+	 * @param[in] q1
+	 * @param[in] q2
+	 * return 算出されたQuaternion
+	 */
+	static Quaternion Dot(Quaternion q1, Quaternion q2);
+
+	/**
+	 * @brief 2つのQuaternionの間を計算
+	 * @param[in] angle
+	 * @param[in] axis
+	 * return 算出されたQuaternion
+	 */
+	static Quaternion AngleAxis(float angle, float3 axis);
+
+	/**
 	 * @brief Euler
-	 * @param float3
+	 * @param[in] float3
 	 * @return Quaternion
 	 */
 	static Quaternion Euler(float3 vec);
 	/**
 	 * @brief Euler
-	 * @param float x, float y, float z
+	 * @param[in] float x, float y, float z
 	 * @return Quaternion
 	 */
 	static Quaternion Euler(float x, float y, float z);
