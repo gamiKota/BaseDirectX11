@@ -91,19 +91,32 @@ void Player::Operation() {
 
 	// ターゲットロックオン
 	if (Input::isTrigger('T')) {
-		if (m_target == nullptr) {
-			GameObject* obj = GameObject::FindGameObjectWithTag("Enemy");
-			if (obj != nullptr) {
+		// メモ
+		// 複数敵が居たら近い順(もしくはソート基準なし)で
+		// 順番に敵をロックオンする
+		// 今のままだとリストの1番目と2番目を交互に見続けるだけ
+		std::list<GameObject*> objlist = GameObject::FindGameObjectsWithTag("Enemy");
+		for (auto obj : objlist) {
+			if (obj == nullptr) continue;	// 多分nullはないと思うけど一応
+			if (m_target == nullptr) {		// そもそもロックオンしてない
 				m_target = obj;
+				break;
 			}
-		}
-		else if (m_target != nullptr) {
-			m_target = nullptr;
-			m_transform->m_rotate = Quaternion::identity;
+			if (m_target != obj) {		// すでにロックオン状態なので、違う敵をロックオン
+				m_target = obj;
+				break;
+			}
 		}
 	}
 	if (m_target != nullptr) {
 		m_transform->LookAt(m_target->m_transform);
+	}
+	// ターゲットロックオフ
+	if (Input::isTrigger('O')) {
+		if (m_target != nullptr) {
+			m_target = nullptr;
+			m_transform->m_rotate = Quaternion::identity;
+		}
 	}
 
 	// モデル姿勢に依存しない平行移動

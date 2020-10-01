@@ -114,7 +114,7 @@ GameObject* GameObject::FindGameObjectWithTag(std::string tag) {
 	return nullptr;
 }
 
-// わかんにゃーい！！！！！！！！！
+
 std::list<GameObject*> GameObject::FindGameObjectsWithTag(std::string tag) {
 	m_listFinds.clear();
 	for (auto obj : SceneManager::GetInstance().m_scene->m_listObject) {
