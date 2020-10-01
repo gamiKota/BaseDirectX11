@@ -35,6 +35,14 @@ Quaternion Quaternion::Inverse(Quaternion rotation) {
 }
 
 Quaternion Quaternion::Slerp(Quaternion q1, Quaternion q2, float t) {
+	//XMFLOAT4 f1, f2, result;
+	//Quaternion out = Quaternion();
+	//f1.w = q1.w; f1.x = q1.x; f1.y = q1.y; f1.z = q1.z;
+	//f2.w = q2.w; f2.x = q2.x; f2.y = q2.y; f2.z = q2.z;
+	//XMStoreFloat4(&result, XMQuaternionSlerp(XMLoadFloat4(&f1), XMLoadFloat4(&f2), t));
+	//out.x = result.x; out.y = result.y; out.z = result.z; out.w = result.w;
+	//return out;
+
 	XMFLOAT4 f1, f2, result;
 	Quaternion out = Quaternion();
 	f1.w = q1.w; f1.x = q1.x; f1.y = q1.y; f1.z = q1.z;

@@ -48,7 +48,29 @@ void Player::Start() {
 
 void Player::Update() {
 	
-	this->Operation();
+	XMFLOAT3 f1;
+	XMFLOAT4 result;
+	f1.x = 0.f;
+	f1.y = 0.f;
+	f1.z = 1.f;
+
+	XMStoreFloat4(&result, XMQuaternionRotationAxis(XMLoadFloat3(&f1), XMConvertToRadians(g_time)));
+
+	m_transform->m_rotate.z += XMConvertToRadians(g_time);
+
+	PrintDebugProc("axisAngle = %.2f, %.2f, %.2f, %.2f\n",
+		m_transform->m_rotate.x, m_transform->m_rotate.y, m_transform->m_rotate.z, m_transform->m_rotate.w);
+
+	g_time += 1.f;
+	if (g_time >= 720.f) {
+		g_time = 0.f;
+	}
+
+	
+
+
+
+	//this->Operation();
 }
 
 
@@ -111,9 +133,8 @@ void Player::Operation() {
 			m_roll += VAL_ANGLE_Z * 0.5f;
 		}
 	}
-	//m_transform->m_rotate = Quaternion::AngleAxis(m_roll, m_transform->m_forward);
-	m_transform->m_rotate.z = XMConvertToRadians(m_roll);
-	
+	m_transform->m_rotate = Quaternion::AngleAxis(m_roll, m_transform->m_forward);
+
 
 	// ホーミングミサイル発射
 	if (Input::isTrigger(VK_SPACE)) {
