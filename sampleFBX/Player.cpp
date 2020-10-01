@@ -42,35 +42,47 @@ void Player::Start() {
 	m_target	= nullptr;
 	m_transform->m_position = float3(0.f, 0.f, 0.f);
 
+	q1 = Quaternion();
+	q2 = Quaternion::Euler(0.f, -270.f, 0.f);
 	g_time = 0.f;
 }
 
 
 void Player::Update() {
+	//// 逆クォータニオン
+	//Quaternion Inverse = Quaternion::Inverse(m_transform->m_rotate);
+	//// 球面線形補間
+	//m_transform->m_rotate = Quaternion::Slerp(q1, q2, g_time);
+	//// 2つのQuaternionの内積
+	//Quaternion Dot = Quaternion::Dot(m_transform->m_rotate, q2);
+	// 軸による回転
+	//Quaternion AngleAxis = Quaternion::AngleAxis(g_time, float3(0.f, 0.f, 1.f));
+	//m_transform->m_rotate = AngleAxis;
+
+
+	//PrintDebugProc("position = %.2f, %.2f, %.2f\n",
+	//	m_transform->m_position.x, m_transform->m_position.y, m_transform->m_position.z);
+	//PrintDebugProc("rotate = %.2f, %.2f, %.2f, %.2f\n",
+	//	m_transform->m_rotate.EulerAngle().x, m_transform->m_rotate.EulerAngle().y, m_transform->m_rotate.EulerAngle().z, m_transform->m_rotate.w);
+	//PrintDebugProc("Inverse = %.2f, %.2f, %.2f, %.2f\n",
+	//	Inverse.EulerAngle().x, Inverse.EulerAngle().y, Inverse.EulerAngle().z, Inverse.w);
+	//PrintDebugProc("slerp = %.2f, %.2f, %.2f, %.2f\n",
+	//	m_transform->m_rotate.EulerAngle().x, m_transform->m_rotate.EulerAngle().y, m_transform->m_rotate.EulerAngle().z, m_transform->m_rotate.w);
+	//PrintDebugProc("Dot = %.2f, %.2f, %.2f, %.2f\n",
+	//	Dot.EulerAngle().x, Dot.EulerAngle().y, Dot.EulerAngle().z, Dot.w);
+	//PrintDebugProc("AngleAxis = %.2f, %.2f, %.2f, %.2f\n",
+	//	AngleAxis.EulerAngle().x, AngleAxis.EulerAngle().y, AngleAxis.EulerAngle().z, AngleAxis.w);
+
+	//g_time += 0.1f / 60.f;
+	//if (g_time >= 1.f) {
+	//	g_time = 1.f;
+	//}
+	//g_time += 1.f;
+	//if (g_time >= 720.f) {
+	//	g_time = 0.f;
+	//}
 	
-	XMFLOAT3 f1;
-	XMFLOAT4 result;
-	f1.x = 0.f;
-	f1.y = 0.f;
-	f1.z = 1.f;
-
-	XMStoreFloat4(&result, XMQuaternionRotationAxis(XMLoadFloat3(&f1), XMConvertToRadians(g_time)));
-
-	m_transform->m_rotate.z += XMConvertToRadians(g_time);
-
-	PrintDebugProc("axisAngle = %.2f, %.2f, %.2f, %.2f\n",
-		m_transform->m_rotate.x, m_transform->m_rotate.y, m_transform->m_rotate.z, m_transform->m_rotate.w);
-
-	g_time += 1.f;
-	if (g_time >= 720.f) {
-		g_time = 0.f;
-	}
-
-	
-
-
-
-	//this->Operation();
+	this->Operation();
 }
 
 
