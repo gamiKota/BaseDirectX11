@@ -41,8 +41,8 @@ int GetRandom(int min, int max) {
 void GameScene::Init() {
 
 	// TPS視点カメラ
-	m_empty = new GameObject("MainCamera");
-#if 1
+	GameObject* m_empty = new GameObject("MainCamera");
+#if 0
 	m_empty->AddComponent<CCamera>();
 	CCamera::Set(m_empty->GetComponent<CCamera>());
 #else
@@ -52,7 +52,7 @@ void GameScene::Init() {
 	m_listObject.push_back(m_empty);
 
 	// スカイドーム
-	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky");
+	GameObject3D* m_object3D = new GameObject3D(E_MODEL_SKY, "Sky");
 	m_object3D->AddComponent<SkyDome>();
 	m_listObject.push_back(m_object3D);
 	

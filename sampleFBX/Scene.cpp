@@ -7,6 +7,7 @@
  * @include
  */
 #include "Scene.h"
+#include "Object.h"
 #include "GameObject.h"
 #include "GameObject3D.h"
 #include "GameObjectUI.h"
@@ -31,7 +32,9 @@ void Scene::Init() {
 
 	auto buff = m_listObject;
 	for (auto obj : buff) {
-		obj->Init();
+		GameObject* gameObject = dynamic_cast<GameObject*>(obj);
+		if (gameObject != nullptr)
+			gameObject->Init();
 	}
 
 	// 初期化の終了
@@ -41,30 +44,40 @@ void Scene::Init() {
 void Scene::Uninit() {
 	auto buff = m_listObject;
 	for (auto obj : buff) {
-		obj->Uninit();
+		GameObject* gameObject = dynamic_cast<GameObject*>(obj);
+		if (gameObject != nullptr)
+			gameObject->Uninit();
 	}
 }
 
 void Scene::Update() {
 	auto buff = m_listObject;
-	for (auto obj : buff)
-		obj->Update();
+	for (auto obj : buff) {
+		GameObject* gameObject = dynamic_cast<GameObject*>(obj);
+		if (gameObject != nullptr)
+			gameObject->Update();
+	}
 
 	buff = m_listObject;
-	for (auto obj : buff)
-		obj->LastUpdate();
+	for (auto obj : buff) {
+		GameObject* gameObject = dynamic_cast<GameObject*>(obj);
+		if (gameObject != nullptr)
+			gameObject->LastUpdate();
+	}
 
 	// Collisionコンポーネントを持つオブジェクトの総当たり判定
-	std::list<GameObject*> *collisionList = &m_listObject;
+	std::list<Object*> *collisionList = &m_listObject;
 	for (auto i = collisionList->begin(); i != collisionList->end(); i++) {
 		for (auto j = i; j != collisionList->end(); j++) {
 			if (j == i)	continue;	// うんち処理
-			GameObject *temp1 = *i;
-			GameObject *temp2 = *j;
-			if (temp1->GetComponent<Collision>() != nullptr && temp2->GetComponent<Collision>() != nullptr) {
-				if (Collision::OBB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
-					temp1->OnCollision(temp2);
-					temp2->OnCollision(temp1);
+			GameObject *temp1 = dynamic_cast<GameObject*>(*i);
+			GameObject *temp2 = dynamic_cast<GameObject*>(*j);
+			if (temp1 != nullptr && temp2 != nullptr) {
+				if (temp1->GetComponent<Collision>() != nullptr && temp2->GetComponent<Collision>() != nullptr) {
+					if (Collision::OBB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
+						temp1->OnCollision(temp2);
+						temp2->OnCollision(temp1);
+					}
 				}
 			}
 		}
@@ -85,7 +98,7 @@ void Scene::Draw() {
 	for (auto obj : buff) {
 		GameObjectUI* background = dynamic_cast<GameObjectUI*>(obj);
 		if (background != nullptr && background->m_layer < E_LAYER::UI) {
-			obj->Draw();
+			background->Draw();
 		}
 	}
 
@@ -95,8 +108,9 @@ void Scene::Draw() {
 	// 3Dモデル
 	buff = m_listObject;
 	for (auto obj : buff) {
-		if (dynamic_cast<GameObject3D*>(obj) != nullptr)
-			obj->Draw();
+		GameObject* gameObject = dynamic_cast<GameObject3D*>(obj);
+		if (gameObject != nullptr)
+			gameObject->Draw();
 	}
 
 	// 背面カリング (通常は表面のみ描画)
@@ -109,7 +123,7 @@ void Scene::Draw() {
 	for (auto obj : buff) {
 		GameObjectUI* UI = dynamic_cast<GameObjectUI*>(obj);
 		if (UI != nullptr && UI->m_layer >= E_LAYER::UI) {
-			obj->Draw();
+			UI->Draw();
 		}
 	}
 }

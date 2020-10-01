@@ -13,7 +13,7 @@ enum class E_SCENE {
 
 class SceneManager : public Singleton<SceneManager> {
 public:
-	std::list<GameObject*> m_DontDestroyObject;
+	std::list<GameObject*> m_DontDestroyObject;	//!< オブジェクトの保存
 
 public:
 	Scene* m_scene;

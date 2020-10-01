@@ -97,8 +97,9 @@ void GameObject::OnCollision(GameObject* obj) {
 
 GameObject* GameObject::Find(std::string name) {
 	for (auto objectList : SceneManager::GetInstance().m_scene->m_listObject) {
-		if (objectList->m_name == name) {
-			return objectList;
+		GameObject* gameObject = dynamic_cast<GameObject*>(objectList);
+		if (gameObject->m_name == name) {
+			return gameObject;
 		}
 	}
 	return nullptr;
@@ -107,8 +108,9 @@ GameObject* GameObject::Find(std::string name) {
 
 GameObject* GameObject::FindGameObjectWithTag(std::string tag) {
 	for (auto objectList : SceneManager::GetInstance().m_scene->m_listObject) {
-		if (objectList->m_tag == tag) {
-			return objectList;
+		GameObject* gameObject = dynamic_cast<GameObject*>(objectList);
+		if (gameObject->m_tag == tag) {
+			return gameObject;
 		}
 	}
 	return nullptr;
@@ -118,8 +120,9 @@ GameObject* GameObject::FindGameObjectWithTag(std::string tag) {
 std::list<GameObject*> GameObject::FindGameObjectsWithTag(std::string tag) {
 	m_listFinds.clear();
 	for (auto obj : SceneManager::GetInstance().m_scene->m_listObject) {
-		if (obj->m_tag == tag) {
-			m_listFinds.push_back(obj);
+		GameObject* gameObject = dynamic_cast<GameObject*>(obj);
+		if (gameObject->m_tag == tag) {
+			m_listFinds.push_back(gameObject);
 		}
 	}
 	return m_listFinds;

@@ -19,9 +19,7 @@
 /**
  * @forward declaration
  */
-class GameObject;
-class GameObject3D;
-class GameObjectUI;
+class Object;
 
 
 /**
@@ -31,14 +29,9 @@ class Scene {
 protected:
 	bool			m_isUpdate;
 	std::string		m_name;
-	GameObject*		m_empty;	//!< 空のオブジェクト
-	GameObject3D*	m_object3D;	//!< 3Dオブジェクト
-	GameObjectUI*	m_UI;		//!< 取り合えず
-	GameObjectUI*	m_number;	//!< 取り合えず
-	GameObjectUI*	m_Button;	//!< 取り合えず
 
 public:
-	std::list<GameObject*> m_listObject;	//!< オブジェクトリスト
+	std::list<Object*> m_listObject;	//!< オブジェクトリスト
 	Scene();
 	~Scene();
 	virtual void Init();
