@@ -145,7 +145,8 @@ void Player::Operation() {
 			m_roll += VAL_ANGLE_Z * 0.5f;
 		}
 	}
-	m_transform->m_rotate = Quaternion::AngleAxis(m_roll, m_transform->m_forward);
+	//m_transform->m_rotate = Quaternion::AngleAxis(m_roll, m_transform->m_forward);
+	m_transform->m_rotate.z = XMConvertToRadians(m_roll);
 
 
 	// ホーミングミサイル発射

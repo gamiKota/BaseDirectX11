@@ -58,7 +58,7 @@ Quaternion Quaternion::Dot(Quaternion q1, Quaternion q2) {
 // ˆê‰ñ“]o—ˆ‚È‚¢‚È‚ñ‚ÅH
 // ˆêü‚ª720‹‚È‚ñ‚¾‚¯‚Ç‚¤‚ñ‚±
 Quaternion Quaternion::AngleAxis(float angle, float3 axis) {
-	if (axis.x == 0.f && axis.y == 0.f && axis.z == 0.f) return Quaternion();
+	if (axis.x == 0.f && axis.y == 0.f && axis.z == 0.f || angle == 0.f) return Quaternion();
 	float RadiansAngle = XMConvertToRadians(angle);
 	XMVECTOR axisRot; //‰ñ“]—p²
 	XMFLOAT4 result;
