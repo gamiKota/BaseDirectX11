@@ -57,6 +57,7 @@ Quaternion Quaternion::Dot(Quaternion q1, Quaternion q2) {
 // バグではないけど、挙動が可笑しい(というより回転角度が小さい)
 // 一回転出来ないなんで？
 // 一周が720°なんだけどうんこ
+// なんか掛けたり色々しなきゃいけなさそうブルキナサソウ
 Quaternion Quaternion::AngleAxis(float angle, float3 axis) {
 	if (axis.x == 0.f && axis.y == 0.f && axis.z == 0.f || angle == 0.f) return Quaternion();
 	float RadiansAngle = XMConvertToRadians(angle);

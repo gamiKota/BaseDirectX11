@@ -51,8 +51,9 @@ public:
 	void LastUpdate();
 	void DebugDraw();
 
-	DirectX::XMFLOAT4& GetColor() { return m_color; }
-	void SetColor(DirectX::XMFLOAT4* pColor) { m_color = *pColor; }
+	inline void SetHit() {
+		m_bHit = true;
+	}
 
 	static bool AABB(Collision obj1, Collision obj2);
 	static bool OBB(Collision obj1, Collision obj2);
@@ -60,6 +61,7 @@ public:
 private:
 	void Init(E_MODEL model);
 	void SetWorld(DirectX::XMFLOAT4X4 world);
+	void OnCollision(GameObject* obj);
 };
 
 

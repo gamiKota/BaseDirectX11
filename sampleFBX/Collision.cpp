@@ -85,8 +85,9 @@ void Collision::Update() {
 }
 
 // 更新
-void Collision::LastUpdate()
-{
+void Collision::LastUpdate() {
+	m_bHit = false;
+
 	if (!m_isInit) {
 		GameObject3D* obj = dynamic_cast<GameObject3D*>(GameObject::Find(m_gameObject->m_name));
 		if (obj != nullptr) {
@@ -127,12 +128,10 @@ void Collision::DebugDraw() {
 
 	// 境界ボックスの色
 	if (m_bHit) {
-		XMFLOAT4 vRed(1.0f, 0.0f, 0.0f, 0.5f);
-		SetColor(&vRed);
+		m_color = XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);
 	}
 	else {
-		XMFLOAT4 vGreen(0.0f, 1.0f, 0.0f, 0.5f);
-		SetColor(&vGreen);
+		m_color = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f);
 	}
 
 	// シェーダ設定
@@ -300,35 +299,6 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 		Az - Ad <= Bz + Bd &&
 		Bz - Bd <= Az + Ad;
 
-	// 境界ボックスの色
-	if (hit) {
-		XMFLOAT4 vRed(1.0f, 0.0f, 0.0f, 0.5f);
-		obj1.SetColor(&vRed);
-		obj2.SetColor(&vRed);
-	} else {
-		XMFLOAT4 vGreen(0.0f, 1.0f, 0.0f, 0.5f);
-		obj1.SetColor(&vGreen);
-		obj2.SetColor(&vGreen);
-	}
-
-	//XMFLOAT3   t1, t2;
-	////判定する辺を目立たせる処理（衝突判定とは関係なし）
-	// r1 = obj1の頂点 (2、0)
-	// r2 = obj1の頂点 (3、1)
-	// p1 = obj2の頂点 (0、2)
-	// p2 = obj2の頂点 (1、3)
-	////衝突判定計算
-	//t1 = (r1.x - r2.x)*(p1.y - r1.y) + (r1.y - r2.y)*(r1.x - p1.x);
-	//t2 = (r1.x - r2.x)*(p2.y - r1.y) + (r1.y - r2.y)*(r1.x - p2.x);
-	////それぞれの正負が異なる（積が負になる）か、0（点が直線上にある）
-	////ならクロスしている
-	//if (t1*t2 < 0 || t1 == 0 || t2 == 0) {
-	//	return(true); //クロスしている
-	//}
-	//else {
-	//	return(false); //クロスしない
-	//}
-
 	return hit;
 }
 
@@ -400,6 +370,10 @@ bool Collision::OBB(Collision obj1, Collision obj2) {
 	}
 
 	return true;	// 当たっている
+}
+
+
+void Collision::OnCollision(GameObject* obj) {
 }
 
 
