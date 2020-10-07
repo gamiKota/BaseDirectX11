@@ -295,12 +295,6 @@
     <FxCompile Include="Vertex.hlsl">
       <Filter>ソース ファイル\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="Vertex2D.hlsl">
-      <Filter>ソース ファイル\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Pixel2D.hlsl">
-      <Filter>ソース ファイル\hlsl</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="sampleFBX.rc">
