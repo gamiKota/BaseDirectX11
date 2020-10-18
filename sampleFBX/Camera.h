@@ -26,7 +26,7 @@ protected:
 	float3					m_vUp;		//!< 上方ベクトル
 	DirectX::XMFLOAT4X4		m_mView;	//!< ビュー変換
 	DirectX::XMFLOAT4X4		m_mProj;	//!< 射影変換
-	float					m_fFOVY;	//!< 視野角
+	float					m_fFovy;	//!< 視野角
 	float					m_fAspect;	//!< アスペクト比
 	float					m_fNearZ;	//!< 前方クリップ距離
 	float					m_fFarZ;	//!< 後方クリップ距離

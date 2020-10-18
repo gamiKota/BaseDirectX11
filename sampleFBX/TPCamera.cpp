@@ -25,7 +25,7 @@ namespace {
 
 
 void TPCamera::Awake() {
-	m_fFOVY = XMConvertToRadians(45);
+	m_fFovy = XMConvertToRadians(45);
 	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 	m_fNearZ = 10.0f;
 	m_fFarZ = 100000.0f;

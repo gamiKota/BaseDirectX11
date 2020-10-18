@@ -23,7 +23,7 @@ void CCamera::Start() {
 	m_vEye	= float3(0.0f, 200.0f, -400.0f);
 	m_vLook = float3(0.0f, 0.0f, 0.0f);
 	m_vUp	= float3(0.0f, 1.0f, 0.0f);
-	m_fFOVY = XMConvertToRadians(45);
+	m_fFovy = XMConvertToRadians(45);
 	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 	m_fNearZ = 10.0f;
 	m_fFarZ = 10000.0f;
@@ -61,7 +61,7 @@ void CCamera::LastUpdate() {
 		XMLoadFloat3(&m_vUp)));
 	// éÀâeïœä∑çXêV
 	XMStoreFloat4x4(&m_mProj,
-		XMMatrixPerspectiveFovLH(m_fFOVY, m_fAspect,
+		XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect,
 			m_fNearZ, m_fFarZ));
 }
 
