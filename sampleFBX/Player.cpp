@@ -132,7 +132,6 @@ void Player::Operation() {
 
 void Player::OnCollision(GameObject* obj) {
 	if (obj->GetTag() == "Enemy") {
-		PrintDebugProc("HIT!!!!!!!!!!");
 		obj->GetComponent<Collision>()->SetHit();
 	}
 }

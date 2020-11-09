@@ -8,12 +8,16 @@
  */
 #include "Data.h"
 #include <DirectXMath.h>
+#include "debugproc.h"
 
 
 using namespace DirectX;
 
 
 const Quaternion Quaternion::identity = Quaternion(0.f, 0.f, 0.f, 1.f);
+
+void QuaternionMultiply(Quaternion *pOut, Quaternion *pQ1, Quaternion *pQ2);
+void Vec3RotationAxis(float3 *pQut, float3 *pIn, float3 *pAxis, float fDegree);
 
 
 Quaternion Quaternion::Euler(float3 vec) {
@@ -67,12 +71,64 @@ Quaternion Quaternion::AngleAxis(float angle, float3 axis) {
 	
 	axisRot = XMVector3Normalize(XMVectorSet(axis.x, axis.y, axis.z, 1.f));
 	XMStoreFloat4(&result, XMQuaternionRotationAxis(axisRot, RadiansAngle));
-
+	
 	out.x = result.x;
 	out.y = result.y;
 	out.z = result.z;
 	out.w = result.w;
 	return out;
+
+	//float3 out0 = float3(0.f, 0.f, 0.f);
+	//float3 vec0 = axis;
+	//Vec3RotationAxis(&out0, &vec0, &axis, angle);
+	//return Quaternion(out0.x, out0.y, out0.z, 0.f);
+}
+
+
+// クウォータニオン同士の乗算
+void QuaternionMultiply(Quaternion *pOut, Quaternion *pQ1, Quaternion *pQ2) {
+	pOut->w = pQ1->w * pQ2->w - pQ1->x * pQ2->x - pQ1->y * pQ2->y - pQ1->z * pQ2->z;
+	pOut->x = pQ1->w * pQ2->x + pQ2->w * pQ1->x + pQ1->y * pQ2->z - pQ1->z * pQ2->y;
+	pOut->y = pQ1->w * pQ2->y + pQ2->w * pQ1->y + pQ1->z * pQ2->x - pQ1->x * pQ2->z;
+	pOut->z = pQ1->w * pQ2->z + pQ2->w * pQ1->z + pQ1->x * pQ2->y - pQ1->y * pQ2->x;
+}
+
+// 任意軸回転
+void Vec3RotationAxis(float3 *pQut, float3 *pIn, float3 *pAxis, float fDegree) {
+	float rad, s, c;
+	Quaternion q_src, q_rot0, q_rot1;
+	Quaternion q_tmp, q_out;
+
+	// 角度をラジアンに変換
+	rad = XMConvertToRadians(fDegree);
+
+	// 回転用クウォータニオン設定
+	q_src.x = pIn->x;
+	q_src.y = pIn->y;
+	q_src.z = pIn->z;
+	q_src.w = 0.f;
+
+	s = sinf(rad * 0.5f);
+	c = cosf(rad * 0.5f);
+
+	q_rot0.x = pAxis->x * s;
+	q_rot0.y = pAxis->y * s;
+	q_rot0.z = pAxis->z * s;
+	q_rot0.w = c;
+
+	q_rot1.x = pAxis->x * -s;
+	q_rot1.y = pAxis->y * -s;
+	q_rot1.z = pAxis->z * -s;
+	q_rot1.w = c;
+
+	// クウォータニオンを掛ける
+	QuaternionMultiply(&q_tmp, &q_rot1, &q_src);
+	QuaternionMultiply(&q_out, &q_tmp, &q_rot0);
+
+	// ベクトルに戻す
+	pQut->x = q_out.x;
+	pQut->y = q_out.y;
+	pQut->z = q_out.z;
 }
 
 

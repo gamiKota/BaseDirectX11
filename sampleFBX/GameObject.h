@@ -94,12 +94,12 @@ public:
 	static GameObject* Find(std::string name);
 
 	/**
-	 * @brief FindTag
+	 * @brief FindGameObjectWithTag
 	 */
 	static GameObject* FindGameObjectWithTag(std::string tag);
 
 	/**
-	 * @brief FindTags
+	 * @brief FindGameObjectsWithTag
 	 */
 	static std::list<GameObject*> FindGameObjectsWithTag(std::string tag);
 
