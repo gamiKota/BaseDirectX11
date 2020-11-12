@@ -200,6 +200,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TPCamera.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Tween.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TPCamera.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Tween.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FbxModelPixel.hlsl">

@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "GameObject.h"
+#include "Tween.h"
 #include "debugproc.h"
 #include "System.h"
 
@@ -17,6 +18,7 @@ float lerp(float3 start, float3 end, float t) {
 
 Transform::Transform() : m_position(float3()), m_rotate(Quaternion()), m_scale(float3()) {
 	XMStoreFloat4x4(&m_world, XMMatrixIdentity());
+
 }
 
 
@@ -45,6 +47,18 @@ void Transform::LastUpdate() {
 
 	//transformRotMatToQuaternion(m_rotate, m_world);
 }
+
+
+//Tween* Transform::DOMove(float3 position, float time) {
+//
+//	//for (auto tween : m_tween) {
+//	//	if (tween->ToString == "Move") {
+//	//		return tween->DOTween(m_position, position, time);
+//	//	}
+//	//}
+//
+//	return nullptr;
+//}
 
 
 void Transform::LookAt(Transform* target) {

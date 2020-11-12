@@ -12,6 +12,8 @@
 #include "debugproc.h"
 #include "Bullet.h"
 #include "Collision.h"
+#include "Tween.h"
+#include "debugproc.h"
 #include "System.h"
 
 
@@ -28,6 +30,7 @@ static const float SPEED		= 15.0f;	// 速さ
 static const float VAL_ANGLE_Z	= 2.f;
 static const float MAX_ANGLE_Z	= 30.f;
 
+Tween* g_tween;
 
 void Player::Start() {
 	m_gameObject->AddComponent<Collision>();
@@ -36,12 +39,27 @@ void Player::Start() {
 	m_vMove		= float3();
 	m_target	= nullptr;
 	m_transform->m_position = float3(0.f, 0.f, 0.f);
+
+	g_tween = new Tween("tween");
 }
 
 
 void Player::Update() {
 	
+	float3 start = float3(0.f, 0.f, 0.f);
+	float3 end = float3(20.f, 10.f, 30.f);
+	if (Input::isTrigger('M')) {
+		g_tween->DOTween(start, end, 5.f);
+	}
+
+	g_tween->Update();
+
 	this->Operation();
+}
+
+
+void Player::Uninit() {
+	delete g_tween;
 }
 
 

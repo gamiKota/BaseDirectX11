@@ -55,11 +55,19 @@ public:
 	 */
 	void DrawFPS();
 
+	/**
+	 * @brief デルタタイム取得
+	 */
+	float GetDeltaTime() {
+		return m_deltaTime / 1000.f;
+	}
+
 private:
 	DWORD	m_startTime;	//!< アプリケーション起動時の時間
 	DWORD	m_oldTime;		//!< 前の時間
 	DWORD	m_nowTime;		//!< 今の時間
 	DWORD	m_Frame;		//!< フレーム数
+	DWORD	m_deltaTime;	//!< デルタタイム
 };
 
 

@@ -39,7 +39,7 @@ public:
 	Object() : m_isDontDestroy(false), m_isActive(true), m_ID(unsigned int(this)), m_name("Object") {}
 	Object(std::string name, bool active = true) : m_isDontDestroy(false), m_isActive(active), m_ID(unsigned int(this)), m_name(name) {}
 
-	const char* ToString() { return m_name.c_str(); }
+	std::string ToString() { return m_name; }
 	const unsigned int GetInstanceID() { return m_ID; }
 	const bool GetActive() { return m_isActive; }
 	bool isDintDestroy() { return m_isDontDestroy; }

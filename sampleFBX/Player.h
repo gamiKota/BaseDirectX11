@@ -36,6 +36,7 @@ public:
 public:
 	void Start();
 	void Update();
+	void Uninit();
 	void OnCollision(GameObject* obj);
 
 private:

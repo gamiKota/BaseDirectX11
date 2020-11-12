@@ -30,6 +30,12 @@ public:
 		this->z = z;
 	}
 
+	static float3 lerp3(float3 start, float3 end, float t) {
+		if (t > 1.f)	t = 1.f;
+		if (t < 0.f)	t = 0.f;
+		return float3(((1.f - t) * start.x + t * end.x), ((1.f - t) * start.y + t * end.y), ((1.f - t) * start.z + t * end.z));
+	}
+
 	float3 operator + (float3 data) {
 		return float3(x + data.x, y + data.y, z + data.z);
 	}

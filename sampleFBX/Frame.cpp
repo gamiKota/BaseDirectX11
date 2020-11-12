@@ -33,6 +33,7 @@ void Frame::Update() {
 bool Frame::isUpdateGame() {
 	if ((m_nowTime - m_oldTime) >= 1000 / VAL_FRAME) {
 		m_Frame = (1000 / (m_nowTime - m_oldTime));
+		m_deltaTime = m_nowTime - m_oldTime;
 		m_oldTime = m_nowTime;
 		return true;
 	}
@@ -49,9 +50,13 @@ DWORD Frame::GetPassageTime() {
 	return m_nowTime - m_startTime;
 }
 
+static float time;
 
 void Frame::DrawFPS() {
 	PrintDebugProc("FPS:%d\n\n", m_Frame);
+	PrintDebugProc("DeltaTime:%f\n\n", m_deltaTime / 1000.f);
+	time += m_deltaTime / 1000.f;
+	PrintDebugProc("time:%f\n\n", time);
 }
 
 
