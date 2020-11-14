@@ -124,11 +124,8 @@ public:
 /**
  * @brief クォータニオン
  */
-class Quaternion {
+class Quaternion : public float3 {
 public:
-	float x;
-	float y;
-	float z;
 	float w;
 
 	static const Quaternion identity;	//!< 恒等回転（無回転状態）
@@ -194,6 +191,13 @@ public:
 	 */
 	static Quaternion Euler(float x, float y, float z);
 
+
+	Quaternion operator = (float3 data) {
+		x = data.x;
+		y = data.y;
+		z = data.z;
+		return *this;
+	}
 
 	Quaternion operator * (Quaternion data) {
 		Quaternion quaternion;

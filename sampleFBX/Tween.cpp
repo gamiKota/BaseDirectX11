@@ -13,10 +13,8 @@
 #include "System.h"
 
 
-
-Tween::Tween(std::string name) : Object(name) {
-	//m_name		= name;
-
+Tween::Tween() {
+	m_name		= "tween";
 	m_isTween	= E_TWEEN::NONE;
 	m_result	= float3();
 	m_start		= float3();
@@ -26,7 +24,18 @@ Tween::Tween(std::string name) : Object(name) {
 }
 
 
-Tween* Tween::DOTween(float3 start, float3 end, float time) {
+Tween::Tween(std::string name) : Object() {
+	m_name		= "tween";
+	m_isTween	= E_TWEEN::NONE;
+	m_result	= float3();
+	m_start		= float3();
+	m_end		= float3();
+	m_nowTime	= 0.f;
+	m_maxTime	= 0.f;
+}
+
+
+void Tween::DOTween(float3 start, float3 end, float time) {
 
 	if (m_isTween == E_TWEEN::NONE) {
 		m_isTween = E_TWEEN::DO;
@@ -37,25 +46,15 @@ Tween* Tween::DOTween(float3 start, float3 end, float time) {
 		m_nowTime	= 0.f;
 		m_maxTime	= time;
 	}
-	return this;
 }
 
 
 void Tween::Update() {
 
-	if (m_isTween == E_TWEEN::NONE) {
-
-		PrintDebugProc("start = %.2f, %.2f, %.2f\n", m_start.x, m_start.y, m_start.z);
-		PrintDebugProc("end = %.2f, %.2f, %.2f\n", m_end.x, m_end.y, m_end.z);
-		PrintDebugProc("result = %.2f, %.2f, %.2f\n", m_result.x, m_result.y, m_result.z);
-
-		PrintDebugProc("m_nowTime = %.2f\n", m_nowTime);
-		PrintDebugProc("m_nowTime = %.2f\n", m_maxTime);
-
-		return;
+	if (m_isTween == E_TWEEN::END) {
+		m_isTween = E_TWEEN::NONE;
 	}
-
-	if (m_isTween == E_TWEEN::DO) {
+	else if (m_isTween == E_TWEEN::DO) {
 
 		// éûä‘Çë´Ç∑
 		m_nowTime += Frame::GetInstance().GetDeltaTime();
@@ -66,18 +65,10 @@ void Tween::Update() {
 		m_result = float3::lerp3(m_start, m_end, time);
 
 		if (time >= 1.f && m_isTween == E_TWEEN::DO) {	// ç°tweeníÜ
-		// èIÇÌÇË
-			m_isTween = E_TWEEN::NONE;
-			return;
+			// èIÇÌÇË
+			m_isTween = E_TWEEN::END;
 		}
 	}
-
-	PrintDebugProc("start = %.2f, %.2f, %.2f\n", m_start.x, m_start.y, m_start.z);
-	PrintDebugProc("end = %.2f, %.2f, %.2f\n", m_end.x, m_end.y, m_end.z);
-	PrintDebugProc("result = %.2f, %.2f, %.2f\n", m_result.x, m_result.y, m_result.z);
-
-	PrintDebugProc("m_nowTime = %.2f\n", m_nowTime);
-	PrintDebugProc("m_nowTime = %.2f\n", m_maxTime);
 }
 
 

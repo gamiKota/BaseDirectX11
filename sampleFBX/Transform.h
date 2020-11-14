@@ -6,9 +6,9 @@
 #pragma once
 
 
+#include <list>
 #include "Component.h"
 #include "Data.h"
-#include <list>
 
 
 class Tween;
@@ -23,7 +23,7 @@ public:
 	float3		m_right;		//!< 右方向
 	float3		m_up;			//!< 上方向
 
-	//std::list<Tween*> m_tween;	//!< tweenリスト
+	Tween*		m_tween;		//!< tween
 	
 private:
 	DirectX::XMFLOAT4X4 m_world;		//!< ワールド行列
@@ -33,8 +33,9 @@ public:
 	Transform();
 	void Update();
 	void LastUpdate();
+	void Uninit();
 
-	//Tween* DOMove(float3 position, float time = 0.f);
+	Tween* DOMove(float3 position, float time = 0.f);
 
 	void LookAt(Transform* target);
 	void LookAtA(Transform* target);

@@ -11,23 +11,36 @@ bool transformRotMatToQuaternion(Quaternion &q, XMFLOAT4X4 matrix);
 void transformQuaternionToRotMat(XMFLOAT4X4 &matrix, Quaternion q);
 
 
-float lerp(float3 start, float3 end, float t) {
-	return ((1 - t) * start.y + t * end.y);
-}
 
-
-Transform::Transform() : m_position(float3()), m_rotate(Quaternion()), m_scale(float3()) {
+Transform::Transform() : m_position(float3()), m_rotate(Quaternion()), m_scale(float3()), m_tween(new Tween[3]()) {
 	XMStoreFloat4x4(&m_world, XMMatrixIdentity());
-
 }
 
 
 void Transform::Update() {
-	//XMQuaternionSlerp
 }
 
 
 void Transform::LastUpdate() {
+
+	for (int i = 0; i < 3; i++) {
+		m_tween[i].Update();
+
+		if (m_tween[i].m_isTween == E_TWEEN::DO) {	// ‚¤‚ñ‚¿
+			if (i == 0) {
+				m_position = m_tween[i].GetResult();
+			}
+			if (i == 1) {
+				m_rotate = m_tween[i].GetResult();
+			}
+			if (i == 2) {
+				m_scale = m_tween[i].GetResult();
+			}
+		}
+	}
+
+
+
 	XMMATRIX matrix = XMMatrixIdentity();	// s—ñ•ÏŠ·
 	// Šgk‚Ì•ÏX
 	matrix = XMMatrixMultiply(matrix, XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z));
@@ -44,21 +57,20 @@ void Transform::LastUpdate() {
 	m_right = { m_world._11, m_world._12, m_world._13 };
 	// ã•ûŒü‚ÌXV
 	m_up = { m_world._21, m_world._22, m_world._23 };
-
-	//transformRotMatToQuaternion(m_rotate, m_world);
 }
 
 
-//Tween* Transform::DOMove(float3 position, float time) {
-//
-//	//for (auto tween : m_tween) {
-//	//	if (tween->ToString == "Move") {
-//	//		return tween->DOTween(m_position, position, time);
-//	//	}
-//	//}
-//
-//	return nullptr;
-//}
+void Transform::Uninit() {
+	delete[] m_tween;
+}
+
+
+Tween* Transform::DOMove(float3 position, float time) {
+
+	m_tween[0].DOTween(m_position, position, time);
+
+	return &m_tween[0];
+}
 
 
 void Transform::LookAt(Transform* target) {

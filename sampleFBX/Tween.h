@@ -19,7 +19,7 @@
 enum class E_TWEEN {
 	NONE,	// ‘Ò‹@ó‘Ô
 	DO,		// “®ì’†
-	END,
+	END,	// I‚í‚Á‚½uŠÔ
 };
 
 
@@ -27,7 +27,7 @@ enum class E_TWEEN {
  * @class Tween
  */
 class Tween : Object {
-private :
+public:
 	E_TWEEN m_isTween;
 
 	float3 m_result;
@@ -38,9 +38,10 @@ private :
 
 public:
 
+	Tween();
 	Tween(std::string name);
 
-	Tween* DOTween(float3 start, float3 end, float time = 0.f);
+	void DOTween(float3 start, float3 end, float time = 0.f);
 
 	void Update();
 

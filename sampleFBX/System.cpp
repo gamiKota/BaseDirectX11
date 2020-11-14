@@ -12,6 +12,7 @@
 #define CLASS_NAME		_T("AppClass")					// ウインドウのクラス名
 #define WINDOW_NAME		_T("コンポーネント指向")		// ウインドウのキャプション名
 static const Library LIBRARY_MODE = Library::DirectX;	// ライブラリモード
+static const BOOL CURSOR_MODE = TRUE;
 
 
 //********************************************************************************
@@ -105,7 +106,7 @@ bool System::InitializeWindows(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPT
 		CLASS_NAME,
 		nullptr
 	};
-	ShowCursor(FALSE);
+	ShowCursor(CURSOR_MODE);
 
 	// COM初期化
 	if (FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED))) {
