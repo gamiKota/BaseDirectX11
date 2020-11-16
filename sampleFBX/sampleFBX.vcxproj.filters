@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\hlsl">
-      <UniqueIdentifier>{7b81f225-cd94-450b-9fb2-6efacae0d0f6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\System">
       <UniqueIdentifier>{bdfd8ad3-0b10-4ba2-ae2d-89c77582b5b7}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,9 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\Scene">
       <UniqueIdentifier>{6ae5f3e5-b877-4c43-8910-703904dd31fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\hlsl">
+      <UniqueIdentifier>{7b81f225-cd94-450b-9fb2-6efacae0d0f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -290,16 +290,16 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FbxModelPixel.hlsl">
-      <Filter>ソース ファイル\hlsl</Filter>
+      <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="FbxModelVertex.hlsl">
-      <Filter>ソース ファイル\hlsl</Filter>
+      <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="Pixel.hlsl">
-      <Filter>ソース ファイル\hlsl</Filter>
+      <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="Vertex.hlsl">
-      <Filter>ソース ファイル\hlsl</Filter>
+      <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

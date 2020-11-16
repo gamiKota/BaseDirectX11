@@ -45,7 +45,6 @@ void Player::Update() {
 	
 	Tween tween;
 
-	float3 start = float3(0.f, 0.f, 0.f);
 	float3 end = float3(20.f, 10.f, 30.f);
 	if (Input::isTrigger('M')) {
 		m_transform->DOMove(end, 2.f);
