@@ -12,6 +12,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "debugproc.h"
+#include "imgui.h"
 #include "System.h"
 
 
@@ -49,8 +50,18 @@ void GameObject::Uninit() {
 
 void GameObject::Update() {
 	auto buff = m_listComponent;
-	for (auto com : buff)
+	for (auto com : buff) {
 		com->Update();
+	}
+
+	if (ImGui::CollapsingHeader(m_name.c_str())) {
+		for (auto com : buff) {
+			if (ImGui::TreeNode(com->m_name.c_str())) {
+				com->SetImGuiVal();
+				ImGui::TreePop();
+			}
+		}
+	}
 }
 
 

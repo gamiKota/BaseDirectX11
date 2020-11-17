@@ -31,8 +31,7 @@ static const float VAL_ANGLE_Z	= 2.f;
 static const float MAX_ANGLE_Z	= 30.f;
 
 
-void Player::Start() {
-	m_gameObject->AddComponent<Collision>();
+void PlayerCtr::Start() {
 
 	m_roll		= 0.f;
 	m_vMove		= float3();
@@ -41,7 +40,7 @@ void Player::Start() {
 }
 
 
-void Player::Update() {
+void PlayerCtr::Update() {
 	
 	Tween tween;
 
@@ -50,17 +49,16 @@ void Player::Update() {
 		m_transform->DOMove(end, 2.f);
 	}
 
-
 	this->Operation();
 }
 
 
-void Player::Uninit() {
+void PlayerCtr::Uninit() {
 }
 
 
 
-void Player::Operation() {
+void PlayerCtr::Operation() {
 
 	// ターゲットロックオン
 	if (Input::isTrigger('T')) {
@@ -144,10 +142,15 @@ void Player::Operation() {
 }
 
 
-void Player::OnCollision(GameObject* obj) {
+void PlayerCtr::OnCollision(GameObject* obj) {
 	if (obj->GetTag() == "Enemy") {
 		obj->GetComponent<Collision>()->SetHit();
 	}
+}
+
+
+void PlayerCtr::SetImGuiVal() {
+
 }
 
 

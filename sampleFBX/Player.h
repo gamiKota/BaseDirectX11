@@ -26,7 +26,7 @@ static const float VAL_MOVE_PLAYER = 0.f;
 /**
  * @class Player : inheritance Component
  */
-class Player : public Component
+class PlayerCtr : public Component
 {
 public:
 	float3			m_vMove;	//!< ˆÚ“®—Ê
@@ -38,6 +38,7 @@ public:
 	void Update();
 	void Uninit();
 	void OnCollision(GameObject* obj);
+	void SetImGuiVal();
 
 private:
 	void Operation();

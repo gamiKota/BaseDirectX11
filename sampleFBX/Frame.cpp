@@ -53,10 +53,7 @@ DWORD Frame::GetPassageTime() {
 static float time;
 
 void Frame::DrawFPS() {
-	PrintDebugProc("FPS:%d\n\n", m_Frame);
-	PrintDebugProc("DeltaTime:%f\n\n", m_deltaTime / 1000.f);
-	time += m_deltaTime / 1000.f;
-	PrintDebugProc("time:%f\n\n", time);
+	//PrintDebugProc("FPS:%d\n\n", m_Frame);
 }
 
 

@@ -65,7 +65,7 @@ void Tween::Update() {
 		m_result = float3::lerp3(m_start, m_end, time);
 
 		if (time >= 1.f && m_isTween == E_TWEEN::DO) {	// ç°tweeníÜ
-			// èIÇÌÇË
+			m_result = m_end;
 			m_isTween = E_TWEEN::END;
 		}
 	}

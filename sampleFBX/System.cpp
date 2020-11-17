@@ -3,6 +3,9 @@
 //********************************************************************************
 #include "Frame.h"		// フレーム管理
 #include "Graphics.h"	// 描画
+#include "D3DClass.h"	// D3D関係
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
 #include "System.h"		// 宣言クラス先
 
 
@@ -21,6 +24,9 @@ static const BOOL CURSOR_MODE = TRUE;
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 int	OnCreate(HWND hWnd, LPCREATESTRUCT lpcs);
 
+// Forward declare message handler from imgui_impl_win32.cpp
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 
 bool System::Initialize(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	// ウィンドウの初期化
@@ -30,13 +36,26 @@ bool System::Initialize(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	Frame::GetInstance().Init();
 
 	// Create the graphics object.  This object will handle rendering all the graphics for this application.
-	//if (Graphics::GetInstance()) {
-	//	return false;
-	//}
 	// Initialize the graphics object.
 	if (FAILED(Graphics::GetInstance().Init(Library::DirectX, 0, 0, m_hwnd))) {
 		return false;
 	}
+
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	ImGui::StyleColorsClassic();
+
+	// Setup Platform/Renderer bindings
+	ImGui_ImplWin32_Init(m_hwnd);
+	ImGui_ImplDX11_Init(D3DClass::GetInstance().GetDevice(), D3DClass::GetInstance().GetDeviceContext());
+
+	// Our state
+	//clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	return true;
 }
@@ -45,6 +64,11 @@ bool System::Initialize(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 void System::Shutdown() {
 	// フレーム機能の終了処理
 	Frame::GetInstance().Uninit();
+
+	// Cleanup
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	// Release the graphics object.
 	Graphics::GetInstance().Shutdown();
@@ -82,8 +106,23 @@ void System::Run() {
 		}
 		else {
 			Frame::GetInstance().Update();
-			if (Frame::GetInstance().isUpdateGame()) {
-				Graphics::GetInstance().GetInstance().Update();	// 更新処理
+
+			if (Frame::GetInstance().isUpdateGame()) {	
+				// Start the Dear ImGui frame
+				ImGui_ImplDX11_NewFrame();
+				ImGui_ImplWin32_NewFrame();
+				ImGui::NewFrame();
+
+				ImGui::Begin("[inspector]");
+				
+				ImGui::Text("FPS : %.1f", ImGui::GetIO().Framerate);
+
+
+				Graphics::GetInstance().Update();	// 更新処理
+
+
+				ImGui::End();
+
 				Graphics::GetInstance().GetInstance().Draw();	// 描画処理
 			}
 		}
@@ -162,8 +201,13 @@ HWND System::GetWnd() {
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+		return S_OK;
+	
 	switch (uMsg) {
 	case WM_CREATE:										//----- ウィンドウが生成された
+
 		return OnCreate(hWnd, (LPCREATESTRUCT)lParam);
 	case WM_DESTROY:									//----- ウィンドウ破棄指示がきた
 		PostQuitMessage(0);								// システムにスレッドの終了を要求

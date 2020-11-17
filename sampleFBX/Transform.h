@@ -31,9 +31,10 @@ private:
 
 public:
 	Transform();
+	void Uninit();
 	void Update();
 	void LastUpdate();
-	void Uninit();
+	void SetImGuiVal();
 
 	Tween* DOMove(float3 position, float time = 0.f);
 

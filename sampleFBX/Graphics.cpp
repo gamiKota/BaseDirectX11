@@ -8,9 +8,9 @@
 #include "D3DClass.h"		// D3D関連
 #include "Frame.h"			// フレーム管理
 #include "polygon.h"		// デバッグ文字色の変更
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_win32.h"
-#include "ImGui/imgui_impl_dx11.h"
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
 #include "System.h"
 
 
@@ -146,9 +146,14 @@ void Graphics::Draw() {
 	case Library::OpenGL:	break;
 	}
 
+	// Rendering
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 	// デバッグ文字列表示
 	SetPolygonColor(1.0f, 1.0f, 1.0f);
 	DrawDebugProc();
+
 
 	switch (m_library) {
 	case Library::DirectX:	D3DClass::GetInstance().SwitchingBuffer();	break;

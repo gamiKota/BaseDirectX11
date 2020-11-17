@@ -59,7 +59,8 @@ void GameScene::Init() {
 	// ©‹@
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, 0.f);
-	m_object3D->AddComponent<Player>();
+	m_object3D->AddComponent<PlayerCtr>();
+	m_object3D->AddComponent<Collision>();
 	m_listObject.push_back(m_object3D);
 
 	// “G‹@‰Šú‰»

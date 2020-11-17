@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Tween.h"
 #include "debugproc.h"
+#include "imgui.h"
 #include "System.h"
 
 
@@ -17,7 +18,13 @@ Transform::Transform() : m_position(float3()), m_rotate(Quaternion()), m_scale(f
 }
 
 
+void Transform::Uninit() {
+	delete[] m_tween;
+}
+
+
 void Transform::Update() {
+
 }
 
 
@@ -26,7 +33,8 @@ void Transform::LastUpdate() {
 	for (int i = 0; i < 3; i++) {
 		m_tween[i].Update();
 
-		if (m_tween[i].m_isTween == E_TWEEN::DO) {	// ‚¤‚ñ‚¿
+		if (m_tween[i].m_isTween == E_TWEEN::DO ||
+			m_tween[i].m_isTween == E_TWEEN::END) {	// ‚¤‚ñ‚¿
 			if (i == 0) {
 				m_position = m_tween[i].GetResult();
 			}
@@ -60,8 +68,10 @@ void Transform::LastUpdate() {
 }
 
 
-void Transform::Uninit() {
-	delete[] m_tween;
+void Transform::SetImGuiVal() {
+	ImGui::DragFloat3("position", (float*)&m_transform->m_position);
+	ImGui::DragFloat3("rotation", (float*)&m_transform->m_rotate, 0.01f);
+	ImGui::DragFloat3("scale", (float*)&m_transform->m_scale, 0.01f);
 }
 
 

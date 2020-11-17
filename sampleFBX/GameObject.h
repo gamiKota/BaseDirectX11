@@ -135,6 +135,11 @@ public:
 			buff->m_transform = m_transform;
 		}
 		m_listComponent.push_back(buff);
+
+		const type_info& id = typeid(*buff);
+		std::string name = (std::string)id.name();
+		buff->m_name = name.substr(6);
+
 		buff->Awake();
 		if (SceneManager::GetInstance().m_scene->GetGameUpdate()) {
 			buff->Start();

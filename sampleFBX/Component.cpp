@@ -39,6 +39,9 @@ void Component::LastUpdate() {
 
 }
 
+void Component::SetImGuiVal() {
+
+}
 
 
 // EOF
