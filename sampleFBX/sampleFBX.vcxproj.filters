@@ -40,6 +40,9 @@
     <Filter Include="リソース ファイル\hlsl">
       <UniqueIdentifier>{7b81f225-cd94-450b-9fb2-6efacae0d0f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\ImGui">
+      <UniqueIdentifier>{7a737210-0e1b-4cc7-be66-260e565a4b96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -163,22 +166,22 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_demo.cpp">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_draw.cpp">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_dx11.cpp">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_win32.cpp">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,23 +305,23 @@
     <ClInclude Include="FixedEnemy.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
-    <ClInclude Include="imconfig.h">
-      <Filter>リソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui.h">
-      <Filter>リソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_dx11.h">
-      <Filter>リソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_win32.h">
-      <Filter>リソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_internal.h">
-      <Filter>リソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Tween.h">
       <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>リソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>リソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx11.h">
+      <Filter>リソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>リソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>リソース ファイル\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -332,6 +335,9 @@
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="Vertex.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="MonochromePS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
