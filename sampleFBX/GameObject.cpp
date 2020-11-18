@@ -54,13 +54,15 @@ void GameObject::Update() {
 		com->Update();
 	}
 
-	if (ImGui::CollapsingHeader(m_name.c_str())) {
+	//if (ImGui::CollapsingHeader(m_name.c_str())) {	// ID‚ª˜A“®‚·‚é‚Á‚Û‚¢H
+	if (ImGui::TreeNode(m_name.c_str())) {
 		for (auto com : buff) {
 			if (ImGui::TreeNode(com->m_name.c_str())) {
 				com->SetImGuiVal();
 				ImGui::TreePop();
 			}
 		}
+		ImGui::TreePop();
 	}
 }
 
