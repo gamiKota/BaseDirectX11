@@ -8,7 +8,6 @@
  */
 #include "ModelManager.h"
 #include "FbxModel.h"
-#include "System.h"
 #include "D3DClass.h"
 #include "Camera.h"
 #include "Light.h"
@@ -27,9 +26,10 @@ static const char* name[E_MODEL_MAX] = {
 };
 
 
-extern CFbxLight	g_light;		// ŒõŒ¹î•ñ
-CFbxLight			m_lightOff;		// ŒõŒ¹–³Œø
+extern Light	g_light;		// ŒõŒ¹î•ñ
+Light			m_lightOff;		// ŒõŒ¹–³Œø
 
+TFbxMaterial material;
 
 ModelManager::ModelManager() {
 	for (int i = E_MODEL_NONE; i < E_MODEL_MAX; i++) {
@@ -106,6 +106,15 @@ void ModelManager::Draw(E_MODEL model, XMFLOAT4X4 transform) {
 	if (model <= E_MODEL_NONE || model > E_MODEL_MAX) {
 		return ;
 	}
+
+
+	//material = *m_pModel[model]->GetMaterial();
+	//material.Ka = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
+	//material.Ke = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	//material.Kd = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	//material.Ks = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
+	//m_pModel[model]->SetMaterial(&material);
+
 
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();

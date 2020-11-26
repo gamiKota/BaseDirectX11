@@ -15,6 +15,10 @@
 
 #define MAX_REF_POLY			60	// 最大共有頂点参照数
 
+
+class Light;
+
+
 // 定数
 enum EByOpacity {
 	eNoAffect = 0,		// 全て
@@ -68,18 +72,7 @@ struct TPolyTable {
 	TPolyTable();
 };
 
-//
-// FBXモデル光源
-//
-class CFbxLight
-{
-public:
-	DirectX::XMFLOAT4 m_diffuse;
-	DirectX::XMFLOAT4 m_ambient;
-	DirectX::XMFLOAT4 m_specular;
-	DirectX::XMFLOAT3 m_direction;
-	CFbxLight();
-};
+
 
 // メッシュ クラス
 class CFbxMesh
@@ -101,7 +94,7 @@ public:
 	FbxNode* m_pFBXNode;						// FBXから姿勢行列を取り出す際に使うFBXポインタ
 	DirectX::XMFLOAT4X4 m_mView;
 	DirectX::XMFLOAT4X4 m_mProj;
-	CFbxLight* m_pLight;
+	Light* m_pLight;
 	DirectX::XMFLOAT3* m_pCamera;
 	// アニメーション関連
 	DirectX::XMFLOAT4X4 m_mParentOrientation;	// 親の姿勢行列
@@ -160,7 +153,7 @@ public:
 	// メソッド
 	void Render(DirectX::XMFLOAT4X4& mWorld, DirectX::XMFLOAT4X4& mView, DirectX::XMFLOAT4X4& mProj, EByOpacity byOpacity = eNoAffect);
 	HRESULT Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LPCSTR pszFileName);
-	void SetLight(CFbxLight& light);
+	void SetLight(Light& light);
 	void SetCamera(DirectX::XMFLOAT3& vCamera);
 	void SetAnimFrame(int nFrame);
 	int GetMaxAnimFrame();
@@ -177,6 +170,9 @@ public:
 	DirectX::XMFLOAT3& GetBBox();	// 境界ボックス サイズ
 	float GetRadius();				// 境界球半径
 
+	TFbxMaterial* m_pMaterial;
+	TFbxMaterial m_material;
+
 private:
 	CFbxMesh* m_pRootMesh;
 	// 外部のデバイス等情報
@@ -185,9 +181,12 @@ private:
 	ID3D11SamplerState* m_pSampleLinear;
 	ID3D11Buffer* m_pConstantBuffer0;
 	ID3D11Buffer* m_pConstantBuffer1;
+
+	// シェーダ
 	ID3D11InputLayout* m_pVertexLayout;
 	ID3D11VertexShader* m_pVertexShader;
 	ID3D11PixelShader* m_pPixelShader;
+
 	DirectX::XMFLOAT4X4 m_mView;
 	DirectX::XMFLOAT4X4 m_mProj;
 	DirectX::XMFLOAT4X4 m_mWorld;
@@ -196,10 +195,8 @@ private:
 	FbxImporter* m_pImporter;
 	FbxScene* m_pScene;
 	DirectX::XMFLOAT4X4 m_mFinalWorld;//最終的なワールド行列（この姿勢でレンダリングする）
-	CFbxLight m_light;
+	Light* m_light;
 	DirectX::XMFLOAT3 m_vCamera;
-	TFbxMaterial* m_pMaterial;
-	TFbxMaterial m_material;
 
 	DirectX::XMFLOAT3 m_vCenter;
 	DirectX::XMFLOAT3 m_vBBox;

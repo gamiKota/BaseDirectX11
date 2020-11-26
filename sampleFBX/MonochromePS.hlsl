@@ -22,5 +22,8 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	color = g_texture.Sample(g_sampler, input.Tex);
 	float mono = 0.299f * color.r + 0.587f * color.g + 0.114f * color.b;
 	color.rgb = mono;
+
 	return color;
 }
+
+// EOF

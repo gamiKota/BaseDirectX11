@@ -17,7 +17,7 @@
 
 using namespace DirectX;
 
-extern CFbxLight	g_light;		// 光源
+extern Light	g_light;		// 光源
 
 // 構造体定義
 //----- 頂点座標
@@ -122,61 +122,61 @@ void Collision::LastUpdate() {
 void Collision::DebugDraw() {
 #if _DEBUG
 
-	if (!m_isInit)	return;
+	//if (!m_isInit)	return;
 
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
+	//D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
 
-	// 境界ボックスの色
-	if (m_bHit) {
-		m_color = XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);
-	}
-	else {
-		m_color = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f);
-	}
+	//// 境界ボックスの色
+	//if (m_bHit) {
+	//	m_color = XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);
+	//}
+	//else {
+	//	m_color = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f);
+	//}
 
-	// シェーダ設定
-	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
-	pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
-	pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
-	pDeviceContext->IASetInputLayout(m_pInputLayout);
+	//// シェーダ設定
+	//ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
+	//pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
+	//pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
+	//pDeviceContext->IASetInputLayout(m_pInputLayout);
 
-	// プリミティブ形状をセット
-	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//// プリミティブ形状をセット
+	//pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// 頂点バッファ設定
-	UINT stride = sizeof(VERTEX);
-	UINT offset = 0;
-	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-	// インデックスバッファ設定
-	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	// 定数バッファ設定
-	SHADER_GLOBAL cb;
-	XMMATRIX mtxWorld = XMLoadFloat4x4(&m_world);
-	CCamera* pCamera = CCamera::Get();
-	cb.mWVP = XMMatrixTranspose(mtxWorld *
-		XMLoadFloat4x4(&pCamera->GetView()) *
-		XMLoadFloat4x4(&pCamera->GetProj()));
-	cb.mW = XMMatrixTranspose(mtxWorld);
-	pDeviceContext->UpdateSubresource(m_pConstantBuffer[0], 0, nullptr, &cb, 0, 0);
-	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer[0]);
-	SHADER_GLOBAL2 cb2;
-	cb2.vEye = XMLoadFloat3(&pCamera->GetEye());
-	CFbxLight& light = g_light;
-	cb2.vLightDir = XMVectorSet(light.m_direction.x, light.m_direction.y, light.m_direction.z, 0.f);
-	cb2.vLa = XMLoadFloat4(&light.m_ambient);
-	cb2.vLd = XMLoadFloat4(&light.m_diffuse);
-	cb2.vLs = XMLoadFloat4(&light.m_specular);
-	cb2.vDiffuse = XMLoadFloat4(&m_color);
-	cb2.vAmbient = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	cb2.vSpecular = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-	cb2.vEmissive = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	pDeviceContext->UpdateSubresource(m_pConstantBuffer[1], 0, nullptr, &cb2, 0, 0);
-	pDeviceContext->PSSetConstantBuffers(1, 1, &m_pConstantBuffer[1]);
-	// 描画
-	pDeviceContext->DrawIndexed(36, 0, 0);
+	//// 頂点バッファ設定
+	//UINT stride = sizeof(VERTEX);
+	//UINT offset = 0;
+	//pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+	//// インデックスバッファ設定
+	//pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	//// 定数バッファ設定
+	//SHADER_GLOBAL cb;
+	//XMMATRIX mtxWorld = XMLoadFloat4x4(&m_world);
+	//CCamera* pCamera = CCamera::Get();
+	//cb.mWVP = XMMatrixTranspose(mtxWorld *
+	//	XMLoadFloat4x4(&pCamera->GetView()) *
+	//	XMLoadFloat4x4(&pCamera->GetProj()));
+	//cb.mW = XMMatrixTranspose(mtxWorld);
+	//pDeviceContext->UpdateSubresource(m_pConstantBuffer[0], 0, nullptr, &cb, 0, 0);
+	//pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer[0]);
+	//SHADER_GLOBAL2 cb2;
+	//cb2.vEye = XMLoadFloat3(&pCamera->GetEye());
+	//CFbxLight& light = g_light;
+	//cb2.vLightDir = XMVectorSet(light.m_direction.x, light.m_direction.y, light.m_direction.z, 0.f);
+	//cb2.vLa = XMLoadFloat4(&light.m_ambient);
+	//cb2.vLd = XMLoadFloat4(&light.m_diffuse);
+	//cb2.vLs = XMLoadFloat4(&light.m_specular);
+	//cb2.vDiffuse = XMLoadFloat4(&m_color);
+	//cb2.vAmbient = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	//cb2.vSpecular = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+	//cb2.vEmissive = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	//pDeviceContext->UpdateSubresource(m_pConstantBuffer[1], 0, nullptr, &cb2, 0, 0);
+	//pDeviceContext->PSSetConstantBuffers(1, 1, &m_pConstantBuffer[1]);
+	//// 描画
+	//pDeviceContext->DrawIndexed(36, 0, 0);
 
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);	// 前面カリング(表を描かない)
-	D3DClass::GetInstance().SetZWrite(true);
+	//D3DClass::GetInstance().SetCullMode(CULLMODE_CW);	// 前面カリング(表を描かない)
+	//D3DClass::GetInstance().SetZWrite(true);
 
 #endif
 }

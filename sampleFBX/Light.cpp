@@ -1,4 +1,6 @@
-#include "FbxModel.h"
+
+
+#include "Light.h"
 #include "D3DClass.h"
 #include "System.h"
 
@@ -6,13 +8,21 @@
 #define LIGHT0_DIFFUSE	XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define LIGHT0_AMBIENT	XMFLOAT4(0.2f,0.2f,0.2f,1.0f)
 #define LIGHT0_SPECULAR	XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
-#define LIGHT0_DIR_X	(-1.0f)
+#define LIGHT0_DIR_X	(1.0f)
 #define LIGHT0_DIR_Y	(-1.0f)
 #define LIGHT0_DIR_Z	(1.0f)
 
 
-CFbxLight	g_light;
-bool		g_bLightEnable = true;
+Light	g_light;
+bool	g_bLightEnable = true;
+
+
+Light::Light() :	m_diffuse(XMFLOAT4(1.f, 1.f, 1.f, 1.f)),
+					m_ambient(XMFLOAT4(0.f, 0.f, 0.f, 1.f)),
+					m_specular(XMFLOAT4(0.f, 0.f, 0.f, 1.f)),
+					m_direction(XMFLOAT3(0.f, 0.f, 1.f))
+{
+}
 
 
 void InitLight(void)

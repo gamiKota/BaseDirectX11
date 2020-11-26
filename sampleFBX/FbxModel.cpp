@@ -2,6 +2,7 @@
 #include "FbxModel.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Light.h"
 
 #pragma comment(lib, "d3d11")
 #ifdef D3DCOMPILER
@@ -93,13 +94,6 @@ TPolyTable::TPolyTable()
 	ZeroMemory(nPolyIndex, sizeof(nPolyIndex));
 	ZeroMemory(nIndex123, sizeof(nIndex123));
 	nNumRef = 0;
-}
-
-CFbxLight::CFbxLight() :	 m_diffuse(1.f, 1.f, 1.f, 1.f),
-							m_ambient(0.f, 0.f, 0.f, 1.f),
-							m_specular(0.f, 0.f, 0.f, 1.f),
-							m_direction(0.f, 0.f, 1.f)
-{
 }
 
 
@@ -1174,7 +1168,7 @@ void CFbxModel::RenderMesh(CFbxMesh* pMesh, EByOpacity byOpacity)
 {
 	pMesh->m_mView = m_mView;
 	pMesh->m_mProj = m_mProj;
-	pMesh->m_pLight = &m_light;
+	pMesh->m_pLight = m_light;
 	pMesh->m_pCamera = &m_vCamera;
 	pMesh->m_pMateUsr = m_pMaterial;
 	pMesh->RenderMesh(byOpacity);
@@ -1277,9 +1271,9 @@ void CFbxModel::SetAnimStack(int nAnimStack)
 //---------------------------------------------------------------------------------------
 // åıåπê›íË
 //---------------------------------------------------------------------------------------
-void CFbxModel::SetLight(CFbxLight& light)
+void CFbxModel::SetLight(Light& light)
 {
-	m_light = light;
+	m_light = &light;
 }
 
 //---------------------------------------------------------------------------------------

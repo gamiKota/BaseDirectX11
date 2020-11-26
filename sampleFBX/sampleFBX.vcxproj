@@ -172,6 +172,7 @@
     <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Number.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -207,6 +208,7 @@
     <ClCompile Include="TPCamera.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Tween.cpp" />
+    <ClCompile Include="VertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h" />
@@ -218,6 +220,7 @@
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Camera.h" />
@@ -255,6 +258,7 @@
     <ClInclude Include="TPCamera.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Tween.h" />
+    <ClInclude Include="VertexShader.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FbxModelPixel.hlsl">
