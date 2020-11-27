@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include "Graphics.h"
 #include "D3DClass.h"
+#include "GeometryShader.h"
 #include "System.h"
 
 //*****************************************************************************
@@ -53,6 +54,7 @@ static ID3D11Buffer*				g_pVertexBuffer;		// 頂点バッファ
 static ID3D11SamplerState*			g_pSamplerState;		// テクスチャ サンプラ
 static ID3D11VertexShader*			g_pVertexShader;		// 頂点シェーダ
 static ID3D11InputLayout*			g_pInputLayout;			// 頂点フォーマット
+static GeometryShader*				g_pGeometryShader;		// ジオメトリシェーダ
 static ID3D11PixelShader*			g_pPixelShader;			// ピクセルシェーダ
 
 static XMFLOAT4X4					g_mProj;				// 射影変換行列
@@ -78,6 +80,9 @@ HRESULT InitPolygon(ID3D11Device* pDevice)
 	if (FAILED(hr)) {
 		return hr;
 	}
+
+	g_pGeometryShader = new GeometryShader;
+	g_pGeometryShader->Create("data/shader/Geometry2D.cso");
 
 	// 定数バッファ生成
 	D3D11_BUFFER_DESC bd;
@@ -183,6 +188,7 @@ void DrawPolygon(ID3D11DeviceContext* pDeviceContext)
 	SetVertexPolygon();
 
 	pDeviceContext->VSSetShader(g_pVertexShader, nullptr, 0);
+	g_pGeometryShader->Bind();
 	pDeviceContext->PSSetShader(g_pPixelShader, nullptr, 0);
 	pDeviceContext->IASetInputLayout(g_pInputLayout);
 
