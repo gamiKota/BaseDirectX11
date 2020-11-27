@@ -1,7 +1,24 @@
 #pragma once
 
 
-#include "ShaderManager.h"
+#include "ShaderBase.h"
+
+
+/**
+ * enum 頂点レイアウトの種類を列挙
+ */
+enum ShaderLayout {
+	LAYOUT_FBX,		// HMY-FBX
+	LAYOUT_PCUN,	// pos-color-uv-normal
+	LAYOUT_PUN,		// pos-uv-normal
+	LAYOUT_MAX
+};
+
+
+enum E_SHADER_VS {
+	E_SHADER_VS_FBX,
+	E_SHADER_VS_MAX
+};
 
 
 /**
@@ -10,7 +27,7 @@
 class VertexShader : public ShaderBase
 {
 public:
-	VertexShader();
+	VertexShader(ShaderLayout layout);
 	virtual ~VertexShader();
 
 	virtual void Bind();
@@ -20,6 +37,7 @@ protected:
 	virtual HRESULT MakeShader(void* pData, UINT size);
 
 private:
+	ShaderLayout m_layout;
 	ID3D11InputLayout* m_pInputLayout;
 	ID3D11VertexShader* m_pVertexShader;
 };

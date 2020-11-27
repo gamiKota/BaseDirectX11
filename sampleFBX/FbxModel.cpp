@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Light.h"
+#include "debugproc.h"
 
 #pragma comment(lib, "d3d11")
 #ifdef D3DCOMPILER
@@ -929,9 +930,9 @@ CFbxModel::CFbxModel()
 	m_pSampleLinear = nullptr;
 	m_pConstantBuffer0 = nullptr;
 	m_pConstantBuffer1 = nullptr;
-	m_pVertexLayout = nullptr;
-	m_pVertexShader = nullptr;
-	m_pPixelShader = nullptr;
+	//m_pVertexLayout = nullptr;
+	//m_pVertexShader = nullptr;
+	//m_pPixelShader = nullptr;
 	XMStoreFloat4x4(&m_mView, XMMatrixIdentity());
 	m_mProj = m_mView;
 	m_mWorld = m_mView;
@@ -1052,12 +1053,12 @@ HRESULT CFbxModel::Init(ID3D11Device* pDevice, ID3D11DeviceContext *pContext, LP
 HRESULT CFbxModel::InitShader()
 {
 	// シェーダ読み込み
-	HRESULT hr = LoadShader("FbxModelVertex", "FbxModelPixel",
-		&m_pVertexShader, &m_pVertexLayout, &m_pPixelShader);
-	if (FAILED(hr)) {
-		MessageBoxW(0, L"hlsl読み込み失敗", nullptr, MB_OK);
-		return hr;
-	}
+	HRESULT hr;// = LoadShader("FbxModelVertex", "FbxModelPixel",
+	//	&m_pVertexShader, &m_pVertexLayout, &m_pPixelShader);
+	//if (FAILED(hr)) {
+	//	MessageBoxW(0, L"hlsl読み込み失敗", nullptr, MB_OK);
+	//	return hr;
+	//}
 
 	// コンスタントバッファ作成 変換行列渡し用
 	D3D11_BUFFER_DESC cb;
@@ -1153,10 +1154,10 @@ void CFbxModel::Render(XMFLOAT4X4& mWorld, XMFLOAT4X4& mView, XMFLOAT4X4& mProj,
 	m_mView = mView;
 	m_mProj = mProj;
 	// 使用するシェーダーの登録	
-	m_pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
-	m_pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
-	// 頂点インプットレイアウトをセット
-	m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
+	//m_pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
+	//m_pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
+	//// 頂点インプットレイアウトをセット
+	//m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
 
 	RecursiveRender(m_pRootMesh, byOpacity);
 }

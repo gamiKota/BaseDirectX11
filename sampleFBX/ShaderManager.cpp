@@ -1,57 +1,46 @@
-/**
- * @file ShaderManager.cpp
- */
-
-
-/**
- * @ignore warning
- */
-#define _CRT_SECURE_NO_WARNINGS
-
-
-/**
- * @include
- */
 #include "ShaderManager.h"
-#include <stdio.h>
 #include "System.h"
 
 
-ShaderBase::ShaderBase()
-	: m_pTexture(nullptr)
-{
+void ShaderManager::Initialize() {
+
+	HRESULT hr;
+
+	m_VS[E_SHADER_VS_FBX] = new VertexShader(LAYOUT_FBX);
+	hr = m_VS[E_SHADER_VS_FBX]->Create("data/shader/FbxModelVertex.cso");
+	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK);}
+
+	m_PS[E_SHADER_PS_FBX] = new PixelShader;
+	hr = m_PS[E_SHADER_PS_FBX]->Create("data/shader/FbxModelPixel.cso");
+	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK); }
 }
 
 
-ShaderBase::~ShaderBase()
-{
+void ShaderManager::Terminate() {
+	for (int i = 0; i < E_SHADER_PS_MAX; ++i) {
+		SAFE_DELETE(m_PS[i])
+	}
+	for (int i = 0; i < E_SHADER_VS_MAX; ++i) {
+		SAFE_DELETE(m_VS[i])
+	}
 }
 
 
-HRESULT ShaderBase::Create(const char* FileName)
-{
-	HRESULT hr = E_FAIL;
-
-	// シェーダの処理が記述されたバイナリファイルを読み込む
-	FILE* fp;
-	fp = fopen(FileName, "rb");
-	if (fp == NULL) { return hr; }
-
-	// ファイルサイズ計算
-	UINT size = 0;
-	fseek(fp, 0, SEEK_END);
-	size = ftell(fp);
-
-	// データの読み込み
-	fseek(fp, 0, SEEK_SET);
-	BYTE* pData = new BYTE[size];
-	fread_s(pData, size, size, 1, fp);
-	fclose(fp);
-
-	// シェーダの作成
-	hr = MakeShader(pData, size);
-
-	delete[] pData;
-
-	return hr;
+void ShaderManager::Bind(E_SHADER shader) {
+	switch (shader)
+	{
+	case E_SHADER_FBX:
+		m_VS[E_SHADER_VS_FBX]->Bind();
+		m_PS[E_SHADER_PS_FBX]->Bind();
+		break;
+	case E_SHADER_MONOCHROME:
+		break;
+	case E_SHADER_MAX:
+		break;
+	default:
+		break;
+	}
 }
+
+
+// EOF

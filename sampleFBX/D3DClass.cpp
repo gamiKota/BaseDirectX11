@@ -5,6 +5,7 @@
 #include "Graphics.h"		// ウィンドウサイズの取得
 #include "polygon.h"		// ポリゴン
 #include "SceneManager.h"	// シーンの管理
+#include "ShaderManager.h"	// シェーダの管理
 #include "System.h"			// ポインターの解放
 
 
@@ -104,6 +105,9 @@ HRESULT D3DClass::Initialize(HWND hWnd, BOOL bWindow) {
 	if (FAILED(hr))
 		return hr;
 
+	// シェーダの初期化
+	ShaderManager::GetInstance().Initialize();
+
 	// シーンの初期化
 	SceneManager::GetInstance().Init();
 
@@ -120,6 +124,9 @@ void D3DClass::Uninit(void) {
 	SceneManager::GetInstance().Uninit();
 
 	SceneManager::GetInstance().m_scene->Shutdown();
+
+	// シェーダの終了
+	ShaderManager::GetInstance().Terminate();
 
 	// ポリゴン表示終了処理
 	UninitPolygon();

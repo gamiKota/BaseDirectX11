@@ -11,6 +11,8 @@
 #include "D3DClass.h"
 #include "Camera.h"
 #include "Light.h"
+#include "debugproc.h"
+#include "ShaderManager.h"
 #include "System.h"
 
 
@@ -98,6 +100,8 @@ void ModelManager::Update(E_MODEL model) {
 	else {
 		m_pModel[model]->SetLight(g_light);
 	}
+
+	PrintDebugProc("aaaaaaaaaaaaaa");
 }
 
 
@@ -114,6 +118,8 @@ void ModelManager::Draw(E_MODEL model, XMFLOAT4X4 transform) {
 	//material.Kd = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 	//material.Ks = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
 	//m_pModel[model]->SetMaterial(&material);
+
+	ShaderManager::GetInstance().Bind(E_SHADER_FBX);
 
 
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
