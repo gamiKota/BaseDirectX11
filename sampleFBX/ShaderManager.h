@@ -3,6 +3,7 @@
 
 #include "Singleton.h"
 #include "VertexShader.h"
+#include "GeometryShader.h"
 #include "PixelShader.h"
 
 
@@ -19,10 +20,11 @@ public:
 	void Initialize();
 	void Terminate();
 
-	void Bind(E_SHADER shader = E_SHADER_FBX);
+	void Bind(E_SHADER shader = E_SHADER_FBX, E_SHADER_GS GS = E_SHADER_GS_DEFAULT);
 
 private:
 	VertexShader*	m_VS[E_SHADER_VS_MAX];
+	GeometryShader* m_GS[E_SHADER_GS_MAX];
 	PixelShader*	m_PS[E_SHADER_PS_MAX];
 };
 

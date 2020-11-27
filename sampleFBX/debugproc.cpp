@@ -81,6 +81,9 @@ void DrawDebugProc(void)
 	SetPolygonTexture(g_pTexture);
 	SetPolygonFrameSize(8.0f / 128.0f, 8.0f / 128.0f);
 	SetPolygonSize(FONT_WIDTH, FONT_HEIGHT);
+
+	//SetPolygonAlpha(0.5f);
+
 	for (char* pChr = &g_szDebug[0]; *pChr; ++pChr) {
 		if (*pChr == '\n') {
 			vPos.x = SCREEN_WIDTH * -0.5f + FONT_WIDTH * 0.5f;
