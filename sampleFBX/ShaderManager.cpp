@@ -24,6 +24,10 @@ void ShaderManager::Initialize() {
 	m_PS[E_SHADER_PS_FBX] = new PixelShader;
 	hr = m_PS[E_SHADER_PS_FBX]->Create("data/shader/FbxModelPixel.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
+
+	m_PS[E_SHADER_PS_MONOCHRO] = new PixelShader;
+	hr = m_PS[E_SHADER_PS_MONOCHRO]->Create("data/shader/MonochromePS.cso");
+	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
 }
 
 
@@ -45,11 +49,16 @@ void ShaderManager::Bind(E_SHADER shader, E_SHADER_GS gs) {
 	{
 	case E_SHADER_FBX:
 		m_VS[E_SHADER_VS_FBX]->Bind();
-		//m_GS[gs]->Bind();
+		m_GS[gs]->Bind();
 		m_PS[E_SHADER_PS_FBX]->Bind();
 		break;
+
 	case E_SHADER_MONOCHROME:
+		m_VS[E_SHADER_VS_FBX]->Bind();
+		m_GS[gs]->Bind();
+		m_PS[E_SHADER_PS_MONOCHRO]->Bind();
 		break;
+
 	case E_SHADER_MAX:
 		break;
 	default:

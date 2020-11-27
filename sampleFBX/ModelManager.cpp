@@ -13,6 +13,8 @@
 #include "Light.h"
 #include "debugproc.h"
 #include "ShaderManager.h"
+#include "GameObject.h"
+#include "TPCamera.h"
 #include "System.h"
 
 
@@ -57,6 +59,7 @@ void ModelManager::Init() {
 		m_pModel[i] = new CFbxModel();
 		hr = m_pModel[i]->Init(pDevice, pDeviceContext, name[i]);
 		if (SUCCEEDED(hr)) {
+			//m_pModel[i]->SetCamera(GameObject::Find("MainCamera")->GetComponent<TPCamera>()->GetEye());
 			//m_pModel[i]->SetCamera(CCamera::Get()->GetEye());
 			if (i == E_MODEL_SKY) {
 				m_pModel[i]->SetLight(m_lightOff);
@@ -101,7 +104,7 @@ void ModelManager::Update(E_MODEL model) {
 		m_pModel[model]->SetLight(g_light);
 	}
 
-	PrintDebugProc("aaaaaaaaaaaaaa");
+	//PrintDebugProc("abc...xyz\n");
 }
 
 
@@ -119,6 +122,12 @@ void ModelManager::Draw(E_MODEL model, XMFLOAT4X4 transform) {
 	//material.Ks = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
 	//m_pModel[model]->SetMaterial(&material);
 
+	//if (model == E_MODEL_SKY) {
+	//	ShaderManager::GetInstance().Bind(E_SHADER_MONOCHROME);
+	//}
+	//else {
+	//	ShaderManager::GetInstance().Bind(E_SHADER_FBX);
+	//}
 	ShaderManager::GetInstance().Bind(E_SHADER_FBX);
 
 
