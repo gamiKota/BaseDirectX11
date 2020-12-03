@@ -7,6 +7,7 @@
  * @include
  */
 #include "Player.h"
+#include <math.h>
 #include "GameObject3D.h"
 #include "input.h"
 #include "debugproc.h"
@@ -143,8 +144,8 @@ void PlayerCtr::Operation() {
 
 
 void PlayerCtr::OnCollision(GameObject* obj) {
-	if (obj->GetTag() == "Enemy") {
-		obj->GetComponent<Collision>()->SetHit();
+	if (obj->GetTag() == "FixedEnemy") {
+
 	}
 }
 

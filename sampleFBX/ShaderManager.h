@@ -5,11 +5,13 @@
 #include "VertexShader.h"
 #include "GeometryShader.h"
 #include "PixelShader.h"
+#include <DirectXMath.h>
 
 
 enum E_SHADER {
 	E_SHADER_FBX,
 	E_SHADER_MONOCHROME,
+	E_SHADER_PHONG,
 	E_SHADER_MAX,
 };
 
@@ -21,6 +23,8 @@ public:
 	void Terminate();
 
 	void Bind(E_SHADER shader = E_SHADER_FBX, E_SHADER_GS GS = E_SHADER_GS_DEFAULT);
+
+	void UpdateBuffer(DirectX::XMFLOAT4X4 world);
 
 private:
 	VertexShader*	m_VS[E_SHADER_VS_MAX];

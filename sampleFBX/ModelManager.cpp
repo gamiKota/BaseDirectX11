@@ -33,7 +33,6 @@ static const char* name[E_MODEL_MAX] = {
 extern Light	g_light;		// åıåπèÓïÒ
 Light			m_lightOff;		// åıåπñ≥å¯
 
-TFbxMaterial material;
 
 ModelManager::ModelManager() {
 	for (int i = E_MODEL_NONE; i < E_MODEL_MAX; i++) {
@@ -55,6 +54,14 @@ void ModelManager::Init() {
 	HRESULT hr;
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
+
+	TFbxMaterial material;
+	//material = *m_pModel[model]->GetMaterial();
+	material.Ka = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	material.Ke = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	material.Kd = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	material.Ks = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.f);
+
 	for (int i = E_MODEL_NONE + 1; i < E_MODEL_MAX; i++) {
 		m_pModel[i] = new CFbxModel();
 		hr = m_pModel[i]->Init(pDevice, pDeviceContext, name[i]);
@@ -67,6 +74,7 @@ void ModelManager::Init() {
 			else {
 				m_pModel[i]->SetLight(g_light);
 			}
+			m_pModel[i]->SetMaterial(&material);
 		}
 		else {
 			MessageBoxA(System::GetInstance().GetWnd(), name[i], "Failed Load Model", MB_OK | MB_ICONWARNING | MB_TOPMOST);
@@ -114,21 +122,14 @@ void ModelManager::Draw(E_MODEL model, XMFLOAT4X4 transform) {
 		return ;
 	}
 
-
-	//material = *m_pModel[model]->GetMaterial();
-	//material.Ka = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
-	//material.Ke = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	//material.Kd = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	//material.Ks = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	//m_pModel[model]->SetMaterial(&material);
-
+	ShaderManager::GetInstance().UpdateBuffer(transform);
 	//if (model == E_MODEL_SKY) {
-	//	ShaderManager::GetInstance().Bind(E_SHADER_MONOCHROME);
+		ShaderManager::GetInstance().Bind(E_SHADER_FBX);
 	//}
 	//else {
-	//	ShaderManager::GetInstance().Bind(E_SHADER_FBX);
+	//	ShaderManager::GetInstance().Bind(E_SHADER_PHONG);
 	//}
-	ShaderManager::GetInstance().Bind(E_SHADER_FBX);
+	//ShaderManager::GetInstance().Bind(E_SHADER_PHONG);
 
 
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();

@@ -143,6 +143,8 @@ void UninitPolygon(void)
 	SAFE_RELEASE(g_pConstantBuffer);
 	// ピクセルシェーダ解放
 	SAFE_RELEASE(g_pPixelShader);
+	// ジオメトリシェーダ解放
+	SAFE_DELETE(g_pGeometryShader);
 	// 頂点フォーマット解放
 	SAFE_RELEASE(g_pInputLayout);
 	// 頂点シェーダ解放
@@ -188,7 +190,7 @@ void DrawPolygon(ID3D11DeviceContext* pDeviceContext)
 	SetVertexPolygon();
 
 	pDeviceContext->VSSetShader(g_pVertexShader, nullptr, 0);
-	g_pGeometryShader->Bind();
+	//g_pGeometryShader->Bind();
 	pDeviceContext->PSSetShader(g_pPixelShader, nullptr, 0);
 	pDeviceContext->IASetInputLayout(g_pInputLayout);
 

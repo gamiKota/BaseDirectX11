@@ -28,10 +28,10 @@ enum EByOpacity {
 
 // マテリアル
 struct TFbxMaterial {
-	DirectX::XMFLOAT4	Ka;		// アンビエント+テクスチャ有無
-	DirectX::XMFLOAT4	Kd;		// ディフューズ
+	DirectX::XMFLOAT4	Ka;		// アンビエント+テクスチャ有無(色)
+	DirectX::XMFLOAT4	Kd;		// ディフューズ(拡散光)
 	DirectX::XMFLOAT4	Ks;		// スペキュラ+スペキュラ強度
-	DirectX::XMFLOAT4	Ke;		// エミッシブ
+	DirectX::XMFLOAT4	Ke;		// エミッシブ(自身の光)
 	ID3D11ShaderResourceView*	pTexture;		// 拡散テクスチャ
 	ID3D11ShaderResourceView*	pTexEmmisive;	// 発光テクスチャ
 	DWORD		dwNumFace;		// このマテリアルのポリゴン数

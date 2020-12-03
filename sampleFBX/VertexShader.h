@@ -17,6 +17,7 @@ enum ShaderLayout {
 
 enum E_SHADER_VS {
 	E_SHADER_VS_FBX,
+	E_SHADER_VS_DEFAULT,
 	E_SHADER_VS_MAX
 };
 

@@ -26,7 +26,7 @@ struct GS_OUT
 // レジストリはb...バッファを指定
 // 構造体のように書くが、構造体ではない。
 // メンバ変数をグローバル変数のように扱う。
-cbuffer WorldBuffer : register(b0) {
+cbuffer WorldBuffer : register(b3) {
 	float4x4 world;
 }
 

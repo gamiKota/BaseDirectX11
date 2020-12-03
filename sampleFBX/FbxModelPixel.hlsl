@@ -6,6 +6,8 @@ cbuffer global : register(b0) {
 	matrix	g_World;			// ワールド行列
 	float4	g_cameraPos;		// 視点座標(ワールド空間)
 	float4	g_lightDir;			// 光源方向(ワールド空間)
+
+	// メインライトの値
 	float4	g_lightAmbient;		// 環境光
 	float4	g_lightDiffuse;		// 拡散光
 	float4	g_lightSpecular;	// 鏡面反射光
@@ -13,6 +15,7 @@ cbuffer global : register(b0) {
 
 // マテリアル
 cbuffer global2 : register(b1) {
+	// モデルごとの値
 	float4	g_Ambient;			// 環境色
 	float4	g_Diffuse;			// 拡散色
 	float4	g_Specular;			// 鏡面反射色

@@ -6,6 +6,7 @@
 enum E_SHADER_PS {
 	E_SHADER_PS_FBX,		// HMY-FBX
 	E_SHADER_PS_MONOCHRO,	// ÉÇÉmÉNÉç
+	E_SHADER_PS_PHONG,		// Ç”ÇßÇÒ
 	E_SHADER_PS_MAX			// ç≈ëÂíl
 };
 

@@ -28,7 +28,7 @@
 #include "System.h"		// ƒƒ‚ƒŠŠÄ‹
 
 
-static const int MAX_ENEMY = 3;
+static const int MAX_ENEMY = 2;
 static const float VAL_ENEMY_POS_Z = 800.f;
 static const float MAX_ENEMY_POS_Z = 1000.f;
 
@@ -66,7 +66,7 @@ void GameScene::Init() {
 	// “G‹@‰Šú‰»
 	float3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
 	for (int i = 0; i < MAX_ENEMY; ++i) {
-		m_object3D = new GameObject3D(E_MODEL_ENEMY, "Enemy (" + std::to_string(i) + ")", "Enemy");
+		m_object3D = new GameObject3D(E_MODEL_ENEMY, "FixedEnemy (" + std::to_string(i) + ")", "Enemy");
 
 		vEnemyPos.x = (float)GetRandom((int)(-MAX_MOVE_WIDTH + 30.f), (int)(MAX_MOVE_WIDTH - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);

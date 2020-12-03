@@ -204,6 +204,9 @@
     <ClCompile Include="GeometryShader.cpp">
       <Filter>ソース ファイル\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderBuffer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DClass.h">
@@ -359,6 +362,9 @@
     <ClInclude Include="GeometryShader.h">
       <Filter>ヘッダー ファイル\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderBuffer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FbxModelPixel.hlsl">
@@ -389,6 +395,12 @@
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="Geometry2D.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongPS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

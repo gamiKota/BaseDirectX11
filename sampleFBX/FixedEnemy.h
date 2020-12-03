@@ -22,6 +22,8 @@ class FixedEnemy : public Enemy {
 public:
 	void Start();
 	void Update();
+
+	void OnCollision(GameObject* obj);
 };
 
 
