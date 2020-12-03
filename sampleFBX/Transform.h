@@ -13,7 +13,9 @@
 
 class Tween;
 
-
+/**
+ * @class Transform : inheritance Component
+ */
 class Transform : public Component {
 public:
 	float3		m_position;		//!< À•W

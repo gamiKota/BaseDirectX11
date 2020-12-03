@@ -12,7 +12,7 @@
 
 
 Component::Component() : Object("Component") {
-
+	
 }
 
 Component::~Component() {

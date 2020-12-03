@@ -25,6 +25,7 @@
 #include "Player.h"		// プレイヤー
 #include "FixedEnemy.h"	// 敵
 #include "Collision.h"	// 当たり判定
+#include "Rigidbody.h"	// 物理エンジン機能
 #include "System.h"		// メモリ監視
 
 
@@ -60,7 +61,6 @@ void GameScene::Init() {
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, 0.f);
 	m_object3D->AddComponent<PlayerCtr>();
-	m_object3D->AddComponent<Collision>();
 	m_listObject.push_back(m_object3D);
 
 	// 敵機初期化

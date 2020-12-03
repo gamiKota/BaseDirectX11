@@ -13,6 +13,7 @@
 #include "debugproc.h"
 #include "Bullet.h"
 #include "Collision.h"
+#include "Rigidbody.h"
 #include "Tween.h"
 #include "debugproc.h"
 #include "System.h"
@@ -33,11 +34,15 @@ static const float MAX_ANGLE_Z	= 30.f;
 
 
 void PlayerCtr::Start() {
-
+	// 変数の初期化
 	m_roll		= 0.f;
 	m_vMove		= float3();
 	m_target	= nullptr;
 	m_transform->m_position = float3(0.f, 0.f, 0.f);
+
+	// コンポーネントの追加
+	m_gameObject->AddComponent<Collision>();
+	m_gameObject->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_1;
 }
 
 
@@ -144,9 +149,7 @@ void PlayerCtr::Operation() {
 
 
 void PlayerCtr::OnCollision(GameObject* obj) {
-	if (obj->GetTag() == "FixedEnemy") {
 
-	}
 }
 
 

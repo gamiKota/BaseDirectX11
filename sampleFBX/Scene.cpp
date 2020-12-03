@@ -12,6 +12,7 @@
 #include "GameObjectUI.h"
 #include "D3DClass.h"
 #include "Collision.h"
+#include "Rigidbody.h"
 #include "System.h"
 
 
@@ -63,10 +64,16 @@ void Scene::Update() {
 			GameObject *temp2 = *j;
 			if (temp1->GetComponent<Collision>() != nullptr && temp2->GetComponent<Collision>() != nullptr) {
 				if (Collision::OBB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
+					// デバッグ用Hit
 					temp1->GetComponent<Collision>()->SetHit();
 					temp2->GetComponent<Collision>()->SetHit();
+					// 当たった時に呼ばれる関数
 					temp1->OnCollision(temp2);
 					temp2->OnCollision(temp1);
+					// 物理エンジン機能？
+					if (temp1->GetComponent<Rigidbody>() != nullptr && temp2->GetComponent<Rigidbody>() != nullptr) {
+						Rigidbody::ShiftCollision(temp1, temp2);
+					}
 				}
 			}
 		}

@@ -126,6 +126,7 @@ void Collision::DebugDraw() {
 	if (!m_isInit)	return;
 
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
+	D3DClass::GetInstance().SetZWrite(true);
 
 	// 境界ボックスの色
 	if (m_bHit) {
