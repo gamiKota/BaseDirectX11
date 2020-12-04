@@ -210,6 +210,15 @@
     <ClCompile Include="Rigidbody.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="MeshBullet.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="tree.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DClass.h">
@@ -371,6 +380,15 @@
     <ClInclude Include="Rigidbody.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="MeshBullet.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="tree.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FbxModelPixel.hlsl">
@@ -407,6 +425,12 @@
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="VertexShader.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="BillboardVS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="BillboardPS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

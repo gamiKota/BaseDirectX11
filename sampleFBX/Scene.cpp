@@ -13,7 +13,16 @@
 #include "D3DClass.h"
 #include "Collision.h"
 #include "Rigidbody.h"
+
+#include "input.h"
+#include "MeshBullet.h"
+#include "tree.h"
+
 #include "System.h"
+
+
+
+MeshBullet g_mesh;
 
 
 Scene::Scene() : m_isUpdate(false) {
@@ -30,6 +39,19 @@ Scene::~Scene() {
 
 void Scene::Init() {
 
+	g_mesh.Awake();
+
+	// 木の初期化
+	InitTree();
+	for (int nCntCoin = 0; nCntCoin < 20; ++nCntCoin) {
+		float fPosX, fPosY, fPosZ;
+
+		fPosX = (float)(rand() % 12000) / 10.0f - 600.0f;
+		fPosY = 0.0f;
+		fPosZ = (float)(rand() % 12000) / 10.0f - 600.0f;
+		SetTree(XMFLOAT3(fPosX, fPosY, fPosZ), 60.0f, 190.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+
 	auto buff = m_listObject;
 	for (auto obj : buff) {
 		obj->Init();
@@ -44,9 +66,21 @@ void Scene::Uninit() {
 	for (auto obj : buff) {
 		obj->Uninit();
 	}
+
+	UninitTree();
+	g_mesh.Uninit();
 }
 
 void Scene::Update() {
+
+	if (Input::isTrigger('K')) {
+		g_mesh.Fire(float3(0.f, 0.f, 0.f), float3(0.f, 0.f, 1.f));
+	}
+
+
+	g_mesh.Update();
+	UpdateTree();
+
 	auto buff = m_listObject;
 	for (auto obj : buff)
 		obj->Update();
@@ -102,17 +136,24 @@ void Scene::Draw() {
 	// 前面カリング (FBXは表裏が反転するため)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 
+
 	// 3Dモデル
 	buff = m_listObject;
 	for (auto obj : buff) {
 		if (dynamic_cast<GameObject3D*>(obj) != nullptr)
 			obj->Draw();
 	}
+	// ビルボード
+
+	g_mesh.Draw();
+	DrawTree();
+
 
 	// 背面カリング (通常は表面のみ描画)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
 	// Zバッファ無効
 	D3DClass::GetInstance().SetZBuffer(false);
+
 
 	// 2DUI
 	buff = m_listObject;

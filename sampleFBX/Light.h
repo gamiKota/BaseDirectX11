@@ -23,5 +23,10 @@ void UninitLight();
 void UpdateLight();
 void DrawLight();
 
+void SetLightEnable(bool);
+
+
+Light* GetMainLight();
+
 
 // EOF

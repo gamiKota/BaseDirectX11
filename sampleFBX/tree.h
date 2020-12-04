@@ -6,7 +6,8 @@
 //=============================================================================
 #pragma once
 
-#include "main.h"
+#include <Windows.h>
+#include <DirectXMath.h>
 
 //*****************************************************************************
 // マクロ定義
@@ -17,12 +18,12 @@
 // 構造体定義
 //*****************************************************************************
 typedef struct TTree {
-	XMFLOAT3 pos;		// 位置
-	XMFLOAT4 col;		// 色
-	float width;		// 幅
-	float height;		// 高さ
-	int idxShadow;		// 影ID
-	bool bUse;			// 使用しているかどうか
+	DirectX::XMFLOAT3 pos;		// 位置
+	DirectX::XMFLOAT4 col;		// 色
+	float width;				// 幅
+	float height;				// 高さ
+	int idxShadow;				// 影ID
+	bool bUse;					// 使用しているかどうか
 } TREE;
 
 //*****************************************************************************
@@ -33,6 +34,6 @@ void UninitTree(void);
 void UpdateTree(void);
 void DrawTree(void);
 
-int SetTree(XMFLOAT3 pos, float width, float height, XMFLOAT4 col);
+int SetTree(DirectX::XMFLOAT3 pos, float width, float height, DirectX::XMFLOAT4 col);
 
 TREE *GetTree(void);

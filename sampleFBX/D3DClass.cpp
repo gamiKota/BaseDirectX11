@@ -4,6 +4,7 @@
 #include "D3DClass.h"		// クラスの宣言先
 #include "Graphics.h"		// ウィンドウサイズの取得
 #include "polygon.h"		// ポリゴン
+#include "mesh.h"			// メッシュ
 #include "SceneManager.h"	// シーンの管理
 #include "ShaderManager.h"	// シェーダの管理
 #include "System.h"			// ポインターの解放
@@ -105,6 +106,11 @@ HRESULT D3DClass::Initialize(HWND hWnd, BOOL bWindow) {
 	if (FAILED(hr))
 		return hr;
 
+	// メッシュ表示初期化
+	hr = InitMesh();
+	if (FAILED(hr))
+		return hr;
+
 	// シェーダの初期化
 	ShaderManager::GetInstance().Initialize();
 
@@ -122,11 +128,13 @@ void D3DClass::Uninit(void) {
 
 	// シーンの終了処理
 	SceneManager::GetInstance().Uninit();
-
 	SceneManager::GetInstance().m_scene->Shutdown();
 
 	// シェーダの終了
 	ShaderManager::GetInstance().Terminate();
+
+	// メッシュ表示終了処理
+	UninitMesh();
 
 	// ポリゴン表示終了処理
 	UninitPolygon();

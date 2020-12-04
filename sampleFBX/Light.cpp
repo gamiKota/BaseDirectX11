@@ -55,4 +55,14 @@ void DrawLight(void) {
 }
 
 
+void SetLightEnable(bool b) {
+	g_bLightEnable = b;
+}
+
+
+Light* GetMainLight() {
+	return &g_light;
+}
+
+
 // EOF
