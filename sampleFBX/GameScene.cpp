@@ -30,7 +30,7 @@
 #include "System.h"		// ƒƒ‚ƒŠŠÄ‹
 
 
-static const int MAX_ENEMY = 2;
+static const int MAX_ENEMY = 10;
 static const float VAL_ENEMY_POS_Z = 800.f;
 static const float MAX_ENEMY_POS_Z = 1000.f;
 
@@ -79,14 +79,33 @@ void GameScene::Init() {
 	}
 
 	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
-	mesh->m_transform->m_scale = float3(50.f, 100.f, 100.f);
+	mesh->m_transform->m_position	= float3(0.f, 0.f, 400.f);
+	mesh->m_transform->m_scale		= float3(50.f, 100.f, 100.f);
+	//mesh->AddComponent<Collision>();
 	m_listObject.push_back(mesh);
 
+	//mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_NONE, "Mesh", "Mesh");
+	//mesh->m_transform->m_scale = float3(100.f, 100.f, 100.f);
+	//mesh->m_transform->m_rotate = Quaternion::Euler(0.f, 90.f, 0.f);
+	//m_listObject.push_back(mesh);
 
-	mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_NONE, "Wall", "Wall");
-	mesh->m_transform->m_position	= float3(0.f, 5000.f, 5000.f);
-	mesh->m_transform->m_scale		= float3(10000.f, 10000.f, 10000.f);
-	m_listObject.push_back(mesh);
+
+	//for (int x = 0; x < 20; ++x) {
+	//	for (int y = 0; y < 20; ++y) {
+	//		m_object3D = new GameObject3D(E_MODEL_ENEMY, "Wall", "Wall");
+	//		m_object3D->AddComponent<Collision>();
+	//		m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_5;
+	//		m_listObject.push_back(m_object3D);
+	//	}
+	//}
+	//m_object3D = new GameObject3D(E_MODEL_ENEMY, "Wall", "Wall");
+	//m_object3D->m_transform->m_position = float3(0.f, 0.f, 100.f);
+	//m_object3D->m_transform->m_scale	= float3(50.f, 50.f, 50.f);
+	//m_object3D->AddComponent<Collision>();
+	//m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_5;
+	//m_listObject.push_back(m_object3D);
+
+	
 
 	// push_back‚Ì‡”Ô‚ÅUI‚Ì•`‰æ‚Ì•`‰æ‡‚ª•Ï‚í‚é
 	// Å‰‚É”wŒi‚È‚Ç‚ÌUI

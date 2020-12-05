@@ -57,10 +57,10 @@ void ModelManager::Init() {
 
 	TFbxMaterial material;
 	//material = *m_pModel[model]->GetMaterial();
-	material.Ka = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	material.Ke = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	material.Kd = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	material.Ks = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.f);
+	material.Ka = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
+	material.Ke = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
+	material.Kd = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
+	material.Ks = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);	// 光沢
 
 	for (int i = E_MODEL_NONE + 1; i < E_MODEL_MAX; i++) {
 		m_pModel[i] = new CFbxModel();

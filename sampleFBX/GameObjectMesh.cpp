@@ -9,6 +9,7 @@
 #include "GameObjectMesh.h"
 #include "D3DClass.h"
 #include "Camera.h"
+#include "Collision.h"
 #include "polygon.h"
 #include "System.h"
 
@@ -119,6 +120,10 @@ void GameObjectMesh::Draw() {
 	}
 
 	D3DClass::GetInstance().SetBlendState(BS_NONE);
+
+	if (GetComponent<Collision>() != nullptr) {
+		GetComponent<Collision>()->DebugDraw();
+	}
 }
 
 

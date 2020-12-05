@@ -26,16 +26,6 @@ enum ePrimitiveType {
 	MAX_PRIMITIVETYPE
 };
 
-//**************************************
-// ç\ë¢ëÃíËã`
-//**************************************
-typedef struct {
-	DirectX::XMFLOAT4	Diffuse;		// Diffuse color RGBA
-	DirectX::XMFLOAT4	Ambient;		// Ambient color RGB
-	DirectX::XMFLOAT4	Specular;		// Specular 'shininess'
-	DirectX::XMFLOAT4	Emissive;		// Emissive color RGB
-	float		Power;					// Sharpness if specular highlight
-} MATERIAL;
 
 
 class Material : public Component {

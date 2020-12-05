@@ -11,9 +11,11 @@
 #include "Camera.h"
 #include "FbxModel.h"
 #include "D3DClass.h"
-#include "GameObjectUI.h"
 #include "GameObject3D.h"
+#include "GameObjectUI.h"
+#include "GameObjectMesh.h"
 #include "Light.h"
+#include "imgui.h"
 #include "System.h"
 
 using namespace DirectX;
@@ -45,8 +47,16 @@ struct SHADER_GLOBAL2 {
 	XMVECTOR	vEmissive;	// エミッシブ色
 };
 
+
+static ID3D11Buffer* m_pVertexBuffer;			//!< 頂点バッファ
+static ID3D11Buffer* m_pConstantBuffer[2];		//!< 定数バッファ
+static ID3D11VertexShader* m_pVertexShader;		//!< 頂点シェーダ
+static ID3D11InputLayout* m_pInputLayout;		//!< 頂点フォーマット
+static ID3D11PixelShader* m_pPixelShader;		//!< ピクセルシェーダ
+static ID3D11Buffer* m_pIndexBuffer;			//!< インデックスバッファ
+
 // コンストラクタ
-Collision::Collision() : m_color(1.0f, 1.0f, 1.0f, 0.5f), m_model(E_MODEL_NONE), m_bHit(false), m_isInit(false) {
+Collision::Collision() : m_color(1.0f, 1.0f, 1.0f, 0.5f), m_bHit(false), m_isInit(false) {
 }
 
 // デストラクタ
@@ -125,6 +135,8 @@ void Collision::DebugDraw() {
 
 	if (!m_isInit)	return;
 
+	if (true) { return; }
+
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
 	D3DClass::GetInstance().SetZWrite(true);
 
@@ -193,11 +205,10 @@ void Collision::Init(E_MODEL model) {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 
-	if (model != E_MODEL_NONE && model != E_MODEL_MAX) {
+	if (model != E_MODEL_MAX) {
 		// 境界ボックス初期化
-		m_model = model;
-		m_vCenter = ModelManager::GetInstance().Get(m_model)->GetCenter();
-		m_vBBox = ModelManager::GetInstance().Get(m_model)->GetBBox();
+		m_vCenter = ModelManager::GetInstance().Get(model)->GetCenter();
+		m_vBBox = ModelManager::GetInstance().Get(model)->GetBBox();
 		m_vPosBBox = m_vCenter;
 	}
 
@@ -376,6 +387,14 @@ bool Collision::OBB(Collision obj1, Collision obj2) {
 
 
 void Collision::OnCollision(GameObject* obj) {
+
+}
+
+
+void Collision::SetImGuiVal() {
+	ImGui::InputFloat3("m_vCenter",		(float*)&m_vCenter);
+	ImGui::InputFloat3("m_vBBox",		(float*)&m_vBBox);
+	ImGui::InputFloat3("m_vPosBBox",	(float*)&m_vPosBBox);
 }
 
 

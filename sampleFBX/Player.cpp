@@ -38,7 +38,7 @@ void PlayerCtr::Start() {
 	m_roll		= 0.f;
 	m_vMove		= float3();
 	m_target	= nullptr;
-	m_transform->m_position = float3(0.f, 0.f, 0.f);
+	//m_transform->m_position = float3(0.f, 0.f, 0.f);
 
 	// コンポーネントの追加
 	m_gameObject->AddComponent<Collision>();
@@ -142,7 +142,8 @@ void PlayerCtr::Operation() {
 	// ホーミングミサイル発射
 	if (Input::isTrigger(VK_SPACE)) {
 		GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet");
-		Instantiate(obj, m_transform->m_position, m_transform->m_rotate);
+		Instantiate(obj, float3(m_transform->m_position), 
+			Quaternion::Euler(m_transform->m_rotate.x, -m_transform->m_rotate.y, m_transform->m_rotate.z));
 		obj->AddComponent<Bullet>();
 	}
 }
