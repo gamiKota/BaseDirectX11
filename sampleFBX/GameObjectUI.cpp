@@ -41,6 +41,9 @@ void GameObjectUI::Uninit() {
 
 void GameObjectUI::Update() {
 	GameObject::Update();
+	if (m_layer == E_LAYER::BILLBOARD) {
+
+	}
 }
 
 

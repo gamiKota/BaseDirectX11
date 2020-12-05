@@ -12,13 +12,12 @@
 /**
  * @include
  */
+// ゲームオブジェクト
 #include "GameScene.h"		// 自身の定義
 #include "GameObject3D.h"	// 3Dオブジェクト
 #include "GameObjectUI.h"	// UIオブジェクト
-
-/**
- * @Component
- */
+#include "GameObjectMesh.h"	// メッシュオブジェクト
+// コンポーネント
 #include "TPCamera.h"	// TPSカメラ
 #include "FPCamera.h"	// FPSカメラ
 #include "Sky.h"		// スカイドーム
@@ -26,6 +25,8 @@
 #include "FixedEnemy.h"	// 敵
 #include "Collision.h"	// 当たり判定
 #include "Rigidbody.h"	// 物理エンジン機能
+#include "MeshBullet.h"	// メッシュ弾
+// システム
 #include "System.h"		// メモリ監視
 
 
@@ -77,8 +78,9 @@ void GameScene::Init() {
 		m_listObject.push_back(m_object3D);
 	}
 
-	m_UI = new GameObjectUI(E_LAYER::UI, E_TEXTURE_NUMBER, "UI", "UI");
-	m_listObject.push_back(m_UI);
+	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
+	mesh->m_transform->m_scale = float3(50.f, 100.f, 100.f);
+	m_listObject.push_back(mesh);
 
 	// push_backの順番でUIの描画の描画順が変わる
 	// 最初に背景などのUI

@@ -320,6 +320,10 @@ void SetPolygonAngle(float fAngle)
 {
 	g_rotPolygon.z = fAngle;
 }
+void SetPolygonAngle(float3 angle)
+{
+	g_rotPolygon = angle;
+}
 
 //=============================================================================
 // 左上テクスチャ座標の設定 (0.0≦fU＜1.0, 0.0≦fV＜1.0)

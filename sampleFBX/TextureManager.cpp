@@ -18,6 +18,7 @@
 static const char* name[E_TEXTURE_MAX] = {
 	"tetuxre_none",
 	"data/texture/number000.png",	// ”š
+	"data/texture/tree000.png",		// –Ø
 };
 
 

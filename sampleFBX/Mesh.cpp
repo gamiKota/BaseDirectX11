@@ -9,15 +9,19 @@
 #include "light.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "ShaderBuffer.h"
+#include "imgui.h"
 #include "System.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define M_DIFFUSE		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
-#define M_SPECULAR		XMFLOAT4(0.0f,0.0f,0.0f,0.0f)
-#define M_AMBIENT		XMFLOAT4(0.0f,0.0f,0.0f,1.0f)
-#define M_EMISSIVE		XMFLOAT4(0.0f,0.0f,0.0f,0.0f)
+static const DirectX::XMFLOAT4	M_DIFFUSE	=	XMFLOAT4(1.0f,1.0f,1.0f,1.0f);
+static const DirectX::XMFLOAT4	M_SPECULAR	=	XMFLOAT4(0.0f,0.0f,0.0f,0.0f);
+static const DirectX::XMFLOAT4	M_AMBIENT	=	XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
+static const DirectX::XMFLOAT4	M_EMISSIVE	=	XMFLOAT4(0.0f,0.0f,0.0f,0.0f);
+static const float				M_POWER		=	0.f;
+
 
 //*****************************************************************************
 // 構造体定義
@@ -52,7 +56,26 @@ static ID3D11InputLayout*			g_pInputLayout;			// 頂点フォーマット
 static ID3D11PixelShader*			g_pPixelShader;			// ピクセルシェーダ
 
 // マテリアル
-static MATERIAL						g_material;
+//static MATERIAL						g_material;
+
+
+Material::Material() {
+	m_diffuse		= M_DIFFUSE;
+	m_ambient		= M_AMBIENT;
+	m_specular		= M_SPECULAR;
+	m_emissive		= M_EMISSIVE;
+	m_power			= M_POWER;
+}
+
+
+void Material::SetImGuiVal() {
+	ImGui::DragFloat4("Diffuse", (float*)&m_diffuse);
+	ImGui::DragFloat4("Ambient", (float*)&m_ambient);
+	ImGui::DragFloat4("Specular", (float*)&m_specular);
+	ImGui::DragFloat4("Emissive", (float*)&m_emissive);
+	ImGui::DragFloat("SpecularHighlight", (float*)&m_power);
+}
+
 
 //=============================================================================
 // 初期化処理
@@ -99,13 +122,6 @@ HRESULT InitMesh(void)
 	if (FAILED(hr)) {
 		return hr;
 	}
-
-	// マテリアルの初期設定
-	g_material.Diffuse = M_DIFFUSE;
-	g_material.Ambient = M_AMBIENT;
-	g_material.Specular = M_SPECULAR;
-	g_material.Power = 0.0f;
-	g_material.Emissive = M_EMISSIVE;
 
 	return hr;
 }
@@ -156,8 +172,11 @@ void UpdateMesh(MESH* pMesh)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh)
+void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture)
 {
+	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
+	Material* pMaterial = new Material();
+
 	// 背面カリング (通常は表面のみ描画)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
 	// Zバッファ無効
@@ -176,7 +195,7 @@ void DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh)
 	pDeviceContext->IASetIndexBuffer(pMesh->pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	pDeviceContext->PSSetSamplers(0, 1, &g_pSamplerState);
-	pDeviceContext->PSSetShaderResources(0, 1, &pMesh->pTexture);
+	pDeviceContext->PSSetShaderResources(0, 1, &texture);
 
 	SHADER_GLOBAL cb;
 	XMMATRIX mtxWorld = XMLoadFloat4x4(&pMesh->mtxWorld);
@@ -193,26 +212,34 @@ void DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh)
 	cb2.vLa = XMLoadFloat4(&light->m_ambient);
 	cb2.vLd = XMLoadFloat4(&light->m_diffuse);
 	cb2.vLs = XMLoadFloat4(&light->m_specular);
-	MATERIAL* pMaterial = pMesh->pMaterial;
-	if (!pMaterial) pMaterial = &g_material;
-	cb2.vDiffuse = XMLoadFloat4(&pMaterial->Diffuse);
-	cb2.vAmbient = XMVectorSet(pMaterial->Ambient.x, pMaterial->Ambient.y, pMaterial->Ambient.z,
-		(pMesh->pTexture != nullptr) ? 1.f : 0.f);
-	cb2.vSpecular = XMVectorSet(pMaterial->Specular.x, pMaterial->Specular.y, pMaterial->Specular.z, pMaterial->Power);
-	cb2.vEmissive = XMLoadFloat4(&pMaterial->Emissive);
+
+	if (material) {
+		cb2.vDiffuse = XMLoadFloat4(&material->m_diffuse);
+		cb2.vAmbient = XMVectorSet(material->m_ambient.x, material->m_ambient.y, material->m_ambient.z,
+			(texture != nullptr) ? 1.f : 0.f);
+		cb2.vSpecular = XMVectorSet(material->m_specular.x, material->m_specular.y, material->m_specular.z, material->m_power);
+		cb2.vEmissive = XMLoadFloat4(&material->m_emissive);
+	}
+	else {
+		cb2.vDiffuse = XMLoadFloat4(&pMaterial->m_diffuse);
+		cb2.vAmbient = XMVectorSet(pMaterial->m_ambient.x, pMaterial->m_ambient.y, pMaterial->m_ambient.z,
+			(texture != nullptr) ? 1.f : 0.f);
+		cb2.vSpecular = XMVectorSet(pMaterial->m_specular.x, pMaterial->m_specular.y, pMaterial->m_specular.z, pMaterial->m_power);
+		cb2.vEmissive = XMLoadFloat4(&pMaterial->m_emissive);
+	}
 	pDeviceContext->UpdateSubresource(g_pConstantBuffer[1], 0, nullptr, &cb2, 0, 0);
 	pDeviceContext->PSSetConstantBuffers(1, 1, &g_pConstantBuffer[1]);
 
-	// プリミティブ形状をセット
-	static const D3D11_PRIMITIVE_TOPOLOGY pt[] = {
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,	// 0なら三角形ストリップ
-		D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,
-		D3D11_PRIMITIVE_TOPOLOGY_LINELIST,
-		D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
-	};
-	pDeviceContext->IASetPrimitiveTopology(pt[pMesh->primitiveType]);
+	//// プリミティブ形状をセット
+	//static const D3D11_PRIMITIVE_TOPOLOGY pt[] = {
+	//	D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,	// 0なら三角形ストリップ
+	//	D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,
+	//	D3D11_PRIMITIVE_TOPOLOGY_LINELIST,
+	//	D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
+	//	D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+	//	D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
+	//};
+	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	// ポリゴンの描画
 	pDeviceContext->DrawIndexed(pMesh->nNumIndex, 0, 0);
@@ -221,6 +248,8 @@ void DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 	// Zバッファ無効
 	D3DClass::GetInstance().SetZBuffer(true);
+
+	SAFE_DELETE(pMaterial);
 }
 
 //=============================================================================
@@ -258,8 +287,6 @@ HRESULT MakeMeshVertex(ID3D11Device* pDevice, MESH* pMesh,
 void ReleaseMesh(MESH* pMesh)
 {
 	if (!pMesh) return;
-	// テクスチャ解放
-	SAFE_RELEASE(pMesh->pTexture);
 	// 頂点バッファ解放
 	SAFE_RELEASE(pMesh->pVertexBuffer);
 	// インデックス バッファ解放

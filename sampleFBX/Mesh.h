@@ -9,7 +9,7 @@
 
 #include <DirectXMath.h>
 #include "D3DClass.h"
-
+#include "Component.h"
 
 
 //*****************************************************************************
@@ -37,6 +37,23 @@ typedef struct {
 	float		Power;					// Sharpness if specular highlight
 } MATERIAL;
 
+
+class Material : public Component {
+public:
+	DirectX::XMFLOAT4	m_diffuse;		//!< Diffuse color RGBA
+	DirectX::XMFLOAT4	m_ambient;		//!< Ambient color RGB
+	DirectX::XMFLOAT4	m_specular;		//!< Specular 'shininess'
+	DirectX::XMFLOAT4	m_emissive;		//!< Emissive color RGB
+	float				m_power;		//!< Sharpness if specular highlight
+
+public:
+	Material();
+	void SetImGuiVal();
+
+public:
+};
+
+
 typedef struct {
 	ID3D11Buffer* pVertexBuffer;			// 頂点バッファインターフェースへのポインタ
 	ID3D11Buffer* pIndexBuffer;				// インデックスバッファインターフェースへのポインタ
@@ -48,11 +65,6 @@ typedef struct {
 	int nNumIndex;							// 総インデックス数
 
 	DirectX::XMFLOAT4X4 mtxTexture;			// テクスチャ マトリックス
-	ID3D11ShaderResourceView* pTexture;		// テクスチャ
-
-	ePrimitiveType primitiveType;			// プリミティブ型
-
-	MATERIAL* pMaterial;					// マテリアル
 } MESH;
 
 //*****************************************************************************
@@ -61,6 +73,6 @@ typedef struct {
 HRESULT InitMesh(void);
 void UninitMesh(void);
 void UpdateMesh(MESH* pMesh);
-void DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh);
+void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture);
 HRESULT MakeMeshVertex(ID3D11Device* pDevice, MESH* pMesh, VERTEX_3D vertexWk[], int indexWk[]);
 void ReleaseMesh(MESH* pMesh);

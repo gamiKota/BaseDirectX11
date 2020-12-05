@@ -1,35 +1,26 @@
-//=============================================================================
-//
-// ビルボード弾 [bullet.h]
-// Author : HIROHIKO HAMAYA
-//
-//=============================================================================
+/**
+ * @file MeshBullet.h
+ */
 #pragma once
-
-#include <Windows.h>
-#include <DirectXMath.h>
-#include "Component.h"
-
-//*****************************************************************************
-// プロトタイプ宣言
-//*****************************************************************************
-//HRESULT InitBullet(void);
-//void UninitBullet(void);
-//void UpdateBullet(void);
-//void DrawBullet(void);
-//int FireBullet(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir);
 
 
 /**
- * @class MeshBullet
+ * @include
+ */
+#include <DirectXMath.h>
+#include "Component.h"
+
+
+/**
+ * @class MeshBullet : inheritance Component
  */
 class MeshBullet :  public Component {
+private:
+
 public:
 	void Awake();
-	void Uninit();
 	void Update();
-	void Draw();
-	int Fire(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir);
+	void Fire(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir);
 };
 
 

@@ -22,6 +22,7 @@
 enum E_TEXTURE {
 	E_TEXTURE_NONE,		//!< テクスチャなし
 	E_TEXTURE_NUMBER,	//!< 数字
+	E_TEXTURE_TREE,		//!< 木
 	E_TEXTURE_MAX,		//!< テクスチャ最大値
 };
 

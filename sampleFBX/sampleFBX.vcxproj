@@ -164,6 +164,7 @@
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="FixedEnemy.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
+    <ClCompile Include="GameObjectMesh.cpp" />
     <ClCompile Include="GameObjectUI.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
     <ClCompile Include="imgui.cpp" />
@@ -214,7 +215,6 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TPCamera.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="tree.cpp" />
     <ClCompile Include="Tween.cpp" />
     <ClCompile Include="VertexShader.cpp" />
   </ItemGroup>
@@ -222,6 +222,7 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="FixedEnemy.h" />
     <ClInclude Include="GameObject3D.h" />
+    <ClInclude Include="GameObjectMesh.h" />
     <ClInclude Include="GameObjectUI.h" />
     <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="imconfig.h" />
@@ -244,7 +245,6 @@
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="Enemy.h" />
-    <ClInclude Include="Explosion.h" />
     <ClInclude Include="FbxModel.h" />
     <ClInclude Include="FPCamera.h" />
     <ClInclude Include="Frame.h" />
@@ -272,7 +272,6 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TPCamera.h" />
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="tree.h" />
     <ClInclude Include="Tween.h" />
     <ClInclude Include="VertexShader.h" />
   </ItemGroup>

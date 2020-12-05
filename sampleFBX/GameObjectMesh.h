@@ -1,5 +1,5 @@
 /**
- * @file GameObjectUI.h
+ * @file GameObjectMesh.h
  */
 
 
@@ -14,41 +14,42 @@
  */
 #include "GameObject.h"
 #include "TextureManager.h"
+#include "Mesh.h"
 
 
-enum class E_LAYER {
-	BACKGROUND	= 0,
-	UI			= 5,
-	MAX			= 10,
-	BILLBOARD	= 11,
+enum class E_MESH_TYPE {
+	NORMAL = 0,
+	BILLBORAD,
 };
 
 
 /**
- * @class GameObjectUI : inheritance GameObject
+ * @class GameObjectMesh : inheritance GameObject
  */
-class GameObjectUI : public GameObject {
+class GameObjectMesh : public GameObject {
 public:
-	E_TEXTURE	m_texture;
-	E_LAYER		m_layer;
+	E_TEXTURE		m_texture;	//!< テクスチャ
+	E_MESH_TYPE		m_type;		//!< 表示方法
+	MESH			m_mesh;		//!< メッシュ
+	Material*		m_material;	//!< マテリアル
 
 public:
 	/**
 	 * @brief コンストラクタ
 	 */
-	GameObjectUI(E_LAYER layer);
+	GameObjectMesh(E_MESH_TYPE mesh);
 
 	/**
 	 * @brief コンストラクタ
 	 * @param[in] name
 	 * @param[in] tag
 	 */
-	GameObjectUI(E_LAYER layer, E_TEXTURE texture = E_TEXTURE_NONE, std::string name = "GameObjectUI", std::string tag = "none");
+	GameObjectMesh(E_MESH_TYPE mesh, E_TEXTURE texture = E_TEXTURE_NONE, std::string name = "GameObjectUI", std::string tag = "none");
 
 	/**
 	 * @brief デストラクタ
 	 */
-	virtual ~GameObjectUI();
+	virtual ~GameObjectMesh();
 
 	/**
 	 * @brief 初期処理

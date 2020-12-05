@@ -6,6 +6,7 @@
 //=============================================================================
 #pragma once
 
+#include "Data.h"
 #include "D3DClass.h"
 
 //*****************************************************************************
@@ -19,6 +20,7 @@ void SetPolygonTexture(ID3D11ShaderResourceView* pTexture);
 void SetPolygonPos(float fX, float fY);
 void SetPolygonSize(float fScaleX, float fScaleY);
 void SetPolygonAngle(float fAngle);
+void SetPolygonAngle(float3 angle);
 void SetPolygonUV(float fU, float fV);
 void SetPolygonFrameSize(float fWidth, float fHeight);
 void SetPolygonColor(float fRed, float fGreen, float fBlue);
