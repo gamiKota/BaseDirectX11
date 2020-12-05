@@ -8,6 +8,8 @@
  */
 #include "GameObject3D.h"
 #include "Collision.h"
+#include "Rigidbody.h"
+#include "System.h"
 
 
 GameObject3D::GameObject3D() : m_model(E_MODEL_NONE), GameObject("GameObject3D") {

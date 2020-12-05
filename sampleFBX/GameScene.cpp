@@ -99,11 +99,10 @@ void GameScene::Init() {
 
 	m_object3D = new GameObject3D(E_MODEL_NONE, "Wall", "Wall");
 	m_object3D->m_transform->m_position = float3(-VAL_WALL_POS, 0.f, 0.f);
-	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, -90.f, 0.f);
+	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 90.f, 0.f);
 	m_object3D->m_transform->m_scale = float3(50.f, 50.f, 0.1f);
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
-	//m_object3D->GetComponent<Rigidbody>()->m_front = float3(0.f, 0.f, 1.f);
 	m_listObject.push_back(m_object3D);
 
 	m_object3D = new GameObject3D(E_MODEL_NONE, "Wall", "Wall");
@@ -112,16 +111,30 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_scale = float3(50.f, 50.f, 0.1f);
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
-	//m_object3D->GetComponent<Rigidbody>()->m_front = float3(0.f, 0.f, 1.f);
 	m_listObject.push_back(m_object3D);
 
 	m_object3D = new GameObject3D(E_MODEL_NONE, "Wall", "Wall");
 	m_object3D->m_transform->m_position = float3(VAL_WALL_POS, 0.f, 0.f);
-	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 90.f, 0.f);
+	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, -90.f, 0.f);
 	m_object3D->m_transform->m_scale = float3(50.f, 50.f, 0.1f);
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
-	//m_object3D->GetComponent<Rigidbody>()->m_front = float3(0.f, 0.f, 1.f);
+	m_listObject.push_back(m_object3D);
+
+	m_object3D = new GameObject3D(E_MODEL_LAND, "Land", "Land");
+	m_object3D->m_transform->m_position = float3(0.f, -2000.f, 0.f);
+	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 0.f, 0.f);
+	m_object3D->m_transform->m_scale = float3(3.f, 3.f, 3.f);
+	m_object3D->AddComponent<Collision>();
+	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_LAND;
+	m_listObject.push_back(m_object3D);
+
+	m_object3D = new GameObject3D(E_MODEL_NONE, "Wall", "Wall");
+	m_object3D->m_transform->m_position = float3(0.f,  2000.f, 0.f);
+	m_object3D->m_transform->m_rotate = Quaternion::Euler(90.f, 0.f, 0.f);
+	m_object3D->m_transform->m_scale = float3(150.f, 150.f, 0.1f);
+	m_object3D->AddComponent<Collision>();
+	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 
 	

@@ -29,6 +29,7 @@ enum class E_WEIGHT {
 
 
 	_WALL,	// •Ç
+	_LAND,	// •Ç
 };
 
 

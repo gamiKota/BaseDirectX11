@@ -22,11 +22,12 @@
  * @const
  */
 static const char* name[E_MODEL_MAX] = {
-	"data/model/box.fbx",			// ボックス
-	"data/model/X_wing.fbx",		// プレイヤー
-	"data/model/X_wing.fbx",		// 敵
-	"data/model/FA-18/sparrow.fbx",	// ミサイル
-	"data/model/sky.fbx",			// スカイドーム
+	"data/model/box.fbx",				// ボックス
+	"data/model/Squadron/X_wing.fbx",	// プレイヤー
+	"data/model/Squadron/X_wing.fbx",	// 敵
+	"data/model/FA-18/sparrow.fbx",		// ミサイル
+	"data/model/Land/Land.fbx",			// 地形
+	"data/model/sky.fbx",				// スカイドーム
 };
 
 

@@ -40,8 +40,8 @@ void Rigidbody::LastUpdate() {
 void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 
 
-	if (obj1->GetComponent<Rigidbody>()->m_weight == obj2->GetComponent<Rigidbody>()->m_weight &&
-		obj1->GetComponent<Rigidbody>()->m_weight == E_WEIGHT::_WALL) {
+	if (obj1->GetComponent<Rigidbody>()->m_weight > E_WEIGHT::_5 &&
+		obj1->GetComponent<Rigidbody>()->m_weight > E_WEIGHT::_5) {
 		return;
 	}
 
@@ -65,13 +65,18 @@ void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 	BYTE i = 0;
 	while (true) {	// ‚ß‚èž‚ñ‚¾•ª‚¾‚¯‰Ÿ‚µ–ß‚·
 
-		if (i >= 99999999) {
-			MessageBox(NULL, L"Rigidbody", NULL, MB_OK);
-		}
+		//if (i >= 99999999) {
+		//	MessageBox(NULL, L"Rigidbody", NULL, MB_OK);
+		//}
 
 		if (obj[1]->GetComponent<Rigidbody>()->m_weight == E_WEIGHT::_WALL) {
 			// ­‚µ‚¸‚Â‚¸‚ç‚·
 			float3 v = obj[1]->m_transform->m_forward;
+			obj[0]->m_transform->m_position += v;
+		}
+		else if (obj[1]->GetComponent<Rigidbody>()->m_weight == E_WEIGHT::_LAND) {
+			// ­‚µ‚¸‚Â‚¸‚ç‚·
+			float3 v = obj[1]->m_transform->m_up;
 			obj[0]->m_transform->m_position += v;
 		}
 		else {
