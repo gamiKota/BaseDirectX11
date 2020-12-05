@@ -22,7 +22,7 @@
  * @const
  */
 static const char* name[E_MODEL_MAX] = {
-	"model_none",
+	"data/model/box.fbx",			// ボックス
 	"data/model/X_wing.fbx",		// プレイヤー
 	"data/model/X_wing.fbx",		// 敵
 	"data/model/FA-18/sparrow.fbx",	// ミサイル
@@ -62,7 +62,7 @@ void ModelManager::Init() {
 	material.Kd = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
 	material.Ks = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);	// 光沢
 
-	for (int i = E_MODEL_NONE + 1; i < E_MODEL_MAX; i++) {
+	for (int i = E_MODEL_NONE; i < E_MODEL_MAX; i++) {
 		m_pModel[i] = new CFbxModel();
 		hr = m_pModel[i]->Init(pDevice, pDeviceContext, name[i]);
 		if (SUCCEEDED(hr)) {
@@ -91,7 +91,7 @@ void ModelManager::Uninit() {
 
 
 CFbxModel* ModelManager::Get(E_MODEL model) {
-	if (model <= E_MODEL_NONE || model > E_MODEL_MAX) {
+	if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
 		return nullptr;
 	}
 	return m_pModel[model];

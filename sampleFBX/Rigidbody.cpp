@@ -39,6 +39,12 @@ void Rigidbody::LastUpdate() {
 
 void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 
+
+	if (obj1->GetComponent<Rigidbody>()->m_weight == obj2->GetComponent<Rigidbody>()->m_weight &&
+		obj1->GetComponent<Rigidbody>()->m_weight == E_WEIGHT::_WALL) {
+		return;
+	}
+
 	// 添え字0が軽い方
 	GameObject* obj[2] = {
 		obj1, obj2
@@ -63,13 +69,20 @@ void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 			MessageBox(NULL, L"Rigidbody", NULL, MB_OK);
 		}
 
-		// 自分と相手のベクトル
-		float3 vec = obj[1]->m_transform->m_position - obj[0]->m_transform->m_position;
-		float scalar = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-		vec /= scalar;
+		if (obj[1]->GetComponent<Rigidbody>()->m_weight == E_WEIGHT::_WALL) {
+			// 少しずつずらす
+			float3 v = obj[1]->m_transform->m_forward;
+			obj[0]->m_transform->m_position += v;
+		}
+		else {
+			// 自分と相手のベクトル
+			float3 vec = obj[1]->m_transform->m_position - obj[0]->m_transform->m_position;
+			float scalar = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+			vec /= scalar;
 
-		// 少しずつずらす
-		obj[0]->m_transform->m_position -= vec * 1.f;
+			// 少しずつずらす
+			obj[0]->m_transform->m_position -= vec * 1.f;
+		}
 
 		// 必要な情報の更新処理
 		obj[0]->GetComponent<Collision>()->LastUpdate();

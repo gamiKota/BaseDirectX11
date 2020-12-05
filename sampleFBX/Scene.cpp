@@ -66,8 +66,8 @@ void Scene::Update() {
 			if (temp1->GetComponent<Collision>() != nullptr && temp2->GetComponent<Collision>() != nullptr) {
 				if (Collision::OBB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
 					// デバッグ用Hit
-					temp1->GetComponent<Collision>()->SetHit();
-					temp2->GetComponent<Collision>()->SetHit();
+					//temp1->GetComponent<Collision>()->SetHit();
+					//temp2->GetComponent<Collision>()->SetHit();
 					// 当たった時に呼ばれる関数
 					temp1->OnCollision(temp2);
 					temp2->OnCollision(temp1);
@@ -114,10 +114,6 @@ void Scene::Draw() {
 			obj->Draw();
 	}
 
-
-	// 背面カリング (通常は表面のみ描画)
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
-
 	// ビルボード
 	buff = m_listObject;
 	for (auto obj : buff) {
@@ -126,6 +122,8 @@ void Scene::Draw() {
 	}
 
 
+	// 背面カリング (通常は表面のみ描画)
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
 	// Zバッファ無効
 	D3DClass::GetInstance().SetZBuffer(false);
 

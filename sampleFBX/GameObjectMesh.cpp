@@ -109,6 +109,8 @@ void GameObjectMesh::LastUpdate() {
 
 
 void GameObjectMesh::Draw() {
+	// ”w–ÊƒJƒŠƒ“ƒO (’Êí‚Í•\–Ê‚Ì‚İ•`‰æ)
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
 	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);
 
 	// •`‰æ
@@ -119,11 +121,13 @@ void GameObjectMesh::Draw() {
 		DrawMesh(&m_mesh, m_material, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrix());
 	}
 
-	D3DClass::GetInstance().SetBlendState(BS_NONE);
-
+	// ”w–ÊƒJƒŠƒ“ƒO (’Êí‚Í•\–Ê‚Ì‚İ•`‰æ)
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 	if (GetComponent<Collision>() != nullptr) {
 		GetComponent<Collision>()->DebugDraw();
 	}
+
+	D3DClass::GetInstance().SetBlendState(BS_NONE);
 }
 
 

@@ -48,13 +48,6 @@ struct SHADER_GLOBAL2 {
 };
 
 
-static ID3D11Buffer* m_pVertexBuffer;			//!< 頂点バッファ
-static ID3D11Buffer* m_pConstantBuffer[2];		//!< 定数バッファ
-static ID3D11VertexShader* m_pVertexShader;		//!< 頂点シェーダ
-static ID3D11InputLayout* m_pInputLayout;		//!< 頂点フォーマット
-static ID3D11PixelShader* m_pPixelShader;		//!< ピクセルシェーダ
-static ID3D11Buffer* m_pIndexBuffer;			//!< インデックスバッファ
-
 // コンストラクタ
 Collision::Collision() : m_color(1.0f, 1.0f, 1.0f, 0.5f), m_bHit(false), m_isInit(false) {
 }
@@ -108,7 +101,6 @@ void Collision::LastUpdate() {
 	}
 	
 	if (m_isInit) {
-		// 境界ボックス(AABB)の移動
 		XMStoreFloat3(&m_vPosBBox,
 			XMVector3TransformCoord(
 				XMLoadFloat3(&m_vCenter),
@@ -135,10 +127,11 @@ void Collision::DebugDraw() {
 
 	if (!m_isInit)	return;
 
-	if (true) { return; }
+	//if (true) { return; }
 
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
 	D3DClass::GetInstance().SetZWrite(true);
+
 
 	// 境界ボックスの色
 	if (m_bHit) {
@@ -205,8 +198,9 @@ void Collision::Init(E_MODEL model) {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 
-	if (model != E_MODEL_MAX) {
+	if (model >= E_MODEL_NONE && model < E_MODEL_MAX) {
 		// 境界ボックス初期化
+		m_model = model;
 		m_vCenter = ModelManager::GetInstance().Get(model)->GetCenter();
 		m_vBBox = ModelManager::GetInstance().Get(model)->GetBBox();
 		m_vPosBBox = m_vCenter;
@@ -317,8 +311,6 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 
 
 bool Collision::OBB(Collision obj1, Collision obj2) {
-	bool hit = false;
-
 	// ワールド空間上のOBB中心座標を求める
 	XMFLOAT3 vPos1, vPos2;
 	XMStoreFloat3(&vPos1, XMVector3TransformCoord(
