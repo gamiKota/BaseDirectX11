@@ -90,6 +90,10 @@ void Scene::Update() {
 }
 
 void Scene::Draw() {
+
+	// Zバッファ無効
+	D3DClass::GetInstance().SetZBuffer(false);
+
 	// 背景などのUI
 	auto buff = m_listObject;
 	for (auto obj : buff) {
@@ -110,6 +114,10 @@ void Scene::Draw() {
 			obj->Draw();
 	}
 
+
+	// 背面カリング (通常は表面のみ描画)
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
+
 	// ビルボード
 	buff = m_listObject;
 	for (auto obj : buff) {
@@ -118,8 +126,6 @@ void Scene::Draw() {
 	}
 
 
-	// 背面カリング (通常は表面のみ描画)
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
 	// Zバッファ無効
 	D3DClass::GetInstance().SetZBuffer(false);
 

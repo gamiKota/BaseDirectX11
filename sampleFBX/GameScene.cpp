@@ -78,8 +78,14 @@ void GameScene::Init() {
 		m_listObject.push_back(m_object3D);
 	}
 
-	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
+	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
 	mesh->m_transform->m_scale = float3(50.f, 100.f, 100.f);
+	m_listObject.push_back(mesh);
+
+
+	mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_NONE, "Wall", "Wall");
+	mesh->m_transform->m_position	= float3(0.f, 5000.f, 5000.f);
+	mesh->m_transform->m_scale		= float3(10000.f, 10000.f, 10000.f);
 	m_listObject.push_back(mesh);
 
 	// push_back‚Ì‡”Ô‚ÅUI‚Ì•`‰æ‚Ì•`‰æ‡‚ª•Ï‚í‚é

@@ -43,6 +43,8 @@ public:
 	void LookAt(Transform* target);
 	void LookAtA(Transform* target);
 
+	DirectX::XMFLOAT4X4 GetMatrixBillboard();
+
 	DirectX::XMFLOAT4X4& GetMatrix() {
 		return m_world;
 	}

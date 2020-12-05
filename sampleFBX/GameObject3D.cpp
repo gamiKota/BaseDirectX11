@@ -11,13 +11,13 @@
 
 
 GameObject3D::GameObject3D() : m_model(E_MODEL_NONE), GameObject("GameObject3D") {
-	m_transform->m_scale = { 1.f, 1.f, 1. };
+	m_transform->m_scale = { 0.5f, 0.5f, 0.5f };
 }
 
 
 GameObject3D::GameObject3D(E_MODEL m_model, std::string name, std::string tag) : 
 	m_model(m_model), GameObject(name, tag) {
-	m_transform->m_scale = { 1.f, 1.f, 1. };
+	m_transform->m_scale = { 0.5f, 0.5f, 0.5f };
 }
 
 

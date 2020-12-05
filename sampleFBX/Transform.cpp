@@ -3,6 +3,7 @@
 #include "Tween.h"
 #include "debugproc.h"
 #include "imgui.h"
+#include "Camera.h"
 #include "System.h"
 
 
@@ -94,6 +95,31 @@ void Transform::LookAt(Transform* target) {
 
 	m_rotate.x = rotate.x;
 	m_rotate.y = rotate.y;
+}
+
+
+XMFLOAT4X4 Transform::GetMatrixBillboard() {
+
+	XMFLOAT4X4& mView = CCamera::Get()->GetView();
+
+	XMFLOAT4X4 mtxWorld;
+	XMStoreFloat4x4(&mtxWorld, XMMatrixIdentity());
+
+	mtxWorld._11 = mView._11 * m_scale.x;
+	mtxWorld._12 = mView._21 * m_scale.x;
+	mtxWorld._13 = mView._31 * m_scale.x;
+	mtxWorld._21 = mView._12 * m_scale.y;
+	mtxWorld._22 = mView._22 * m_scale.y;
+	mtxWorld._23 = mView._32 * m_scale.y;
+	mtxWorld._31 = mView._13 * m_scale.z;
+	mtxWorld._32 = mView._23 * m_scale.z;
+	mtxWorld._33 = mView._33 * m_scale.z;
+	// ˆÊ’u‚ð”½‰f
+	mtxWorld._41 = m_position.x;
+	mtxWorld._42 = m_position.y;
+	mtxWorld._43 = m_position.z;
+
+	return mtxWorld;
 }
 
 

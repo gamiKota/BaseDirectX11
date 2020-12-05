@@ -58,7 +58,6 @@ typedef struct {
 	ID3D11Buffer* pVertexBuffer;			// 頂点バッファインターフェースへのポインタ
 	ID3D11Buffer* pIndexBuffer;				// インデックスバッファインターフェースへのポインタ
 
-	DirectX::XMFLOAT4X4 mtxWorld;			// ワールドマトリックス
 	DirectX::XMFLOAT3 pos;					// ポリゴン表示位置の中心座標
 	DirectX::XMFLOAT3 rot;					// ポリゴンの回転角
 	int nNumVertex;							// 総頂点数	
@@ -72,7 +71,6 @@ typedef struct {
 //*****************************************************************************
 HRESULT InitMesh(void);
 void UninitMesh(void);
-void UpdateMesh(MESH* pMesh);
-void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture);
+void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4X4* matrix);
 HRESULT MakeMeshVertex(ID3D11Device* pDevice, MESH* pMesh, VERTEX_3D vertexWk[], int indexWk[]);
 void ReleaseMesh(MESH* pMesh);

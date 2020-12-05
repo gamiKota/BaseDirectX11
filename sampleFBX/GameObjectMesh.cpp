@@ -56,7 +56,7 @@ void GameObjectMesh::Init() {
 	XMStoreFloat4x4(&m_mesh.mtxTexture, XMMatrixIdentity());
 
 	// ワールドマトリックス初期化
-	XMStoreFloat4x4(&m_mesh.mtxWorld, XMMatrixIdentity());
+	//XMStoreFloat4x4(&m_mesh.mtxWorld, XMMatrixIdentity());
 
 	// 頂点情報の作成
 	m_mesh.nNumVertex = 4;
@@ -110,26 +110,13 @@ void GameObjectMesh::LastUpdate() {
 void GameObjectMesh::Draw() {
 	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);
 
-	XMFLOAT4X4& mView = CCamera::Get()->GetView();
-
-
-	// ビュー行列の回転成分の転置行列を設定
-	m_mesh.mtxWorld._11 = mView._11 * m_transform->m_scale.x;
-	m_mesh.mtxWorld._12 = mView._21 * m_transform->m_scale.x;
-	m_mesh.mtxWorld._13 = mView._31 * m_transform->m_scale.x;
-	m_mesh.mtxWorld._21 = mView._12 * m_transform->m_scale.y;
-	m_mesh.mtxWorld._22 = mView._22 * m_transform->m_scale.y;
-	m_mesh.mtxWorld._23 = mView._32 * m_transform->m_scale.y;
-	m_mesh.mtxWorld._31 = mView._13 * m_transform->m_scale.z;
-	m_mesh.mtxWorld._32 = mView._23 * m_transform->m_scale.z;
-	m_mesh.mtxWorld._33 = mView._33 * m_transform->m_scale.z;
-
-	// 位置を反映
-	m_mesh.mtxWorld._41 = m_transform->m_position.x;
-	m_mesh.mtxWorld._42 = m_transform->m_position.y;
-	m_mesh.mtxWorld._43 = m_transform->m_position.z;
 	// 描画
-	DrawMesh(&m_mesh, m_material, TextureManager::GetInstance().Get(m_texture));
+	if (m_type == E_MESH_TYPE::BILLBORAD) {
+		DrawMesh(&m_mesh, m_material, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrixBillboard());
+	}
+	else {
+		DrawMesh(&m_mesh, m_material, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrix());
+	}
 
 	D3DClass::GetInstance().SetBlendState(BS_NONE);
 }

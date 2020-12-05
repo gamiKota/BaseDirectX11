@@ -55,16 +55,13 @@ static ID3D11VertexShader*			g_pVertexShader;		// 頂点シェーダ
 static ID3D11InputLayout*			g_pInputLayout;			// 頂点フォーマット
 static ID3D11PixelShader*			g_pPixelShader;			// ピクセルシェーダ
 
-// マテリアル
-//static MATERIAL						g_material;
-
 
 Material::Material() {
-	m_diffuse		= M_DIFFUSE;
-	m_ambient		= M_AMBIENT;
-	m_specular		= M_SPECULAR;
-	m_emissive		= M_EMISSIVE;
-	m_power			= M_POWER;
+	m_diffuse	= M_DIFFUSE;
+	m_ambient	= M_AMBIENT;
+	m_specular	= M_SPECULAR;
+	m_emissive	= M_EMISSIVE;
+	m_power		= M_POWER;
 }
 
 
@@ -126,6 +123,7 @@ HRESULT InitMesh(void)
 	return hr;
 }
 
+
 //=============================================================================
 // 終了処理
 //=============================================================================
@@ -145,34 +143,11 @@ void UninitMesh(void)
 	SAFE_RELEASE(g_pVertexShader);
 }
 
-//=============================================================================
-// 更新処理
-//=============================================================================
-void UpdateMesh(MESH* pMesh)
-{
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
-
-	if (!pMesh) return;
-
-	// ワールドマトリックスの初期化
-	mtxWorld = XMMatrixIdentity();
-
-	// 回転を反映
-	mtxRot = XMMatrixRotationRollPitchYaw(pMesh->rot.x, pMesh->rot.y, pMesh->rot.z);
-	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
-
-	// 移動を反映
-	mtxTranslate = XMMatrixTranslation(pMesh->pos.x, pMesh->pos.y, pMesh->pos.z);
-	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
-
-	// ワールドマトリックスの設定
-	XMStoreFloat4x4(&pMesh->mtxWorld, mtxWorld);
-}
 
 //=============================================================================
 // 描画処理
 //=============================================================================
-void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture)
+void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4X4* matrix)
 {
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
 	Material* pMaterial = new Material();
@@ -198,7 +173,7 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 	pDeviceContext->PSSetShaderResources(0, 1, &texture);
 
 	SHADER_GLOBAL cb;
-	XMMATRIX mtxWorld = XMLoadFloat4x4(&pMesh->mtxWorld);
+	XMMATRIX mtxWorld = XMLoadFloat4x4(matrix);
 	cb.mWVP = XMMatrixTranspose(mtxWorld *
 		XMLoadFloat4x4(&CCamera::Get()->GetView()) * XMLoadFloat4x4(&CCamera::Get()->GetProj()));
 	cb.mW = XMMatrixTranspose(mtxWorld);
@@ -252,6 +227,7 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 	SAFE_DELETE(pMaterial);
 }
 
+
 //=============================================================================
 // 頂点の作成
 //=============================================================================
@@ -281,6 +257,7 @@ HRESULT MakeMeshVertex(ID3D11Device* pDevice, MESH* pMesh,
 	return hr;
 }
 
+
 //=============================================================================
 // メッシュ解放
 //=============================================================================
@@ -292,3 +269,6 @@ void ReleaseMesh(MESH* pMesh)
 	// インデックス バッファ解放
 	SAFE_RELEASE(pMesh->pIndexBuffer);
 }
+
+
+// ROF
