@@ -19,6 +19,9 @@
  * @class Enemy : inheritance Character
  */
 class Enemy : public Character {
+private:
+	float m_deleteTime;		//!< Á–ÅŽžŠÔ
+
 public:
 	void Start();
 	void Update();

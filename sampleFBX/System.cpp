@@ -13,7 +13,7 @@
 // マクロ・定数定義
 //********************************************************************************
 #define CLASS_NAME		_T("AppClass")					// ウインドウのクラス名
-#define WINDOW_NAME		_T("コンポーネント指向")		// ウインドウのキャプション名
+#define WINDOW_NAME		_T("AT13A222_21_中上皓太")		// ウインドウのキャプション名
 static const Library LIBRARY_MODE = Library::DirectX;	// ライブラリモード
 static const BOOL CURSOR_MODE = TRUE;
 
