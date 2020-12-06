@@ -223,6 +223,7 @@
   <ItemGroup>
     <ClInclude Include="Character.h" />
     <ClInclude Include="Data.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="FixedEnemy.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GameObjectMesh.h" />

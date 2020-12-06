@@ -8,12 +8,15 @@
  */
 #include "Bullet.h"
 #include "GameObject.h"
+#include "GameObjectMesh.h"
+#include "SceneManager.h"
 #include "Collision.h"
-#include "Score.h"
-#include "Status.h"
-#include "Player.h"
-#include "Frame.h"
 #include "Rigidbody.h"
+#include "Player.h"
+#include "Status.h"
+#include "Score.h"
+#include "Explosion.h"
+#include "Frame.h"
 #include "System.h"
 
 
@@ -62,6 +65,13 @@ void Bullet::OnCollision(GameObject* obj) {
 	if (GameObject::Find("Score") != nullptr) {
 		GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);
 	}
+
+	// ビルボード
+	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE_EXPLOSION, "Explosion", "Explosion");
+	GameObject::Instantiate(mesh);
+	mesh->AddComponent<Explosion>();
+	mesh->m_transform->m_position = m_transform->m_position;
+	mesh->m_transform->m_scale = float3(50.f, 50.f, 50.f);
 }
 
 

@@ -17,8 +17,9 @@
  */
 static const char* name[E_TEXTURE_MAX] = {
 	"tetuxre_none",
-	"data/texture/number000.png",	// 数字
-	"data/texture/tree000.png",		// 木
+	"data/texture/number000.png",		// 数字
+	"data/texture/tree000.png",			// 木
+	"data/texture/explosion000.png",	// 爆発エフェクト
 };
 
 
@@ -43,11 +44,10 @@ void TextureManager::Load(E_TEXTURE texture) {
 }
 
 
-void TextureManager::Release(E_TEXTURE texture) {
-	if (texture <= E_TEXTURE_NONE || texture > E_TEXTURE_MAX)	return;
-	if (m_isUse[texture]) {	// テクスチャの開放
-		SAFE_RELEASE(m_pTexture[texture]);
-		m_isUse[texture] = false;
+void TextureManager::Release() {
+	for (int i = 0; i < E_TEXTURE_MAX; ++i) {
+		SAFE_RELEASE(m_pTexture[i]);
+		m_isUse[i] = false;
 	}
 }
 
@@ -57,5 +57,6 @@ void TextureManager::Shutdown() {
 		SAFE_RELEASE(tex);
 	}
 }
+
 
 // EOF

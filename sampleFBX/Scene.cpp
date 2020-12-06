@@ -45,6 +45,10 @@ void Scene::Uninit() {
 	for (auto obj : buff) {
 		obj->Uninit();
 	}
+
+	m_isUpdate = false;
+
+	TextureManager::GetInstance().Release();
 }
 
 void Scene::Update() {

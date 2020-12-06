@@ -20,10 +20,11 @@
  * @enum
  */
 enum E_TEXTURE {
-	E_TEXTURE_NONE,		//!< テクスチャなし
-	E_TEXTURE_NUMBER,	//!< 数字
-	E_TEXTURE_TREE,		//!< 木
-	E_TEXTURE_MAX,		//!< テクスチャ最大値
+	E_TEXTURE_NONE,			//!< テクスチャなし
+	E_TEXTURE_NUMBER,		//!< 数字
+	E_TEXTURE_TREE,			//!< 木
+	E_TEXTURE_EXPLOSION,	//!< 爆発エフェクト
+	E_TEXTURE_MAX,			//!< テクスチャ最大値
 };
 
 
@@ -49,7 +50,7 @@ public:
 	/**
 	 * @brief Release
 	 */
-	void Release(E_TEXTURE texture);
+	void Release();
 
 	/**
 	 * @brief Shutdown

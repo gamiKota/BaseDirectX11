@@ -66,11 +66,13 @@ Material::Material() {
 
 
 void Material::SetImGuiVal() {
+#if _DEBUG
 	ImGui::DragFloat4("Diffuse", (float*)&m_diffuse);
 	ImGui::DragFloat4("Ambient", (float*)&m_ambient);
 	ImGui::DragFloat4("Specular", (float*)&m_specular);
 	ImGui::DragFloat4("Emissive", (float*)&m_emissive);
 	ImGui::DragFloat("SpecularHighlight", (float*)&m_power);
+#endif
 }
 
 
@@ -183,7 +185,9 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 	SHADER_GLOBAL2 cb2;
 	cb2.vEye = XMLoadFloat3(&CCamera::Get()->GetEye());
 	Light* light = GetMainLight();
-	cb2.vLightDir = XMVectorSet(light->m_direction.x, light->m_direction.y, light->m_direction.z, 0.f);
+	cb2.vLightDir = 
+		pMesh->light ? 
+		XMVectorSet(light->m_direction.x, light->m_direction.y, light->m_direction.z, 0.f) : XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	cb2.vLa = XMLoadFloat4(&light->m_ambient);
 	cb2.vLd = XMLoadFloat4(&light->m_diffuse);
 	cb2.vLs = XMLoadFloat4(&light->m_specular);

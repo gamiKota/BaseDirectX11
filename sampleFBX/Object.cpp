@@ -22,6 +22,9 @@ void Object::Instantiate(GameObject* obj, float3 transform, Quaternion rotate, f
 	obj->m_transform->m_scale = scale;
 
 	SceneManager::GetInstance().m_scene->m_listObject.push_back(obj);
+	if (SceneManager::GetInstance().m_scene->GetGameUpdate()) {
+		obj->Init();
+	}
 }
 
 

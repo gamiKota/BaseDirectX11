@@ -28,14 +28,12 @@ GameObjectUI::~GameObjectUI() {
 
 
 void GameObjectUI::Init() {
-	TextureManager::GetInstance().Load(m_texture);
 	GameObject::Init();
 }
 
 
 void GameObjectUI::Uninit() {
 	GameObject::Uninit();
-	TextureManager::GetInstance().Release(m_texture);
 }
 
 

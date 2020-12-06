@@ -48,12 +48,14 @@ typedef struct {
 	ID3D11Buffer* pVertexBuffer;			// 頂点バッファインターフェースへのポインタ
 	ID3D11Buffer* pIndexBuffer;				// インデックスバッファインターフェースへのポインタ
 
-	DirectX::XMFLOAT3 pos;					// ポリゴン表示位置の中心座標
-	DirectX::XMFLOAT3 rot;					// ポリゴンの回転角
 	int nNumVertex;							// 総頂点数	
 	int nNumIndex;							// 総インデックス数
 
 	DirectX::XMFLOAT4X4 mtxTexture;			// テクスチャ マトリックス
+	float3 texPattern;						// テクスチャ座標
+	float3 texSize;							// テクスチャサイズ
+
+	bool light = false;						// ライト設定ON/OFF
 } MESH;
 
 //*****************************************************************************

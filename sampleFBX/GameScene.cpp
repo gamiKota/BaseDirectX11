@@ -27,7 +27,7 @@
 #include "Rigidbody.h"	// 物理エンジン機能
 #include "MeshBullet.h"	// メッシュ弾
 // システム
-#include "System.h"		// メモリ監視
+#include "System.h"	// メモリ監視
 
 
 static const int MAX_ENEMY = 2;
@@ -43,6 +43,11 @@ int GetRandom(int min, int max) {
 
 
 void GameScene::Init() {
+
+	// このシーンで使用するテクスチャの読み込み
+	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_TREE);
+	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_NUMBER);
+	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_EXPLOSION);
 
 	// TPS視点カメラ
 	m_empty = new GameObject("MainCamera");
@@ -81,6 +86,7 @@ void GameScene::Init() {
 		m_listObject.push_back(m_object3D);
 	}
 
+	// ビルボード
 	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
 	mesh->m_transform->m_position = float3(0.f, 0.f, 400.f);
 	mesh->m_transform->m_scale = float3(50.f, 50.f, 50.f);

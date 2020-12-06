@@ -41,8 +41,6 @@ GameObjectMesh::~GameObjectMesh() {
 
 
 void GameObjectMesh::Init() {
-	TextureManager::GetInstance().Load(m_texture);
-
 	// メッシュの初期化(初期設定)
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	HRESULT hr = S_OK;
@@ -53,9 +51,11 @@ void GameObjectMesh::Init() {
 	m_material->m_power		= 50.0f;
 	m_material->m_emissive	= M_EMISSIVE;
 
-
+	// テクスチャ設定
 	XMStoreFloat4x4(&m_mesh.mtxTexture, XMMatrixIdentity());
-
+	m_mesh.texPattern = float3(0.f, 0.f, 0.f);
+	m_mesh.texSize = float3(1.f, 1.f, 1.f);
+	m_mesh.light = true;
 	// ワールドマトリックス初期化
 	//XMStoreFloat4x4(&m_mesh.mtxWorld, XMMatrixIdentity());
 
@@ -94,7 +94,6 @@ void GameObjectMesh::Init() {
 
 void GameObjectMesh::Uninit() {
 	GameObject::Uninit();
-	TextureManager::GetInstance().Release(m_texture);
 }
 
 
@@ -113,18 +112,26 @@ void GameObjectMesh::Draw() {
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
 	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);
 
+	
+	// テクスチャマトリックスの初期化
+	XMMATRIX mtxTexture, mtxScale, mtxTranslate;
+	mtxTexture = XMMatrixIdentity();
+	// スケールを反映
+	mtxScale = XMMatrixScaling(m_mesh.texSize.x, m_mesh.texSize.y, 1.0f);
+	mtxTexture = XMMatrixMultiply(mtxTexture, mtxScale);
+	// 移動を反映
+	mtxTranslate = XMMatrixTranslation(m_mesh.texSize.x * m_mesh.texPattern.x, m_mesh.texSize.y * m_mesh.texPattern.y, 0.0f);
+	mtxTexture = XMMatrixMultiply(mtxTexture, mtxTranslate);
+	// テクスチャマトリックスの設定
+	XMStoreFloat4x4(&m_mesh.mtxTexture, mtxTexture);
+
+
 	// 描画
 	if (m_type == E_MESH_TYPE::BILLBORAD) {
 		DrawMesh(&m_mesh, m_material, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrixBillboard());
 	}
 	else {
 		DrawMesh(&m_mesh, m_material, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrix());
-	}
-
-	// 背面カリング (通常は表面のみ描画)
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
-	if (GetComponent<Collision>() != nullptr) {
-		GetComponent<Collision>()->DebugDraw();
 	}
 
 	D3DClass::GetInstance().SetBlendState(BS_NONE);
