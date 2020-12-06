@@ -56,6 +56,7 @@ void GameObjectMesh::Init() {
 	m_mesh.texPattern = float3(0.f, 0.f, 0.f);
 	m_mesh.texSize = float3(1.f, 1.f, 1.f);
 	m_mesh.light = true;
+	m_mesh.Zbuff = true;
 	// ワールドマトリックス初期化
 	//XMStoreFloat4x4(&m_mesh.mtxWorld, XMMatrixIdentity());
 

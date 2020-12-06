@@ -56,6 +56,7 @@ typedef struct {
 	float3 texSize;							// テクスチャサイズ
 
 	bool light = false;						// ライト設定ON/OFF
+	bool Zbuff;								// Zバッファ
 } MESH;
 
 //*****************************************************************************

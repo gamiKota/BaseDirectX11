@@ -116,6 +116,7 @@ void Scene::Draw() {
 			obj->Draw();
 	}
 
+	D3DClass::GetInstance().SetZBuffer(false);
 	// ビルボード
 	buff = m_listObject;
 	for (auto obj : buff) {

@@ -183,6 +183,7 @@
     <ClCompile Include="ShaderBuffer.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Status.cpp" />
+    <ClCompile Include="TargetCtr.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="ShaderBuffer.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Status.h" />
+    <ClInclude Include="TargetCtr.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Camera.h" />
