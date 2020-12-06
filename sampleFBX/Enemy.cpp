@@ -8,19 +8,26 @@
  */
 #include "Enemy.h"
 #include "GameObject.h"
+#include "Status.h"
+#include "Status.h"
 #include "Collision.h"
 #include "Rigidbody.h"
 #include "System.h"
 
 
 void Enemy::Start() {
-	m_gameObject->AddComponent<Collision>();
-	m_gameObject->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_0;
+	// CharacterƒNƒ‰ƒX‚Ì‰Šú‰»
+	Character::Init();
+
+	// •Ï”‚Ì‰Šú‰»
+	m_rigidbody->m_weight = E_WEIGHT::_1;
 }
 
 
 void Enemy::Update() {
-
+	if (m_status->m_isDead) {
+		Destroy(m_gameObject);
+	}
 }
 
 

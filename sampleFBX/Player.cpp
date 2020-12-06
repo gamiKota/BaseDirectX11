@@ -12,6 +12,7 @@
 #include "input.h"
 #include "debugproc.h"
 #include "Bullet.h"
+#include "Status.h"
 #include "Collision.h"
 #include "Rigidbody.h"
 #include "Tween.h"
@@ -34,15 +35,14 @@ static const float MAX_ANGLE_Z	= 30.f;
 
 
 void PlayerCtr::Start() {
-	// 変数の初期化
-	m_roll		= 0.f;
-	m_vMove		= float3();
-	m_target	= nullptr;
-	//m_transform->m_position = float3(0.f, 0.f, 0.f);
+	// Characterクラスの初期化
+	Character::Init();
 
-	// コンポーネントの追加
-	m_gameObject->AddComponent<Collision>();
-	m_gameObject->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_1;
+	// 変数の初期化
+	m_roll = 0.f;
+	m_vMove = float3();
+	m_target = nullptr;
+	m_rigidbody->m_weight = E_WEIGHT::_2;
 }
 
 
@@ -85,8 +85,21 @@ void PlayerCtr::Operation() {
 			}
 		}
 	}
+
 	if (m_target != nullptr) {
-		m_transform->LookAt(m_target->m_transform);
+		bool b = false;
+		std::list<GameObject*> objlist = GameObject::FindGameObjectsWithTag("Enemy");
+		for (auto obj : objlist) {
+			if (m_target == obj) {		// そもそもロックオンしてない
+				b = true;
+				m_transform->LookAt(m_target->m_transform);
+				break;
+			}
+		}
+		if (!b) {	// ターゲットが消滅してる場合
+			m_target = nullptr;
+			m_transform->m_rotate = Quaternion::identity;
+		}
 	}
 	// ターゲットロックオフ
 	if (Input::isTrigger('O')) {
@@ -141,8 +154,8 @@ void PlayerCtr::Operation() {
 
 	// ホーミングミサイル発射
 	if (Input::isTrigger(VK_SPACE)) {
-		GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet");
-		Instantiate(obj, m_transform->m_position, m_transform->m_rotate);
+		GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "Player");
+		Instantiate(obj, m_transform->m_position + m_transform->m_forward * 100.f, m_transform->m_rotate);
 		obj->AddComponent<Bullet>();
 	}
 }

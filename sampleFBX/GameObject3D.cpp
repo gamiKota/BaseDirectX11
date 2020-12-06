@@ -51,7 +51,8 @@ void GameObject3D::LastUpdate() {
 
 void GameObject3D::Draw() {
 	ModelManager::GetInstance().Draw(m_model, m_transform->GetMatrix());
-	if (GetComponent<Collision>() != nullptr) {
+	if (GetComponent<Collision>() != nullptr &&
+		GetTag() != "Land") {
 		GetComponent<Collision>()->DebugDraw();
 	}
 	GameObject::Draw();

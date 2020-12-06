@@ -56,12 +56,12 @@ void GameScene::Init() {
 	m_listObject.push_back(m_empty);
 
 	// スカイドーム
-	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky");
+	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
 	m_object3D->AddComponent<SkyDome>();
 	m_listObject.push_back(m_object3D);
 	
 	// 自機
-	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player");
+	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player", "Player");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, 0.f);
 	m_object3D->AddComponent<PlayerCtr>();
 	m_listObject.push_back(m_object3D);
@@ -88,7 +88,7 @@ void GameScene::Init() {
 
 
 
-	m_object3D = new GameObject3D(E_MODEL_NONE, "Wall", "Wall");
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall", "AreaWall");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, VAL_WALL_POS);
 	m_object3D->m_transform->m_rotate	= Quaternion::Euler(0.f, 180.f, 0.f);
 	m_object3D->m_transform->m_scale	= float3(50.f, 50.f, 0.1f);
@@ -97,7 +97,7 @@ void GameScene::Init() {
 	//m_object3D->GetComponent<Rigidbody>()->m_front = float3(0.f, 0.f, 1.f);
 	m_listObject.push_back(m_object3D);
 
-	m_object3D = new GameObject3D(E_MODEL_NONE, "Wall", "Wall");
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall", "AreaWall");
 	m_object3D->m_transform->m_position = float3(-VAL_WALL_POS, 0.f, 0.f);
 	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 90.f, 0.f);
 	m_object3D->m_transform->m_scale = float3(50.f, 50.f, 0.1f);
@@ -105,7 +105,7 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 
-	m_object3D = new GameObject3D(E_MODEL_NONE, "Wall", "Wall");
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall", "AreaWall");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, -VAL_WALL_POS);
 	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 0.f, 0.f);
 	m_object3D->m_transform->m_scale = float3(50.f, 50.f, 0.1f);
@@ -113,7 +113,7 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 
-	m_object3D = new GameObject3D(E_MODEL_NONE, "Wall", "Wall");
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall", "AreaWall");
 	m_object3D->m_transform->m_position = float3(VAL_WALL_POS, 0.f, 0.f);
 	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, -90.f, 0.f);
 	m_object3D->m_transform->m_scale = float3(50.f, 50.f, 0.1f);
@@ -121,22 +121,21 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 
-	m_object3D = new GameObject3D(E_MODEL_LAND, "Land", "Land");
-	m_object3D->m_transform->m_position = float3(0.f, -2000.f, 0.f);
-	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 0.f, 0.f);
-	m_object3D->m_transform->m_scale = float3(3.f, 3.f, 3.f);
-	m_object3D->AddComponent<Collision>();
-	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_LAND;
-	m_listObject.push_back(m_object3D);
-
-	m_object3D = new GameObject3D(E_MODEL_NONE, "Wall", "Wall");
-	m_object3D->m_transform->m_position = float3(0.f,  2000.f, 0.f);
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall", "AreaWall");
+	m_object3D->m_transform->m_position = float3(0.f,  2250.f, 0.f);
 	m_object3D->m_transform->m_rotate = Quaternion::Euler(90.f, 0.f, 0.f);
 	m_object3D->m_transform->m_scale = float3(150.f, 150.f, 0.1f);
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 
+	m_object3D = new GameObject3D(E_MODEL_LAND, "Land", "Land");
+	m_object3D->m_transform->m_position = float3(0.f, -2250.f, 0.f);
+	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 0.f, 0.f);
+	m_object3D->m_transform->m_scale = float3(3.f, 3.f, 3.f);
+	m_object3D->AddComponent<Collision>();
+	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_LAND;
+	m_listObject.push_back(m_object3D);
 	
 
 	// push_backの順番でUIの描画の描画順が変わる

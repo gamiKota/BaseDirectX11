@@ -12,13 +12,13 @@
 /**
  * @include
  */
-#include "Component.h"
+#include "Character.h"
 
 
 /**
- * @class Enemy : inheritance Component
+ * @class Enemy : inheritance Character
  */
-class Enemy : public Component {
+class Enemy : public Character {
 public:
 	void Start();
 	void Update();

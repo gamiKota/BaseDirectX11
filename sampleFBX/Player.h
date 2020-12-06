@@ -12,8 +12,7 @@
 /**
  * @include
  */
-#include "Component.h"
-#include "Transform.h"
+#include "Character.h"
 
 
 /**
@@ -24,9 +23,9 @@ static const float VAL_MOVE_PLAYER = 0.f;
 
 
 /**
- * @class Player : inheritance Component
+ * @class Player : inheritance Character
  */
-class PlayerCtr : public Component
+class PlayerCtr : public Character
 {
 public:
 	float3			m_vMove;	//!< ˆÚ“®—Ê

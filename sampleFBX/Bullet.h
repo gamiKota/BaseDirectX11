@@ -12,14 +12,14 @@
 /**
  * @include
  */
-#include "Component.h"
+#include "Character.h"
+
 
 
 /**
- * @class Bullet : inheritance Component
+ * @class Bullet : inheritance Character
  */
-class Bullet : public Component
-{
+class Bullet : public Character {
 private:
 	int	m_nLife;	//!< Žõ–½
 

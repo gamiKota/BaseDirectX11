@@ -10,8 +10,10 @@
 #include "GameObject.h"
 #include "Collision.h"
 #include "Score.h"
+#include "Status.h"
 #include "Player.h"
 #include "Frame.h"
+#include "Rigidbody.h"
 #include "System.h"
 
 
@@ -23,8 +25,15 @@ static const char	LIFE_TIME	= 5;		// 生存時間
 
 
 void Bullet::Start() {
-	m_gameObject->AddComponent<Collision>();
+	// Characterクラスの初期化
+	Character::Init();
+
+	// 初期化
 	m_nLife = LIFE_TIME * Frame::GetInstance().GetFrame();	// 5秒
+	m_status->m_HP = 10.f;
+	m_status->m_AttakPower = 100.f;
+	m_status->m_HitStop = 5.f * Frame::GetInstance().GetFrame();
+	m_rigidbody->m_weight = E_WEIGHT::_0;
 }
 
 
@@ -40,17 +49,18 @@ void Bullet::Update() {
 
 
 void Bullet::OnCollision(GameObject* obj) {
-	if (obj->GetTag() == "Enemy") {
-		//Destroy(obj);
-		Destroy(m_gameObject);
-		obj->GetComponent<Collision>()->m_bHit = true;
-		if (GameObject::Find("Score") != nullptr) {
-			GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);
-		}
-		//if (GameObject::Find("Player") != nullptr) {
-		//	if (obj == GameObject::Find("Player")->GetComponent<Player>()->m_target)
-		//		GameObject::Find("Player")->GetComponent<Player>()->m_target = nullptr;
-		//}
+	if (obj->GetTag() == m_gameObject->GetTag() ||	// 同じタグなら衝突判定なし
+		obj->GetTag() == "AreaWall"					// エリア外
+		) {
+		return;
+	}
+	Destroy(m_gameObject);
+	if (obj->GetComponent<Status>() != nullptr) {
+		obj->GetComponent<Status>()->m_HP -= m_status->m_AttakPower;
+		obj->GetComponent<Status>()->m_HitStop -= m_status->m_HitStop;
+	}
+	if (GameObject::Find("Score") != nullptr) {
+		GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);
 	}
 }
 

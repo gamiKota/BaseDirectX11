@@ -85,6 +85,7 @@ Tween* Transform::DOMove(float3 position, float time) {
 
 
 void Transform::LookAt(Transform* target) {
+	if (!target)	return;
 	float3 rotate = float3();	// ˆÚ“®æ‰ñ“]Ž²‚ÌŠm•Û
 	rotate.x = -atan2f(
 		target->m_position.y - m_position.y,
