@@ -142,9 +142,6 @@ void ModelManager::Draw(E_MODEL model, XMFLOAT4X4 transform) {
 	D3DClass::GetInstance().SetZWrite(false);
 	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);	// 半透明描画
 	m_pModel[model]->Render(transform, pCamera->GetView(), pCamera->GetProj(), eTransparentOnly);
-
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);	// 前面カリング(表を描かない)
-	D3DClass::GetInstance().SetZWrite(true);
 }
 
 

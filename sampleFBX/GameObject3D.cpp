@@ -9,6 +9,7 @@
 #include "GameObject3D.h"
 #include "Collision.h"
 #include "Rigidbody.h"
+#include "D3DClass.h"
 #include "System.h"
 
 

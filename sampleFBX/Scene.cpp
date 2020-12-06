@@ -95,9 +95,8 @@ void Scene::Update() {
 
 void Scene::Draw() {
 
-	// Zバッファ無効
-	D3DClass::GetInstance().SetZBuffer(false);
-
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング (通常は表面のみ描画)
+	D3DClass::GetInstance().SetZBuffer(false);			// Zバッファ無効
 	// 背景などのUI
 	auto buff = m_listObject;
 	for (auto obj : buff) {
@@ -109,7 +108,6 @@ void Scene::Draw() {
 
 	// 前面カリング (FBXは表裏が反転するため)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
-
 
 	// 3Dモデル
 	buff = m_listObject;
@@ -126,12 +124,8 @@ void Scene::Draw() {
 	}
 
 
-	// 背面カリング (通常は表面のみ描画)
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
-	// Zバッファ無効
-	D3DClass::GetInstance().SetZBuffer(false);
-
-
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング (通常は表面のみ描画)
+	D3DClass::GetInstance().SetZBuffer(false);			// Zバッファ無効
 	// 2DUI
 	buff = m_listObject;
 	for (auto obj : buff) {

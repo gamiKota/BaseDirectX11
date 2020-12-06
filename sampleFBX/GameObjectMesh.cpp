@@ -108,11 +108,6 @@ void GameObjectMesh::LastUpdate() {
 
 
 void GameObjectMesh::Draw() {
-	// 背面カリング (通常は表面のみ描画)
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
-	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);
-
-	
 	// テクスチャマトリックスの初期化
 	XMMATRIX mtxTexture, mtxScale, mtxTranslate;
 	mtxTexture = XMMatrixIdentity();
@@ -133,8 +128,6 @@ void GameObjectMesh::Draw() {
 	else {
 		DrawMesh(&m_mesh, m_material, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrix());
 	}
-
-	D3DClass::GetInstance().SetBlendState(BS_NONE);
 }
 
 
