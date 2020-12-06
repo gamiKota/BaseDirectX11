@@ -19,6 +19,10 @@ static const char* name[E_TEXTURE_MAX] = {
 	"tetuxre_none",
 	"data/texture/number000.png",		// 数字
 	"data/texture/tree000.png",			// 木
+	"data/texture/arrow003.tga",		// 画面外アイコン(小)
+	"data/texture/arrow001.tga",		// 画面外アイコン(大)
+	"data/texture/arrow001.tga",		// 画面内メインターゲット
+	"data/texture/arrow001.tga",		// 画面内サブターゲット
 	"data/texture/explosion000.png",	// 爆発エフェクト
 };
 
