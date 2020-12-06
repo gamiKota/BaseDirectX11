@@ -106,7 +106,8 @@ void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 
 
 void Rigidbody::SetImGuiVal() {
-
+#if _DEBUG
+#endif
 }
 
 

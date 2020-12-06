@@ -53,7 +53,7 @@ void GameObject::Update() {
 	for (auto com : buff) {
 		com->Update();
 	}
-
+#if _DEBUG
 	//if (ImGui::CollapsingHeader(m_name.c_str())) {	// IDÇ™òAìÆÇ∑ÇÈÇ¡Ç€Ç¢ÅH
 	if (ImGui::TreeNode(m_name.c_str())) {
 		for (auto com : buff) {
@@ -64,6 +64,7 @@ void GameObject::Update() {
 		}
 		ImGui::TreePop();
 	}
+#endif
 }
 
 

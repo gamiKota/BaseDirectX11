@@ -146,9 +146,11 @@ void Graphics::Draw() {
 	case Library::OpenGL:	break;
 	}
 
+#if _DEBUG
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+#endif
 
 	// デバッグ文字列表示
 	SetPolygonColor(1.0f, 1.0f, 1.0f);

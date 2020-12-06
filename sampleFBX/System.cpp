@@ -24,9 +24,10 @@ static const BOOL CURSOR_MODE = TRUE;
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 int	OnCreate(HWND hWnd, LPCREATESTRUCT lpcs);
 
+#if _DEBUG
 // Forward declare message handler from imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
+#endif
 
 bool System::Initialize(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	// ウィンドウの初期化
@@ -41,6 +42,7 @@ bool System::Initialize(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		return false;
 	}
 
+#if _DEBUG
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -56,6 +58,7 @@ bool System::Initialize(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 
 	// Our state
 	//clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+#endif
 
 	return true;
 }
@@ -65,10 +68,12 @@ void System::Shutdown() {
 	// フレーム機能の終了処理
 	Frame::GetInstance().Uninit();
 
+#if _DEBUG
 	// Cleanup
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+#endif
 
 	// Release the graphics object.
 	Graphics::GetInstance().Shutdown();
@@ -108,6 +113,8 @@ void System::Run() {
 			Frame::GetInstance().Update();
 
 			if (Frame::GetInstance().isUpdateGame()) {	
+
+#if _DEBUG
 				// Start the Dear ImGui frame
 				ImGui_ImplDX11_NewFrame();
 				ImGui_ImplWin32_NewFrame();
@@ -116,12 +123,13 @@ void System::Run() {
 				ImGui::Begin("[inspector]");
 				
 				ImGui::Text("FPS : %.1f", ImGui::GetIO().Framerate);
-
+#endif
 
 				Graphics::GetInstance().Update();	// 更新処理
 
-
+#if _DEBUG
 				ImGui::End();
+#endif
 
 				Graphics::GetInstance().GetInstance().Draw();	// 描画処理
 			}
@@ -201,10 +209,10 @@ HWND System::GetWnd() {
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	
+#if _DEBUG
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
 		return S_OK;
-	
+#endif
 	switch (uMsg) {
 	case WM_CREATE:										//----- ウィンドウが生成された
 
