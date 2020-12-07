@@ -121,11 +121,6 @@ void GameScene::Init() {
 	mesh->m_transform->m_scale = float3(50.f, 50.f, 50.f);
 	m_listObject.push_back(mesh);
 
-	// ロックオンマーカー
-	m_UI = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_ROCK_ICON_OUTCAMERA_ATTACK);
-	m_UI->AddComponent<TargetCtr>();
-	m_listObject.push_back(m_UI);
-
 
 	//--- フィールドの生成
 	// 壁

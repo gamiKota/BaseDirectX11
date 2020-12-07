@@ -46,8 +46,9 @@ public:
 
 	/**
 	 * @brief Instantiate
+	 * @details *この関数でオブジェクトを生成してからコンポーネントの追加すること
 	 */
-	static void Instantiate(GameObject* obj, float3 transform = float3(), Quaternion rotate = Quaternion(), float3 scale = float3(1.f, 1.f, 1.f));
+	static GameObject* Instantiate(GameObject* obj, float3 transform = float3(), Quaternion rotate = Quaternion(), float3 scale = float3(1.f, 1.f, 1.f));
 
 	/**
 	 : @brief Destroy

@@ -20,7 +20,8 @@
  */
 class TargetCtr : public Component {
 public:
-	GameObject* m_target;
+	GameObject* m_parent = nullptr;	//!< 親
+	GameObject* m_target = nullptr;	//!< ターゲット
 
 public:
 	void Start();

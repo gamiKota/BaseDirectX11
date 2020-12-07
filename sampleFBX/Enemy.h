@@ -22,9 +22,13 @@ class Enemy : public Character {
 private:
 	float m_deleteTime;		//!< 消滅時間
 
+protected:
+	GameObject* m_LockIcon;	//!< ロックオンマーカー
+
 public:
 	void Start();
 	void Update();
+	void Uninit();
 };
 
 

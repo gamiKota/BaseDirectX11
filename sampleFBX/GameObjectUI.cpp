@@ -13,13 +13,13 @@
 
 
 GameObjectUI::GameObjectUI(E_LAYER layer) : m_layer(layer), m_texture(E_TEXTURE_NONE), GameObject("GameObjectUI") {
-	m_transform->m_scale = { 100.f, 100.f, 0 };
+
 }
 
 
 GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, std::string tag) :
 	m_layer(layer), m_texture(texture), GameObject(name, tag) {
-	m_transform->m_scale = { 100.f, 100.f, 0 };
+
 }
 
 
@@ -28,6 +28,10 @@ GameObjectUI::~GameObjectUI() {
 
 
 void GameObjectUI::Init() {
+	// •Ï”‚Ì‰Šú‰»
+	m_transform->m_scale = { 100.f, 100.f, 0 };
+	m_color = float3(1.f, 1.f, 1.f);
+
 	GameObject::Init();
 }
 
@@ -57,7 +61,7 @@ void GameObjectUI::Draw() {
 	SetPolygonAngle(m_transform->m_rotate.z);
 	SetPolygonUV(0.f, 0.f);
 	SetPolygonFrameSize(1.f, 1.f);
-	SetPolygonColor(1.0f, 1.0f, 1.0f);
+	SetPolygonColor(m_color.x, m_color.y, m_color.z);
 	SetPolygonAlpha(1.0f);
 	DrawPolygon(D3DClass::GetInstance().GetDeviceContext());
 	

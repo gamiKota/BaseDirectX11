@@ -14,8 +14,8 @@
 #include "System.h"
 
 
-void Object::Instantiate(GameObject* obj, float3 transform, Quaternion rotate, float3 scale) {
-	if (obj == nullptr)	return;
+GameObject* Object::Instantiate(GameObject* obj, float3 transform, Quaternion rotate, float3 scale) {
+	if (obj == nullptr)	return nullptr;
 
 	obj->m_transform->m_position = transform;
 	obj->m_transform->m_rotate = rotate;
@@ -25,6 +25,8 @@ void Object::Instantiate(GameObject* obj, float3 transform, Quaternion rotate, f
 	if (SceneManager::GetInstance().m_scene->GetGameUpdate()) {
 		obj->Init();
 	}
+
+	return obj;
 }
 
 

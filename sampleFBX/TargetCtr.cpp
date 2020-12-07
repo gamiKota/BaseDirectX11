@@ -10,8 +10,12 @@
 #include <DirectXMath.h>
 #include "Graphics.h"
 #include "debugproc.h"
+#include "TextureManager.h"
 #include "Camera.h"
 #include "GameObject.h"
+#include "GameObjectUI.h"
+#include "GameObject3D.h"
+#include "Player.h"
 #include "System.h"
 
 
@@ -64,13 +68,25 @@ float3 LockOnMarker(float3 target) {
 
 void TargetCtr::Start() {
 	// 変数初期化
-	m_transform->m_scale = float3(50.f, 50.f, 50.f);
-	m_target = GameObject::FindGameObjectWithTag("Enemy");
+	m_transform->m_scale = float3(100.f, 100.f, 0.f);
+
+	if (m_target == nullptr) {
+		m_target = GameObject::FindGameObjectWithTag("Enemy");
+	}
 }
 
 
 void TargetCtr::Update() {
-
+	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
+	if (m_target == GameObject::Find("Player")->GetComponent<PlayerCtr>()->m_target) {
+		obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_MAIN;
+		obj->m_color = float3(1.f, 0.f, 0.f);
+	}
+	else {
+		obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_SUB;
+		obj->m_color = float3(1.f, 0.6f, 0.f);
+	}
+	
 	// ロックオンマーカー
 	m_transform->m_position = LockOnMarker(m_target->m_transform->m_position);
 }

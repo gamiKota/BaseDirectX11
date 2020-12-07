@@ -31,6 +31,7 @@ class GameObjectUI : public GameObject {
 public:
 	E_TEXTURE	m_texture;
 	E_LAYER		m_layer;
+	float3		m_color;
 
 public:
 	/**

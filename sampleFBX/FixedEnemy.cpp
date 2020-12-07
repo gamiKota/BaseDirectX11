@@ -12,12 +12,16 @@
 #include "Status.h"
 #include "Collision.h"
 #include "Transform.h"
+#include "TargetCtr.h"
 #include "debugproc.h"
 #include "System.h"
 
 
 void FixedEnemy::Start() {
+	// “G‚Ì‹¤’Êˆ—
 	Enemy::Start();
+
+	// •Ï”‚Ì‰Šú‰»
 	m_status->m_HP = 500.f;
 	m_status->m_AttakPower = 10.f;
 }

@@ -31,8 +31,7 @@ Scene::~Scene() {
 
 
 void Scene::Init() {
-	auto buff = m_listObject;
-	for (auto obj : buff) {
+	for (auto obj : m_listObject) {	// バッファでやるとイテレータの関係でStart関数が実行されないオブジェクトが出てくる
 		obj->Init();
 	}
 
