@@ -175,13 +175,16 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 	pDeviceContext->PSSetShaderResources(0, 1, &texture);
 
 	SHADER_GLOBAL cb;
+
 	XMMATRIX mtxWorld = XMLoadFloat4x4(matrix);
 	cb.mWVP = XMMatrixTranspose(mtxWorld *
 		XMLoadFloat4x4(&CCamera::Get()->GetView()) * XMLoadFloat4x4(&CCamera::Get()->GetProj()));
 	cb.mW = XMMatrixTranspose(mtxWorld);
 	cb.mTex = XMMatrixTranspose(XMLoadFloat4x4(&pMesh->mtxTexture));
+	
 	pDeviceContext->UpdateSubresource(g_pConstantBuffer[0], 0, nullptr, &cb, 0, 0);
 	pDeviceContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer[0]);
+
 	SHADER_GLOBAL2 cb2;
 	cb2.vEye = XMLoadFloat3(&CCamera::Get()->GetEye());
 	Light* light = GetMainLight();
