@@ -35,8 +35,8 @@ GameObject::~GameObject() {
 
 
 void GameObject::Init() {
-	auto buff = m_listComponent;
-	for (auto com : buff)
+	//auto buff = m_listComponent;
+	for (auto com : m_listComponent)
 		com->Start();
 }
 
