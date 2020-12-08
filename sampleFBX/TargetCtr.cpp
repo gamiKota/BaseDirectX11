@@ -69,6 +69,8 @@ float3 LockOnMarker(float3 target) {
 void TargetCtr::Start() {
 	// •Ï”‰Šú‰»
 	m_transform->m_scale = float3(100.f, 100.f, 0.f);
+	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
+	obj->m_shader = E_SHADER_2D::_COLOR;
 
 	if (m_target == nullptr) {
 		m_target = GameObject::FindGameObjectWithTag("Enemy");
@@ -100,6 +102,7 @@ void TargetCtr::Update() {
 		}
 		obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
 		obj->m_color = float3(1.f, 0.f, 0.f);
+		obj->m_layer = E_LAYER::UI;
 		m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
 	}
 	// ‰æ–Ê“à
@@ -107,10 +110,14 @@ void TargetCtr::Update() {
 		if (m_target == GameObject::Find("Player")->GetComponent<PlayerCtr>()->m_target) {
 			obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_MAIN;
 			obj->m_color = float3(1.f, 0.f, 0.f);
+			m_transform->m_scale = float3(100.f, 100.f, 0.f);
+			obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 2);
 		}
 		else {
 			obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_SUB;
 			obj->m_color = float3(1.f, 0.6f, 0.f);
+			m_transform->m_scale = float3(80.f, 80.f, 0.f);
+			obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 1);
 		}
 		m_transform->m_rotate.z = 0.f;
 	}

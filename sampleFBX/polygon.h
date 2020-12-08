@@ -9,6 +9,13 @@
 #include "Data.h"
 #include "D3DClass.h"
 
+
+enum class E_SHADER_2D {
+	_NORMAL,	// 通常
+	_COLOR,		// 色直塗
+};
+
+
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -25,3 +32,4 @@ void SetPolygonUV(float fU, float fV);
 void SetPolygonFrameSize(float fWidth, float fHeight);
 void SetPolygonColor(float fRed, float fGreen, float fBlue);
 void SetPolygonAlpha(float fAlpha);
+void SetPolygonShader(E_SHADER_2D shader);

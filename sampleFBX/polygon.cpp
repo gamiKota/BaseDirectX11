@@ -25,6 +25,7 @@ struct SHADER_GLOBAL {
 	XMMATRIX	mView;		// ビュー変換行列(転置行列)
 	XMMATRIX	mProj;		// 射影変換行列(転置行列)
 	XMMATRIX	mTex;		// テクスチャ変換行列(転置行列)
+	XMFLOAT4    color;		// いろ
 };
 
 //*****************************************************************************
@@ -57,10 +58,14 @@ static ID3D11InputLayout*			g_pInputLayout;			// 頂点フォーマット
 static GeometryShader*				g_pGeometryShader;		// ジオメトリシェーダ
 static ID3D11PixelShader*			g_pPixelShader;			// ピクセルシェーダ
 
+static ID3D11PixelShader*			g_pPixelShaderColor;		// ピクセルシェーダ
+
 static XMFLOAT4X4					g_mProj;				// 射影変換行列
 static XMFLOAT4X4					g_mView;				// ビュー変換行列
 static XMFLOAT4X4					g_mWorld;				// ワールド変換行列
 static XMFLOAT4X4					g_mTex;					// テクスチャ変換行列
+
+static E_SHADER_2D					g_shader2D;				// シェーダ
 
 //=============================================================================
 // 初期化処理
@@ -77,6 +82,11 @@ HRESULT InitPolygon(ID3D11Device* pDevice)
 	};
 	hr = LoadShader("Vertex2D", "Pixel2D",
 		&g_pVertexShader, &g_pInputLayout, &g_pPixelShader, layout, _countof(layout));
+	if (FAILED(hr)) {
+		return hr;
+	}
+
+	hr = LoadPixelShader("Color2DPS", &g_pPixelShaderColor);
 	if (FAILED(hr)) {
 		return hr;
 	}
@@ -189,26 +199,54 @@ void DrawPolygon(ID3D11DeviceContext* pDeviceContext)
 	// 頂点バッファ更新
 	SetVertexPolygon();
 
-	pDeviceContext->VSSetShader(g_pVertexShader, nullptr, 0);
-	//g_pGeometryShader->Bind();
-	pDeviceContext->PSSetShader(g_pPixelShader, nullptr, 0);
-	pDeviceContext->IASetInputLayout(g_pInputLayout);
+	if (g_shader2D == E_SHADER_2D::_NORMAL) {
+		pDeviceContext->VSSetShader(g_pVertexShader, nullptr, 0);
+		//g_pGeometryShader->Bind();
+		pDeviceContext->PSSetShader(g_pPixelShader, nullptr, 0);
+		pDeviceContext->IASetInputLayout(g_pInputLayout);
 
-	UINT stride = sizeof(VERTEX_2D);
-	UINT offset = 0;
-	pDeviceContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+		UINT stride = sizeof(VERTEX_2D);
+		UINT offset = 0;
+		pDeviceContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
 
-	pDeviceContext->PSSetSamplers(0, 1, &g_pSamplerState);
-	pDeviceContext->PSSetShaderResources(0, 1, &g_pTexture);
+		pDeviceContext->PSSetSamplers(0, 1, &g_pSamplerState);
+		pDeviceContext->PSSetShaderResources(0, 1, &g_pTexture);
 
-	SHADER_GLOBAL cb;
-	cb.mProj = XMMatrixTranspose(XMLoadFloat4x4(&g_mProj));
-	cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&g_mView));
-	cb.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&g_mWorld));
-	cb.mTex = XMMatrixTranspose(XMLoadFloat4x4(&g_mTex));
-	pDeviceContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-	pDeviceContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	pDeviceContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+		SHADER_GLOBAL cb;
+		cb.mProj = XMMatrixTranspose(XMLoadFloat4x4(&g_mProj));
+		cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&g_mView));
+		cb.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&g_mWorld));
+		cb.mTex = XMMatrixTranspose(XMLoadFloat4x4(&g_mTex));
+		pDeviceContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+		pDeviceContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+		pDeviceContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	}
+	else if (g_shader2D == E_SHADER_2D::_COLOR) {
+		pDeviceContext->VSSetShader(g_pVertexShader, nullptr, 0);
+		//g_pGeometryShader->Bind();
+		pDeviceContext->PSSetShader(g_pPixelShaderColor, nullptr, 0);
+		pDeviceContext->IASetInputLayout(g_pInputLayout);
+
+		UINT stride = sizeof(VERTEX_2D);
+		UINT offset = 0;
+		pDeviceContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+
+		pDeviceContext->PSSetSamplers(0, 1, &g_pSamplerState);
+		pDeviceContext->PSSetShaderResources(0, 1, &g_pTexture);
+
+		SHADER_GLOBAL cb;
+		cb.mProj = XMMatrixTranspose(XMLoadFloat4x4(&g_mProj));
+		cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&g_mView));
+		cb.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&g_mWorld));
+		cb.mTex = XMMatrixTranspose(XMLoadFloat4x4(&g_mTex));
+		cb.color.x = g_colPolygon.x;
+		cb.color.y = g_colPolygon.y;
+		cb.color.z = g_colPolygon.z;
+		cb.color.w = g_colPolygon.w;
+		pDeviceContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+		pDeviceContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+		pDeviceContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	}
 
 	// プリミティブ形状をセット
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -365,4 +403,9 @@ void SetPolygonAlpha(float fAlpha)
 		g_colPolygon.w = fAlpha;
 		g_bInvalidate = true;
 	}
+}
+
+
+void SetPolygonShader(E_SHADER_2D shader) {
+	g_shader2D = shader;
 }
