@@ -24,6 +24,8 @@ using namespace DirectX;
 
 float3 LockOnMarker(float3 target) {
 	float3 OutPos = float3();
+	float3 CameraVec = CCamera::Get()->m_transform->m_forward;
+	//if ()
 
 	// ビュー行列と射影行列の取得
 	XMMATRIX view = XMLoadFloat4x4(&CCamera().Get()->GetView());

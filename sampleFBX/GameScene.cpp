@@ -116,7 +116,7 @@ void GameScene::Init() {
 	}
 
 	// ビルボード
-	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
+	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
 	mesh->m_transform->m_position = float3(0.f, 0.f, 400.f);
 	mesh->m_transform->m_scale = float3(50.f, 50.f, 50.f);
 	m_listObject.push_back(mesh);

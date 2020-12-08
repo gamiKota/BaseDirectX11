@@ -229,6 +229,10 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 
 	// 背面カリング (通常は表面のみ描画)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
+
+
+	//pDeviceContext->DrawIndexed(pMesh->nNumIndex, 0, 0);
+	
 	// Zバッファ無効
 	D3DClass::GetInstance().SetZBuffer(true);
 
