@@ -90,6 +90,9 @@ void Scene::Update() {
 		m_listObject.remove(obj);
 		SAFE_DELETE(obj);
 	}
+
+	// 2Dレイヤーのソート
+	m_listObject.sort(GameObjectUISort);
 }
 
 void Scene::Draw() {

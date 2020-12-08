@@ -80,4 +80,7 @@ public:
 };
 
 
+bool GameObjectUISort(GameObject* obj1, GameObject* obj2);
+
+
 // EOF

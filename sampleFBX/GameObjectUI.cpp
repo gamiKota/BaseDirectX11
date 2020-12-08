@@ -71,4 +71,16 @@ void GameObjectUI::Draw() {
 }
 
 
+bool GameObjectUISort(GameObject* obj1, GameObject* obj2) {
+	GameObjectUI* temp1 = dynamic_cast<GameObjectUI*>(obj1);
+	GameObjectUI* temp2 = dynamic_cast<GameObjectUI*>(obj2);
+	if (temp1 != nullptr && temp2 != nullptr) {
+		if (temp1->m_layer < temp2->m_layer) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
 // EOF
