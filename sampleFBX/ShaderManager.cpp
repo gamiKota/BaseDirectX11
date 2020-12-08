@@ -1,6 +1,7 @@
 #include "ShaderManager.h"
 #include "ShaderBuffer.h"
 #include "Camera.h"
+#include "Transform.h"
 #include "System.h"
 
 
@@ -120,9 +121,9 @@ void ShaderManager::UpdateBuffer(XMFLOAT4X4 world) {
 	g_ViewProj[1] = CCamera::Get()->GetProj();
 
 	// ƒJƒƒ‰À•W
-	g_value.x = CCamera::Get()->GetEye().x;
-	g_value.y = CCamera::Get()->GetEye().y;
-	g_value.z = CCamera::Get()->GetEye().z;
+	g_value.x = CCamera::Get()->m_transform->m_position.x;
+	g_value.y = CCamera::Get()->m_transform->m_position.y;
+	g_value.z = CCamera::Get()->m_transform->m_position.z;
 	g_value.w = 1.f;
 
 	

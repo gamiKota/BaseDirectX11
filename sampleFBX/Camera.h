@@ -21,7 +21,6 @@
 class CCamera : public Component
 {
 protected:
-	float3					m_vEye;		//!< 視点座標
 	float3					m_vLook;	//!< 注視点座標
 	float3					m_vUp;		//!< 上方ベクトル
 	DirectX::XMFLOAT4X4		m_mView;	//!< ビュー変換
@@ -46,7 +45,6 @@ public:
 
 	DirectX::XMFLOAT4X4& GetView() { return m_mView; }
 	DirectX::XMFLOAT4X4& GetProj() { return m_mProj; }
-	float3& GetEye() { return m_vEye; }
 	float3& GetLook() { return m_vLook; }
 	void SetLook(float3 vLook) { m_vLook = vLook; }
 	static void Set(CCamera* pCamera)

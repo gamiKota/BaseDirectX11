@@ -104,7 +104,7 @@ void ModelManager::Update(E_MODEL model) {
 		return;
 	}
 	// カメラ座標を反映
-	m_pModel[model]->SetCamera(CCamera::Get()->GetEye());
+	m_pModel[model]->SetCamera(CCamera::Get()->m_transform->m_position);
 	// 光源上方を反映
 	if (model == E_MODEL_SKY) {
 		m_pModel[model]->SetLight(m_lightOff);
@@ -112,8 +112,6 @@ void ModelManager::Update(E_MODEL model) {
 	else {
 		m_pModel[model]->SetLight(g_light);
 	}
-
-	//PrintDebugProc("abc...xyz\n");
 }
 
 
@@ -123,22 +121,31 @@ void ModelManager::Draw(E_MODEL model, XMFLOAT4X4 transform) {
 		return ;
 	}
 
-	ShaderManager::GetInstance().UpdateBuffer(transform);
-	//if (model == E_MODEL_SKY) {
-		ShaderManager::GetInstance().Bind(E_SHADER_FBX);
-	//}
-	//else {
-	//	ShaderManager::GetInstance().Bind(E_SHADER_PHONG);
-	//}
-	//ShaderManager::GetInstance().Bind(E_SHADER_PHONG);
-
-
+	// 使用する変数
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
 	CCamera* pCamera = CCamera::Get();
-	// FBXファイル表示
-	D3DClass::GetInstance().SetBlendState(BS_NONE);			// アルファ処理しない
+
+	// シェーダの適用
+	ShaderManager::GetInstance().UpdateBuffer(transform);
+	ShaderManager::GetInstance().Bind(E_SHADER_FBX);
+
+	//--- FBXファイル表示
+
+	D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない
+	D3DClass::GetInstance().SetZWrite(true);			// Zバッファ有効
+
+	if (model == E_MODEL_SKY) {
+		D3DClass::GetInstance().SetZWrite(false);
+	}
 	m_pModel[model]->Render(transform, pCamera->GetView(), pCamera->GetProj(), eOpacityOnly);
+
+	if (model == E_MODEL_SKY) {
+		D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);		// アルファ処理しない
+		D3DClass::GetInstance().SetZWrite(true);					// Zバッファ有効
+		return;
+	}
+
 	D3DClass::GetInstance().SetZWrite(false);
 	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);	// 半透明描画
 	m_pModel[model]->Render(transform, pCamera->GetView(), pCamera->GetProj(), eTransparentOnly);

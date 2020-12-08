@@ -10,6 +10,7 @@
 #include "D3DClass.h"
 #include "Graphics.h"
 #include "debugproc.h"
+#include "Transform.h"
 #include "System.h"
 
 // 静的メンバ
@@ -20,14 +21,14 @@ float3 CCamera::m_vNowUp;		// 現在の上方ベクトル
 
 
 void CCamera::Start() {
-	m_vEye	= float3(0.0f, 200.0f, -400.0f);
+	m_transform->m_position	= float3(0.0f, 200.0f, -400.0f);
 	m_vLook = float3(0.0f, 0.0f, 0.0f);
 	m_vUp	= float3(0.0f, 1.0f, 0.0f);
 	m_fFovy = XMConvertToRadians(45);
 	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 	m_fNearZ = 10.0f;
 	m_fFarZ = 10000.0f;
-	m_vNowEye = m_vEye;
+	m_vNowEye = m_transform->m_position;
 	m_vNowLook = m_vLook;
 	m_vNowUp = m_vUp;
 	Update();
@@ -56,7 +57,7 @@ void CCamera::LastUpdate() {
 
 	// ビュー変換更新
 	XMStoreFloat4x4(&m_mView, XMMatrixLookAtLH(
-		XMLoadFloat3(&m_vEye),
+		XMLoadFloat3(&m_transform->m_position),
 		XMLoadFloat3(&m_vLook),
 		XMLoadFloat3(&m_vUp)));
 	// 射影変換更新

@@ -110,6 +110,7 @@ void Scene::Draw() {
 
 	// 前面カリング (FBXは表裏が反転するため)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
+	D3DClass::GetInstance().SetZWrite(true);
 
 	// 3Dモデル
 	buff = m_listObject;

@@ -21,7 +21,6 @@ enum class E_LAYER {
 	BACKGROUND	= 0,
 	UI			= 5,
 	MAX			= 10,
-	BILLBOARD	= 11,
 };
 
 

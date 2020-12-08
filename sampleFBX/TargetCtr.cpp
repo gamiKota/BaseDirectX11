@@ -84,29 +84,31 @@ void TargetCtr::Update() {
 
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
 	// 画面外
-	if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X ||
-		m_transform->m_position.x - m_transform->m_scale.x * 0.5f >  (float)SCREEN_CENTER_X	||
-		m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y ||
-		m_transform->m_position.y + m_transform->m_scale.y * 0.5f >  (float)SCREEN_CENTER_Y) {
-		if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X) {
-			m_transform->m_position.x = -(float)SCREEN_CENTER_X + m_transform->m_scale.x * 0.5f;
-		}
-		if (m_transform->m_position.x - m_transform->m_scale.x * 0.5f > (float)SCREEN_CENTER_X) {
-			m_transform->m_position.x = (float)SCREEN_CENTER_X - m_transform->m_scale.x * 0.5f;
-		}
-		if (m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y) {
-			m_transform->m_position.y = -(float)SCREEN_CENTER_Y + m_transform->m_scale.y * 0.5f;
-		}
-		if (m_transform->m_position.y + m_transform->m_scale.y * 0.5f > (float)SCREEN_CENTER_Y) {
-			m_transform->m_position.y = (float)SCREEN_CENTER_Y - m_transform->m_scale.y * 0.5f;
-		}
-		obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
-		obj->m_color = float3(1.f, 0.f, 0.f);
-		obj->m_layer = E_LAYER::UI;
-		m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
-	}
-	// 画面内
-	else {
+	// 挙動が可笑しい原因
+	// あくまでも座標は3Dオブジェクトを追ってるからスクリーン座標へ変換した時の値が望んでるものとは限らない
+	//if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X ||
+	//	m_transform->m_position.x - m_transform->m_scale.x * 0.5f >  (float)SCREEN_CENTER_X	||
+	//	m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y ||
+	//	m_transform->m_position.y + m_transform->m_scale.y * 0.5f >  (float)SCREEN_CENTER_Y) {
+	//	if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X) {
+	//		m_transform->m_position.x = -(float)SCREEN_CENTER_X + m_transform->m_scale.x * 0.5f;
+	//	}
+	//	if (m_transform->m_position.x - m_transform->m_scale.x * 0.5f > (float)SCREEN_CENTER_X) {
+	//		m_transform->m_position.x = (float)SCREEN_CENTER_X - m_transform->m_scale.x * 0.5f;
+	//	}
+	//	if (m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y) {
+	//		m_transform->m_position.y = -(float)SCREEN_CENTER_Y + m_transform->m_scale.y * 0.5f;
+	//	}
+	//	if (m_transform->m_position.y + m_transform->m_scale.y * 0.5f > (float)SCREEN_CENTER_Y) {
+	//		m_transform->m_position.y = (float)SCREEN_CENTER_Y - m_transform->m_scale.y * 0.5f;
+	//	}
+	//	obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
+	//	obj->m_color = float3(1.f, 0.f, 0.f);
+	//	obj->m_layer = E_LAYER::UI;
+	//	m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
+	//}
+	//// 画面内
+	//else {
 		if (m_target == GameObject::Find("Player")->GetComponent<PlayerCtr>()->m_target) {
 			obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_MAIN;
 			obj->m_color = float3(1.f, 0.f, 0.f);
@@ -120,7 +122,7 @@ void TargetCtr::Update() {
 			obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 1);
 		}
 		m_transform->m_rotate.z = 0.f;
-	}
+	//}
 }
 
 

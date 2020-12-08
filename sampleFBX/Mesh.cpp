@@ -10,6 +10,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "ShaderBuffer.h"
+#include "Transform.h"
 #include "imgui.h"
 #include "System.h"
 
@@ -186,7 +187,7 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 	pDeviceContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer[0]);
 
 	SHADER_GLOBAL2 cb2;
-	cb2.vEye = XMLoadFloat3(&CCamera::Get()->GetEye());
+	cb2.vEye = XMLoadFloat3(&CCamera::Get()->m_transform->m_position);
 	Light* light = GetMainLight();
 	cb2.vLightDir = 
 		pMesh->light ? 

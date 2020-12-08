@@ -16,7 +16,7 @@ namespace {
 // ‰Šú‰»
 void FPCamera::Awake()
 {
-	m_vEye = g_vEye;
+	m_transform->m_position = g_vEye;
 	m_vLook = g_vLook;
 	m_vUp = g_vUp;
 	m_fFovy = XMConvertToRadians(45);
@@ -43,7 +43,7 @@ void FPCamera::Update()
 	GameObject* player = GameObject::Find("Player");
 	if (player != nullptr) {
 		XMMATRIX world = XMLoadFloat4x4(&player->m_transform->GetMatrix());
-		XMStoreFloat3(&m_vEye, XMVector3TransformCoord(
+		XMStoreFloat3(&m_transform->m_position, XMVector3TransformCoord(
 			XMLoadFloat3(&g_vEye), world));
 		XMStoreFloat3(&m_vLook, XMVector3TransformCoord(
 			XMLoadFloat3(&g_vLook), world));
