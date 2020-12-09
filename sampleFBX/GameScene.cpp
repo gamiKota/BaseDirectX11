@@ -99,6 +99,7 @@ void GameScene::Init() {
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player", "Player");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, 0.f);
 	m_object3D->AddComponent<PlayerCtr>();
+	m_object3D->m_shader = E_SHADER_TOON;
 	m_listObject.push_back(m_object3D);
 
 	// 敵機初期化
@@ -112,11 +113,12 @@ void GameScene::Init() {
 		m_object3D->m_transform->m_position = vEnemyPos;
 		m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 180, 0.f);
 		m_object3D->AddComponent<FixedEnemy>();
+		m_object3D->m_shader = E_SHADER_TOON;
 		m_listObject.push_back(m_object3D);
 	}
 
 	// ビルボード
-	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
+	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
 	mesh->m_transform->m_position = float3(0.f, 0.f, 400.f);
 	mesh->m_transform->m_scale = float3(50.f, 50.f, 50.f);
 	m_listObject.push_back(mesh);

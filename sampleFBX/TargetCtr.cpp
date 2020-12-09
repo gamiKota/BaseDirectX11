@@ -22,19 +22,25 @@
 using namespace DirectX;
 
 
-//ベクトルの長さを計算する
+typedef struct {
+	float3 pos;	// 変換座標
+	bool b;		// カメラ外
+} LockOnMarkerA;
+
+
+// ベクトルの長さを計算する
 float get_vector_length(float3 v) {
 	return powf((v.x * v.x) + (v.y * v.y) + (v.z * v.z), 0.5);
 }
 
-//ベクトル内積
+// ベクトル内積
 float dot_product(float3 vl, float3 vr) {
 	return vl.x * vr.x + vl.y * vr.y + vl.z * vr.z;
 }
 
 
-float3 LockOnMarker(Transform* target) {
-	float3 OutPos = float3();
+LockOnMarkerA LockOnMarker(Transform* target) {
+	LockOnMarkerA OutPos = { float3(), false };
 	
 	// カメラの向いてるベクトルと
 	// 対象物のカメラに対してのベクトルが正と負で
@@ -52,8 +58,8 @@ float3 LockOnMarker(Transform* target) {
 	sita = sita * 180.f / XM_PI;
 	
 	PrintDebugProc("sita = %.2f\n", sita);
-	if (sita < 90.f) {
-		return float3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.f);
+	if (sita < 90.f) {	// おおよそカメラの裏側
+		OutPos.b = true;
 	}
 
 
@@ -90,9 +96,9 @@ float3 LockOnMarker(Transform* target) {
 	XMFLOAT3 ScreenPos;
 	XMStoreFloat3(&ScreenPos, vScreenPos);
 
-	OutPos.x =  ScreenPos.x - SCREEN_CENTER_X;
-	OutPos.y = -ScreenPos.y + SCREEN_CENTER_Y;
-	OutPos.z =  ScreenPos.z;
+	OutPos.pos.x =  ScreenPos.x - SCREEN_CENTER_X;
+	OutPos.pos.y = -ScreenPos.y + SCREEN_CENTER_Y;
+	OutPos.pos.z =  ScreenPos.z;
 
 	return OutPos;
 }
@@ -112,7 +118,8 @@ void TargetCtr::Start() {
 
 void TargetCtr::Update() {
 	// ロックオンマーカー
-	m_transform->m_position = LockOnMarker(m_target->m_transform);
+	LockOnMarkerA marker = LockOnMarker(m_target->m_transform);
+	m_transform->m_position = marker.pos;
 
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
 	// 画面外
@@ -124,23 +131,40 @@ void TargetCtr::Update() {
 		m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y ||
 		m_transform->m_position.y + m_transform->m_scale.y * 0.5f >  (float)SCREEN_CENTER_Y) {
 
-		float angle = atan2(GameObject::Find("Player")->m_transform->m_position.z - m_target->m_transform->m_position.z,
-			GameObject::Find("Player")->m_transform->m_position.x - m_target->m_transform->m_position.x);
-
-		m_transform->m_position.x = 0.f - cosf(angle + GameObject::Find("Player")->m_transform->m_rotate.y) * SCREEN_CENTER_X;
-		m_transform->m_position.y = 0.f - sinf(angle + GameObject::Find("Player")->m_transform->m_rotate.y) * SCREEN_CENTER_X;
-
-		if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X) {
-			m_transform->m_position.x = -(float)SCREEN_CENTER_X + m_transform->m_scale.x * 0.5f;
+		if (marker.b) {	// カメラ外
+			float3 pos = CCamera::Get()->m_transform->m_position - m_target->m_transform->m_position;
+			float3 vec = float3::Normalize(pos);
+			if (vec.y >= vec.z) {
+				if (pos.y > 0) {
+					m_transform->m_position.y += SCREEN_HEIGHT;
+				}
+				else {
+					m_transform->m_position.y -= SCREEN_HEIGHT;
+				}
+			}
+			else {
+				if (pos.z > 0) {	// 上
+					m_transform->m_position.x += SCREEN_HEIGHT;
+				}
+				else {
+					m_transform->m_position.x -= SCREEN_HEIGHT;
+				}
+			}
 		}
-		if (m_transform->m_position.x - m_transform->m_scale.x * 0.5f > (float)SCREEN_CENTER_X) {
-			m_transform->m_position.x = (float)SCREEN_CENTER_X - m_transform->m_scale.x * 0.5f;
-		}
-		if (m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y) {
-			m_transform->m_position.y = -(float)SCREEN_CENTER_Y + m_transform->m_scale.y * 0.5f;
-		}
-		if (m_transform->m_position.y + m_transform->m_scale.y * 0.5f > (float)SCREEN_CENTER_Y) {
-			m_transform->m_position.y = (float)SCREEN_CENTER_Y - m_transform->m_scale.y * 0.5f;
+		
+		{
+			if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X) {
+				m_transform->m_position.x = -(float)SCREEN_CENTER_X + m_transform->m_scale.x * 0.5f;
+			}
+			if (m_transform->m_position.x - m_transform->m_scale.x * 0.5f > (float)SCREEN_CENTER_X) {
+				m_transform->m_position.x = (float)SCREEN_CENTER_X - m_transform->m_scale.x * 0.5f;
+			}
+			if (m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y) {
+				m_transform->m_position.y = -(float)SCREEN_CENTER_Y + m_transform->m_scale.y * 0.5f;
+			}
+			if (m_transform->m_position.y + m_transform->m_scale.y * 0.5f > (float)SCREEN_CENTER_Y) {
+				m_transform->m_position.y = (float)SCREEN_CENTER_Y - m_transform->m_scale.y * 0.5f;
+			}
 		}
 		obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
 		obj->m_color = float3(1.f, 0.f, 0.f);

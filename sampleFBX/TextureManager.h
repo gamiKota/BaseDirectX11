@@ -37,6 +37,8 @@ enum E_TEXTURE {
  */
 class TextureManager : public Singleton<TextureManager> {
 private:
+	ID3D11ShaderResourceView* m_ptexToon;
+	
 	ID3D11ShaderResourceView* m_pTexture[E_TEXTURE_MAX];
 	bool m_isUse[E_TEXTURE_MAX];
 
@@ -60,6 +62,8 @@ public:
 	 * @brief Shutdown
 	 */
 	void Shutdown();
+
+	ID3D11ShaderResourceView** GetToonTex();
 
 	/**
 	 * @brief Get

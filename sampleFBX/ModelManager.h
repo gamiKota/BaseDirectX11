@@ -34,6 +34,9 @@ enum E_MODEL {
 };
 
 
+class GameObject3D;
+
+
 /**
  * @class ModelManagerÅ@: inheritance Singleton
  */
@@ -46,7 +49,7 @@ public:
 	CFbxModel* Get(E_MODEL model);
 
 	void Update(E_MODEL model);
-	void Draw(E_MODEL model, DirectX::XMFLOAT4X4 transform);
+	void Draw(GameObject3D* obj);
 
 private:
 	CFbxModel* m_pModel[E_MODEL_MAX];

@@ -14,6 +14,7 @@
 #include "debugproc.h"
 #include "ShaderManager.h"
 #include "GameObject.h"
+#include "GameObject3D.h"
 #include "TPCamera.h"
 #include "System.h"
 
@@ -115,8 +116,9 @@ void ModelManager::Update(E_MODEL model) {
 }
 
 
-void ModelManager::Draw(E_MODEL model, XMFLOAT4X4 transform) {
+void ModelManager::Draw(GameObject3D* obj) {
 
+	E_MODEL model = obj->m_model;
 	if (model <= E_MODEL_NONE || model > E_MODEL_MAX) {
 		return ;
 	}
@@ -127,18 +129,18 @@ void ModelManager::Draw(E_MODEL model, XMFLOAT4X4 transform) {
 	CCamera* pCamera = CCamera::Get();
 
 	// シェーダの適用
-	ShaderManager::GetInstance().UpdateBuffer(transform);
-	ShaderManager::GetInstance().Bind(E_SHADER_FBX);
+	ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
+	ShaderManager::GetInstance().Bind(obj->m_shader);
 
 	//--- FBXファイル表示
 
 	D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない
 	D3DClass::GetInstance().SetZWrite(true);			// Zバッファ有効
 
-	if (model == E_MODEL_SKY) {
+	if (obj->m_model == E_MODEL_SKY) {
 		D3DClass::GetInstance().SetZWrite(false);
 	}
-	m_pModel[model]->Render(transform, pCamera->GetView(), pCamera->GetProj(), eOpacityOnly);
+	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eOpacityOnly);
 
 	if (model == E_MODEL_SKY) {
 		D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);		// アルファ処理しない
@@ -148,7 +150,17 @@ void ModelManager::Draw(E_MODEL model, XMFLOAT4X4 transform) {
 
 	D3DClass::GetInstance().SetZWrite(false);
 	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);	// 半透明描画
-	m_pModel[model]->Render(transform, pCamera->GetView(), pCamera->GetProj(), eTransparentOnly);
+	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eTransparentOnly);
+
+	if (obj->m_shader == E_SHADER_TOON) {
+		// シェーダの適用
+		D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない
+		D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 前面カリング (FBXは表裏が反転するため)
+		D3DClass::GetInstance().SetZWrite(true);			// Zバッファ有効
+		ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
+		ShaderManager::GetInstance().Bind(E_SHADER_OUTLINE);
+		m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eNoAffect);
+	}
 }
 
 

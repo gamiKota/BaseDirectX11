@@ -34,6 +34,7 @@ void TextureManager::Initialize() {
 	for (auto use : m_isUse) {
 		use = false;
 	}
+	CreateTextureFromFile(D3DClass::GetInstance().GetDevice(), "data/texture/Toon.bmp", &m_ptexToon);
 }
 
 
@@ -60,6 +61,12 @@ void TextureManager::Shutdown() {
 	for (auto tex : m_pTexture) {
 		SAFE_RELEASE(tex);
 	}
+	SAFE_RELEASE(m_ptexToon);
+}
+
+
+ID3D11ShaderResourceView** TextureManager::GetToonTex() {
+	return &m_ptexToon;
 }
 
 

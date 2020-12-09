@@ -17,6 +17,7 @@
 #include "Rigidbody.h"
 #include "Tween.h"
 #include "debugproc.h"
+#include "imgui.h"
 #include "System.h"
 
 
@@ -167,7 +168,15 @@ void PlayerCtr::OnCollision(GameObject* obj) {
 
 
 void PlayerCtr::SetImGuiVal() {
-
+#if _DEBUG
+	int i = 0;
+	GameObject3D* obj = dynamic_cast<GameObject3D*>(m_gameObject);
+	i = obj->m_shader;
+	ImGui::InputInt("shader", &i);
+	obj->m_shader = (E_SHADER)i;
+	float3 up = m_transform->m_up * -1.f;
+	ImGui::DragFloat3("up", (float *)&up);
+#endif
 }
 
 

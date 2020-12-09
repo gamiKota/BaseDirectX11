@@ -28,6 +28,10 @@ void ShaderManager::Initialize() {
 	hr = m_VS[E_SHADER_VS_FBX]->Create("data/shader/FbxModelVertex.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK);}
 
+	m_VS[E_SHADER_VS_OUTLINE] = new VertexShader(LAYOUT_FBX);
+	hr = m_VS[E_SHADER_VS_OUTLINE]->Create("data/shader/OutLineVS.cso");
+	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK); }
+
 	m_VS[E_SHADER_VS_DEFAULT] = new VertexShader(LAYOUT_PCUN);
 	hr = m_VS[E_SHADER_VS_DEFAULT]->Create("data/shader/VertexShader.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK); }
@@ -52,6 +56,14 @@ void ShaderManager::Initialize() {
 
 	m_PS[E_SHADER_PS_PHONG] = new PixelShader;
 	hr = m_PS[E_SHADER_PS_PHONG]->Create("data/shader/PhongPS.cso");
+	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
+
+	m_PS[E_SHADER_PS_TOON] = new PixelShader;
+	hr = m_PS[E_SHADER_PS_TOON]->Create("data/shader/ToonPS.cso");
+	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
+
+	m_PS[E_SHADER_PS_OUTLINE] = new PixelShader;
+	hr = m_PS[E_SHADER_PS_OUTLINE]->Create("data/shader/OutLinePS.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
 
 	// 定数バッファ
@@ -95,6 +107,18 @@ void ShaderManager::Bind(E_SHADER shader, E_SHADER_GS gs) {
 		m_VS[E_SHADER_VS_DEFAULT]->Bind();
 		//m_GS[gs]->Bind();
 		m_PS[E_SHADER_PS_PHONG]->Bind();
+		break;
+
+	case E_SHADER_TOON:
+		m_VS[E_SHADER_VS_FBX]->Bind();
+		//m_GS[gs]->Bind();
+		m_PS[E_SHADER_PS_TOON]->Bind();
+		break;
+
+	case E_SHADER_OUTLINE:
+		m_VS[E_SHADER_VS_OUTLINE]->Bind();
+		//m_GS[gs]->Bind();
+		m_PS[E_SHADER_PS_OUTLINE]->Bind();
 		break;
 
 	case E_SHADER_MAX:

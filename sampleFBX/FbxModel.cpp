@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Light.h"
 #include "debugproc.h"
+#include "TextureManager.h"
 
 #pragma comment(lib, "d3d11")
 #ifdef D3DCOMPILER
@@ -598,6 +599,8 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 				m_pDeviceContext->PSSetShaderResources(0, 1, &m_pMaterial[i].pTexture);
 			if (m_pMaterial[i].pTexEmmisive)
 				m_pDeviceContext->PSSetShaderResources(1, 1, &m_pMaterial[i].pTexEmmisive);
+			m_pDeviceContext->PSSetShaderResources(1, 1, &m_pMaterial[i].pTexEmmisive);
+			m_pDeviceContext->PSSetShaderResources(2, 1, TextureManager::GetInstance().GetToonTex());
 		}
 		// ボーンをシェーダに渡す
 		m_pDeviceContext->VSSetConstantBuffers(2, 1, &m_pConstantBufferBone);

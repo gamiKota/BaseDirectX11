@@ -14,6 +14,7 @@
  */
 #include "GameObject.h"
 #include "ModelManager.h"
+#include "ShaderManager.h"
 
 
 /**
@@ -22,6 +23,7 @@
 class GameObject3D : public GameObject {
 public:
 	E_MODEL m_model;	//!< モデル(いつかコンポーネント化)
+	E_SHADER m_shader;	//!< シェーダ
 
 public:
 	/**

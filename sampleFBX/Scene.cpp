@@ -119,6 +119,8 @@ void Scene::Draw() {
 			obj->Draw();
 	}
 
+	// 前面カリング (FBXは表裏が反転するため)
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 	D3DClass::GetInstance().SetZBuffer(false);
 	// ビルボード
 	buff = m_listObject;

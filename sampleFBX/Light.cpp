@@ -8,9 +8,9 @@
 #define LIGHT0_DIFFUSE	XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define LIGHT0_AMBIENT	XMFLOAT4(0.2f,0.2f,0.2f,1.0f)
 #define LIGHT0_SPECULAR	XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
-#define LIGHT0_DIR_X	(1.0f)
-#define LIGHT0_DIR_Y	(-1.0f)
-#define LIGHT0_DIR_Z	(1.0f)
+#define LIGHT0_DIR_X	(-1.0f)
+#define LIGHT0_DIR_Y	(-2.0f)
+#define LIGHT0_DIR_Z	(-1.0f)
 
 
 Light	g_light;
