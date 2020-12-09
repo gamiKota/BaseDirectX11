@@ -81,6 +81,8 @@ void DrawDebugProc(void)
 	SetPolygonTexture(g_pTexture);
 	SetPolygonFrameSize(8.0f / 128.0f, 8.0f / 128.0f);
 	SetPolygonSize(FONT_WIDTH, FONT_HEIGHT);
+	SetPolygonAngle(0.f);
+	SetPolygonColor(1.0f, 1.0f, 1.0f);
 
 	//SetPolygonAlpha(0.5f);
 

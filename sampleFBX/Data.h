@@ -36,6 +36,12 @@ public:
 		return float3(((1.f - t) * start.x + t * end.x), ((1.f - t) * start.y + t * end.y), ((1.f - t) * start.z + t * end.z));
 	}
 
+	static float3 Normalize(float3 data) {
+		float scalar = sqrtf(data.x * data.x + data.y * data.y + data.z * data.z);
+		data /= scalar;
+		return data;
+	}
+
 	float3 operator + (float3 data) {
 		return float3(x + data.x, y + data.y, z + data.z);
 	}

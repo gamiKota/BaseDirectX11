@@ -82,8 +82,7 @@ void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 		else {
 			// Ž©•ª‚Æ‘ŠŽè‚ÌƒxƒNƒgƒ‹
 			float3 vec = obj[1]->m_transform->m_position - obj[0]->m_transform->m_position;
-			float scalar = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-			vec /= scalar;
+			vec = float3::Normalize(vec);
 
 			// ­‚µ‚¸‚Â‚¸‚ç‚·
 			obj[0]->m_transform->m_position -= vec * 1.f;
