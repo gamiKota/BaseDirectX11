@@ -174,6 +174,7 @@
     <ClCompile Include="imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="Laser.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshBullet.cpp" />
     <ClCompile Include="Number.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="Laser.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshBullet.h" />
     <ClInclude Include="PixelShader.h" />

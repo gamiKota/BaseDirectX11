@@ -1,5 +1,5 @@
 /**
- * @file Bullet.h
+ * @file Laser.h
  */
 
 
@@ -12,21 +12,16 @@
 /**
  * @include
  */
-#include "Character.h"
-
+#include "Bullet.h"
 
 
 /**
  * @class Bullet : inheritance Character
  */
-class Bullet : public Character {
-protected:
-	int	m_nLife;	//!< Žõ–½
-
+class Laser : public Bullet {
 public:
-
-	void Start();		// ‰Šú‰»
-	void Update();		// XV
+	void Start();
+	void Update();
 
 	void OnCollision(GameObject* obj);
 };

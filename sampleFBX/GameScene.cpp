@@ -130,7 +130,7 @@ void GameScene::Init() {
 	m_listObject.push_back(m_mesh);
 
 	// ƒr[ƒ€
-	m_object3D = new GameObject3D(E_MODEL_NONE, "Laser", "Bullet");
+	m_object3D = new GameObject3D(E_MODEL_LASER, "Laser", "Bullet");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, 0.f);
 	m_object3D->m_shader = E_SHADER::E_SHADER_DEFAULT;
 	m_object3D->m_material.Ka = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
@@ -152,7 +152,6 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 180.f, 0.f);
 	m_object3D->m_transform->m_scale = scale;
 	m_object3D->m_material = material;
-	m_object3D->m_isLight = false;
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
@@ -162,7 +161,6 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 90.f, 0.f);
 	m_object3D->m_transform->m_scale = scale;
 	m_object3D->m_material = material;
-	m_object3D->m_isLight = false;
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
@@ -172,7 +170,6 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 0.f, 0.f);
 	m_object3D->m_transform->m_scale = scale;
 	m_object3D->m_material = material;
-	m_object3D->m_isLight = false;
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
@@ -182,7 +179,6 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, -90.f, 0.f);
 	m_object3D->m_transform->m_scale = scale;
 	m_object3D->m_material = material;
-	m_object3D->m_isLight = false;
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
@@ -192,7 +188,6 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_rotate = Quaternion::Euler(90.f, 0.f, 0.f);
 	m_object3D->m_transform->m_scale = float3(6000.f, 6000.f, 0.1f);
 	m_object3D->m_material = material;
-	m_object3D->m_isLight = false;
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);

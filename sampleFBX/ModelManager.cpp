@@ -27,6 +27,7 @@ static const char* name[E_MODEL_MAX] = {
 	"data/model/Squadron/X_wing.fbx",	// プレイヤー
 	"data/model/Squadron/X_wing.fbx",	// 敵
 	"data/model/FA-18/sparrow.fbx",		// ミサイル
+	"data/model/laser.fbx",				// ミサイル
 	"data/model/Land/Land.fbx",			// 地形
 	"data/model/sky.fbx",				// スカイドーム
 };
@@ -88,13 +89,6 @@ void ModelManager::Update(GameObject3D *obj) {
 	}
 	// カメラ座標を反映
 	m_pModel[model]->SetCamera(CCamera::Get()->m_transform->m_position);
-	// 光源上方を反映
-	if (obj->m_isLight) {
-		m_pModel[model]->SetLight(*Light::Get());
-	}
-	else {
-		m_pModel[model]->SetLight(m_lightOff);
-	}
 }
 
 
@@ -105,7 +99,15 @@ void ModelManager::Draw(GameObject3D* obj) {
 		return ;
 	}
 
+	// マテリアル反映
 	m_pModel[model]->SetMaterial(&obj->m_material);
+	// 光源上方を反映
+	if (obj->m_isLight) {
+		m_pModel[model]->SetLight(*Light::Get());
+	}
+	else {
+		m_pModel[model]->SetLight(m_lightOff);
+	}
 
 	// 使用する変数
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
