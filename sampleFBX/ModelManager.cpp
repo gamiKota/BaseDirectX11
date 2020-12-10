@@ -105,6 +105,8 @@ void ModelManager::Draw(GameObject3D* obj) {
 		return ;
 	}
 
+	m_pModel[model]->SetMaterial(&obj->m_material);
+
 	// g—p‚·‚é•Ï”
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
