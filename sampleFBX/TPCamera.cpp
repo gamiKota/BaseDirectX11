@@ -110,7 +110,7 @@ void TPCamera::LastUpdate() {
 
 	if (m_player->GetComponent<PlayerCtr>()->m_target != nullptr) {	// ターゲットロックオン状態
 		float3 eye = m_player->m_transform->m_position;
-		eye -= m_player->m_transform->m_forward * 500.f;
+		eye -= m_player->m_transform->m_forward * 800.f;
 		m_transform->m_position = float3(eye.x, eye.y + 150.f, eye.z);
 		m_vLook = m_player->GetComponent<PlayerCtr>()->m_target->m_transform->m_position;
 		m_vUp = float3(0.f, 1.f, 0.f);

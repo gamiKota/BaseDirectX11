@@ -151,6 +151,8 @@ void ModelManager::Draw(GameObject3D* obj) {
 	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);	// 半透明描画
 	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eTransparentOnly);
 
+	// エッジ検出のやり方じゃないと複雑なモデル描画時に
+	// カリングの設定だけでは足りずに黒い部分が描画されてしまう
 	if (obj->m_shader == E_SHADER_TOON) {
 		// シェーダの適用
 		D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない

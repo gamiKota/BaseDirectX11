@@ -89,7 +89,7 @@ VS_OUTPUT main(VS_INPUT input)
 	SKIN vSkinned = SkinVert(input);
 	output.Pos = mul(vSkinned.Pos, g_WorldViewProj);
 	output.Tex = input.Tex;
-	output.Normal = mul(vSkinned.Norm, (float3x3)g_World);
+	output.Normal = mul(VS_INPUT.Normal, (float3x3)g_World);
 	output.Pos.xyz += output.Normal * 2.5f;
 	output.PosForPS = mul(vSkinned.Pos, g_World).xyz;
 	return output;
