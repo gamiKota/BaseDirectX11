@@ -56,28 +56,10 @@ void ModelManager::Init() {
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
 
-	TFbxMaterial material;
-	//material = *m_pModel[model]->GetMaterial();
-	material.Ka = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
-	material.Ke = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
-	material.Kd = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
-	material.Ks = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);	// 光沢
-
 	for (int i = E_MODEL_NONE; i < E_MODEL_MAX; i++) {
 		m_pModel[i] = new CFbxModel();
 		hr = m_pModel[i]->Init(pDevice, pDeviceContext, name[i]);
-		if (SUCCEEDED(hr)) {
-			//m_pModel[i]->SetCamera(GameObject::Find("MainCamera")->GetComponent<TPCamera>()->GetEye());
-			//m_pModel[i]->SetCamera(CCamera::Get()->GetEye());
-			if (i == E_MODEL_SKY) {
-				m_pModel[i]->SetLight(m_lightOff);
-			}
-			else {
-				m_pModel[i]->SetLight(*Light::Get());
-			}
-			m_pModel[i]->SetMaterial(&material);
-		}
-		else {
+		if (FAILED(hr)) {
 			MessageBoxA(System::GetInstance().GetWnd(), name[i], "Failed Load Model", MB_OK | MB_ICONWARNING | MB_TOPMOST);
 		}
 	}
@@ -99,18 +81,19 @@ CFbxModel* ModelManager::Get(E_MODEL model) {
 }
 
 
-void ModelManager::Update(E_MODEL model) {
-	if (model <= E_MODEL_NONE || model > E_MODEL_MAX) {
+void ModelManager::Update(GameObject3D *obj) {
+	E_MODEL model = obj->m_model;
+	if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
 		return;
 	}
 	// カメラ座標を反映
 	m_pModel[model]->SetCamera(CCamera::Get()->m_transform->m_position);
 	// 光源上方を反映
-	if (model == E_MODEL_SKY) {
-		m_pModel[model]->SetLight(m_lightOff);
+	if (obj->m_isLight) {
+		m_pModel[model]->SetLight(*Light::Get());
 	}
 	else {
-		m_pModel[model]->SetLight(*Light::Get());
+		m_pModel[model]->SetLight(m_lightOff);
 	}
 }
 
@@ -118,7 +101,7 @@ void ModelManager::Update(E_MODEL model) {
 void ModelManager::Draw(GameObject3D* obj) {
 
 	E_MODEL model = obj->m_model;
-	if (model <= E_MODEL_NONE || model > E_MODEL_MAX) {
+	if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
 		return ;
 	}
 
@@ -153,15 +136,15 @@ void ModelManager::Draw(GameObject3D* obj) {
 
 	// エッジ検出のやり方じゃないと複雑なモデル描画時に
 	// カリングの設定だけでは足りずに黒い部分が描画されてしまう
-	if (obj->m_shader == E_SHADER_TOON) {
-		// シェーダの適用
-		D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない
-		D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 前面カリング (FBXは表裏が反転するため)
-		D3DClass::GetInstance().SetZWrite(true);			// Zバッファ有効
-		ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
-		ShaderManager::GetInstance().Bind(E_SHADER_OUTLINE);
-		m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eNoAffect);
-	}
+	//if (obj->m_shader == E_SHADER_TOON) {
+	//	// シェーダの適用
+	//	D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない
+	//	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 前面カリング (FBXは表裏が反転するため)
+	//	D3DClass::GetInstance().SetZWrite(true);			// Zバッファ有効
+	//	ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
+	//	ShaderManager::GetInstance().Bind(E_SHADER_OUTLINE);
+	//	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eNoAffect);
+	//}
 }
 
 

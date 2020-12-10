@@ -15,6 +15,7 @@
 #include "GameObject.h"
 #include "ModelManager.h"
 #include "ShaderManager.h"
+#include "FbxModel.h"
 
 
 /**
@@ -22,8 +23,10 @@
  */
 class GameObject3D : public GameObject {
 public:
-	E_MODEL m_model;	//!< モデル(いつかコンポーネント化)
-	E_SHADER m_shader;	//!< シェーダ
+	E_MODEL			m_model;		//!< モデル(いつかコンポーネント化)
+	E_SHADER		m_shader;		//!< シェーダ
+	TFbxMaterial	m_material;		//!< マテリアル
+	bool			m_isLight;		//!< ライト設定
 
 public:
 	/**

@@ -26,6 +26,20 @@ static const DirectX::XMFLOAT4 M_EMISSIVE	=	XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
 GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh) : m_type(mesh), m_texture(E_TEXTURE_NONE), GameObject("GameObjectMesh") {
 	m_transform->m_scale = { 100.f, 100.f, 100.f };
 	m_material = AddComponent<Material>();
+
+	// マテリアルの初期設定
+	m_material->m_diffuse = M_DIFFUSE;
+	m_material->m_ambient = M_AMBIENT;
+	m_material->m_specular = M_SPECULAR;
+	m_material->m_power = 50.0f;
+	m_material->m_emissive = M_EMISSIVE;
+
+	// テクスチャ設定
+	XMStoreFloat4x4(&m_mesh.mtxTexture, XMMatrixIdentity());
+	m_mesh.texPattern = float3(0.f, 0.f, 0.f);
+	m_mesh.texSize = float3(1.f, 1.f, 1.f);
+	m_mesh.light = true;
+	m_mesh.Zbuff = true;
 }
 
 
@@ -33,6 +47,20 @@ GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh, E_TEXTURE texture, std::string 
 	m_type(mesh), m_texture(texture), GameObject(name, tag) {
 	m_transform->m_scale = { 100.f, 100.f, 100.f };
 	m_material = AddComponent<Material>();
+
+	// マテリアルの初期設定
+	m_material->m_diffuse = M_DIFFUSE;
+	m_material->m_ambient = M_AMBIENT;
+	m_material->m_specular = M_SPECULAR;
+	m_material->m_power = 50.0f;
+	m_material->m_emissive = M_EMISSIVE;
+
+	// テクスチャ設定
+	XMStoreFloat4x4(&m_mesh.mtxTexture, XMMatrixIdentity());
+	m_mesh.texPattern = float3(0.f, 0.f, 0.f);
+	m_mesh.texSize = float3(1.f, 1.f, 1.f);
+	m_mesh.light = true;
+	m_mesh.Zbuff = true;
 }
 
 
@@ -44,19 +72,6 @@ void GameObjectMesh::Init() {
 	// メッシュの初期化(初期設定)
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	HRESULT hr = S_OK;
-	// マテリアルの初期設定
-	m_material->m_diffuse	= M_DIFFUSE;
-	m_material->m_ambient	= M_AMBIENT;
-	m_material->m_specular	= M_SPECULAR;
-	m_material->m_power		= 50.0f;
-	m_material->m_emissive	= M_EMISSIVE;
-
-	// テクスチャ設定
-	XMStoreFloat4x4(&m_mesh.mtxTexture, XMMatrixIdentity());
-	m_mesh.texPattern = float3(0.f, 0.f, 0.f);
-	m_mesh.texSize = float3(1.f, 1.f, 1.f);
-	m_mesh.light = true;
-	m_mesh.Zbuff = true;
 	// ワールドマトリックス初期化
 	//XMStoreFloat4x4(&m_mesh.mtxWorld, XMMatrixIdentity());
 

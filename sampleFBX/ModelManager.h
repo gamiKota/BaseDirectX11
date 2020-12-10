@@ -48,7 +48,7 @@ public:
 	void Uninit();
 	CFbxModel* Get(E_MODEL model);
 
-	void Update(E_MODEL model);
+	void Update(GameObject3D* obj);
 	void Draw(GameObject3D* obj);
 
 private:

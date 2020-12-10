@@ -72,8 +72,8 @@ void Transform::LastUpdate() {
 void Transform::SetImGuiVal() {
 #if _DEBUG
 	ImGui::DragFloat3("position", (float*)&m_transform->m_position);
-	ImGui::DragFloat3("rotation", (float*)&m_transform->m_rotate, 0.01f);
-	ImGui::DragFloat3("scale", (float*)&m_transform->m_scale, 0.01f);
+	ImGui::DragFloat3("rotation", (float*)&m_transform->m_rotate);
+	ImGui::DragFloat3("scale", (float*)&m_transform->m_scale);
 #endif
 }
 

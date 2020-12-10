@@ -196,20 +196,20 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 	cb2.vLd = XMLoadFloat4(&light->m_diffuse);
 	cb2.vLs = XMLoadFloat4(&light->m_specular);
 
-	if (material) {
+	//if (material) {
 		cb2.vDiffuse = XMLoadFloat4(&material->m_diffuse);
 		cb2.vAmbient = XMVectorSet(material->m_ambient.x, material->m_ambient.y, material->m_ambient.z,
 			(texture != nullptr) ? 1.f : 0.f);
 		cb2.vSpecular = XMVectorSet(material->m_specular.x, material->m_specular.y, material->m_specular.z, material->m_power);
 		cb2.vEmissive = XMLoadFloat4(&material->m_emissive);
-	}
-	else {
-		cb2.vDiffuse = XMLoadFloat4(&pMaterial->m_diffuse);
-		cb2.vAmbient = XMVectorSet(pMaterial->m_ambient.x, pMaterial->m_ambient.y, pMaterial->m_ambient.z,
-			(texture != nullptr) ? 1.f : 0.f);
-		cb2.vSpecular = XMVectorSet(pMaterial->m_specular.x, pMaterial->m_specular.y, pMaterial->m_specular.z, pMaterial->m_power);
-		cb2.vEmissive = XMLoadFloat4(&pMaterial->m_emissive);
-	}
+	//}
+	//else {
+	//	cb2.vDiffuse = XMLoadFloat4(&pMaterial->m_diffuse);
+	//	cb2.vAmbient = XMVectorSet(pMaterial->m_ambient.x, pMaterial->m_ambient.y, pMaterial->m_ambient.z,
+	//		(texture != nullptr) ? 1.f : 0.f);
+	//	cb2.vSpecular = XMVectorSet(pMaterial->m_specular.x, pMaterial->m_specular.y, pMaterial->m_specular.z, pMaterial->m_power);
+	//	cb2.vEmissive = XMLoadFloat4(&pMaterial->m_emissive);
+	//}
 	pDeviceContext->UpdateSubresource(g_pConstantBuffer[1], 0, nullptr, &cb2, 0, 0);
 	pDeviceContext->PSSetConstantBuffers(1, 1, &g_pConstantBuffer[1]);
 
