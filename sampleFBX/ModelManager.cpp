@@ -32,7 +32,6 @@ static const char* name[E_MODEL_MAX] = {
 };
 
 
-extern Light	g_light;		// ŒõŒ¹î•ñ
 Light			m_lightOff;		// ŒõŒ¹–³Œø
 
 
@@ -74,7 +73,7 @@ void ModelManager::Init() {
 				m_pModel[i]->SetLight(m_lightOff);
 			}
 			else {
-				m_pModel[i]->SetLight(g_light);
+				m_pModel[i]->SetLight(*Light::Get());
 			}
 			m_pModel[i]->SetMaterial(&material);
 		}
@@ -111,7 +110,7 @@ void ModelManager::Update(E_MODEL model) {
 		m_pModel[model]->SetLight(m_lightOff);
 	}
 	else {
-		m_pModel[model]->SetLight(g_light);
+		m_pModel[model]->SetLight(*Light::Get());
 	}
 }
 

@@ -18,9 +18,11 @@
 #include "imgui.h"
 #include "System.h"
 
+
+
 using namespace DirectX;
 
-extern Light	g_light;		// 光源
+
 
 // 構造体定義
 //----- 頂点座標
@@ -168,7 +170,7 @@ void Collision::DebugDraw() {
 	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer[0]);
 	SHADER_GLOBAL2 cb2;
 	cb2.vEye = XMLoadFloat3(&pCamera->m_transform->m_position);
-	Light& light = g_light;
+	Light& light = *Light::Get();
 	cb2.vLightDir = XMVectorSet(light.m_direction.x, light.m_direction.y, light.m_direction.z, 0.f);
 	cb2.vLa = XMLoadFloat4(&light.m_ambient);
 	cb2.vLd = XMLoadFloat4(&light.m_diffuse);

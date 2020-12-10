@@ -44,6 +44,7 @@
 // コンポーネント
 #include "TPCamera.h"	// TPSカメラ
 #include "FPCamera.h"	// FPSカメラ
+#include "Light.h"		// ライト
 #include "Sky.h"		// スカイドーム
 #include "Player.h"		// プレイヤー
 #include "FixedEnemy.h"	// 敵
@@ -81,12 +82,15 @@ void GameScene::Init() {
 	// TPS視点カメラ
 	m_empty = new GameObject("MainCamera");
 #if 0
-	m_empty->AddComponent<CCamera>();
-	CCamera::Set(m_empty->GetComponent<CCamera>());
+	CCamera::Set(m_empty->AddComponent<CCamera>());
 #else
-	m_empty->AddComponent<TPCamera>();
-	CCamera::Set(m_empty->GetComponent<TPCamera>());
+	CCamera::Set(m_empty->AddComponent<TPCamera>());
 #endif
+	m_listObject.push_back(m_empty);
+
+	// ライト(平行光源)
+	m_empty = new GameObject("MainLight");
+	Light::Set(m_empty->AddComponent<Light>());
 	m_listObject.push_back(m_empty);
 
 	// スカイドーム
@@ -99,7 +103,7 @@ void GameScene::Init() {
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player", "Player");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, 0.f);
 	m_object3D->AddComponent<PlayerCtr>();
-	m_object3D->m_shader = E_SHADER_TOON;
+	m_object3D->m_shader = E_SHADER_FBX;
 	m_listObject.push_back(m_object3D);
 
 	// 敵機初期化
@@ -113,15 +117,16 @@ void GameScene::Init() {
 		m_object3D->m_transform->m_position = vEnemyPos;
 		m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 180, 0.f);
 		m_object3D->AddComponent<FixedEnemy>();
-		m_object3D->m_shader = E_SHADER_TOON;
+		m_object3D->m_shader = E_SHADER_FBX;
 		m_listObject.push_back(m_object3D);
 	}
 
 	// ビルボード
-	GameObjectMesh* mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
-	mesh->m_transform->m_position = float3(0.f, 0.f, 400.f);
-	mesh->m_transform->m_scale = float3(50.f, 50.f, 50.f);
-	m_listObject.push_back(mesh);
+	m_mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
+	m_mesh->m_transform->m_position = float3(0.f, 0.f, 400.f);
+	m_mesh->m_transform->m_scale = float3(50.f, 50.f, 50.f);
+	m_mesh->m_mesh.light = false;
+	m_listObject.push_back(m_mesh);
 
 
 	//--- フィールドの生成

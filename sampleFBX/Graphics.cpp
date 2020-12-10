@@ -30,9 +30,6 @@ bool Graphics::Init(Library eLibrary, int screenWidth, int screenHeight, HWND hw
 	// 入力処理初期化
 	Input::Init();
 
-	// 光源の初期化
-	InitLight();
-
 	// Initialize the graphics scene.
 	switch (m_library) {
 		// Create the Direct3D object.
@@ -86,9 +83,6 @@ void Graphics::Shutdown() {
 		break;
 	}
 
-	// 光源終了処理
-	UninitLight();
-
 	// 入力処理終了処理
 	Input::Uninit();
 
@@ -109,9 +103,6 @@ void Graphics::Update() {
 
 	// フレーム表示
 	Frame::GetInstance().DrawFPS();
-
-	// 光源更新
-	UpdateLight();
 
 	// Update the graphics scene.
 	switch (m_library) {

@@ -22,6 +22,7 @@
 class GameObject;
 class GameObject3D;
 class GameObjectUI;
+class GameObjectMesh;
 
 
 /**
@@ -30,12 +31,11 @@ class GameObjectUI;
 class Scene {
 protected:
 	bool			m_isUpdate;
-	std::string		m_name;
+	std::string		m_name;		//!< 現在アクティブなシーンの名前
 	GameObject*		m_empty;	//!< 空のオブジェクト
 	GameObject3D*	m_object3D;	//!< 3Dオブジェクト
-	GameObjectUI*	m_UI;		//!< 取り合えず
-	GameObjectUI*	m_number;	//!< 取り合えず
-	GameObjectUI*	m_Button;	//!< 取り合えず
+	GameObjectUI*	m_UI;		//!< UI
+	GameObjectMesh*	m_mesh;		//!< メッシュ
 
 public:
 	std::list<GameObject*> m_listObject;	//!< オブジェクトリスト

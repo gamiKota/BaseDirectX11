@@ -18,16 +18,21 @@
 #include "debugproc.h"
 #include "GameObject.h"
 #include "Camera.h"
+#include "Light.h"
 #include "System.h"
 
 
 void TitleScene::Init() {
 
-	GameObject* obj;
-	obj = new GameObject;
-	obj->AddComponent<CCamera>();
-	CCamera::Set(obj->GetComponent<CCamera>());
-	m_listObject.push_back(obj);
+	// カメラ
+	m_empty = new GameObject;
+	CCamera::Set(m_empty->AddComponent<CCamera>());
+	m_listObject.push_back(m_empty);
+
+	// ライト(平行光源)
+	m_empty = new GameObject("MainLight");
+	Light::Set(m_empty->AddComponent<Light>());
+	m_listObject.push_back(m_empty);
 
 	// お前は最後
 	Scene::Init();

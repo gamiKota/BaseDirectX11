@@ -188,7 +188,7 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 
 	SHADER_GLOBAL2 cb2;
 	cb2.vEye = XMLoadFloat3(&CCamera::Get()->m_transform->m_position);
-	Light* light = GetMainLight();
+	Light* light = Light::Get();
 	cb2.vLightDir = 
 		pMesh->light ? 
 		XMVectorSet(light->m_direction.x, light->m_direction.y, light->m_direction.z, 0.f) : XMVectorSet(0.f, 0.f, 0.f, 0.f);
