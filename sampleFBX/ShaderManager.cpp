@@ -66,9 +66,9 @@ void ShaderManager::Initialize() {
 	hr = m_PS[E_SHADER_PS_TOON]->Create("data/shader/ToonPS.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
 
-	m_PS[E_SHADER_PS_OUTLINE] = new PixelShader;
-	hr = m_PS[E_SHADER_PS_OUTLINE]->Create("data/shader/OutLinePS.cso");
-	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
+	//m_PS[E_SHADER_PS_OUTLINE] = new PixelShader;
+	//hr = m_PS[E_SHADER_PS_OUTLINE]->Create("data/shader/OutLinePS.cso");
+	//if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
 
 	// 定数バッファ
 	// シェーダにデータを渡す際には、
@@ -126,9 +126,9 @@ void ShaderManager::Bind(E_SHADER shader, E_SHADER_GS gs) {
 		break;
 
 	case E_SHADER_OUTLINE:
-		m_VS[E_SHADER_VS_OUTLINE]->Bind();
+		//m_VS[E_SHADER_VS_OUTLINE]->Bind();
 		//m_GS[gs]->Bind();
-		m_PS[E_SHADER_PS_OUTLINE]->Bind();
+		//m_PS[E_SHADER_PS_OUTLINE]->Bind();
 		break;
 
 	case E_SHADER_MAX:
