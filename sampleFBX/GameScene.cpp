@@ -129,17 +129,6 @@ void GameScene::Init() {
 	m_mesh->m_mesh.light = false;
 	m_listObject.push_back(m_mesh);
 
-	// ビーム
-	m_object3D = new GameObject3D(E_MODEL_LASER, "Laser", "Bullet");
-	m_object3D->m_transform->m_position = float3(0.f, 0.f, 0.f);
-	m_object3D->m_shader = E_SHADER::E_SHADER_DEFAULT;
-	m_object3D->m_material.Ka = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	m_object3D->m_material.Kd = XMFLOAT4(1.f, 0.f, 0.f, 0.5f);
-	m_object3D->m_material.Ke = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	m_object3D->m_material.Ks = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	m_object3D->m_isLight = false;
-	m_listObject.push_back(m_object3D);
-
 
 	//--- フィールドの生成
 	float3 scale = float3(6000.f, 3000.f, 0.1f);

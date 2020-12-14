@@ -13,19 +13,26 @@
  // インクルード部
  //*****************************************************************************
 #include "TitleScene.h"		// 自身のヘッダー
-#include "D3DClass.h"
-#include "input.h"
+// ゲームオブジェクト
 #include "debugproc.h"
 #include "GameObject.h"
+#include "GameObjectUI.h"
+#include "GameObject3D.h"
+#include "GameObjectMesh.h"
+// コンポーネント
 #include "Camera.h"
 #include "Light.h"
+#include "Sky.h"
+// システム
 #include "System.h"
 
 
 void TitleScene::Init() {
 
+	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_TREE);
+
 	// カメラ
-	m_empty = new GameObject;
+	m_empty = new GameObject("MainCamera");
 	CCamera::Set(m_empty->AddComponent<CCamera>());
 	m_listObject.push_back(m_empty);
 
@@ -33,6 +40,17 @@ void TitleScene::Init() {
 	m_empty = new GameObject("MainLight");
 	Light::Set(m_empty->AddComponent<Light>());
 	m_listObject.push_back(m_empty);
+
+	// スカイドーム
+	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
+	m_object3D->AddComponent<SkyDome>();
+	m_object3D->m_isLight = false;
+	m_listObject.push_back(m_object3D);
+
+	// ビルボード
+	m_mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
+	m_mesh->m_mesh.light = false;
+	m_listObject.push_back(m_mesh);
 
 	// お前は最後
 	Scene::Init();

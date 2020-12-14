@@ -13,7 +13,7 @@
 
 
 
-SceneManager::SceneManager() : m_scene(new GameScene()) {
+SceneManager::SceneManager() : m_scene(new TitleScene()) {
 
 }
 
@@ -67,13 +67,13 @@ void SceneManager::Update() {
 		m_isChange = false;
 	}
 
-	if (Input::isTrigger('1')) {
+	if (Input::isPress(VK_LSHIFT) && Input::isTrigger('1')) {
 		LoadScene(E_SCENE::TITLE);
 	}
-	if (Input::isTrigger('2')) {
+	if (Input::isPress(VK_LSHIFT) && Input::isTrigger('2')) {
 		LoadScene(E_SCENE::GAME);
 	}
-	if (Input::isTrigger('3')) {
+	if (Input::isPress(VK_LSHIFT) && Input::isTrigger('3')) {
 		LoadScene(E_SCENE::RESULT);
 	}
 
