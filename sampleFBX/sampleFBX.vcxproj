@@ -221,6 +221,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Tween.cpp" />
     <ClCompile Include="VertexShader.cpp" />
+    <ClCompile Include="WaterSurface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
@@ -283,9 +284,10 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Tween.h" />
     <ClInclude Include="VertexShader.h" />
+    <ClInclude Include="WaterSurface.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BillboardPS.hlsl">
+    <FxCompile Include="MeshPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
@@ -297,7 +299,7 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)data\shader\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)data\shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="BillboardVS.hlsl">
+    <FxCompile Include="MeshVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>

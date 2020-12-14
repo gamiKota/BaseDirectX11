@@ -19,6 +19,7 @@
 #include "GameObjectUI.h"
 #include "GameObject3D.h"
 #include "GameObjectMesh.h"
+#include "WaterSurface.h"
 // コンポーネント
 #include "Camera.h"
 #include "Light.h"
@@ -47,10 +48,10 @@ void TitleScene::Init() {
 	m_object3D->m_isLight = false;
 	m_listObject.push_back(m_object3D);
 
-	// ビルボード
-	m_mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
-	m_mesh->m_mesh.light = false;
-	m_listObject.push_back(m_mesh);
+	// 水面
+	WaterSurface* waterSurface = new WaterSurface("WaterSurface", "WaterSurface");
+	waterSurface->m_mesh.light = false;
+	m_listObject.push_back(waterSurface);
 
 	// お前は最後
 	Scene::Init();

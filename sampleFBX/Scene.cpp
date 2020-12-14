@@ -11,6 +11,7 @@
 #include "GameObject3D.h"
 #include "GameObjectUI.h"
 #include "GameObjectMesh.h"
+#include "WaterSurface.h"
 #include "D3DClass.h"
 #include "Collision.h"
 #include "Rigidbody.h"
@@ -136,10 +137,11 @@ void Scene::Draw() {
 	// 前面カリング (FBXは表裏が反転するため)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 	D3DClass::GetInstance().SetZBuffer(false);
-	// ビルボード
+	// ビルボード(ここ最悪、汚すぎる)
 	buff = m_listObject;
 	for (auto obj : buff) {
-		if (dynamic_cast<GameObjectMesh*>(obj) != nullptr)
+		if (dynamic_cast<GameObjectMesh*>(obj) != nullptr ||
+			dynamic_cast<WaterSurface*>(obj) != nullptr)
 			obj->Draw();
 	}
 
