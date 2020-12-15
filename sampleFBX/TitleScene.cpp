@@ -50,6 +50,8 @@ void TitleScene::Init() {
 
 	// …–Ê
 	WaterSurface* waterSurface = new WaterSurface("WaterSurface", "WaterSurface");
+	waterSurface->m_transform->m_rotate = Quaternion::Euler(90.f, 0.f, 0.f);
+	waterSurface->m_transform->m_scale = float3(1000.f, 1000.f, 1000.f);
 	waterSurface->m_mesh.light = false;
 	m_listObject.push_back(waterSurface);
 

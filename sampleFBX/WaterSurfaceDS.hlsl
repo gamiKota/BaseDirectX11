@@ -5,6 +5,11 @@ cbuffer global : register(b0) {
 };
 
 
+cbuffer global : register(b2) {
+	float	g_timer;	// タイマー
+};
+
+
 // ハルシェーダーのパッチ定数フェーズ用の出力パラメータ
 struct CONSTANT_HS_OUT
 {
@@ -40,7 +45,6 @@ DS_OUT main(CONSTANT_HS_OUT In, float2 uv : SV_DomainLocation, const OutputPatch
 	float3 p1 = lerp(patch[1].pos, patch[0].pos, uv.x);
 	float3 p2 = lerp(patch[3].pos, patch[2].pos, uv.x);
 	float3 p3 = lerp(p1, p2, uv.y);
-
 	Out.pos = mul(float4(p3, 1.0f), g_WorldViewProj);
 
 	// テクセル
@@ -48,6 +52,18 @@ DS_OUT main(CONSTANT_HS_OUT In, float2 uv : SV_DomainLocation, const OutputPatch
 	float2 t2 = lerp(patch[3].texel, patch[2].texel, uv.x);
 	float2 t3 = lerp(t1, t2, uv.y);
 	Out.texel = t3;
+
+	// 振動
+	float dx = (-0.5f + Out.texel.x) * (-0.5f + Out.texel.x);
+	float dz = (-0.5f + Out.texel.y) * (-0.5f + Out.texel.y);
+	float length = sqrt(dx + dz);
+	length *= 100.f;
+	Out.pos.y += 10.f * sin(2.f * 3.141592f * ((length / 14.f) - (g_timer / 1.f)));
+	//Out.pos.y += 2.f * sin(2.f * g_timer);
+	//dx = ((g_Wave[20][20].position.x + g_Wave[z][x].position.x) * (g_Wave[20][20].position.x + g_Wave[z][x].position.x));
+	//dz = ((g_Wave[20][20].position.z + g_Wave[z][x].position.z) * (g_Wave[20][20].position.z + g_Wave[z][x].position.z));
+	//length = sqrtf(dx + dz);
+	//Out.pos.y = g_Wave[z][x].amplitude * sinf(2.f * PI * ((length / WAVE_LENGTH) - (g_Wave[z][x].time / WAVE_CYCLE)));
 
 	return Out;
 }

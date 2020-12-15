@@ -19,29 +19,10 @@
 #include "PixelShader.h"
 #include "HullShader.h"
 #include "DomainShader.h"
+#include "Frame.h"
 #include "imgui.h"
 #include "System.h"
 
-
-// シェーダに渡す値
-struct SHADER_GLOBAL {
-	XMMATRIX	mWVP;		// ワールド×ビュー×射影行列(転置行列)
-	XMMATRIX	mW;			// ワールド行列(転置行列)
-	XMMATRIX	mTex;		// テクスチャ行列(転置行列)
-};
-struct SHADER_GLOBAL2 {
-	XMVECTOR	vEye;		// 視点座標
-	// 光源
-	XMVECTOR	vLightDir;	// 光源方向
-	XMVECTOR	vLa;		// 光源色(アンビエント)
-	XMVECTOR	vLd;		// 光源色(ディフューズ)
-	XMVECTOR	vLs;		// 光源色(スペキュラ)
-	// マテリアル
-	XMVECTOR	vAmbient;	// アンビエント色(+テクスチャ有無)
-	XMVECTOR	vDiffuse;	// ディフューズ色
-	XMVECTOR	vSpecular;	// スペキュラ色(+スペキュラ強度)
-	XMVECTOR	vEmissive;	// エミッシブ色
-};
 
 
 // 頂点定義
@@ -52,18 +33,28 @@ struct _VERTEX
 };
 
 // 定数定義
-typedef struct _CBUFFER0
+typedef struct
 {
 	XMMATRIX  g_matWVP; // ワールド × ビュー × 射影 行列
-}CBUFFER0;
+} _CBUFFER0;
 
-typedef struct _CBUFFER1
+typedef struct
 {
 	float g_fTessFactor;		// ポリゴンのエッジのテッセレーション係数
 	float g_fInsideTessFactor;	// ポリゴン内部のテッセレーション係数
+	// 16バイト調整用変数
 	float g_Dummy2;
-	float g_Dummy3;	// 16バイト調整用変数
-}CBUFFER1;
+	float g_Dummy3;
+} _CBUFFER1;
+
+typedef struct
+{
+	float g_timer;		// 経過時間
+	// 16バイト調整用変数
+	float g_Dummy1;
+	float g_Dummy2;
+	float g_Dummy3;
+} _CBUFFER2;
 
 
 /**
@@ -74,7 +65,7 @@ static const DirectX::XMFLOAT4 M_SPECULAR = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 static const DirectX::XMFLOAT4 M_AMBIENT = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 static const DirectX::XMFLOAT4 M_EMISSIVE = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 
-static ID3D11Buffer*				g_pConstantBuffer[2];	// 定数バッファ
+static ID3D11Buffer*				g_pConstantBuffer[3];	// 定数バッファ
 static ID3D11SamplerState*			g_pSamplerState;		// テクスチャ サンプラ
 static ID3D11VertexShader*			g_pVertexShader;		// 頂点シェーダ
 static ID3D11InputLayout*			g_pInputLayout;			// 頂点フォーマット
@@ -86,8 +77,10 @@ static DomainShader* g_DS;
 static GeometryShader* g_GS;
 static PixelShader* g_PS;
 
-static float TessFactor = 1.0f;        // ポリゴンのエッジのテッセレーション係数の定数
-static float InsideTessFactor = 1.0f;  // ポリゴン内部のテッセレーション係数の定数
+// 波シェーダの時はなるべく同じ値の方が奇麗に見える
+static float TessFactor = 32.0f;			// ポリゴンのエッジのテッセレーション係数の定数
+static float InsideTessFactor = 32.0f;		// ポリゴン内部のテッセレーション係数の定数
+static float Timer = 0.f;
 
 
 WaterSurface::WaterSurface() : GameObject("WaterSurface") {
@@ -169,6 +162,8 @@ void WaterSurface::Init() {
 	pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[0]);
 	bd.ByteWidth = sizeof(_CBUFFER1);
 	pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[1]);
+	bd.ByteWidth = sizeof(_CBUFFER2);
+	pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[2]);
 
 
 	//// 定数バッファ生成
@@ -246,8 +241,9 @@ void WaterSurface::Init() {
 
 void WaterSurface::Uninit() {
 	SAFE_RELEASE(g_pSamplerState);
-	SAFE_RELEASE(g_pConstantBuffer[0]);
+	SAFE_RELEASE(g_pConstantBuffer[2]);
 	SAFE_RELEASE(g_pConstantBuffer[1]);
+	SAFE_RELEASE(g_pConstantBuffer[0]);
 	SAFE_RELEASE(g_pVertexShader);
 	SAFE_RELEASE(g_pInputLayout);
 	//SAFE_RELEASE(g_pPixelShader);
@@ -274,6 +270,7 @@ void WaterSurface::LastUpdate() {
 void WaterSurface::Draw() {
 	ImGui::DragFloat("Edge", &TessFactor, 0.1f);
 	ImGui::DragFloat("Inpolygon", &InsideTessFactor, 0.1f);
+	ImGui::DragFloat("timer", &Timer, 0.1f);
 
 	//// テクスチャマトリックスの初期化
 	//XMMATRIX mtxTexture, mtxScale, mtxTranslate;
@@ -298,7 +295,7 @@ void WaterSurface::Draw() {
 
 
 	// 背面カリング (通常は表面のみ描画)
-	D3DClass::GetInstance().SetCullMode(CULLMODE_NONE);
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 	// Zバッファ無効
 	D3DClass::GetInstance().SetZBuffer(false);
 
@@ -333,8 +330,8 @@ void WaterSurface::Draw() {
 	g_DS->Bind();
 
 	// ジオメトリーシェーダを無効にする
-	//pDeviceContext->GSSetShader(NULL, NULL, 0);
-	g_GS->Bind();
+	pDeviceContext->GSSetShader(NULL, NULL, 0);
+	//g_GS->Bind();
 
 	// ピクセルシェーダをデバイスに設定する
 	g_PS->Bind();
@@ -349,7 +346,6 @@ void WaterSurface::Draw() {
 		cbuffer0.g_matWVP = XMMatrixTranspose(mtxWorld *
 			XMLoadFloat4x4(&CCamera::Get()->GetView()) * XMLoadFloat4x4(&CCamera::Get()->GetProj()));
 		pDeviceContext->UpdateSubresource(g_pConstantBuffer[0], 0, nullptr, &cbuffer0, 0, 0);
-		pDeviceContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer[0]);
 	}
 	
 	// テッセレーション係数を定数バッファにセット
@@ -358,7 +354,14 @@ void WaterSurface::Draw() {
 		cbuffer1.g_fTessFactor = TessFactor;
 		cbuffer1.g_fInsideTessFactor = InsideTessFactor;
 		pDeviceContext->UpdateSubresource(g_pConstantBuffer[1], 0, nullptr, &cbuffer1, 0, 0);
-		pDeviceContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer[1]);
+	}
+
+	// 波を定数バッファにセット
+	{
+		_CBUFFER2 cbuffer2;
+		Timer += Frame::GetInstance().GetDeltaTime();
+		cbuffer2.g_timer = Timer;
+		pDeviceContext->UpdateSubresource(g_pConstantBuffer[2], 0, nullptr, &cbuffer2, 0, 0);
 	}
 	
 	// ハルシェーダーに定数バッファを設定する。
@@ -366,6 +369,7 @@ void WaterSurface::Draw() {
 	
 	// ドメインシェーダーに定数バッファを設定する。
 	pDeviceContext->DSSetConstantBuffers(0, 1, &g_pConstantBuffer[0]);
+	pDeviceContext->DSSetConstantBuffers(2, 1, &g_pConstantBuffer[2]);
 
 	// ピクセルシェーダにサンプルステートを渡す
 	pDeviceContext->PSSetSamplers(0, 1, &g_pSamplerState);
@@ -425,8 +429,6 @@ void WaterSurface::Draw() {
 void WaterSurface::SetImGuiVal() {
 
 
-	static float TessFactor = 1.0f;        // ポリゴンのエッジのテッセレーション係数の定数
-	static float InsideTessFactor = 1.0f;  // ポリゴン内部のテッセレーション係数の定数
 }
 
 
