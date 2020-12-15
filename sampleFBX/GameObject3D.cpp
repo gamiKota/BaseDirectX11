@@ -72,10 +72,10 @@ void GameObject3D::Draw() {
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 	D3DClass::GetInstance().SetZWrite(true);
 	ModelManager::GetInstance().Draw(this);
-	//if (GetComponent<Collision>() != nullptr &&
-	//	GetTag() != "Land") {
-	//	GetComponent<Collision>()->DebugDraw();
-	//}
+	if (GetComponent<Collision>() != nullptr &&
+		GetTag() != "Land") {
+		GetComponent<Collision>()->DebugDraw();
+	}
 	//GameObject::Draw();
 }
 

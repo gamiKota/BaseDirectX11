@@ -49,6 +49,9 @@
     <Filter Include="ヘッダー ファイル\Shader">
       <UniqueIdentifier>{18a08ae8-76a7-40f8-a7d9-1b9488932bac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\hlsl\WaterSurface">
+      <UniqueIdentifier>{5b6d8cff-ced2-4328-8ffa-c323892f688c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -232,6 +235,12 @@
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
     <ClCompile Include="WaterSurface.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="HullShader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DomainShader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -419,6 +428,12 @@
     <ClInclude Include="WaterSurface.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="HullShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DomainShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FbxModelPixel.hlsl">
@@ -474,6 +489,18 @@
     </FxCompile>
     <FxCompile Include="MeshVS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterSurfaceVS.hlsl">
+      <Filter>リソース ファイル\hlsl\WaterSurface</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterSurfaceHS.hlsl">
+      <Filter>リソース ファイル\hlsl\WaterSurface</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterSurfaceDS.hlsl">
+      <Filter>リソース ファイル\hlsl\WaterSurface</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterSurfacePS.hlsl">
+      <Filter>リソース ファイル\hlsl\WaterSurface</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -115,8 +115,12 @@ void ModelManager::Draw(GameObject3D* obj) {
 	CCamera* pCamera = CCamera::Get();
 
 	// シェーダの適用
-	ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
+	//ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
 	ShaderManager::GetInstance().Bind(obj->m_shader);
+	pDeviceContext->HSSetShader(NULL, NULL, 0);
+	pDeviceContext->DSSetShader(NULL, NULL, 0);
+	pDeviceContext->GSSetShader(NULL, NULL, 0);
+	pDeviceContext->CSSetShader(NULL, NULL, 0);
 
 	//--- FBXファイル表示
 

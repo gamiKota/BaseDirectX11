@@ -145,12 +145,15 @@ void Collision::DebugDraw() {
 
 	// シェーダ設定
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
+	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // プリミティブ形状をセット
 	pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
 	pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
 	pDeviceContext->IASetInputLayout(m_pInputLayout);
+	pDeviceContext->GSSetShader(NULL, NULL, 0);
+	pDeviceContext->DSSetShader(NULL, NULL, 0);
+	pDeviceContext->HSSetShader(NULL, NULL, 0);
+	pDeviceContext->CSSetShader(NULL, NULL, 0);
 
-	// プリミティブ形状をセット
-	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 頂点バッファ設定
 	UINT stride = sizeof(VERTEX);

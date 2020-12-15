@@ -175,6 +175,13 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 	pDeviceContext->PSSetSamplers(0, 1, &g_pSamplerState);
 	pDeviceContext->PSSetShaderResources(0, 1, &texture);
 
+
+	pDeviceContext->HSSetShader(NULL, NULL, 0);
+	pDeviceContext->DSSetShader(NULL, NULL, 0);
+	pDeviceContext->GSSetShader(NULL, NULL, 0);
+	pDeviceContext->CSSetShader(NULL, NULL, 0);
+
+
 	SHADER_GLOBAL cb;
 
 	XMMATRIX mtxWorld = XMLoadFloat4x4(matrix);

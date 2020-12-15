@@ -53,6 +53,12 @@ void TitleScene::Init() {
 	waterSurface->m_mesh.light = false;
 	m_listObject.push_back(waterSurface);
 
+	// …–Ê
+	m_mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE,  "Mesh", "mesh");
+	m_mesh->m_transform->m_position.y = -100.f;
+	m_mesh->m_mesh.light = false;
+	m_listObject.push_back(m_mesh);
+
 	// ‚¨‘O‚ÍÅŒã
 	Scene::Init();
 }

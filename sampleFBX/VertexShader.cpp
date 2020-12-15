@@ -84,6 +84,14 @@ HRESULT VertexShader::MakeShader(void* pData, UINT size)
 		}
 	};
 
+	// ②pos-color-uv-normal
+	static const D3D11_INPUT_ELEMENT_DESC PosNormalColorUV[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,                            D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+
 	// ③pos-uv-normal
 	static const D3D11_INPUT_ELEMENT_DESC PosUvNormal[] = {
 		{
@@ -127,8 +135,8 @@ HRESULT VertexShader::MakeShader(void* pData, UINT size)
 	};
 
 	// 頂点レイアウト作成
-	const D3D11_INPUT_ELEMENT_DESC* pDesc[] = { layout, PosColorUvNormal, PosUvNormal, PosNormal };
-	int dataNum[] = { _countof(layout), _countof(PosColorUvNormal), _countof(PosUvNormal), _countof(PosNormal) };
+	const D3D11_INPUT_ELEMENT_DESC* pDesc[] = { layout, PosColorUvNormal, PosNormalColorUV ,PosUvNormal, PosNormal };
+	int dataNum[] = { _countof(layout), _countof(PosColorUvNormal), _countof(PosNormalColorUV) , _countof(PosUvNormal), _countof(PosNormal) };
 
 	// CPU-GPU間でデータを行き来させるため
 	ID3D11Device *pDevice = D3DClass::GetInstance().GetDevice();

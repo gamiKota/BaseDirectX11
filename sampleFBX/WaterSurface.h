@@ -67,6 +67,9 @@ public:
 	 * @brief •`‰æˆ—
 	 */
 	virtual void Draw();
+
+
+	void SetImGuiVal();
 };
 
 

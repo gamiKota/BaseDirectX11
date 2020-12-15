@@ -10,6 +10,7 @@
 enum ShaderLayout {
 	LAYOUT_FBX,		// HMY-FBX
 	LAYOUT_PCUN,	// pos-color-uv-normal
+	LAYOUT_PNCU,	// pos-normal-color-uv
 	LAYOUT_PUN,		// pos-uv-normal
 	LAYOUT_PN,		// pos-normal
 	LAYOUT_MAX

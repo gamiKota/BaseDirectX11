@@ -11,9 +11,10 @@ cbuffer global : register(b0) {
 struct VS_INPUT {
 	float3	Position	: POSITION;
 	float3	Normal		: NORMAL;
-	float2	TexCoord	: TEXCOORD0;
-	float4	Diffuse		: COLOR0;
+	float4	Diffuse		: COLOR;
+	float2	TexCoord	: TEXCOORD;
 };
+
 
 struct VS_OUTPUT {
 	float4	Position	: SV_Position;
@@ -30,7 +31,11 @@ VS_OUTPUT main(VS_INPUT input)
 	output.Position = mul(P, g_mWVP);
 	output.Pos4PS = mul(P, g_mWorld).xyz;
 	output.Normal = mul(float4(input.Normal, 0.0f), g_mWorld).xyz;
-	output.TexCoord = mul(float4(input.TexCoord, 0.0f, 1.0f), g_mTexture).xy;
 	output.Diffuse = input.Diffuse;
+	output.TexCoord = mul(float4(input.TexCoord, 0.0f, 1.0f), g_mTexture).xy;
+	//output.TexCoord = mul(float4(input.Normal.xy, 0.f, 1.0f), g_mTexture).xy;
+	//output.TexCoord = mul(float4(input.Diffuse.xy, 0.f, 1.f), g_mTexture).xy;
+	//output.TexCoord = float2(1, 1);
+
 	return output;
 }

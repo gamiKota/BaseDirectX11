@@ -199,6 +199,11 @@ void DrawPolygon(ID3D11DeviceContext* pDeviceContext)
 	// 頂点バッファ更新
 	SetVertexPolygon();
 
+	pDeviceContext->HSSetShader(NULL, NULL, 0);
+	pDeviceContext->DSSetShader(NULL, NULL, 0);
+	pDeviceContext->GSSetShader(NULL, NULL, 0);
+	pDeviceContext->CSSetShader(NULL, NULL, 0);
+
 	if (g_shader2D == E_SHADER_2D::_NORMAL) {
 		pDeviceContext->VSSetShader(g_pVertexShader, nullptr, 0);
 		//g_pGeometryShader->Bind();
