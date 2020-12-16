@@ -17,7 +17,7 @@ static const float GravityAcceleration = 9.8f;
 
 void Drop::Start() {
 	m_time = 0.f;
-	m_influence = 100.f;	// ドメインシェーダに与えるパラメータ(振幅)
+	m_influence = 20.f;	// ドメインシェーダに与えるパラメータ(振幅)
 	m_isCollsion = false;
 }
 
@@ -29,7 +29,7 @@ void Drop::Update() {
 	if (m_transform->m_position.y <= 0.f) {
 		// 取り合えず波と当たった判定
 		m_isCollsion = true;
-		m_influence -= 1.f;
+		m_influence -= 0.1f;
 		if (m_influence <= 0.f) {
 			m_influence = 0;
 		}

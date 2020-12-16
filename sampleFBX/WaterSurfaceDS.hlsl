@@ -1,5 +1,5 @@
 
-#define MAX_DROP 40
+#define MAX_DROP 4
 
 
 cbuffer global : register(b0) {
@@ -7,19 +7,19 @@ cbuffer global : register(b0) {
 };
 
 
-cbuffer global : register(b2) {
-	float	g_timer;			// É^ÉCÉ}Å[
+cbuffer globalFurface : register(b2) {
+	float4	g_Furface[4];			// É^ÉCÉ}Å[
 };
 
 
-cbuffer global : register(b3) {
-	float	g_amplitude;	// êUïù
-};
-
-
-cbuffer global : register(b4) {
-	float3	g_DropPos;	// ç¿ïW
-};
+//cbuffer global : register(b3) {
+//	float4	g_amplitude[4];	// êUïù
+//};
+//
+//
+//cbuffer global : register(b4) {
+//	float4	g_DropPos[4];	// ç¿ïW
+//};
 
 
 
@@ -66,29 +66,52 @@ DS_OUT main(CONSTANT_HS_OUT In, float2 uv : SV_DomainLocation, const OutputPatch
 	float2 t3 = lerp(t1, t2, uv.y);
 	Out.texel = t3;
 
+	float amplitude = 0.f;
+	float dx = 0.f;
+	float dz = 0.f;
+	float length = 0.f;
+	float timer = 0.f;
+	float PosY = 0.f;
+	
 	// êUìÆ
-	//for (int i = 0; i < MAX_DROP; i++) {
-	//	if (g_amplitude[i]) {
-	//		continue;
-	//	}
-
-	if (g_amplitude > 0.f) {
-		float amplitude = g_amplitude;
-
-		float dx = (-0.5f + Out.texel.x) * (-0.5f + Out.texel.x);
-		float dz = (-0.5f + Out.texel.y) * (-0.5f + Out.texel.y);
-		//float dx = (g_DropPos.x + Out.pos.x) * (g_DropPos.x + Out.pos.x);
-		//float dz = (g_DropPos.z + Out.pos.z) * (g_DropPos.z + Out.pos.z);
-
-		float length = sqrt(dx + dz);
+	for (int i = 0; i < 4; ++i) {
+		//if (g_amplitude[i] <= 0) {
+		//	continue;
+		//}
+	
+		// âeãøóÕÇÃåvéZ
+		amplitude = g_Furface[i].w;
+		dx = (g_Furface[i].x - Out.texel.x) * (g_Furface[i].x - Out.texel.x);
+		dz = (g_Furface[i].y - Out.texel.y) * (g_Furface[i].y - Out.texel.y);
+		timer = g_Furface[i].z;
+	
+		// ãóó£Ç≈âeãøóÕÇå∏éZ
+		length = sqrt(dx + dz);
 		length *= 100.f;
 		amplitude -= length;
+	
 		if (amplitude < 0) {
 			amplitude = 0;
+			continue;
 		}
-		Out.pos.y += amplitude * sin(2.f * 3.141592f * ((length / 14.f) - (g_timer / 1.f)));
+	
+		// ç≈èIìIÇ»ç¿ïWÇ÷ÇÃâ¡éZ
+		PosY += amplitude * sin(2.f * 3.141592f * ((length / 14.f) - (timer / 1.f)));
+	
+		//break;
 	}
+	Out.pos.y += PosY;
+
+	//float amplitude = g_amplitude.x;
+	//float dx = (g_DropPos.x - Out.texel.x) * (g_DropPos.x - Out.texel.x);
+	//float dz = (g_DropPos.y - Out.texel.y) * (g_DropPos.y - Out.texel.y);
+	//float length = sqrt(dx + dz);
+	//length *= 100.f;
+	//amplitude -= length;
+	//if (amplitude < 0) {
+	//	amplitude = 0;
 	//}
+	//Out.pos.y += amplitude * sin(2.f * 3.141592f * ((length / 14.f) - (g_timer.x / 1.f)));
 
 	//Out.pos.y += 2.f * sin(2.f * g_timer);
 	//dx = ((g_Wave[20][20].position.x + g_Wave[z][x].position.x) * (g_Wave[20][20].position.x + g_Wave[z][x].position.x));

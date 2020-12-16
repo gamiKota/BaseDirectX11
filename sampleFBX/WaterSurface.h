@@ -27,7 +27,7 @@ class WaterSurface : public GameObject {
 public:
 	MESH				m_mesh;		//!< メッシュ
 	Material*			m_material;	//!< マテリアル
-	Drop*	m_dropList;	//!< 雫
+	//Drop*	m_dropList;	//!< 雫
 	//std::list<Drop*>	m_dropList;	//!< 雫
 
 public:

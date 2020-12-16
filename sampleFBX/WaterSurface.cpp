@@ -28,6 +28,13 @@
 
 
 
+#define MAX_DROP 4
+
+
+typedef struct {
+	float x, y;
+} float2;
+
 // 頂点定義
 struct _VERTEX
 {
@@ -52,27 +59,25 @@ typedef struct
 
 typedef struct
 {
-	float g_timer;		//!< 経過時間
-	float g_Dummy1;
-	float g_Dummy2;
-	float g_Dummy3;
+	XMFLOAT4 g_Surface[MAX_DROP];
 } _CBUFFER2;
 
 
-typedef struct
-{
-	float g_amplitude;	//!< 影響力
-	float g_Dummy1;
-	float g_Dummy2;
-	float g_Dummy3;
-} _CBUFFER3;
-
-
-typedef struct
-{
-	float3 g_collisionPos;	//!< 当たった座標
-	float g_Dummy1;
-} _CBUFFER4;
+//typedef struct
+//{
+//	XMFLOAT4 g_amplitude[MAX_DROP];	//!< 影響力
+//	//float g_Dummy1[MAX_DROP];
+//	//float g_Dummy2[MAX_DROP];
+//	//float g_Dummy3[MAX_DROP];
+//} _CBUFFER3;
+//
+//
+//typedef struct
+//{
+//	XMFLOAT4 g_dropPos[MAX_DROP];	//!< 当たった座標
+//	//float g_Dummy1[MAX_DROP];
+//	//float g_Dummy2[MAX_DROP];
+//} _CBUFFER4;
 
 
 /**
@@ -83,7 +88,7 @@ static const DirectX::XMFLOAT4 M_SPECULAR = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 static const DirectX::XMFLOAT4 M_AMBIENT = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 static const DirectX::XMFLOAT4 M_EMISSIVE = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 
-static ID3D11Buffer*				g_pConstantBuffer[5];	// 定数バッファ
+static ID3D11Buffer*				g_pConstantBuffer[3];	// 定数バッファ
 static ID3D11SamplerState*			g_pSamplerState;		// テクスチャ サンプラ
 static ID3D11VertexShader*			g_pVertexShader;		// 頂点シェーダ
 static ID3D11InputLayout*			g_pInputLayout;			// 頂点フォーマット
@@ -96,9 +101,11 @@ static GeometryShader* g_GS;
 static PixelShader* g_PS;
 
 // 波シェーダの時はなるべく同じ値の方が奇麗に見える
-static float TessFactor = 32.0f;			// ポリゴンのエッジのテッセレーション係数の定数
-static float InsideTessFactor = 32.0f;		// ポリゴン内部のテッセレーション係数の定数
+static float TessFactor = 128.0f;			// ポリゴンのエッジのテッセレーション係数の定数
+static float InsideTessFactor = 128.0f;		// ポリゴン内部のテッセレーション係数の定数
 static float Timer = 0.f;
+
+static const Drop* g_dropList[MAX_DROP];
 
 
 WaterSurface::WaterSurface() : GameObject("WaterSurface") {
@@ -184,12 +191,12 @@ void WaterSurface::Init() {
 	bd.ByteWidth = sizeof(_CBUFFER2);
 	pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[2]);
 
-	bd.ByteWidth = sizeof(_CBUFFER3);
-	hr = pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[3]);
-	if (FAILED(hr)) { MessageBox(NULL, L"バッファ", NULL, MB_OK); }
-	bd.ByteWidth = sizeof(_CBUFFER4);
-	hr = pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[4]);
-	if (FAILED(hr)) { MessageBox(NULL, L"バッファ", NULL, MB_OK); }
+	//bd.ByteWidth = sizeof(_CBUFFER3);
+	//hr = pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[3]);
+	//if (FAILED(hr)) { MessageBox(NULL, L"バッファ", NULL, MB_OK); }
+	//bd.ByteWidth = sizeof(_CBUFFER4);
+	//hr = pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[4]);
+	//if (FAILED(hr)) { MessageBox(NULL, L"バッファ", NULL, MB_OK); }
 
 
 	//// 定数バッファ生成
@@ -261,8 +268,11 @@ void WaterSurface::Init() {
 	delete[] pIndexWk;
 	delete[] pVertexWk;
 
-	m_dropList = nullptr;
+	//m_dropList = nullptr;
 	//m_dropList.clear();
+	for (int i = 0; i < MAX_DROP; i++) {
+		g_dropList[i] = nullptr;
+	}
 
 	GameObject::Init();
 }
@@ -270,8 +280,8 @@ void WaterSurface::Init() {
 
 void WaterSurface::Uninit() {
 	SAFE_RELEASE(g_pSamplerState);
-	SAFE_RELEASE(g_pConstantBuffer[4]);
-	SAFE_RELEASE(g_pConstantBuffer[3]);
+	//SAFE_RELEASE(g_pConstantBuffer[4]);
+	//SAFE_RELEASE(g_pConstantBuffer[3]);
 	SAFE_RELEASE(g_pConstantBuffer[2]);
 	SAFE_RELEASE(g_pConstantBuffer[1]);
 	SAFE_RELEASE(g_pConstantBuffer[0]);
@@ -296,11 +306,37 @@ void WaterSurface::Update() {
 		obj->m_transform->m_position = float3(0.f, 100.f, 0.f);
 		obj->m_transform->m_scale = float3(10.f, 10.f, 10.f);
 
-		m_dropList = obj->AddComponent<Drop>();
+		//m_dropList = obj->AddComponent<Drop>();
 		//m_dropList.push_back(obj->AddComponent<Drop>());
+		for (int i = 0; i < MAX_DROP; i++) {
+			if (g_dropList[i] == nullptr) {
+				g_dropList[i] = obj->AddComponent<Drop>();
+				break;
+			}
+		}
 
-		//obj->m_transform->m_position.x = (float)GetRandom(-200, 200);
-		//obj->m_transform->m_position.z = (float)GetRandom(-200, 200);
+		obj->m_transform->m_position.x = 
+			(float)GetRandom((int)(m_transform->m_position.x - m_transform->m_scale.x * 0.5f),
+			(int)(m_transform->m_position.x + m_transform->m_scale.x * 0.5f));
+
+		obj->m_transform->m_position.z = 
+			(float)GetRandom((int)(m_transform->m_position.z - m_transform->m_scale.y * 0.5f),
+				(int)(m_transform->m_position.z + m_transform->m_scale.y * 0.5f));
+	}
+
+	//auto buff = m_dropList;
+	//for (auto obj : buff) {
+	//	if (obj->m_influence > 0.f)	continue;
+	//	GameObject::Destroy(obj->m_gameObject);
+	//	m_dropList.remove(obj);
+	//	//SAFE_DELETE(obj);
+	//}
+	for (int i = 0; i < MAX_DROP; i++) {
+		if (g_dropList[i] != nullptr &&
+			g_dropList[i]->m_influence <= 0) {
+			GameObject::Destroy(g_dropList[i]->m_gameObject);
+			g_dropList[i] = nullptr;
+		}
 	}
 
 	GameObject::Update();
@@ -403,46 +439,196 @@ void WaterSurface::Draw() {
 
 	// 波を定数バッファにセット
 	{
-		_CBUFFER2 cbuffer2;
-		Timer += Frame::GetInstance().GetDeltaTime();
-		cbuffer2.g_timer = Timer;
-		pDeviceContext->UpdateSubresource(g_pConstantBuffer[2], 0, nullptr, &cbuffer2, 0, 0);
+		//_CBUFFER2 cbuffer2;
+
+		//for (int i = 0; i < MAX_DROP; i++) {
+		//	cbuffer2.g_timer[i] = 0.f;
+		//}
+		//for (auto drop : m_dropList) {
+		//	if (drop->m_isCollsion) {
+		//		cbuffer2.g_timer[No] = drop->m_time;
+		//	}
+		//	else {
+		//		cbuffer2.g_timer[No] = 0.f;
+		//	}
+		//	No += 1;
+		//}
+		//if (m_dropList != nullptr && m_dropList->m_isCollsion) {
+		//	cbuffer2.g_timer = m_dropList->m_time;
+		//}
+		//else {
+		//	cbuffer2.g_timer = 0.f;
+		//}
+		//for (int i = 0; i < MAX_DROP; i++) {
+		//	if (g_dropList[i] != nullptr) {
+		//		if (g_dropList[i]->m_isCollsion) {
+		//			cbuffer2.g_timer[i] = g_dropList[i]->m_time;
+		//		}
+		//		else {
+		//			cbuffer2.g_timer[i] = 0.f;
+		//		}
+		//	}
+		//}
+		//pDeviceContext->UpdateSubresource(g_pConstantBuffer[2], 0, nullptr, &cbuffer2, 0, 0);
 	}
 
 	// 振幅
 	{
-		_CBUFFER3 cbuffer3;
-		if (m_dropList != nullptr && m_dropList->m_isCollsion) {
-			cbuffer3.g_amplitude = m_dropList->m_influence;
-		}
-		else {
-			cbuffer3.g_amplitude = 0.f;
-		}
-		pDeviceContext->UpdateSubresource(g_pConstantBuffer[3], 0, nullptr, &cbuffer3, 0, 0);
+		//_CBUFFER3 cbuffer3;
+		//for (int i = 0; i < MAX_DROP; i++) {
+		//	cbuffer3.g_amplitude[i] = 0.f;
+		//}
+		//for (auto drop : m_dropList) {
+		//	if (drop->m_isCollsion) {
+		//		cbuffer3.g_amplitude[No] = drop->m_influence;
+		//	}
+		//	else {
+		//		cbuffer3.g_amplitude[No] = 0.f;
+		//	}
+		//	No += 1;
+		//}
+		//if (m_dropList != nullptr && m_dropList->m_isCollsion) {
+		//	// 振幅
+		//	cbuffer3.g_amplitude = m_dropList->m_influence;
+		//}
+		//else {
+		//	cbuffer3.g_amplitude = 0.f;
+		//}
+		//for (int i = 0; i < MAX_DROP; i++) {
+		//	if (g_dropList[i] != nullptr) {
+		//		if (g_dropList[i]->m_isCollsion) {
+		//			cbuffer3.g_amplitude[i] = g_dropList[i]->m_influence;
+		//		}
+		//		else {
+		//			cbuffer3.g_amplitude[i] = 0.f;
+		//		}
+		//	}
+		//}
+		//pDeviceContext->UpdateSubresource(g_pConstantBuffer[3], 0, nullptr, &cbuffer3, 0, 0);
 	}
 
 	// 座標
 	{
-		// UV座標系に変換
-		// 0から1に正規化
-		_CBUFFER4 cbuffer4;
-		XMVECTOR dropVec;
-		if (m_dropList != nullptr && m_dropList->m_isCollsion) {
-			dropVec = XMVectorSet(
-				m_dropList->m_transform->m_position.x,
-				m_dropList->m_transform->m_position.y,
-				m_dropList->m_transform->m_position.z, 0.0f);
-			//cbuffer4.g_collisionPos = m_dropList->m_transform->m_position;
-		}
-		else {
-			dropVec = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-			//cbuffer4.g_collisionPos = float3();
-		}
+		_CBUFFER2 cbuffer2;
+		//_CBUFFER3 cbuffer3;
+		//_CBUFFER4 cbuffer4;
 
-		
-		XMStoreFloat3(&cbuffer4.g_collisionPos, dropVec);
-		pDeviceContext->UpdateSubresource(g_pConstantBuffer[4], 0, nullptr, &cbuffer4, 0, 0);
+		//for (int i = 0; i < MAX_DROP; i++) {
+		//	cbuffer4.g_dropPos[i].x = 0.f;
+		//	cbuffer4.g_dropPos[i].y = 0.f;
+		//}
+		//for (auto drop : m_dropList) {
+		//	if (drop->m_isCollsion) {
+		//		// 震源地
+		//		float uvPosX = drop->m_transform->m_position.x;
+		//		float uvPosY = drop->m_transform->m_position.z;
+		//		uvPosY *= -1.f;	// 反転(座標系が違う)
+		//		// UV座標軸へ変換
+		//		uvPosX += m_transform->m_position.x + m_transform->m_scale.x * 0.5f;
+		//		uvPosY += m_transform->m_position.y + m_transform->m_scale.y * 0.5f;
+		//		// 正規化
+		//		uvPosX /= m_transform->m_scale.x;
+		//		uvPosY /= m_transform->m_scale.y;
+		//		// 代入
+		//		cbuffer4.g_dropPos[No].x = uvPosX;
+		//		cbuffer4.g_dropPos[No].y = uvPosY;
+		//	}
+		//	else {
+		//		cbuffer4.g_dropPos[No].x = 0.f;
+		//		cbuffer4.g_dropPos[No].y = 0.f;
+		//	}
+		//	No += 1;
+		//}
+		//if (m_dropList != nullptr && m_dropList->m_isCollsion) {
+		//
+		//	// 震源地
+		//	float uvPosX = m_dropList->m_transform->m_position.x;
+		//	float uvPosY = m_dropList->m_transform->m_position.z;
+		//	uvPosY *= -1.f;	// 反転(座標系が違う)
+		//	// UV座標軸へ変換
+		//	uvPosX += m_transform->m_position.x + m_transform->m_scale.x * 0.5f;
+		//	uvPosY += m_transform->m_position.y + m_transform->m_scale.y * 0.5f;
+		//	// 正規化
+		//	uvPosX /= m_transform->m_scale.x;
+		//	uvPosY /= m_transform->m_scale.y;
+		//	// 代入
+		//	cbuffer4.g_dropPos.x = uvPosX;
+		//	cbuffer4.g_dropPos.y = uvPosY;
+		//}
+		//else {
+		//	cbuffer4.g_dropPos.x = 0.f;
+		//	cbuffer4.g_dropPos.y = 0.f;
+		//}
+
+
+		//for (int i = 0; i < MAX_DROP; i++) {
+		//	if (g_dropList[i] != nullptr) {
+		//		if (g_dropList[i]->m_isCollsion) {
+		//
+		//			// 経過時間
+		//			cbuffer2.g_timer[i] = g_dropList[i]->m_time;
+		//
+		//			// 影響力
+		//			cbuffer3.g_amplitude[i] = g_dropList[i]->m_influence;
+		//
+		//			// 震源地
+		//			float uvPosX = g_dropList[i]->m_transform->m_position.x;
+		//			float uvPosY = g_dropList[i]->m_transform->m_position.z;
+		//			uvPosY *= -1.f;	// 反転(座標系が違う)
+		//			// UV座標軸へ変換
+		//			uvPosX += m_transform->m_position.x + m_transform->m_scale.x * 0.5f;
+		//			uvPosY += m_transform->m_position.y + m_transform->m_scale.y * 0.5f;
+		//			// 正規化
+		//			uvPosX /= m_transform->m_scale.x;
+		//			uvPosY /= m_transform->m_scale.y;
+		//			// 代入
+		//			cbuffer4.g_dropPos[i].x = uvPosX;
+		//			cbuffer4.g_dropPos[i].y = uvPosY;
+		//		}
+		//		else {
+		//			cbuffer2.g_timer[i] = 0.f;
+		//			cbuffer3.g_amplitude[i] = 0.f;
+		//			cbuffer4.g_dropPos[i].x = 0.f;
+		//			cbuffer4.g_dropPos[i].y = 0.f;
+		//		}
+		//	}
+		//}
+		for (int i = 0; i < MAX_DROP; i++) {
+
+			if (g_dropList[i] != nullptr && g_dropList[i]->m_isCollsion) {
+
+				// 経過時間
+				cbuffer2.g_Surface[i].z = g_dropList[i]->m_time;
+
+				// 影響力
+				cbuffer2.g_Surface[i].w = g_dropList[i]->m_influence;
+
+				// 震源地
+				float uvPosX = g_dropList[i]->m_transform->m_position.x;
+				float uvPosY = g_dropList[i]->m_transform->m_position.z;
+				uvPosY *= -1.f;	// 反転(座標系が違う)
+				// UV座標軸へ変換
+				uvPosX += m_transform->m_position.x + m_transform->m_scale.x * 0.5f;
+				uvPosY += m_transform->m_position.y + m_transform->m_scale.y * 0.5f;
+				// 正規化
+				uvPosX /= m_transform->m_scale.x;
+				uvPosY /= m_transform->m_scale.y;
+				// 代入
+				cbuffer2.g_Surface[i].x = uvPosX;
+				cbuffer2.g_Surface[i].y = uvPosY;
+			}
+			else {
+				cbuffer2.g_Surface[i].x = 0.f;
+				cbuffer2.g_Surface[i].y = 0.f;
+				cbuffer2.g_Surface[i].z = 0.f;
+				cbuffer2.g_Surface[i].w = 0.f;
+			}
+		}
+		pDeviceContext->UpdateSubresource(g_pConstantBuffer[2], 0, nullptr, &cbuffer2, 0, 0);
+		//pDeviceContext->UpdateSubresource(g_pConstantBuffer[3], 0, nullptr, &cbuffer3, 0, 0);
+		//pDeviceContext->UpdateSubresource(g_pConstantBuffer[4], 0, nullptr, &cbuffer4, 0, 0);
 	}
+
 	
 	// ハルシェーダーに定数バッファを設定する。
 	pDeviceContext->HSSetConstantBuffers(1, 1, &g_pConstantBuffer[1]);
@@ -450,8 +636,8 @@ void WaterSurface::Draw() {
 	// ドメインシェーダーに定数バッファを設定する。
 	pDeviceContext->DSSetConstantBuffers(0, 1, &g_pConstantBuffer[0]);
 	pDeviceContext->DSSetConstantBuffers(2, 1, &g_pConstantBuffer[2]);
-	pDeviceContext->DSSetConstantBuffers(3, 1, &g_pConstantBuffer[3]);
-	pDeviceContext->DSSetConstantBuffers(4, 1, &g_pConstantBuffer[4]);
+	//pDeviceContext->DSSetConstantBuffers(3, 1, &g_pConstantBuffer[3]);
+	//pDeviceContext->DSSetConstantBuffers(4, 1, &g_pConstantBuffer[4]);
 
 	// ピクセルシェーダにサンプルステートを渡す
 	pDeviceContext->PSSetSamplers(0, 1, &g_pSamplerState);
