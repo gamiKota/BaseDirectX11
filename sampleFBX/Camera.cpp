@@ -51,9 +51,10 @@ void CCamera::LastUpdate() {
 	//m_vNowUp.x = m_vNowUp.x * 0.5f + m_vUp.x * 0.5f;
 	//m_vNowUp.y = m_vNowUp.y * 0.5f + m_vUp.y * 0.5f;
 	//m_vNowUp.z = m_vNowUp.z * 0.5f + m_vUp.z * 0.5f;
+
+	// 上方ベクトル更新
 	XMStoreFloat3(&m_vUp,
 		XMVector3Normalize(XMLoadFloat3(&m_vUp)));
-
 
 	// ビュー変換更新
 	XMStoreFloat4x4(&m_mView, XMMatrixLookAtLH(

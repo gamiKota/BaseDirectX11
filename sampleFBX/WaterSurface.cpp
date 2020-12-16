@@ -423,23 +423,24 @@ void WaterSurface::Draw() {
 
 	// À•W
 	{
+		// UVÀ•WŒn‚É•ÏŠ·
+		// 0‚©‚ç1‚É³‹K‰»
 		_CBUFFER4 cbuffer4;
+		XMVECTOR dropVec;
 		if (m_dropList != nullptr && m_dropList->m_isCollsion) {
-			cbuffer4.g_collisionPos = m_dropList->m_transform->m_position;
+			dropVec = XMVectorSet(
+				m_dropList->m_transform->m_position.x,
+				m_dropList->m_transform->m_position.y,
+				m_dropList->m_transform->m_position.z, 0.0f);
+			//cbuffer4.g_collisionPos = m_dropList->m_transform->m_position;
 		}
 		else {
-			cbuffer4.g_collisionPos = float3();
+			dropVec = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			//cbuffer4.g_collisionPos = float3();
 		}
 
-		//XMVECTOR light = XMVectorSet(0.0f, 2.0f, -1.5f, 0.0f);
-		//XMVECTOR attenuation = XMVectorSet(1.0f, 0.0f, 0.2f, 0.0f);
-		//
-		//ConstantBuffer cb;
-		//XMStoreFloat4x4(&cb.world, XMMatrixTranspose(worldMatrix));
-		//XMStoreFloat4x4(&cb.view, XMMatrixTranspose(viewMatrix));
-		//XMStoreFloat4x4(&cb.projection, XMMatrixTranspose(projMatrix));
-		//XMStoreFloat4(&cb.light, light);
-
+		
+		XMStoreFloat3(&cbuffer4.g_collisionPos, dropVec);
 		pDeviceContext->UpdateSubresource(g_pConstantBuffer[4], 0, nullptr, &cbuffer4, 0, 0);
 	}
 	

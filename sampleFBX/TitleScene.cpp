@@ -22,6 +22,7 @@
 #include "WaterSurface.h"
 // コンポーネント
 #include "Camera.h"
+#include "ggCamera.h"
 #include "Light.h"
 #include "Sky.h"
 // システム
@@ -34,7 +35,11 @@ void TitleScene::Init() {
 
 	// カメラ
 	m_empty = new GameObject("MainCamera");
+#if 0
 	CCamera::Set(m_empty->AddComponent<CCamera>());
+#else
+	CCamera::Set(m_empty->AddComponent<ggCamera>());
+#endif
 	m_listObject.push_back(m_empty);
 
 	// ライト(平行光源)

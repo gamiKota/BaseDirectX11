@@ -45,6 +45,13 @@ namespace Input
 	関　数：キーリピート(押し続けたとき
 	*/
 	bool isRepeat(int nVertKey);
+
+
+	void InstantForce(int nKey, bool bPress);
+
+	bool IsMouseDoubleClick(int nKey);
+	const POINT& GetMousePos();
+	int GetMouseWheel();
 };
 
 

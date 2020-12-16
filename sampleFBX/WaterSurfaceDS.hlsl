@@ -18,7 +18,7 @@ cbuffer global : register(b3) {
 
 
 cbuffer global : register(b4) {
-	float3	g_collisionPos;	// À•W
+	float3	g_DropPos;	// À•W
 };
 
 
@@ -75,17 +75,17 @@ DS_OUT main(CONSTANT_HS_OUT In, float2 uv : SV_DomainLocation, const OutputPatch
 	if (g_amplitude > 0.f) {
 		float amplitude = g_amplitude;
 
-		//float dx = (-0.5f + Out.texel.x) * (-0.5f + Out.texel.x);
-		//float dz = (-0.5f + Out.texel.y) * (-0.5f + Out.texel.y);
-		float dx = (g_collisionPos.x + Out.pos.x) * (g_collisionPos.x + Out.pos.x);
-		float dz = (g_collisionPos.z + Out.pos.z) * (g_collisionPos.z + Out.pos.z);
+		float dx = (-0.5f + Out.texel.x) * (-0.5f + Out.texel.x);
+		float dz = (-0.5f + Out.texel.y) * (-0.5f + Out.texel.y);
+		//float dx = (g_DropPos.x + Out.pos.x) * (g_DropPos.x + Out.pos.x);
+		//float dz = (g_DropPos.z + Out.pos.z) * (g_DropPos.z + Out.pos.z);
 
 		float length = sqrt(dx + dz);
-		//length *= 100.f;
-		//amplitude -= length;
-		//if (amplitude < 0) {
-		//	amplitude = 0;
-		//}
+		length *= 100.f;
+		amplitude -= length;
+		if (amplitude < 0) {
+			amplitude = 0;
+		}
 		Out.pos.y += amplitude * sin(2.f * 3.141592f * ((length / 14.f) - (g_timer / 1.f)));
 	}
 	//}
