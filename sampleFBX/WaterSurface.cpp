@@ -12,6 +12,8 @@
 #include "Collision.h"
 #include "polygon.h"
 #include "Light.h"
+#include "input.h"
+#include "GameObjectMesh.h"
 #include "Shader.h"
 #include "ShaderManager.h"
 #include "VertexShader.h"
@@ -21,6 +23,7 @@
 #include "DomainShader.h"
 #include "Frame.h"
 #include "imgui.h"
+#include "Drop.h"
 #include "System.h"
 
 
@@ -49,12 +52,27 @@ typedef struct
 
 typedef struct
 {
-	float g_timer;		// 経過時間
-	// 16バイト調整用変数
+	float g_timer;		//!< 経過時間
 	float g_Dummy1;
 	float g_Dummy2;
 	float g_Dummy3;
 } _CBUFFER2;
+
+
+typedef struct
+{
+	float g_amplitude;	//!< 影響力
+	float g_Dummy1;
+	float g_Dummy2;
+	float g_Dummy3;
+} _CBUFFER3;
+
+
+typedef struct
+{
+	float3 g_collisionPos;	//!< 当たった座標
+	float g_Dummy1;
+} _CBUFFER4;
 
 
 /**
@@ -65,7 +83,7 @@ static const DirectX::XMFLOAT4 M_SPECULAR = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 static const DirectX::XMFLOAT4 M_AMBIENT = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 static const DirectX::XMFLOAT4 M_EMISSIVE = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 
-static ID3D11Buffer*				g_pConstantBuffer[3];	// 定数バッファ
+static ID3D11Buffer*				g_pConstantBuffer[5];	// 定数バッファ
 static ID3D11SamplerState*			g_pSamplerState;		// テクスチャ サンプラ
 static ID3D11VertexShader*			g_pVertexShader;		// 頂点シェーダ
 static ID3D11InputLayout*			g_pInputLayout;			// 頂点フォーマット
@@ -131,6 +149,7 @@ WaterSurface::~WaterSurface() {
 void WaterSurface::Init() {
 	// メッシュの初期化(初期設定)
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
+	HRESULT hr;
 
 	// シェーダ初期化
 	static const D3D11_INPUT_ELEMENT_DESC layout[] = {
@@ -164,6 +183,13 @@ void WaterSurface::Init() {
 	pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[1]);
 	bd.ByteWidth = sizeof(_CBUFFER2);
 	pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[2]);
+
+	bd.ByteWidth = sizeof(_CBUFFER3);
+	hr = pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[3]);
+	if (FAILED(hr)) { MessageBox(NULL, L"バッファ", NULL, MB_OK); }
+	bd.ByteWidth = sizeof(_CBUFFER4);
+	hr = pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[4]);
+	if (FAILED(hr)) { MessageBox(NULL, L"バッファ", NULL, MB_OK); }
 
 
 	//// 定数バッファ生成
@@ -223,7 +249,7 @@ void WaterSurface::Init() {
 	D3D11_SUBRESOURCE_DATA initData;
 	ZeroMemory(&initData, sizeof(initData));
 	initData.pSysMem = pVertexWk;
-	HRESULT hr = pDevice->CreateBuffer(&vbd, &initData, &m_mesh.pVertexBuffer);
+	hr = pDevice->CreateBuffer(&vbd, &initData, &m_mesh.pVertexBuffer);
 	if (FAILED(hr)) MessageBox(NULL, NULL, NULL, MB_OK);
 	CD3D11_BUFFER_DESC ibd(m_mesh.nNumIndex * sizeof(int), D3D11_BIND_INDEX_BUFFER);
 	ZeroMemory(&initData, sizeof(initData));
@@ -235,12 +261,17 @@ void WaterSurface::Init() {
 	delete[] pIndexWk;
 	delete[] pVertexWk;
 
+	m_dropList = nullptr;
+	//m_dropList.clear();
+
 	GameObject::Init();
 }
 
 
 void WaterSurface::Uninit() {
 	SAFE_RELEASE(g_pSamplerState);
+	SAFE_RELEASE(g_pConstantBuffer[4]);
+	SAFE_RELEASE(g_pConstantBuffer[3]);
 	SAFE_RELEASE(g_pConstantBuffer[2]);
 	SAFE_RELEASE(g_pConstantBuffer[1]);
 	SAFE_RELEASE(g_pConstantBuffer[0]);
@@ -249,7 +280,7 @@ void WaterSurface::Uninit() {
 	//SAFE_RELEASE(g_pPixelShader);
 
 	SAFE_DELETE(g_PS);
-	SAFE_DELETE(g_DS);
+	SAFE_DELETE(g_GS);
 	SAFE_DELETE(g_DS);
 	SAFE_DELETE(g_HS);
 
@@ -258,6 +289,20 @@ void WaterSurface::Uninit() {
 
 
 void WaterSurface::Update() {
+
+	if (Input::isTrigger('D')) {
+		GameObjectMesh* obj = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Drop", "Drop");
+		GameObject::Instantiate(obj);
+		obj->m_transform->m_position = float3(0.f, 100.f, 0.f);
+		obj->m_transform->m_scale = float3(10.f, 10.f, 10.f);
+
+		m_dropList = obj->AddComponent<Drop>();
+		//m_dropList.push_back(obj->AddComponent<Drop>());
+
+		//obj->m_transform->m_position.x = (float)GetRandom(-200, 200);
+		//obj->m_transform->m_position.z = (float)GetRandom(-200, 200);
+	}
+
 	GameObject::Update();
 }
 
@@ -330,8 +375,8 @@ void WaterSurface::Draw() {
 	g_DS->Bind();
 
 	// ジオメトリーシェーダを無効にする
-	pDeviceContext->GSSetShader(NULL, NULL, 0);
-	//g_GS->Bind();
+	//pDeviceContext->GSSetShader(NULL, NULL, 0);
+	g_GS->Bind();
 
 	// ピクセルシェーダをデバイスに設定する
 	g_PS->Bind();
@@ -363,6 +408,40 @@ void WaterSurface::Draw() {
 		cbuffer2.g_timer = Timer;
 		pDeviceContext->UpdateSubresource(g_pConstantBuffer[2], 0, nullptr, &cbuffer2, 0, 0);
 	}
+
+	// 振幅
+	{
+		_CBUFFER3 cbuffer3;
+		if (m_dropList != nullptr && m_dropList->m_isCollsion) {
+			cbuffer3.g_amplitude = m_dropList->m_influence;
+		}
+		else {
+			cbuffer3.g_amplitude = 0.f;
+		}
+		pDeviceContext->UpdateSubresource(g_pConstantBuffer[3], 0, nullptr, &cbuffer3, 0, 0);
+	}
+
+	// 座標
+	{
+		_CBUFFER4 cbuffer4;
+		if (m_dropList != nullptr && m_dropList->m_isCollsion) {
+			cbuffer4.g_collisionPos = m_dropList->m_transform->m_position;
+		}
+		else {
+			cbuffer4.g_collisionPos = float3();
+		}
+
+		//XMVECTOR light = XMVectorSet(0.0f, 2.0f, -1.5f, 0.0f);
+		//XMVECTOR attenuation = XMVectorSet(1.0f, 0.0f, 0.2f, 0.0f);
+		//
+		//ConstantBuffer cb;
+		//XMStoreFloat4x4(&cb.world, XMMatrixTranspose(worldMatrix));
+		//XMStoreFloat4x4(&cb.view, XMMatrixTranspose(viewMatrix));
+		//XMStoreFloat4x4(&cb.projection, XMMatrixTranspose(projMatrix));
+		//XMStoreFloat4(&cb.light, light);
+
+		pDeviceContext->UpdateSubresource(g_pConstantBuffer[4], 0, nullptr, &cbuffer4, 0, 0);
+	}
 	
 	// ハルシェーダーに定数バッファを設定する。
 	pDeviceContext->HSSetConstantBuffers(1, 1, &g_pConstantBuffer[1]);
@@ -370,6 +449,8 @@ void WaterSurface::Draw() {
 	// ドメインシェーダーに定数バッファを設定する。
 	pDeviceContext->DSSetConstantBuffers(0, 1, &g_pConstantBuffer[0]);
 	pDeviceContext->DSSetConstantBuffers(2, 1, &g_pConstantBuffer[2]);
+	pDeviceContext->DSSetConstantBuffers(3, 1, &g_pConstantBuffer[3]);
+	pDeviceContext->DSSetConstantBuffers(4, 1, &g_pConstantBuffer[4]);
 
 	// ピクセルシェーダにサンプルステートを渡す
 	pDeviceContext->PSSetSamplers(0, 1, &g_pSamplerState);

@@ -27,8 +27,8 @@ SamplerState  g_Sampler : register(s0);	// ƒTƒ“ƒvƒ‰;
 // *****************************************************************************************
 float4 main(DS_OUT In) : SV_TARGET
 {
-	return g_Tex.Sample(g_Sampler, In.texel);
-	//return float4(In.texel, 0.f, 1.f);
+	//return g_Tex.Sample(g_Sampler, In.texel);
+	return float4(In.texel, 0.f, 1.f);
 }
 
 

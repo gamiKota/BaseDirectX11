@@ -85,6 +85,12 @@ Quaternion Quaternion::AngleAxis(float angle, float3 axis) {
 }
 
 
+
+int GetRandom(int min, int max) {
+	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
+}
+
+
 // クウォータニオン同士の乗算
 void QuaternionMultiply(Quaternion *pOut, Quaternion *pQ1, Quaternion *pQ2) {
 	pOut->w = pQ1->w * pQ2->w - pQ1->x * pQ2->x - pQ1->y * pQ2->y - pQ1->z * pQ2->z;

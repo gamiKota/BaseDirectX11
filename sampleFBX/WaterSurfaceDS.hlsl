@@ -1,4 +1,6 @@
 
+#define MAX_DROP 40
+
 
 cbuffer global : register(b0) {
 	matrix	g_WorldViewProj;	// ワールド×ビュー×射影行列
@@ -6,8 +8,19 @@ cbuffer global : register(b0) {
 
 
 cbuffer global : register(b2) {
-	float	g_timer;	// タイマー
+	float	g_timer;			// タイマー
 };
+
+
+cbuffer global : register(b3) {
+	float	g_amplitude;	// 振幅
+};
+
+
+cbuffer global : register(b4) {
+	float3	g_collisionPos;	// 座標
+};
+
 
 
 // ハルシェーダーのパッチ定数フェーズ用の出力パラメータ
@@ -54,16 +67,34 @@ DS_OUT main(CONSTANT_HS_OUT In, float2 uv : SV_DomainLocation, const OutputPatch
 	Out.texel = t3;
 
 	// 振動
-	float dx = (-0.5f + Out.texel.x) * (-0.5f + Out.texel.x);
-	float dz = (-0.5f + Out.texel.y) * (-0.5f + Out.texel.y);
-	float length = sqrt(dx + dz);
-	length *= 100.f;
-	Out.pos.y += 10.f * sin(2.f * 3.141592f * ((length / 14.f) - (g_timer / 1.f)));
+	//for (int i = 0; i < MAX_DROP; i++) {
+	//	if (g_amplitude[i]) {
+	//		continue;
+	//	}
+
+	if (g_amplitude > 0.f) {
+		float amplitude = g_amplitude;
+
+		//float dx = (-0.5f + Out.texel.x) * (-0.5f + Out.texel.x);
+		//float dz = (-0.5f + Out.texel.y) * (-0.5f + Out.texel.y);
+		float dx = (g_collisionPos.x + Out.pos.x) * (g_collisionPos.x + Out.pos.x);
+		float dz = (g_collisionPos.z + Out.pos.z) * (g_collisionPos.z + Out.pos.z);
+
+		float length = sqrt(dx + dz);
+		//length *= 100.f;
+		//amplitude -= length;
+		//if (amplitude < 0) {
+		//	amplitude = 0;
+		//}
+		Out.pos.y += amplitude * sin(2.f * 3.141592f * ((length / 14.f) - (g_timer / 1.f)));
+	}
+	//}
+
 	//Out.pos.y += 2.f * sin(2.f * g_timer);
 	//dx = ((g_Wave[20][20].position.x + g_Wave[z][x].position.x) * (g_Wave[20][20].position.x + g_Wave[z][x].position.x));
 	//dz = ((g_Wave[20][20].position.z + g_Wave[z][x].position.z) * (g_Wave[20][20].position.z + g_Wave[z][x].position.z));
 	//length = sqrtf(dx + dz);
 	//Out.pos.y = g_Wave[z][x].amplitude * sinf(2.f * PI * ((length / WAVE_LENGTH) - (g_Wave[z][x].time / WAVE_CYCLE)));
-
+	
 	return Out;
 }

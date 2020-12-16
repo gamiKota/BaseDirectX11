@@ -63,11 +63,6 @@ static const float MAX_ENEMY_POS_Z = 1000.f;
 static const float VAL_WALL_POS = 6000.f;
 
 
-int GetRandom(int min, int max) {
-	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
-}
-
-
 void GameScene::Init() {
 
 	// このシーンで使用するテクスチャの読み込み

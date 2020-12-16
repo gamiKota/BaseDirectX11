@@ -242,6 +242,9 @@ public:
 };
 
 
+int GetRandom(int min, int max);
+
+
 /**
  * @brief   クォータニオン作成
  * @param   axis    回転させる軸
