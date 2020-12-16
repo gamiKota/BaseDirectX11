@@ -16,6 +16,7 @@ protected:
 	POINT m_oldMousePos;
 
 public:
+	ggCamera();
 	void Awake();
 	void Start();
 	void Update();

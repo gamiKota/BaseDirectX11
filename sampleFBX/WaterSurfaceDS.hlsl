@@ -1,5 +1,5 @@
 
-#define MAX_DROP 4
+#define MAX_DROP 256
 
 
 cbuffer global : register(b0) {
@@ -8,7 +8,7 @@ cbuffer global : register(b0) {
 
 
 cbuffer globalFurface : register(b2) {
-	float4	g_Furface[4];			// タイマー
+	float4	g_Furface[MAX_DROP];			// タイマー
 };
 
 
@@ -74,10 +74,10 @@ DS_OUT main(CONSTANT_HS_OUT In, float2 uv : SV_DomainLocation, const OutputPatch
 	float PosY = 0.f;
 	
 	// 振動
-	for (int i = 0; i < 4; ++i) {
-		//if (g_amplitude[i] <= 0) {
-		//	continue;
-		//}
+	for (int i = 0; i < MAX_DROP; ++i) {
+		if (g_Furface[i].w <= 0) {
+			continue;
+		}
 	
 		// 影響力の計算
 		amplitude = g_Furface[i].w;
@@ -97,27 +97,8 @@ DS_OUT main(CONSTANT_HS_OUT In, float2 uv : SV_DomainLocation, const OutputPatch
 	
 		// 最終的な座標への加算
 		PosY += amplitude * sin(2.f * 3.141592f * ((length / 14.f) - (timer / 1.f)));
-	
-		//break;
 	}
 	Out.pos.y += PosY;
-
-	//float amplitude = g_amplitude.x;
-	//float dx = (g_DropPos.x - Out.texel.x) * (g_DropPos.x - Out.texel.x);
-	//float dz = (g_DropPos.y - Out.texel.y) * (g_DropPos.y - Out.texel.y);
-	//float length = sqrt(dx + dz);
-	//length *= 100.f;
-	//amplitude -= length;
-	//if (amplitude < 0) {
-	//	amplitude = 0;
-	//}
-	//Out.pos.y += amplitude * sin(2.f * 3.141592f * ((length / 14.f) - (g_timer.x / 1.f)));
-
-	//Out.pos.y += 2.f * sin(2.f * g_timer);
-	//dx = ((g_Wave[20][20].position.x + g_Wave[z][x].position.x) * (g_Wave[20][20].position.x + g_Wave[z][x].position.x));
-	//dz = ((g_Wave[20][20].position.z + g_Wave[z][x].position.z) * (g_Wave[20][20].position.z + g_Wave[z][x].position.z));
-	//length = sqrtf(dx + dz);
-	//Out.pos.y = g_Wave[z][x].amplitude * sinf(2.f * PI * ((length / WAVE_LENGTH) - (g_Wave[z][x].time / WAVE_CYCLE)));
 	
 	return Out;
 }

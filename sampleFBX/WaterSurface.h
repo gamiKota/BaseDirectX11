@@ -17,6 +17,9 @@
 #include "Mesh.h"
 
 
+#define MAX_DROP 256
+
+
 class Drop;
 
 
@@ -25,9 +28,10 @@ class Drop;
  */
 class WaterSurface : public GameObject {
 public:
-	MESH				m_mesh;		//!< メッシュ
-	Material*			m_material;	//!< マテリアル
-	//Drop*	m_dropList;	//!< 雫
+	MESH				m_mesh;					//!< メッシュ
+	Material*			m_material;				//!< マテリアル
+	Drop*				m_dropList[MAX_DROP];	//!< 雫(可変長はちょっと厳しい)
+	float				m_dropTime;				//!< 雫生成時間
 	//std::list<Drop*>	m_dropList;	//!< 雫
 
 public:

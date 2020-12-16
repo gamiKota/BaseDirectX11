@@ -17,13 +17,13 @@ using namespace DirectX;
 
 // ’è”
 namespace {
-	const float3 g_vEye = float3(0.0f, 1000.0f, -2000.0f);
+	const float3 g_vEye = float3(0.0f, 150.0f, -1200.0f);
 	const float3 g_vLook = float3(0.0f, 0.0f, 0.0f);
 	const float3 g_vUp(0.0f, 1.0f, 0.0f);
 };
 
 
-void ggCamera::Awake() {
+ggCamera::ggCamera() {
 	m_fFovy = XMConvertToRadians(45);
 	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 	m_fNearZ = 10.0f;
@@ -31,11 +31,14 @@ void ggCamera::Awake() {
 }
 
 
-void ggCamera::Start() {
+void ggCamera::Awake() {
 	m_transform->m_position = g_vEye;
 	m_vLook = g_vLook;
 	m_vUp = g_vUp;
-	Update();
+}
+
+
+void ggCamera::Start() {
 }
 
 
