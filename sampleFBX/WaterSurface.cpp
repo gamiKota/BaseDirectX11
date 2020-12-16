@@ -232,6 +232,8 @@ void WaterSurface::Init() {
 	}
 	m_dropTime = 0.f;
 
+	m_mesh.isDraw = true;
+
 	GameObject::Init();
 }
 
@@ -260,10 +262,11 @@ void WaterSurface::Update() {
 
 			if (m_dropList[i] == nullptr) {
 
-				GameObjectMesh* obj = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Drop", "Drop");
+				GameObjectMesh* obj = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_EXPLOSION, "Drop", "Drop");
 				GameObject::Instantiate(obj);
-				obj->m_transform->m_position = float3(0.f, 100.f, 0.f);
-				obj->m_transform->m_scale = float3(10.f, 10.f, 10.f);
+				obj->m_transform->m_position = float3(0.f, 1000.f, 0.f);
+				obj->m_transform->m_scale = float3(5.f, 5.f, 5.f);
+				//obj->m_material->m_diffuse = XMFLOAT4(1.f, 1.f, 1.f, 0.f);
 
 				m_dropList[i] = obj->AddComponent<Drop>();
 
@@ -272,7 +275,7 @@ void WaterSurface::Update() {
 					(int)(m_transform->m_position.x + m_transform->m_scale.x * 0.4f));
 
 				obj->m_transform->m_position.z =
-					(float)GetRandom((int)(m_transform->m_position.z - m_transform->m_scale.y * 0.4f),
+					(float)GetRandom((int)(m_transform->m_position.z - m_transform->m_scale.y * 0.3f),
 					(int)(m_transform->m_position.z + m_transform->m_scale.y * 0.4f));
 
 				break;
@@ -313,7 +316,8 @@ void WaterSurface::Draw() {
 	//mtxScale = XMMatrixScaling(m_mesh.texSize.x, m_mesh.texSize.y, 1.0f);
 	//mtxTexture = XMMatrixMultiply(mtxTexture, mtxScale);
 	//// 移動を反映
-	//mtxTranslate = XMMatrixTranslation(m_mesh.texSize.x * m_mesh.texPattern.x, m_mesh.texSize.y * m_mesh.texPattern.y, 0.0f);
+	//mtxTranslate = XMMatrixTranslation(
+	//m_mesh.texSize.x * m_mesh.texPattern.x, m_mesh.texSize.y * m_mesh.texPattern.y, 0.0f);
 	//mtxTexture = XMMatrixMultiply(mtxTexture, mtxTranslate);
 	//// テクスチャマトリックスの設定
 	//XMStoreFloat4x4(&m_mesh.mtxTexture, mtxTexture);
@@ -325,7 +329,7 @@ void WaterSurface::Draw() {
 	Material* pMaterial = new Material();
 	MESH* pMesh = &m_mesh;
 	Material* material = m_material;
-	ID3D11ShaderResourceView* texture = TextureManager::GetInstance().Get(E_TEXTURE::E_TEXTURE_TREE);
+	ID3D11ShaderResourceView* texture = TextureManager::GetInstance().Get(E_TEXTURE::E_TEXTURE_WATER_SURFACE);
 
 
 	// 背面カリング (通常は表面のみ描画)

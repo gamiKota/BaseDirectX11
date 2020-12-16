@@ -40,6 +40,7 @@ GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh) : m_type(mesh), m_texture(E_TEX
 	m_mesh.texSize = float3(1.f, 1.f, 1.f);
 	m_mesh.light = true;
 	m_mesh.Zbuff = true;
+	m_mesh.isDraw = true;
 }
 
 
@@ -61,6 +62,7 @@ GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh, E_TEXTURE texture, std::string 
 	m_mesh.texSize = float3(1.f, 1.f, 1.f);
 	m_mesh.light = true;
 	m_mesh.Zbuff = true;
+	m_mesh.isDraw = true;
 }
 
 

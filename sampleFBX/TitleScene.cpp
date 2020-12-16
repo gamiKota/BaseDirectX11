@@ -31,7 +31,9 @@
 
 void TitleScene::Init() {
 
+	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_NONE);
 	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_TREE);
+	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_WATER_SURFACE);
 
 	// ÉJÉÅÉâ
 	m_empty = new GameObject("MainCamera");

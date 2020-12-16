@@ -8,7 +8,10 @@
  */
 #include "Drop.h"
 #include "Frame.h"
+#include "GameObject.h"
+#include "GameObjectMesh.h"
 #include "Transform.h"
+#include "Mesh.h"
 #include "System.h"
 
 
@@ -29,6 +32,8 @@ void Drop::Update() {
 	if (m_transform->m_position.y <= 0.f) {
 		// Žæ‚è‡‚¦‚¸”g‚Æ“–‚½‚Á‚½”»’è
 		m_isCollsion = true;
+		GameObjectMesh* mesh = dynamic_cast<GameObjectMesh*>(m_gameObject);
+		mesh->m_mesh.isDraw = false;
 		m_influence -= 0.1f;
 		if (m_influence <= 0.f) {
 			m_influence = 0;

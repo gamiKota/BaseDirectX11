@@ -57,6 +57,7 @@ typedef struct {
 
 	bool light = false;						// ライト設定ON/OFF
 	bool Zbuff;								// Zバッファ
+	bool isDraw;
 } MESH;
 
 //*****************************************************************************

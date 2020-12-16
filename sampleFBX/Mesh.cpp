@@ -152,6 +152,8 @@ void UninitMesh(void)
 //=============================================================================
 void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4X4* matrix)
 {
+	if (!pMesh->isDraw)	return;
+
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
 	Material* pMaterial = new Material();
 
