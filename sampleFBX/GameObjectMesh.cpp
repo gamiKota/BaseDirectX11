@@ -23,7 +23,7 @@ static const DirectX::XMFLOAT4 M_AMBIENT	=	XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
 static const DirectX::XMFLOAT4 M_EMISSIVE	=	XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
 
 
-GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh) : m_type(mesh), m_texture(E_TEXTURE_NONE), GameObject("GameObjectMesh") {
+GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh) : m_type(mesh), m_texture(E_TEXTURE_NONE), GameObjectMeshBase("GameObjectMesh") {
 	m_transform->m_scale = { 100.f, 100.f, 100.f };
 	m_material = AddComponent<Material>();
 
@@ -45,7 +45,7 @@ GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh) : m_type(mesh), m_texture(E_TEX
 
 
 GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh, E_TEXTURE texture, std::string name, std::string tag) :
-	m_type(mesh), m_texture(texture), GameObject(name, tag) {
+	m_type(mesh), m_texture(texture), GameObjectMeshBase(name, tag) {
 	m_transform->m_scale = { 100.f, 100.f, 100.f };
 	m_material = AddComponent<Material>();
 

@@ -7,8 +7,14 @@ cbuffer global : register(b0) {
 };
 
 
+// どんな型で宣言しても16バイト刻みで格納される(パディングされる)
+// 
 cbuffer globalFurface : register(b2) {
-	float4	g_Furface[MAX_DROP];			// タイマー
+	/* @ x, y = UV座標
+		 z = 経過時間
+		 w = 影響力
+	*/
+	float4	g_Furface[MAX_DROP];	// 波に必要なパラメータ
 };
 
 

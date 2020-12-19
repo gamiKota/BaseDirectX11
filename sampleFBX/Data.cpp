@@ -20,6 +20,12 @@ void QuaternionMultiply(Quaternion *pOut, Quaternion *pQ1, Quaternion *pQ2);
 void Vec3RotationAxis(float3 *pQut, float3 *pIn, float3 *pAxis, float fDegree);
 
 
+
+float float3::Dot(float3 data1, float3 data2) {
+	return (float)(data1.x * data2.x + data1.y * data2.y + data1.z * data2.z);
+}
+
+
 Quaternion Quaternion::Euler(float3 vec) {
 	Quaternion q = Quaternion(XMConvertToRadians(vec.x), XMConvertToRadians(vec.y), XMConvertToRadians(vec.z), 1.f);
 	return q;

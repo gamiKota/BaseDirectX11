@@ -12,7 +12,7 @@
 /**
  * @include
  */
-#include "GameObject.h"
+#include "GameObjectMeshBase.h"
 #include "TextureManager.h"
 #include "Mesh.h"
 
@@ -24,9 +24,9 @@ enum class E_MESH_TYPE {
 
 
 /**
- * @class GameObjectMesh : inheritance GameObject
+ * @class GameObjectMesh : inheritance GameObjectMeshBase
  */
-class GameObjectMesh : public GameObject {
+class GameObjectMesh : public GameObjectMeshBase {
 public:
 	E_TEXTURE		m_texture;	//!< テクスチャ
 	E_MESH_TYPE		m_type;		//!< 表示方法
@@ -44,7 +44,7 @@ public:
 	 * @param[in] name
 	 * @param[in] tag
 	 */
-	GameObjectMesh(E_MESH_TYPE mesh, E_TEXTURE texture = E_TEXTURE_NONE, std::string name = "GameObjectUI", std::string tag = "none");
+	GameObjectMesh(E_MESH_TYPE mesh, E_TEXTURE texture = E_TEXTURE_NONE, std::string name = "GameObjectMesh", std::string tag = "none");
 
 	/**
 	 * @brief デストラクタ

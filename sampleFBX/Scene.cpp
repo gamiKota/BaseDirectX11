@@ -137,11 +137,9 @@ void Scene::Draw() {
 	// 前面カリング (FBXは表裏が反転するため)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 	D3DClass::GetInstance().SetZBuffer(false);
-	// ビルボード(ここ最悪、汚すぎる)
 	buff = m_listObject;
 	for (auto obj : buff) {
-		if (dynamic_cast<GameObjectMesh*>(obj) != nullptr ||
-			dynamic_cast<WaterSurface*>(obj) != nullptr)
+		if (dynamic_cast<GameObjectMeshBase*>(obj))
 			obj->Draw();
 	}
 

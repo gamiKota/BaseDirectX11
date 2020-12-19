@@ -162,12 +162,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CollisionMesh.cpp" />
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="Drop.cpp" />
     <ClCompile Include="FixedEnemy.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectMesh.cpp" />
+    <ClCompile Include="GameObjectMeshBase.cpp" />
     <ClCompile Include="GameObjectUI.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
     <ClCompile Include="ggCamera.cpp" />
@@ -229,6 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
+    <ClInclude Include="CollisionMesh.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="DomainShader.h" />
     <ClInclude Include="Drop.h" />
@@ -236,6 +239,7 @@
     <ClInclude Include="FixedEnemy.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GameObjectMesh.h" />
+    <ClInclude Include="GameObjectMeshBase.h" />
     <ClInclude Include="GameObjectUI.h" />
     <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="ggCamera.h" />

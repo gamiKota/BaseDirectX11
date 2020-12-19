@@ -12,7 +12,7 @@
 /**
  * @include
  */
-#include "GameObject.h"
+#include "GameObjectMeshBase.h"
 #include "TextureManager.h"
 #include "Mesh.h"
 
@@ -24,13 +24,29 @@ class Drop;
 
 
 /**
- * @class WaterSurface : inheritance GameObject
+ * @struct WaterSurfaceParam
  */
-class WaterSurface : public GameObject {
+typedef struct {
+
+	// 実際にシェーダに与えられるパラメータ
+	float m_pos[2];		//!< UV座標(x, y)
+	float m_time;		//!< 経過時間(z)
+	float m_influence;	//!< 影響力(w)
+
+	// パラメータに働く補正値
+	float m_influenceSub;	//!< 影響力の減算パラメータ
+
+} WaterSurfaceParam;
+
+
+/**
+ * @class WaterSurface : inheritance GameObjectMeshBase
+ */
+class WaterSurface : public GameObjectMeshBase {
 public:
 	MESH				m_mesh;					//!< メッシュ
-	Material*			m_material;				//!< マテリアル
-	Drop*				m_dropList[MAX_DROP];	//!< 雫(可変長はちょっと厳しい)
+	//WaterSurfaceParam*	m_dropList[MAX_DROP];	//!< 雫(可変長はちょっと厳しい)
+	Drop*				m_dropList[MAX_DROP];	//!< 雫
 	float				m_dropTime;				//!< 雫生成時間
 	//std::list<Drop*>	m_dropList;	//!< 雫
 

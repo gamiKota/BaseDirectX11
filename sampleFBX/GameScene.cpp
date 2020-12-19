@@ -121,7 +121,7 @@ void GameScene::Init() {
 	m_mesh = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_TREE, "Mesh", "Mesh");
 	m_mesh->m_transform->m_position = float3(0.f, 0.f, 400.f);
 	m_mesh->m_transform->m_scale = float3(50.f, 50.f, 50.f);
-	m_mesh->m_mesh.light = false;
+	//m_mesh->m_mesh.light = false;
 	m_listObject.push_back(m_mesh);
 
 

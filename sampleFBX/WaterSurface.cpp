@@ -1,4 +1,4 @@
-/**
+ï»¿/**
  * @file WaterSurface.cpp
  */
 
@@ -13,6 +13,7 @@
 #include "polygon.h"
 #include "Light.h"
 #include "input.h"
+#include "CollisionMesh.h"
 #include "GameObjectMesh.h"
 #include "Shader.h"
 #include "ShaderManager.h"
@@ -31,30 +32,37 @@ typedef struct {
 	float x, y;
 } float2;
 
-// ’¸“_’è‹`
+// é ‚ç‚¹å®šç¾©
 struct _VERTEX
 {
-	XMFLOAT3 pos;    // ’¸“_À•W
-	XMFLOAT2 texel;  // ƒeƒNƒZƒ‹
+	XMFLOAT3 pos;    // é ‚ç‚¹åº§æ¨™
+	XMFLOAT2 texel;  // ãƒ†ã‚¯ã‚»ãƒ«
+	//XMFLOAT3 nor;
 };
 
-// ’è”’è‹`
+// å®šæ•°å®šç¾©
 typedef struct
 {
-	XMMATRIX  g_matWVP; // ƒ[ƒ‹ƒh ~ ƒrƒ…[ ~ Ë‰e s—ñ
+	XMMATRIX  g_matWVP; // ãƒ¯ãƒ¼ãƒ«ãƒ‰ Ã— ãƒ“ãƒ¥ãƒ¼ Ã— å°„å½± è¡Œåˆ—
 } _CBUFFER0;
 
 typedef struct
 {
-	float g_fTessFactor;		// ƒ|ƒŠƒSƒ“‚ÌƒGƒbƒW‚ÌƒeƒbƒZƒŒ[ƒVƒ‡ƒ“ŒW”
-	float g_fInsideTessFactor;	// ƒ|ƒŠƒSƒ““à•”‚ÌƒeƒbƒZƒŒ[ƒVƒ‡ƒ“ŒW”
-	// 16ƒoƒCƒg’²®—p•Ï”
+	float g_fTessFactor;		// ãƒãƒªã‚´ãƒ³ã®ã‚¨ãƒƒã‚¸ã®ãƒ†ãƒƒã‚»ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ä¿‚æ•°
+	float g_fInsideTessFactor;	// ãƒãƒªã‚´ãƒ³å†…éƒ¨ã®ãƒ†ãƒƒã‚»ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ä¿‚æ•°
+	// 16ãƒã‚¤ãƒˆèª¿æ•´ç”¨å¤‰æ•°
 	float g_Dummy2;
 	float g_Dummy3;
 } _CBUFFER1;
 
+
+
 typedef struct
 {
+	/* @ x, y = UVåº§æ¨™
+		 z = çµŒéæ™‚é–“
+		 w = å½±éŸ¿åŠ›
+	*/
 	XMFLOAT4 g_Surface[MAX_DROP];
 } _CBUFFER2;
 
@@ -67,10 +75,10 @@ static const DirectX::XMFLOAT4 M_SPECULAR = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 static const DirectX::XMFLOAT4 M_AMBIENT = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 static const DirectX::XMFLOAT4 M_EMISSIVE = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 
-static ID3D11Buffer*				g_pConstantBuffer[3];	// ’è”ƒoƒbƒtƒ@
-static ID3D11SamplerState*			g_pSamplerState;		// ƒeƒNƒXƒ`ƒƒ ƒTƒ“ƒvƒ‰
-static ID3D11VertexShader*			g_pVertexShader;		// ’¸“_ƒVƒF[ƒ_
-static ID3D11InputLayout*			g_pInputLayout;			// ’¸“_ƒtƒH[ƒ}ƒbƒg
+static ID3D11Buffer*				g_pConstantBuffer[3];	// å®šæ•°ãƒãƒƒãƒ•ã‚¡
+static ID3D11SamplerState*			g_pSamplerState;		// ãƒ†ã‚¯ã‚¹ãƒãƒ£ ã‚µãƒ³ãƒ—ãƒ©
+static ID3D11VertexShader*			g_pVertexShader;		// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€
+static ID3D11InputLayout*			g_pInputLayout;			// é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 
 
 static HullShader* g_HS;
@@ -78,24 +86,16 @@ static DomainShader* g_DS;
 static GeometryShader* g_GS;
 static PixelShader* g_PS;
 
-// ”gƒVƒF[ƒ_‚Ì‚Í‚È‚é‚×‚­“¯‚¶’l‚Ì•û‚ªŠï—í‚ÉŒ©‚¦‚é
-static float TessFactor = 128.0f;			// ƒ|ƒŠƒSƒ“‚ÌƒGƒbƒW‚ÌƒeƒbƒZƒŒ[ƒVƒ‡ƒ“ŒW”‚Ì’è”
-static float InsideTessFactor = 128.0f;		// ƒ|ƒŠƒSƒ““à•”‚ÌƒeƒbƒZƒŒ[ƒVƒ‡ƒ“ŒW”‚Ì’è”
+// æ³¢ã‚·ã‚§ãƒ¼ãƒ€ã®æ™‚ã¯ãªã‚‹ã¹ãåŒã˜å€¤ã®æ–¹ãŒå¥‡éº—ã«è¦‹ãˆã‚‹
+static float TessFactor = 128.0f;			// ãƒãƒªã‚´ãƒ³ã®ã‚¨ãƒƒã‚¸ã®ãƒ†ãƒƒã‚»ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ä¿‚æ•°ã®å®šæ•°
+static float InsideTessFactor = 128.0f;		// ãƒãƒªã‚´ãƒ³å†…éƒ¨ã®ãƒ†ãƒƒã‚»ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ä¿‚æ•°ã®å®šæ•°
 static float Timer = 0.f;
 
 
-WaterSurface::WaterSurface() : GameObject("WaterSurface") {
+WaterSurface::WaterSurface() : GameObjectMeshBase("WaterSurface") {
 	m_transform->m_scale = { 100.f, 100.f, 100.f };
-	m_material = AddComponent<Material>();
 
-	// ƒ}ƒeƒŠƒAƒ‹‚Ì‰Šúİ’è
-	m_material->m_diffuse = M_DIFFUSE;
-	m_material->m_ambient = M_AMBIENT;
-	m_material->m_specular = M_SPECULAR;
-	m_material->m_power = 50.0f;
-	m_material->m_emissive = M_EMISSIVE;
-
-	// ƒeƒNƒXƒ`ƒƒİ’è
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
 	XMStoreFloat4x4(&m_mesh.mtxTexture, XMMatrixIdentity());
 	m_mesh.texPattern = float3(0.f, 0.f, 0.f);
 	m_mesh.texSize = float3(1.f, 1.f, 1.f);
@@ -104,18 +104,10 @@ WaterSurface::WaterSurface() : GameObject("WaterSurface") {
 }
 
 
-WaterSurface::WaterSurface(std::string name, std::string tag) : GameObject(name, tag) {
+WaterSurface::WaterSurface(std::string name, std::string tag) : GameObjectMeshBase(name, tag) {
 	m_transform->m_scale = { 100.f, 100.f, 100.f };
-	m_material = AddComponent<Material>();
 
-	// ƒ}ƒeƒŠƒAƒ‹‚Ì‰Šúİ’è
-	m_material->m_diffuse = M_DIFFUSE;
-	m_material->m_ambient = M_AMBIENT;
-	m_material->m_specular = M_SPECULAR;
-	m_material->m_power = 50.0f;
-	m_material->m_emissive = M_EMISSIVE;
-
-	// ƒeƒNƒXƒ`ƒƒİ’è
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
 	XMStoreFloat4x4(&m_mesh.mtxTexture, XMMatrixIdentity());
 	m_mesh.texPattern = float3(0.f, 0.f, 0.f);
 	m_mesh.texSize = float3(1.f, 1.f, 1.f);
@@ -130,11 +122,11 @@ WaterSurface::~WaterSurface() {
 
 
 void WaterSurface::Init() {
-	// ƒƒbƒVƒ…‚Ì‰Šú‰»(‰Šúİ’è)
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã®åˆæœŸåŒ–(åˆæœŸè¨­å®š)
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	HRESULT hr;
 
-	// ƒVƒF[ƒ_‰Šú‰»
+	// ã‚·ã‚§ãƒ¼ãƒ€åˆæœŸåŒ–
 	static const D3D11_INPUT_ELEMENT_DESC layout[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,                            D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -154,7 +146,7 @@ void WaterSurface::Init() {
 	g_PS = new PixelShader();
 	if (FAILED(g_PS->Create("data/shader/WaterSurfacePS.cso"))) { MessageBox(NULL, L"PS", NULL, MB_OK); }
 
-	// ’è”ƒoƒbƒtƒ@¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -168,7 +160,7 @@ void WaterSurface::Init() {
 	pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer[2]);
 
 
-	// ƒeƒNƒXƒ`ƒƒ ƒTƒ“ƒvƒ‰¶¬
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ ã‚µãƒ³ãƒ—ãƒ©ç”Ÿæˆ
 	D3D11_SAMPLER_DESC sd;
 	ZeroMemory(&sd, sizeof(sd));
 	sd.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -177,13 +169,13 @@ void WaterSurface::Init() {
 	sd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	pDevice->CreateSamplerState(&sd, &g_pSamplerState);
 
-	// ’¸“_î•ñ‚Ìì¬
+	// é ‚ç‚¹æƒ…å ±ã®ä½œæˆ
 	m_mesh.nNumVertex = 4;
 	_VERTEX* pVertexWk = new _VERTEX[m_mesh.nNumVertex];
-	pVertexWk[0].pos = XMFLOAT3( 0.5f,  0.5f, 0.0f);
-	pVertexWk[1].pos = XMFLOAT3(-0.5f,  0.5f, 0.0f);
-	pVertexWk[2].pos = XMFLOAT3( 0.5f, -0.5f, 0.0f);
-	pVertexWk[3].pos = XMFLOAT3(-0.5f, -0.5f, 0.0f);
+	pVertexWk[0].pos = XMFLOAT3(-0.5f,  0.5f, 0.0f);
+	pVertexWk[1].pos = XMFLOAT3( 0.5f,  0.5f, 0.0f);
+	pVertexWk[2].pos = XMFLOAT3(-0.5f, -0.5f, 0.0f);
+	pVertexWk[3].pos = XMFLOAT3( 0.5f, -0.5f, 0.0f);
 	//pVertexWk[0].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	//pVertexWk[1].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	//pVertexWk[2].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -192,10 +184,10 @@ void WaterSurface::Init() {
 	//pVertexWk[1].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
 	//pVertexWk[2].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
 	//pVertexWk[3].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
-	pVertexWk[0].texel = XMFLOAT2(1.0f, 0.0f);
-	pVertexWk[1].texel = XMFLOAT2(0.0f, 0.0f);
-	pVertexWk[2].texel = XMFLOAT2(1.0f, 1.0f);
-	pVertexWk[3].texel = XMFLOAT2(0.0f, 1.0f);
+	pVertexWk[0].texel = XMFLOAT2(0.0f, 0.0f);
+	pVertexWk[1].texel = XMFLOAT2(1.0f, 0.0f);
+	pVertexWk[2].texel = XMFLOAT2(0.0f, 1.0f);
+	pVertexWk[3].texel = XMFLOAT2(1.0f, 1.0f);
 	m_mesh.nNumIndex = 4;
 	int* pIndexWk = new int[4];
 	pIndexWk[0] = 0;
@@ -257,34 +249,66 @@ void WaterSurface::Uninit() {
 
 void WaterSurface::Update() {
 
-	if (m_dropTime > 1.f) {
-		for (int i = 0; i < MAX_DROP; i++) {
+	//if (m_dropTime > 0.5f) {
+	//	for (int i = 0; i < MAX_DROP; i++) {
+	//
+	//		if (m_dropList[i] == nullptr) {
+	//
+	//			GameObjectMesh* obj = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_EXPLOSION, "Drop", "Drop");
+	//			GameObject::Instantiate(obj);
+	//			obj->m_transform->m_position = float3(0.f, 1000.f, 0.f);
+	//			obj->m_transform->m_scale = float3(5.f, 5.f, 5.f);
+	//			//obj->m_material->m_diffuse = XMFLOAT4(1.f, 1.f, 1.f, 0.f);
+	//
+	//			m_dropList[i] = obj->AddComponent<Drop>();
+	//
+	//			obj->m_transform->m_position.x =
+	//				(float)GetRandom((int)(m_transform->m_position.x - m_transform->m_scale.x * 0.4f),
+	//				(int)(m_transform->m_position.x + m_transform->m_scale.x * 0.4f));
+	//
+	//			obj->m_transform->m_position.z =
+	//				(float)GetRandom((int)(m_transform->m_position.z - m_transform->m_scale.y * 0.3f),
+	//				(int)(m_transform->m_position.z + m_transform->m_scale.y * 0.4f));
+	//
+	//			break;
+	//		}
+	//	}
+	//	m_dropTime = 0.f;
+	//}
+	//else {
+	//	m_dropTime += Frame::GetInstance().GetDeltaTime();
+	//}
 
-			if (m_dropList[i] == nullptr) {
 
-				GameObjectMesh* obj = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_EXPLOSION, "Drop", "Drop");
-				GameObject::Instantiate(obj);
-				obj->m_transform->m_position = float3(0.f, 1000.f, 0.f);
-				obj->m_transform->m_scale = float3(5.f, 5.f, 5.f);
-				//obj->m_material->m_diffuse = XMFLOAT4(1.f, 1.f, 1.f, 0.f);
+	// zâ€² = (z âˆ’ zo)cosÎ¸ âˆ’ (y âˆ’ yo)sinÎ¸ + zo
+	// yâ€² = (z âˆ’ zo)sinÎ¸ + (y âˆ’ yo)cosÎ¸ + yo
+	GameObject* obj = GameObject::FindGameObjectWithTag("Mesh");
+	if (obj != nullptr) {
+		//obj->m_transform->m_position = m_transform->m_position + float3(-m_transform->m_scale.x * 0.5f, m_transform->m_scale.y * 0.5f, 0.f);	// å·¦ä¸Š
+		//
+		//float3 temp1 = obj->m_transform->m_position;
+		//float3 temp2 = m_transform->m_position;
+		//float angleX = -m_transform->m_rotate.x;
+		//float angleY = -m_transform->m_rotate.y;
+		//float angleZ = -m_transform->m_rotate.z;
+		//obj->m_transform->m_position.z = (temp1.z - temp2.z) * cosf(angleX) - (temp1.y - temp2.y) * sinf(angleX) + temp2.z;
+		//obj->m_transform->m_position.y = (temp1.z - temp2.z) * sinf(angleX) + (temp1.y - temp2.y) * cosf(angleX) + temp2.y;
 
-				m_dropList[i] = obj->AddComponent<Drop>();
 
-				obj->m_transform->m_position.x =
-					(float)GetRandom((int)(m_transform->m_position.x - m_transform->m_scale.x * 0.4f),
-					(int)(m_transform->m_position.x + m_transform->m_scale.x * 0.4f));
+		obj->m_transform->m_position = CollisionMesh::test(obj->m_transform, m_transform);
 
-				obj->m_transform->m_position.z =
-					(float)GetRandom((int)(m_transform->m_position.z - m_transform->m_scale.y * 0.3f),
-					(int)(m_transform->m_position.z + m_transform->m_scale.y * 0.4f));
-
-				break;
-			}
-		}
-		m_dropTime = 0.f;
-	}
-	else {
-		m_dropTime += Frame::GetInstance().GetDeltaTime();
+		//XMMATRIX matrix = XMMatrixIdentity();
+		//// åº§æ¨™ã®å¤‰æ›´
+		//matrix = XMMatrixMultiply(matrix, 
+		//	XMMatrixTranslation(m_transform->m_position.x - m_transform->m_scale.x * 0.5f,
+		//		m_transform->m_position.y + m_transform->m_scale.y * 0.5f, m_transform->m_position.z));
+		//// å›è»¢è»¸ã®å¤‰æ›´
+		//matrix = XMMatrixMultiply(matrix, XMMatrixRotationRollPitchYaw(m_transform->m_rotate.x, m_transform->m_rotate.y, m_transform->m_rotate.z));
+		//
+		//XMFLOAT4X4 pos;
+		//XMStoreFloat4x4(&pos, matrix);
+		//
+		//obj->m_transform->m_position = float3(pos._41, pos._42, pos._43);
 	}
 
 	for (int i = 0; i < MAX_DROP; i++) {
@@ -309,75 +333,68 @@ void WaterSurface::Draw() {
 	//ImGui::DragFloat("Inpolygon", &InsideTessFactor, 0.1f);
 	//ImGui::DragFloat("timer", &Timer, 0.1f);
 
-	//// ƒeƒNƒXƒ`ƒƒƒ}ƒgƒŠƒbƒNƒX‚Ì‰Šú‰»
+	//// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒˆãƒªãƒƒã‚¯ã‚¹ã®åˆæœŸåŒ–
 	//XMMATRIX mtxTexture, mtxScale, mtxTranslate;
 	//mtxTexture = XMMatrixIdentity();
-	//// ƒXƒP[ƒ‹‚ğ”½‰f
+	//// ã‚¹ã‚±ãƒ¼ãƒ«ã‚’åæ˜ 
 	//mtxScale = XMMatrixScaling(m_mesh.texSize.x, m_mesh.texSize.y, 1.0f);
 	//mtxTexture = XMMatrixMultiply(mtxTexture, mtxScale);
-	//// ˆÚ“®‚ğ”½‰f
+	//// ç§»å‹•ã‚’åæ˜ 
 	//mtxTranslate = XMMatrixTranslation(
 	//m_mesh.texSize.x * m_mesh.texPattern.x, m_mesh.texSize.y * m_mesh.texPattern.y, 0.0f);
 	//mtxTexture = XMMatrixMultiply(mtxTexture, mtxTranslate);
-	//// ƒeƒNƒXƒ`ƒƒƒ}ƒgƒŠƒbƒNƒX‚Ìİ’è
+	//// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒˆãƒªãƒƒã‚¯ã‚¹ã®è¨­å®š
 	//XMStoreFloat4x4(&m_mesh.mtxTexture, mtxTexture);
 
 
 
-	//--- •`‰æ
+	//--- æç”»
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
-	Material* pMaterial = new Material();
 	MESH* pMesh = &m_mesh;
-	Material* material = m_material;
 	ID3D11ShaderResourceView* texture = TextureManager::GetInstance().Get(E_TEXTURE::E_TEXTURE_WATER_SURFACE);
 
 
-	// ”w–ÊƒJƒŠƒ“ƒO (’Êí‚Í•\–Ê‚Ì‚İ•`‰æ)
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
-	// Zƒoƒbƒtƒ@–³Œø
+	// ã‚«ãƒªãƒ³ã‚°
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
+	// Zãƒãƒƒãƒ•ã‚¡ç„¡åŠ¹
 	D3DClass::GetInstance().SetZBuffer(false);
 
 
-	//pDeviceContext->PSSetShader(g_pPixelShader, nullptr, 0);
-	//g_HS->Bind();
-	//g_DS->Bind();
-	//g_PS->Bind();
-
-	// ’¸“_ƒoƒbƒtƒ@‚ğƒZƒbƒg
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ã‚»ãƒƒãƒˆ
 	UINT stride = sizeof(_VERTEX);
 	UINT offset = 0;
 	pDeviceContext->IASetVertexBuffers(0, 1, &pMesh->pVertexBuffer, &stride, &offset);
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğƒZƒbƒg
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ã‚»ãƒƒãƒˆ
 	pDeviceContext->IASetIndexBuffer(pMesh->pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	// ƒŒƒCƒAƒEƒg‚Ìİ’è
+	// ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®è¨­å®š
 	pDeviceContext->IASetInputLayout(g_pInputLayout);
 
-	// ƒƒbƒVƒ…‚ª4‚Â‚Ì’¸“_(ƒRƒ“ƒgƒ[ƒ‹ƒ|ƒCƒ“ƒg)‚ğ‚Â‚Æw’è‚·‚é
+	// ãƒ¡ãƒƒã‚·ãƒ¥ãŒ4ã¤ã®é ‚ç‚¹(ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ãƒã‚¤ãƒ³ãƒˆ)ã‚’æŒã¤ã¨æŒ‡å®šã™ã‚‹
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 	//pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	// ’¸“_ƒVƒF[ƒ_‚ğƒfƒoƒCƒX‚Éİ’è‚·‚é
+	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ã‚’ãƒ‡ãƒã‚¤ã‚¹ã«è¨­å®šã™ã‚‹
 	pDeviceContext->VSSetShader(g_pVertexShader, nullptr, 0);
 
-	// ƒnƒ‹ƒVƒF[ƒ_‚ğƒfƒoƒCƒX‚Éİ’è‚·‚é
+	// ãƒãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã‚’ãƒ‡ãƒã‚¤ã‚¹ã«è¨­å®šã™ã‚‹
 	g_HS->Bind();
 	
-	// ƒhƒƒCƒ“ƒVƒF[ƒ_‚ğƒfƒoƒCƒX‚Éİ’è‚·‚é
+	// ãƒ‰ãƒ¡ã‚¤ãƒ³ã‚·ã‚§ãƒ¼ãƒ€ã‚’ãƒ‡ãƒã‚¤ã‚¹ã«è¨­å®šã™ã‚‹
 	g_DS->Bind();
 
-	// ƒWƒIƒƒgƒŠ[ƒVƒF[ƒ_‚ğ–³Œø‚É‚·‚é
+	// ã‚¸ã‚ªãƒ¡ãƒˆãƒªãƒ¼ã‚·ã‚§ãƒ¼ãƒ€ã‚’ç„¡åŠ¹ã«ã™ã‚‹
 	pDeviceContext->GSSetShader(NULL, NULL, 0);
 	//g_GS->Bind();
 
-	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_‚ğƒfƒoƒCƒX‚Éİ’è‚·‚é
+	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã‚’ãƒ‡ãƒã‚¤ã‚¹ã«è¨­å®šã™ã‚‹
 	g_PS->Bind();
 
-	// ƒRƒ“ƒsƒ…[ƒgƒVƒF[ƒ_‚Ì–³Œø
+	// ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ãƒˆã‚·ã‚§ãƒ¼ãƒ€ã®ç„¡åŠ¹
 	pDeviceContext->CSSetShader(NULL, NULL, 0);
 
-	// s—ñ‚ğ’è”ƒoƒbƒtƒ@‚ÉƒZƒbƒg
+	// è¡Œåˆ—ã‚’å®šæ•°ãƒãƒƒãƒ•ã‚¡ã«ã‚»ãƒƒãƒˆ
 	{
 		_CBUFFER0 cbuffer0;
 		XMMATRIX mtxWorld = XMLoadFloat4x4(&m_transform->GetMatrix());
@@ -386,7 +403,7 @@ void WaterSurface::Draw() {
 		pDeviceContext->UpdateSubresource(g_pConstantBuffer[0], 0, nullptr, &cbuffer0, 0, 0);
 	}
 	
-	// ƒeƒbƒZƒŒ[ƒVƒ‡ƒ“ŒW”‚ğ’è”ƒoƒbƒtƒ@‚ÉƒZƒbƒg
+	// ãƒ†ãƒƒã‚»ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ä¿‚æ•°ã‚’å®šæ•°ãƒãƒƒãƒ•ã‚¡ã«ã‚»ãƒƒãƒˆ
 	{
 		_CBUFFER1 cbuffer1;
 		cbuffer1.g_fTessFactor = TessFactor;
@@ -394,7 +411,7 @@ void WaterSurface::Draw() {
 		pDeviceContext->UpdateSubresource(g_pConstantBuffer[1], 0, nullptr, &cbuffer1, 0, 0);
 	}
 
-	// ”g
+	// æ³¢
 	{
 		_CBUFFER2 cbuffer2;
 
@@ -402,23 +419,23 @@ void WaterSurface::Draw() {
 
 			if (m_dropList[i] != nullptr && m_dropList[i]->m_isCollsion) {
 
-				// Œo‰ßŠÔ
+				// çµŒéæ™‚é–“
 				cbuffer2.g_Surface[i].z = m_dropList[i]->m_time;
 
-				// ‰e‹¿—Í
+				// å½±éŸ¿åŠ›
 				cbuffer2.g_Surface[i].w = m_dropList[i]->m_influence;
 
-				// kŒ¹’n
+				// éœ‡æºåœ°
 				float uvPosX = m_dropList[i]->m_transform->m_position.x;
 				float uvPosY = m_dropList[i]->m_transform->m_position.z;
-				uvPosY *= -1.f;	// ”½“](À•WŒn‚ªˆá‚¤)
-				// UVÀ•W²‚Ö•ÏŠ·
+				uvPosY *= -1.f;	// åè»¢(åº§æ¨™ç³»ãŒé•ã†)
+				// UVåº§æ¨™è»¸ã¸å¤‰æ›
 				uvPosX += m_transform->m_position.x + m_transform->m_scale.x * 0.5f;
 				uvPosY += m_transform->m_position.y + m_transform->m_scale.y * 0.5f;
-				// ³‹K‰»
+				// æ­£è¦åŒ–
 				uvPosX /= m_transform->m_scale.x;
 				uvPosY /= m_transform->m_scale.y;
-				// ‘ã“ü
+				// ä»£å…¥
 				cbuffer2.g_Surface[i].x = uvPosX;
 				cbuffer2.g_Surface[i].y = uvPosY;
 			}
@@ -430,29 +447,27 @@ void WaterSurface::Draw() {
 	}
 
 	
-	// ƒnƒ‹ƒVƒF[ƒ_[‚É’è”ƒoƒbƒtƒ@‚ğİ’è‚·‚éB
+	// ãƒãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã«å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®šã™ã‚‹ã€‚
 	pDeviceContext->HSSetConstantBuffers(1, 1, &g_pConstantBuffer[1]);
 	
-	// ƒhƒƒCƒ“ƒVƒF[ƒ_[‚É’è”ƒoƒbƒtƒ@‚ğİ’è‚·‚éB
+	// ãƒ‰ãƒ¡ã‚¤ãƒ³ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã«å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®šã™ã‚‹ã€‚
 	pDeviceContext->DSSetConstantBuffers(0, 1, &g_pConstantBuffer[0]);
 	pDeviceContext->DSSetConstantBuffers(2, 1, &g_pConstantBuffer[2]);
 
-	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_‚ÉƒTƒ“ƒvƒ‹ƒXƒe[ƒg‚ğ“n‚·
+	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã«ã‚µãƒ³ãƒ—ãƒ«ã‚¹ãƒ†ãƒ¼ãƒˆã‚’æ¸¡ã™
 	pDeviceContext->PSSetSamplers(0, 1, &g_pSamplerState);
-	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_‚ÉƒeƒNƒXƒ`ƒƒ‚ğ“n‚·
+	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã«ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’æ¸¡ã™
 	pDeviceContext->PSSetShaderResources(0, 1, &texture);
 
-	// ƒ|ƒŠƒSƒ“‚Ì•`‰æ
+	// ãƒãƒªã‚´ãƒ³ã®æç”»
 	pDeviceContext->DrawIndexed(pMesh->nNumIndex, 0, 0);
 	//pDeviceContext->Draw(4, 0);
 
-	// ”w–ÊƒJƒŠƒ“ƒO (’Êí‚Í•\–Ê‚Ì‚İ•`‰æ)
+	// èƒŒé¢ã‚«ãƒªãƒ³ã‚° (é€šå¸¸ã¯è¡¨é¢ã®ã¿æç”»)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 
-	// Zƒoƒbƒtƒ@–³Œø
+	// Zãƒãƒƒãƒ•ã‚¡ç„¡åŠ¹
 	D3DClass::GetInstance().SetZBuffer(true);
-
-	SAFE_DELETE(pMaterial);
 }
 
 

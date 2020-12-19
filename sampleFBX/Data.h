@@ -37,10 +37,13 @@ public:
 	}
 
 	static float3 Normalize(float3 data) {
+		if (data.x == 0, data.y == 0, data.z == 0)	return float3();
 		float scalar = sqrtf(data.x * data.x + data.y * data.y + data.z * data.z);
 		data /= scalar;
 		return data;
 	}
+
+	static float Dot(float3 data1, float3 data2);
 
 	float3 operator + (float3 data) {
 		return float3(x + data.x, y + data.y, z + data.z);

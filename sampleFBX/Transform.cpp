@@ -1,5 +1,7 @@
 #include "Transform.h"
 #include "GameObject.h"
+#include "GameObjectUI.h"
+#include "GameObjectMeshBase.h"
 #include "Tween.h"
 #include "debugproc.h"
 #include "imgui.h"
@@ -48,7 +50,14 @@ void Transform::LastUpdate() {
 		}
 	}
 
-
+	// 取り合えずこれで
+	if (dynamic_cast<GameObjectUI*>(m_gameObject) != nullptr) {
+		m_transform->m_position.z = 0;
+		m_transform->m_scale.z = 0;
+	}
+	if (dynamic_cast<GameObjectMeshBase*>(m_gameObject) != nullptr) {
+		m_transform->m_scale.z = 0;
+	}
 
 	XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
 	// 拡縮の変更
@@ -62,18 +71,25 @@ void Transform::LastUpdate() {
 
 	// 前方向の更新
 	m_forward = { m_world._31, m_world._32, m_world._33 };
+	//m_forward = float3::Normalize(m_forward);
 	// 横方向の更新
 	m_right = { m_world._11, m_world._12, m_world._13 };
+	//m_right = float3::Normalize(m_right);
 	// 上方向の更新
 	m_up = { m_world._21, m_world._22, m_world._23 };
+	//m_up = float3::Normalize(m_up);
 }
 
 
 void Transform::SetImGuiVal() {
 #if _DEBUG
 	ImGui::DragFloat3("position", (float*)&m_transform->m_position);
-	ImGui::DragFloat3("rotation", (float*)&m_transform->m_rotate);
+	ImGui::DragFloat3("rotation", (float*)&m_transform->m_rotate, 0.01f);
 	ImGui::DragFloat3("scale", (float*)&m_transform->m_scale);
+
+	ImGui::DragFloat3("forward", (float*)&m_transform->m_forward);
+	ImGui::DragFloat3("up", (float*)&m_transform->m_up);
+	ImGui::DragFloat3("right", (float*)&m_transform->m_right);
 #endif
 }
 

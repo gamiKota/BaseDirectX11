@@ -10,7 +10,7 @@
 
 
 /**
- * @ include
+ * @include
  */
 #include "Component.h"
 

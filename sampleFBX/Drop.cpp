@@ -31,6 +31,7 @@ void Drop::Update() {
 	m_transform->m_position.y -= a;
 	if (m_transform->m_position.y <= 0.f) {
 		// Žæ‚è‡‚¦‚¸”g‚Æ“–‚½‚Á‚½”»’è
+		// ‚Ç‚Ì”g‚É“–‚½‚Á‚½‚Ì‚©‚à”»’è‚µ‚½‚¢
 		m_isCollsion = true;
 		GameObjectMesh* mesh = dynamic_cast<GameObjectMesh*>(m_gameObject);
 		mesh->m_mesh.isDraw = false;
