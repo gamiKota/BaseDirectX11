@@ -16,7 +16,7 @@ void transformQuaternionToRotMat(XMFLOAT4X4 &matrix, Quaternion q);
 
 
 
-Transform::Transform() : m_position(float3()), m_rotate(Quaternion()), m_scale(float3()), m_tween(new Tween[3]()) {
+Transform::Transform() : m_position(float3()), m_rotate(Quaternion()), m_scale(float3()), m_tween(new Tween[3]()), m_Parent(nullptr) {
 	XMStoreFloat4x4(&m_world, XMMatrixIdentity());
 }
 
@@ -59,15 +59,31 @@ void Transform::LastUpdate() {
 		m_transform->m_scale.z = 0;
 	}
 
-	XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
-	// 拡縮の変更
-	matrix = XMMatrixMultiply(matrix, XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z));
-	// 回転軸の変更
-	matrix = XMMatrixMultiply(matrix, XMMatrixRotationRollPitchYaw(m_rotate.x, m_rotate.y, m_rotate.z));
-	// 座標の変更
-	matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(m_position.x, m_position.y, m_position.z));
-	// 行列に反映
-	XMStoreFloat4x4(&m_world, matrix);
+	// メモ
+	// 既に削除されたかどうかは今の所考えない
+	// ビルボードだと出来ない処理
+	// 本当に全てが親基準になる
+	// Meshの場合、座標は親の大きさの範囲に指定される(0.5～0.5の範囲)
+	if (m_Parent != nullptr) {
+		XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
+		matrix = XMMatrixMultiply(matrix, XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z));
+		matrix = XMMatrixMultiply(matrix, XMMatrixRotationRollPitchYaw(m_rotate.x, m_rotate.y, m_rotate.z));
+		matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(m_position.x, m_position.y, m_position.z));
+
+		matrix *= XMLoadFloat4x4(&m_Parent->m_transform->GetMatrix());
+		XMStoreFloat4x4(&m_world, matrix);
+	}
+	else {
+		XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
+		// 拡縮の変更
+		matrix = XMMatrixMultiply(matrix, XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z));
+		// 回転軸の変更
+		matrix = XMMatrixMultiply(matrix, XMMatrixRotationRollPitchYaw(m_rotate.x, m_rotate.y, m_rotate.z));
+		// 座標の変更
+		matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(m_position.x, m_position.y, m_position.z));
+		// 行列に反映
+		XMStoreFloat4x4(&m_world, matrix);
+	}
 
 	// 前方向の更新
 	m_forward = { m_world._31, m_world._32, m_world._33 };

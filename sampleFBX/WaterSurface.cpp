@@ -257,7 +257,7 @@ void WaterSurface::Update() {
 	//			GameObjectMesh* obj = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_EXPLOSION, "Drop", "Drop");
 	//			GameObject::Instantiate(obj);
 	//			obj->m_transform->m_position = float3(0.f, 1000.f, 0.f);
-	//			obj->m_transform->m_scale = float3(5.f, 5.f, 5.f);
+	//			obj->m_transform->m_scale = float3(50.f, 50.f, 50.f);
 	//			//obj->m_material->m_diffuse = XMFLOAT4(1.f, 1.f, 1.f, 0.f);
 	//
 	//			m_dropList[i] = obj->AddComponent<Drop>();
@@ -282,35 +282,6 @@ void WaterSurface::Update() {
 
 	// z′ = (z − zo)cosθ − (y − yo)sinθ + zo
 	// y′ = (z − zo)sinθ + (y − yo)cosθ + yo
-	GameObject* obj = GameObject::FindGameObjectWithTag("Mesh");
-	if (obj != nullptr) {
-		//obj->m_transform->m_position = m_transform->m_position + float3(-m_transform->m_scale.x * 0.5f, m_transform->m_scale.y * 0.5f, 0.f);	// 左上
-		//
-		//float3 temp1 = obj->m_transform->m_position;
-		//float3 temp2 = m_transform->m_position;
-		//float angleX = -m_transform->m_rotate.x;
-		//float angleY = -m_transform->m_rotate.y;
-		//float angleZ = -m_transform->m_rotate.z;
-		//obj->m_transform->m_position.z = (temp1.z - temp2.z) * cosf(angleX) - (temp1.y - temp2.y) * sinf(angleX) + temp2.z;
-		//obj->m_transform->m_position.y = (temp1.z - temp2.z) * sinf(angleX) + (temp1.y - temp2.y) * cosf(angleX) + temp2.y;
-
-
-		obj->m_transform->m_position = CollisionMesh::test(obj->m_transform, m_transform);
-
-		//XMMATRIX matrix = XMMatrixIdentity();
-		//// 座標の変更
-		//matrix = XMMatrixMultiply(matrix, 
-		//	XMMatrixTranslation(m_transform->m_position.x - m_transform->m_scale.x * 0.5f,
-		//		m_transform->m_position.y + m_transform->m_scale.y * 0.5f, m_transform->m_position.z));
-		//// 回転軸の変更
-		//matrix = XMMatrixMultiply(matrix, XMMatrixRotationRollPitchYaw(m_transform->m_rotate.x, m_transform->m_rotate.y, m_transform->m_rotate.z));
-		//
-		//XMFLOAT4X4 pos;
-		//XMStoreFloat4x4(&pos, matrix);
-		//
-		//obj->m_transform->m_position = float3(pos._41, pos._42, pos._43);
-	}
-
 	for (int i = 0; i < MAX_DROP; i++) {
 		if (m_dropList[i] != nullptr &&
 			m_dropList[i]->m_influence <= 0) {
@@ -385,8 +356,8 @@ void WaterSurface::Draw() {
 	g_DS->Bind();
 
 	// ジオメトリーシェーダを無効にする
-	pDeviceContext->GSSetShader(NULL, NULL, 0);
-	//g_GS->Bind();
+	//pDeviceContext->GSSetShader(NULL, NULL, 0);
+	g_GS->Bind();
 
 	// ピクセルシェーダをデバイスに設定する
 	g_PS->Bind();
@@ -468,6 +439,11 @@ void WaterSurface::Draw() {
 
 	// Zバッファ無効
 	D3DClass::GetInstance().SetZBuffer(true);
+}
+
+
+void WaterSurface::OnCollision() {
+
 }
 
 

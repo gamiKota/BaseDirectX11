@@ -39,13 +39,16 @@ class CollisionMesh : public Component {
 	// 面と線分の当たり判定に変換する
 	// (面の法線ベクトルと線分各頂点のベクトルの内積をとって掛け合わせた値が負の値なら衝突)
 	// (今回は法線ではなく、上方向ベクトルを使う)
-	// 4本線分ではなく、対角線の2本でいけそう
+	// 4本線分ではなく、対角線の2本でいけそう ※いけません、ちゃんと4本線分で判定してください
 
 public:
 	// 今は取り合えず無限平面との当たり判定になってる
-	bool isMesh2Mesh(Transform* mesh1, Transform* mesh2);
+	static bool isMesh2Mesh(Transform* mesh1, Transform* mesh2);
 
-	static float3 test(Transform* mesh1, Transform* mesh2);
+	/**
+	 * @brief メッシュの頂点座標取得
+	 */
+	static void GetVertex(Transform* mesh, float3 vertex[4]);
 };
 
 

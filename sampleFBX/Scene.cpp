@@ -14,7 +14,9 @@
 #include "WaterSurface.h"
 #include "D3DClass.h"
 #include "Collision.h"
+#include "CollisionMesh.h"
 #include "Rigidbody.h"
+#include "debugproc.h"
 #include "System.h"
 
 
@@ -80,6 +82,8 @@ void Scene::Update() {
 			if (j == i)	continue;	// うんち処理
 			GameObject *temp1 = *i;
 			GameObject *temp2 = *j;
+
+			// Colliison
 			if (temp1->GetComponent<Collision>() != nullptr && temp2->GetComponent<Collision>() != nullptr) {
 				if (Collision::OBB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
 					// デバッグ用Hit
@@ -93,6 +97,20 @@ void Scene::Update() {
 						Rigidbody::ShiftCollision(temp1, temp2);
 					}
 				}
+			}
+
+			// CollisionMesh
+			if (dynamic_cast<GameObjectMeshBase*>(temp1) && dynamic_cast<GameObjectMeshBase*>(temp2)) {
+				if (CollisionMesh::isMesh2Mesh(
+					dynamic_cast<GameObjectMeshBase*>(temp1)->m_transform,
+					dynamic_cast<GameObjectMeshBase*>(temp2)->m_transform)
+					) {
+					// 当たった時に呼ばれる関数
+					temp1->OnCollision(temp2);
+					temp2->OnCollision(temp1);
+					PrintDebugProc("aaaaaaaaaaaaaaaaaaaa\n");
+				}
+				PrintDebugProc("bbbbbbbbbbbbbbbbbbbb\n");
 			}
 		}
 	}

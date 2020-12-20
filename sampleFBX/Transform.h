@@ -12,6 +12,7 @@
 
 
 class Tween;
+class GameObject;
 
 /**
  * @class Transform : inheritance Component
@@ -27,6 +28,8 @@ public:
 
 	Tween*		m_tween;		//!< tween
 	
+	GameObject* m_Parent;	//!< 親オブジェクト
+
 private:
 	DirectX::XMFLOAT4X4 m_world;		//!< ワールド行列
 

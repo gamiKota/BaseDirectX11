@@ -94,6 +94,9 @@ public:
 	virtual void Draw();
 
 
+	virtual void OnCollision();
+
+
 	void SetImGuiVal();
 };
 

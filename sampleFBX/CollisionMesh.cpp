@@ -15,99 +15,57 @@
 using namespace DirectX;
 
 
-// このやり方じゃだめ
-// 後から回転成分を足すやり方じゃないとズレズレのズレ
 
-// 0の空間を基準で動かしてるので、
-// これを対象を基準とした空間にすれば解決しそう...？
-// 親子関係にしてローカルの値をぶち込む
-float3 GetVertexPos(float3 pos, float3 rotate, float3 scale, XMFLOAT4X4 *mxt) {
-	XMMATRIX matrix = XMLoadFloat4x4(mxt);
-	//matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(pos.x, pos.y, pos.z));
-	//matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(pos.x, pos.y, pos.z));
-	//matrix = XMMatrixMultiply(matrix, XMMatrixRotationRollPitchYaw(rotate.x, rotate.y, rotate.z));
-	//matrix = XMMatrixMultiply(matrix, XMMatrixScaling(scale.x, scale.y, scale.z));
-	XMFLOAT4X4 OutPos;
-	XMStoreFloat4x4(&OutPos, matrix);
-	return float3(OutPos._41, OutPos._42, OutPos._43);
+float3 GetVertexPos(float3 offsetPos, XMFLOAT4X4 *basisMtx) {
+	XMFLOAT4X4 mWorld;
+	XMMATRIX matrix = XMMatrixIdentity();
+	matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(offsetPos.x, offsetPos.y, offsetPos.z));
+	matrix *= XMLoadFloat4x4(basisMtx);
+	XMStoreFloat4x4(&mWorld, matrix);
+	return float3(mWorld._41, mWorld._42, mWorld._43);
 }
 
 
-// 普通にベクトルでやった方がいい説
+// メモ
+// 取り合えず今は無限平面
+// 線分要素にするのはmesh2
+// mesh1が無限平面
 
-
+// 平行なベクトルの外積の大きさは0
+// ポリゴンの法線ベクトルと線分の点から平面を貫通しているかどうかをチェック
+// ポリゴン平面までの距離から内分比を算出して貫通点の座標を確定
+// ポリゴン内部に貫通点が含まれるかをチェック
 bool CollisionMesh::isMesh2Mesh(Transform* mesh1, Transform* mesh2) {
 
-	// 平面上でしか計算出来てない
-	// 座標と拡縮から平面上での頂点座標を求める(回転なし状態)
-	// そこから回転を掛け合わせて現在の頂点位置を割り出す
+	bool result = false;
+	float3 pos[4];
+	GetVertex(mesh2, pos);
 
-	float3 pos1, pos2, pos3, pos4;
+	float3 vec0 = float3::Normalize(float3(mesh1->m_up.x, mesh1->m_up.z, mesh1->m_up.y));
+	float3 vec1[4];
+	for (int i = 0; i < 4; i++) {
+		vec1[i] = pos[i] - mesh1->m_position;
+	}
 
-	float3 ScaleHalf;
-	float3 rotate = float3(mesh2->m_rotate.x, mesh2->m_rotate.y, mesh2->m_rotate.z);
-	ScaleHalf.x = mesh2->m_scale.x * 0.5f;
-	ScaleHalf.y = mesh2->m_scale.y * 0.5f;
-	
-	pos1 = float3(mesh2->m_position.x - ScaleHalf.x, mesh2->m_position.y + ScaleHalf.y, 0.f);	// 左上
-	pos2 = float3(mesh2->m_position.x + ScaleHalf.x, mesh2->m_position.y + ScaleHalf.y, 0.f);	// 右上
-	pos3 = float3(mesh2->m_position.x - ScaleHalf.x, mesh2->m_position.y - ScaleHalf.y, 0.f);	// 左下
-	pos4 = float3(mesh2->m_position.x + ScaleHalf.x, mesh2->m_position.y + ScaleHalf.y, 0.f);	// 右下
+	if (float3::Dot(vec1[0], vec0) * float3::Dot(vec1[1], vec0) <= 0.f ||
+		float3::Dot(vec1[0], vec0) * float3::Dot(vec1[2], vec0) <= 0.f ||
+		float3::Dot(vec1[1], vec0) * float3::Dot(vec1[3], vec0) <= 0.f ||
+		float3::Dot(vec1[2], vec0) * float3::Dot(vec1[3], vec0) <= 0.f) {
+		result = true;
+	}
 
-	//pos1 = GetVertexPos(pos1, rotate);
-	//pos2 = GetVertexPos(pos2, rotate);
-	//pos3 = GetVertexPos(pos3, rotate);
-	//pos4 = GetVertexPos(pos4, rotate);
-
-
-	//float3 temp1 = obj->m_transform->m_position;
-	//float3 temp2 = m_transform->m_position;
-	//float angleX = -m_transform->m_rotate.x;
-	//float angleY = -m_transform->m_rotate.y;
-	//float angleZ = -m_transform->m_rotate.z;
-	//obj->m_transform->m_position.z = (temp1.z - temp2.z) * cosf(angleX) - (temp1.y - temp2.y) * sinf(angleX) + temp2.z;
-	//obj->m_transform->m_position.y = (temp1.z - temp2.z) * sinf(angleX) + (temp1.y - temp2.y) * cosf(angleX) + temp2.y;
-
-
-	return false;
+	return result;
 }
 
 
-// mesh1をmesh2の頂点座標に持っていく
-float3 CollisionMesh::test(Transform* mesh1, Transform* mesh2) {
-
-	// 座標を初期値空間にもってくる
-	float3 mesh1Pos = mesh1->m_position;
-	float3 mesh2Pos = mesh2->m_position;
-
-	float3 pos1, pos2, pos3, pos4;
-
-	float3 ScaleHalf;
-	float3 rotate = float3(mesh2->m_rotate.x, mesh2->m_rotate.y, mesh2->m_rotate.z);
-	ScaleHalf.x = mesh2->m_scale.x * 0.5f;
-	ScaleHalf.y = mesh2->m_scale.y * 0.5f;
-
-	pos1 = float3(mesh2Pos.x - ScaleHalf.x, mesh2Pos.y + ScaleHalf.y, mesh2Pos.z);	// 左上
-	pos2 = float3(mesh2Pos.x + ScaleHalf.x, mesh2Pos.y + ScaleHalf.y, mesh2Pos.z);	// 右上
-	pos3 = float3(mesh2Pos.x - ScaleHalf.x, mesh2Pos.y - ScaleHalf.y, mesh2Pos.z);	// 左下
-	pos4 = float3(mesh2Pos.x + ScaleHalf.x, mesh2Pos.y + ScaleHalf.y, mesh2Pos.z);	// 右下
-
-	//float3 temp1 = obj->m_transform->m_position;
-	//float3 temp2 = m_transform->m_position;
-	//float angleX = -m_transform->m_rotate.x;
-	//float angleY = -m_transform->m_rotate.y;
-	//float angleZ = -m_transform->m_rotate.z;
-	//obj->m_transform->m_position.z = (temp1.z - temp2.z) * cosf(angleX) - (temp1.y - temp2.y) * sinf(angleX) + temp2.z;
-	//obj->m_transform->m_position.y = (temp1.z - temp2.z) * sinf(angleX) + (temp1.y - temp2.y) * cosf(angleX) + temp2.y;
-
-	pos1 = GetVertexPos(pos1, rotate, ScaleHalf * 2.f, &mesh2->GetMatrix());
-	//pos2 = GetVertexPos(pos2, rotate, ScaleHalf * 2.f);
-	//pos3 = GetVertexPos(pos3, rotate, ScaleHalf * 2.f);
-	//pos4 = GetVertexPos(pos4, rotate, ScaleHalf * 2.f);
-
-	//pos1 = GetVertexPos()
-
-	return pos1;
+void CollisionMesh::GetVertex(Transform* mesh, float3 vertex[4]) {
+	// 頂点位置の取得
+	// 基準ワールド空間を直接対象のオブジェクトに指定するので、
+	// オフセット位置はUV座標になる
+	vertex[0] = GetVertexPos(float3(-0.5f,  0.5f, 0.f), &mesh->m_transform->GetMatrix()); // 左上
+	vertex[1] = GetVertexPos(float3( 0.5f,  0.5f, 0.f), &mesh->m_transform->GetMatrix()); // 右上
+	vertex[2] = GetVertexPos(float3(-0.5f, -0.5f, 0.f), &mesh->m_transform->GetMatrix()); // 左下
+	vertex[3] = GetVertexPos(float3( 0.5f, -0.5f, 0.f), &mesh->m_transform->GetMatrix()); // 右下
 }
 
 

@@ -10,8 +10,10 @@
 #include "Frame.h"
 #include "GameObject.h"
 #include "GameObjectMesh.h"
+#include "WaterSurface.h"
 #include "Transform.h"
 #include "Mesh.h"
+#include "CollisionMesh.h"
 #include "System.h"
 
 
@@ -27,21 +29,37 @@ void Drop::Start() {
 
 void Drop::Update() {
 
-	float a = GravityAcceleration * (m_time * m_time) * 0.5f;
-	m_transform->m_position.y -= a;
-	if (m_transform->m_position.y <= 0.f) {
-		// Žæ‚è‡‚¦‚¸”g‚Æ“–‚½‚Á‚½”»’è
-		// ‚Ç‚Ì”g‚É“–‚½‚Á‚½‚Ì‚©‚à”»’è‚µ‚½‚¢
-		m_isCollsion = true;
-		GameObjectMesh* mesh = dynamic_cast<GameObjectMesh*>(m_gameObject);
-		mesh->m_mesh.isDraw = false;
+	GameObjectMesh* mesh = dynamic_cast<GameObjectMesh*>(m_gameObject);
+	WaterSurface* waterSurface = dynamic_cast<WaterSurface*>(GameObject::Find("WaterSurface"));
+
+
+	if (m_isCollsion) {
 		m_influence -= 0.1f;
 		if (m_influence <= 0.f) {
 			m_influence = 0;
 		}
 	}
-	//m_posX = 0.5f * GravityAcceleration * (m_nTime * m_nTime);
-	// posY = 0.98f * (g_nTime * g_nTime) / 2.f;
+	else {
+		float a = GravityAcceleration * (m_time * m_time) * 0.5f;
+		m_transform->m_position.y -= a;
+	}
+
+	//if (m_transform->m_position.y <= 0.f) {
+	//	// Žæ‚è‡‚¦‚¸”g‚Æ“–‚½‚Á‚½”»’è
+	//	// ‚Ç‚Ì”g‚É“–‚½‚Á‚½‚Ì‚©‚à”»’è‚µ‚½‚¢
+	//	m_isCollsion = true;
+	//	m_influence -= 0.1f;
+	//	if (m_influence <= 0.f) {
+	//		m_influence = 0;
+	//	}
+	//}
+
+	if (waterSurface != nullptr && mesh != nullptr) {
+		if (CollisionMesh::isMesh2Mesh(waterSurface->m_transform, mesh->m_transform)) {
+			m_isCollsion = true;
+			mesh->m_mesh.isDraw = false;
+		}
+	}
 
 	m_time += Frame::GetInstance().GetDeltaTime();
 }
