@@ -29,6 +29,7 @@ void Enemy::Start() {
 	// ロックオンマーカーの追加
 	GameObjectUI* obj = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_MAIN, "EnemyIcon");
 	obj->AddComponent<TargetCtr>()->m_target = m_gameObject;
+	//obj->AddComponent<TargetCtr>()->m_colY = 0.f;
 	m_LockIcon = GameObject::Instantiate(obj);
 }
 

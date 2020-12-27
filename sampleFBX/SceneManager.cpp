@@ -13,7 +13,7 @@
 
 
 
-SceneManager::SceneManager() : m_scene(new TitleScene()) {
+SceneManager::SceneManager() : m_scene(new GameScene()) {
 
 }
 

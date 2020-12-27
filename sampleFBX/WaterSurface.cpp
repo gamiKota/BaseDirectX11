@@ -249,35 +249,35 @@ void WaterSurface::Uninit() {
 
 void WaterSurface::Update() {
 
-	//if (m_dropTime > 0.5f) {
-	//	for (int i = 0; i < MAX_DROP; i++) {
-	//
-	//		if (m_dropList[i] == nullptr) {
-	//
-	//			GameObjectMesh* obj = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_EXPLOSION, "Drop", "Drop");
-	//			GameObject::Instantiate(obj);
-	//			obj->m_transform->m_position = float3(0.f, 1000.f, 0.f);
-	//			obj->m_transform->m_scale = float3(50.f, 50.f, 50.f);
-	//			//obj->m_material->m_diffuse = XMFLOAT4(1.f, 1.f, 1.f, 0.f);
-	//
-	//			m_dropList[i] = obj->AddComponent<Drop>();
-	//
-	//			obj->m_transform->m_position.x =
-	//				(float)GetRandom((int)(m_transform->m_position.x - m_transform->m_scale.x * 0.4f),
-	//				(int)(m_transform->m_position.x + m_transform->m_scale.x * 0.4f));
-	//
-	//			obj->m_transform->m_position.z =
-	//				(float)GetRandom((int)(m_transform->m_position.z - m_transform->m_scale.y * 0.3f),
-	//				(int)(m_transform->m_position.z + m_transform->m_scale.y * 0.4f));
-	//
-	//			break;
-	//		}
-	//	}
-	//	m_dropTime = 0.f;
-	//}
-	//else {
-	//	m_dropTime += Frame::GetInstance().GetDeltaTime();
-	//}
+	if (m_dropTime > 0.5f) {
+		for (int i = 0; i < MAX_DROP; i++) {
+	
+			if (m_dropList[i] == nullptr) {
+	
+				GameObjectMesh* obj = new GameObjectMesh(E_MESH_TYPE::BILLBORAD, E_TEXTURE::E_TEXTURE_EXPLOSION, "Drop", "Drop");
+				GameObject::Instantiate(obj);
+				obj->m_transform->m_position = float3(0.f, 1000.f, 0.f);
+				obj->m_transform->m_scale = float3(50.f, 50.f, 50.f);
+				//obj->m_material->m_diffuse = XMFLOAT4(1.f, 1.f, 1.f, 0.f);
+	
+				m_dropList[i] = obj->AddComponent<Drop>();
+	
+				obj->m_transform->m_position.x =
+					(float)GetRandom((int)(m_transform->m_position.x - m_transform->m_scale.x * 0.4f),
+					(int)(m_transform->m_position.x + m_transform->m_scale.x * 0.4f));
+	
+				obj->m_transform->m_position.z =
+					(float)GetRandom((int)(m_transform->m_position.z - m_transform->m_scale.y * 0.3f),
+					(int)(m_transform->m_position.z + m_transform->m_scale.y * 0.4f));
+	
+				break;
+			}
+		}
+		m_dropTime = 0.f;
+	}
+	else {
+		m_dropTime += Frame::GetInstance().GetDeltaTime();
+	}
 
 
 	// z′ = (z − zo)cosθ − (y − yo)sinθ + zo

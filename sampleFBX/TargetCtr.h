@@ -16,12 +16,13 @@
 
 
 /**
- * @class Bullet : inheritance Character
+ * @class TargetCtr : inheritance Component
  */
 class TargetCtr : public Component {
 public:
-	GameObject* m_parent = nullptr;	//!< 親
-	GameObject* m_target = nullptr;	//!< ターゲット
+	GameObject* m_parent;	//!< 親
+	GameObject* m_target;	//!< ターゲット
+	float m_colY;
 
 public:
 	void Start();

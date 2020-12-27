@@ -19,11 +19,11 @@
 //********************************************************************************
 // マクロ・定数定義
 //********************************************************************************
-#define		SCREEN_WIDTH	(1280)				// ウインドウの幅
-#define		SCREEN_HEIGHT	(720)				// ウインドウの高さ
-#define		SCREEN_CENTER_X	(SCREEN_WIDTH/2)	// ウインドウの中心Ｘ座標
-#define		SCREEN_CENTER_Y	(SCREEN_HEIGHT/2)	// ウインドウの中心Ｙ座標
-#define		SCREEN_RATIO	// 画面比
+#define		SCREEN_WIDTH	(1280)							// ウインドウの幅
+#define		SCREEN_HEIGHT	(720)							// ウインドウの高さ
+#define		SCREEN_CENTER_X	(SCREEN_WIDTH/2)				// ウインドウの中心Ｘ座標
+#define		SCREEN_CENTER_Y	(SCREEN_HEIGHT/2)				// ウインドウの中心Ｙ座標
+#define		SCREEN_RATIO	(SCREEN_WIDTH / SCREEN_HEIGHT)	// 画面比
 
 
 /**

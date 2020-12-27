@@ -93,18 +93,18 @@ bool CollisionMesh::isMesh2Mesh(Transform* mesh1, Transform* mesh2) {
 	//	if ()
 	//}
 
-	if (InterPos.x == 0.f && InterPos.y == 0.f && InterPos.z == 0.f) {
-		PrintDebugProc("No InterPos\n");
-	}
-	else {
-		// 板を左回りで頂点と中心の内積を求める
-		// 無限平面との交点がポリゴン内にない場合、
-		// 頂点と中心の内積よりも角度が広がる
-		// 交点とのベクトルなので平面空間上で計算が出来る
-		
-
-		PrintDebugProc("InterPos = %.2f, %.2f, %.2f\n", InterPos.x, InterPos.y, InterPos.z);
-	}
+	//if (InterPos.x == 0.f && InterPos.y == 0.f && InterPos.z == 0.f) {
+	//	PrintDebugProc("No InterPos\n");
+	//}
+	//else {
+	//	// 板を左回りで頂点と中心の内積を求める
+	//	// 無限平面との交点がポリゴン内にない場合、
+	//	// 頂点と中心の内積よりも角度が広がる
+	//	// 交点とのベクトルなので平面空間上で計算が出来る
+	//	
+	//
+	//	PrintDebugProc("InterPos = %.2f, %.2f, %.2f\n", InterPos.x, InterPos.y, InterPos.z);
+	//}
 
 	return result;
 }

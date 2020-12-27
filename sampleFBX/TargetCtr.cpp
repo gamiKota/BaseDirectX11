@@ -22,15 +22,12 @@
 using namespace DirectX;
 
 
-typedef struct {
-	float3 pos;	// 変換座標
-	bool b;		// カメラ外
-} LockOnMarkerA;
+static const float CIRCLE_SIZE = 300.f;
 
 
 // ベクトルの長さを計算する
 float get_vector_length(float3 v) {
-	return powf((v.x * v.x) + (v.y * v.y) + (v.z * v.z), 0.5);
+	return powf((v.x * v.x) + (v.y * v.y) + (v.z * v.z), 0.5f);
 }
 
 // ベクトル内積
@@ -39,29 +36,8 @@ float dot_product(float3 vl, float3 vr) {
 }
 
 
-LockOnMarkerA LockOnMarker(Transform* target) {
-	LockOnMarkerA OutPos = { float3(), false };
-	
-	// カメラの向いてるベクトルと
-	// 対象物のカメラに対してのベクトルが正と負で
-	// カメラに対しての後ろ判定がとれそう
-	float3 CameraVec = GameObject::Find("Player")->m_transform->m_forward;
-	float3 TargetVec = float3::Normalize(CCamera::Get()->m_transform->m_position - target->m_transform->m_position);
-	// 二つのベクトルの長さを取得
-	float length_A = get_vector_length(CameraVec);
-	float length_B = get_vector_length(TargetVec);
-	//内積とベクトル長さを使ってcosθを求める
-	float cos_sita = dot_product(CameraVec, TargetVec) / (length_A * length_B);
-	//cosθからθを求める
-	float sita = acos(cos_sita);
-	//ラジアンでなく0～180の角度でほしい場合はコメント外す
-	sita = sita * 180.f / XM_PI;
-	
-	PrintDebugProc("sita = %.2f\n", sita);
-	if (sita < 90.f) {	// おおよそカメラの裏側
-		OutPos.b = true;
-	}
-
+float3 LockOnMarker(Transform* target) {
+	float3 OutPos = float3();
 
 	// ビュー行列と射影行列の取得
 	XMMATRIX view = XMLoadFloat4x4(&CCamera().Get()->GetView());
@@ -86,9 +62,12 @@ LockOnMarkerA LockOnMarker(Transform* target) {
 	vViewProj = XMVector3Transform(vViewProj, proj);
 
 	// zで割って-1~1の範囲に収める(正規化)
+	// zを正規化しないと負の値か正の値でカメラの後ろ判定がとれそう
 	XMFLOAT3 norPos;
 	XMStoreFloat3(&norPos, vViewProj);
-	norPos.x /= norPos.z; norPos.y /= norPos.z; norPos.z /= norPos.z;
+	norPos.x /= norPos.z; norPos.y /= norPos.z;
+	//norPos.z /= norPos.z;
+
 	XMVECTOR vec = XMLoadFloat3(&norPos);
 	// スクリーン変換
 	vScreenPos = XMVector3Transform(vec, viewport);
@@ -96,12 +75,44 @@ LockOnMarkerA LockOnMarker(Transform* target) {
 	XMFLOAT3 ScreenPos;
 	XMStoreFloat3(&ScreenPos, vScreenPos);
 
-	OutPos.pos.x =  ScreenPos.x - SCREEN_CENTER_X;
-	OutPos.pos.y = -ScreenPos.y + SCREEN_CENTER_Y;
-	OutPos.pos.z =  ScreenPos.z;
+	OutPos.x =  ScreenPos.x - SCREEN_CENTER_X;
+	OutPos.y = -ScreenPos.y + SCREEN_CENTER_Y;
+	OutPos.z =  ScreenPos.z;
+	PrintDebugProc("z = %.2f\n", OutPos.z);
 
 	return OutPos;
 }
+float3 LockOnMarker(float3 target) {
+	float3 OutPos = float3();
+	XMMATRIX view = XMLoadFloat4x4(&CCamera().Get()->GetView());
+	XMMATRIX proj = XMLoadFloat4x4(&CCamera().Get()->GetProj());
+	float w = (float)SCREEN_CENTER_X;
+	float h = (float)SCREEN_CENTER_Y;
+	XMMATRIX viewport = XMLoadFloat4x4(&XMFLOAT4X4(
+		w,  0, 0, 0,
+		0, -h, 0, 0,
+		0,  0, 1, 0,
+		w,  h, 0, 1
+	));
+	XMVECTOR vScreenPos;
+	XMVECTOR vViewProj = XMLoadFloat3(&target);
+	vViewProj = XMVector3Transform(vViewProj, view);
+	vViewProj = XMVector3Transform(vViewProj, proj);
+	XMFLOAT3 norPos;
+	XMStoreFloat3(&norPos, vViewProj);
+	norPos.x /= norPos.z; norPos.y /= norPos.z;
+	//norPos.z /= norPos.z;
+	XMVECTOR vec = XMLoadFloat3(&norPos);
+	vScreenPos = XMVector3Transform(vec, viewport);
+	XMFLOAT3 ScreenPos;
+	XMStoreFloat3(&ScreenPos, vScreenPos);
+	OutPos.x = ScreenPos.x - SCREEN_CENTER_X;
+	OutPos.y = -ScreenPos.y + SCREEN_CENTER_Y;
+	OutPos.z = ScreenPos.z;
+	PrintDebugProc("z = %.2f\n", OutPos.z);
+	return OutPos;
+}
+
 
 
 void TargetCtr::Start() {
@@ -109,6 +120,7 @@ void TargetCtr::Start() {
 	m_transform->m_scale = float3(100.f, 100.f, 0.f);
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
 	obj->m_shader = E_SHADER_2D::_COLOR;
+
 
 	if (m_target == nullptr) {
 		m_target = GameObject::FindGameObjectWithTag("Enemy");
@@ -118,61 +130,95 @@ void TargetCtr::Start() {
 
 void TargetCtr::Update() {
 	// ロックオンマーカー
-	LockOnMarkerA marker = LockOnMarker(m_target->m_transform);
-	m_transform->m_position = marker.pos;
+	float3 marker = LockOnMarker(m_target->m_transform);
+	m_transform->m_position = marker;
 
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
-	// 画面外
-	// 挙動が可笑しい原因
-	// あくまでも座標は3Dオブジェクトを追ってるからスクリーン座標へ変換した時の値が望んでるものとは限らない
-	// 取り合えずくそコードで実装
-	if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X ||
-		m_transform->m_position.x - m_transform->m_scale.x * 0.5f >  (float)SCREEN_CENTER_X	||
-		m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y ||
-		m_transform->m_position.y + m_transform->m_scale.y * 0.5f >  (float)SCREEN_CENTER_Y) {
 
-		if (marker.b) {	// カメラ外
-			float3 pos = CCamera::Get()->m_transform->m_position - m_target->m_transform->m_position;
-			float3 vec = float3::Normalize(pos);
-			if (vec.y >= vec.z) {
-				if (pos.y > 0) {
-					m_transform->m_position.y += SCREEN_HEIGHT;
-				}
-				else {
-					m_transform->m_position.y -= SCREEN_HEIGHT;
-				}
+	// メモ
+	// メインターゲット以外のロックオンマーカーの表示は、
+	// サブターゲットはメインターゲットを切り替えて1秒、もしくは何かしらを攻撃している敵
+	// 画面外ミニロックオンマーカーは何かしらを攻撃している時、被弾時にはATTACKに切り替えて1秒表示
+	if (marker.z < 0.f ||
+		(m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X ||
+		 m_transform->m_position.x - m_transform->m_scale.x * 0.5f >  (float)SCREEN_CENTER_X ||
+		 m_transform->m_position.y + m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y ||
+		 m_transform->m_position.y - m_transform->m_scale.y * 0.5f >  (float)SCREEN_CENTER_Y)) {	// 画面外
+		// プレイヤーと相手の座標からベクトルを求める
+		// その位置関係をスクリーンに持ってくる
+		// 真上から見る(ミニマップ？)
+		// 真上から見て位置関係(角度)を割り出す(現状は円表示になる)
+		// 画面比で割ったらなんか動いたっぽい
+		// 画面内に収まるように正規化
+		// 回転情報は取り合えずプレイヤーのY軸回転を持ってくる(もっと安全な情報が良い)
+		// ロックオン状態だと注視点がプレイヤー座標からターゲット座標に切り替わるため、
+		// 視覚的にはズレた様に表示されてしまう
+
+		// ロックオン時は3D座標上でベクトルを出してそっからスクリーン変換が一番簡単そう
+
+		GameObject* player = GameObject::Find("Player");
+		CCamera* camera = CCamera::Get();
+
+		// 座標の初期化
+		m_transform->m_position = float3();
+		float tempX;
+		float tempZ;
+		float vecX;
+		float vecZ;
+		GameObject* playerTarget = player->GetComponent<PlayerCtr>()->m_target;
+		//float3 playerMaker = LockOnMarker(player->m_transform);
+
+		// プレイヤーのターゲット指定状態で処理を分ける
+		// ターゲットと密着してる時に挙動が可笑しい
+		if (playerTarget != nullptr) {
+			// 3D上でのベクトル
+			float3 vec3D = m_target->m_transform->m_position - playerTarget->m_transform->m_position;
+			// 正規化
+			vec3D = float3::Normalize(vec3D);
+			// 座標ひ変換
+			float3 pos3D = playerTarget->m_transform->m_position;
+			pos3D += vec3D;
+			// スクリーン座標に変換
+			pos3D = LockOnMarker(pos3D);
+			// 補正(ここ汚ないし原因もわかんない)
+			if (pos3D.y >= 0.f) {
+				pos3D.y = m_colY;
 			}
 			else {
-				if (pos.z > 0) {	// 上
-					m_transform->m_position.x += SCREEN_HEIGHT;
-				}
-				else {
-					m_transform->m_position.x -= SCREEN_HEIGHT;
-				}
+				m_colY = pos3D.y;
 			}
+			PrintDebugProc("pos2D = %.2f, %.2f, %.2f\n", pos3D.x, pos3D.y, pos3D.z);
+			// 画面比に合わせたベクトルに変換
+			pos3D *= (float)SCREEN_RATIO;
+			// 正規化
+			pos3D = float3::Normalize(float3(pos3D.x, pos3D.y, 0.f)) * CIRCLE_SIZE;
+			// 座標に反映
+			m_transform->m_position += pos3D;
+			// ターゲット方向の更新
+			m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
 		}
-		
-		{
-			if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X) {
-				m_transform->m_position.x = -(float)SCREEN_CENTER_X + m_transform->m_scale.x * 0.5f;
-			}
-			if (m_transform->m_position.x - m_transform->m_scale.x * 0.5f > (float)SCREEN_CENTER_X) {
-				m_transform->m_position.x = (float)SCREEN_CENTER_X - m_transform->m_scale.x * 0.5f;
-			}
-			if (m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y) {
-				m_transform->m_position.y = -(float)SCREEN_CENTER_Y + m_transform->m_scale.y * 0.5f;
-			}
-			if (m_transform->m_position.y + m_transform->m_scale.y * 0.5f > (float)SCREEN_CENTER_Y) {
-				m_transform->m_position.y = (float)SCREEN_CENTER_Y - m_transform->m_scale.y * 0.5f;
-			}
+		else {
+			// 二次元ベクトルに変換
+			tempX = m_target->m_transform->m_position.x - player->m_transform->m_position.x;
+			tempZ = m_target->m_transform->m_position.z - player->m_transform->m_position.z;
+			vecX = tempX * cosf(player->m_transform->m_rotate.y) - tempZ * sinf(player->m_transform->m_rotate.y);
+			vecZ = tempX * sinf(player->m_transform->m_rotate.y) + tempZ * cosf(player->m_transform->m_rotate.y);
+			// 画面比に合わせたベクトルに補正
+			vecX *= (float)SCREEN_RATIO;
+			vecZ *= (float)SCREEN_RATIO;
+			// 正規化
+			float3 vec = float3::Normalize(float3(vecX, vecZ, 0.f)) * CIRCLE_SIZE;
+			// 座標に反映
+			m_transform->m_position += vec;
+			// ターゲット方向の更新
+			m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
 		}
+
 		obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
 		obj->m_color = float3(1.f, 0.f, 0.f);
 		obj->m_layer = E_LAYER::UI;
-		m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
 	}
-	// 画面内
-	else {
+	else {	// 画面内
 		if (m_target == GameObject::Find("Player")->GetComponent<PlayerCtr>()->m_target) {
 			obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_MAIN;
 			obj->m_color = float3(1.f, 0.f, 0.f);
@@ -187,6 +233,72 @@ void TargetCtr::Update() {
 		}
 		m_transform->m_rotate.z = 0.f;
 	}
+
+	// 画面外
+	// 挙動が可笑しい原因
+	// あくまでも座標は3Dオブジェクトを追ってるからスクリーン座標へ変換した時の値が望んでるものとは限らない
+	// 取り合えずくそコードで実装
+	//if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X ||
+	//	m_transform->m_position.x - m_transform->m_scale.x * 0.5f >  (float)SCREEN_CENTER_X	||
+	//	m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y ||
+	//	m_transform->m_position.y + m_transform->m_scale.y * 0.5f >  (float)SCREEN_CENTER_Y) {
+	//
+	//	if (marker.z) {	// カメラ外
+	//		float3 pos = CCamera::Get()->m_transform->m_position - m_target->m_transform->m_position;
+	//		float3 vec = float3::Normalize(pos);
+	//		if (vec.y >= vec.z) {
+	//			if (pos.y > 0) {
+	//				m_transform->m_position.y += SCREEN_HEIGHT;
+	//			}
+	//			else {
+	//				m_transform->m_position.y -= SCREEN_HEIGHT;
+	//			}
+	//		}
+	//		else {
+	//			if (pos.z > 0) {	// 上
+	//				m_transform->m_position.x += SCREEN_HEIGHT;
+	//			}
+	//			else {
+	//				m_transform->m_position.x -= SCREEN_HEIGHT;
+	//			}
+	//		}
+	//	}
+	//	
+	//	{
+	//		if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X) {
+	//			m_transform->m_position.x = -(float)SCREEN_CENTER_X + m_transform->m_scale.x * 0.5f;
+	//		}
+	//		if (m_transform->m_position.x - m_transform->m_scale.x * 0.5f > (float)SCREEN_CENTER_X) {
+	//			m_transform->m_position.x = (float)SCREEN_CENTER_X - m_transform->m_scale.x * 0.5f;
+	//		}
+	//		if (m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y) {
+	//			m_transform->m_position.y = -(float)SCREEN_CENTER_Y + m_transform->m_scale.y * 0.5f;
+	//		}
+	//		if (m_transform->m_position.y + m_transform->m_scale.y * 0.5f > (float)SCREEN_CENTER_Y) {
+	//			m_transform->m_position.y = (float)SCREEN_CENTER_Y - m_transform->m_scale.y * 0.5f;
+	//		}
+	//	}
+	//	obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
+	//	obj->m_color = float3(1.f, 0.f, 0.f);
+	//	obj->m_layer = E_LAYER::UI;
+	//	m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
+	//}
+	//// 画面内
+	//else {
+	//	if (m_target == GameObject::Find("Player")->GetComponent<PlayerCtr>()->m_target) {
+	//		obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_MAIN;
+	//		obj->m_color = float3(1.f, 0.f, 0.f);
+	//		m_transform->m_scale = float3(100.f, 100.f, 0.f);
+	//		obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 2);
+	//	}
+	//	else {
+	//		obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_SUB;
+	//		obj->m_color = float3(1.f, 0.6f, 0.f);
+	//		m_transform->m_scale = float3(80.f, 80.f, 0.f);
+	//		obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 1);
+	//	}
+	//	m_transform->m_rotate.z = 0.f;
+	//}
 }
 
 

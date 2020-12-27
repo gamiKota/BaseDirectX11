@@ -21,6 +21,12 @@
 
 
 
+// メモ
+// Start関数はUpdate関数の最初に呼ばれるもの
+// ステート管理
+
+
+
 bool GameObject3DKdSort(GameObject* gameObject1, GameObject* gameObject2) {
 	GameObject3D* temp1 = dynamic_cast<GameObject3D*>(gameObject1);
 	GameObject3D* temp2 = dynamic_cast<GameObject3D*>(gameObject2);
@@ -100,18 +106,18 @@ void Scene::Update() {
 			}
 
 			// CollisionMesh
-			if (dynamic_cast<GameObjectMeshBase*>(temp1) && dynamic_cast<GameObjectMeshBase*>(temp2)) {
-				if (CollisionMesh::isMesh2Mesh(
-					dynamic_cast<GameObjectMeshBase*>(temp1)->m_transform,
-					dynamic_cast<GameObjectMeshBase*>(temp2)->m_transform)
-					) {
-					// 当たった時に呼ばれる関数
-					temp1->OnCollision(temp2);
-					temp2->OnCollision(temp1);
-					PrintDebugProc("aaaaaaaaaaaaaaaaaaaa\n");
-				}
-				PrintDebugProc("bbbbbbbbbbbbbbbbbbbb\n");
-			}
+			//if (dynamic_cast<GameObjectMeshBase*>(temp1) && dynamic_cast<GameObjectMeshBase*>(temp2)) {
+			//	if (CollisionMesh::isMesh2Mesh(
+			//		dynamic_cast<GameObjectMeshBase*>(temp1)->m_transform,
+			//		dynamic_cast<GameObjectMeshBase*>(temp2)->m_transform)
+			//		) {
+			//		// 当たった時に呼ばれる関数
+			//		temp1->OnCollision(temp2);
+			//		temp2->OnCollision(temp1);
+			//		PrintDebugProc("aaaaaaaaaaaaaaaaaaaa\n");
+			//	}
+			//	PrintDebugProc("bbbbbbbbbbbbbbbbbbbb\n");
+			//}
 		}
 	}
 
