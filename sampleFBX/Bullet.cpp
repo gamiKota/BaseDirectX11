@@ -36,7 +36,7 @@ void Bullet::Start() {
 	m_status->m_HP = 10.f;
 	m_status->m_AttakPower = 100.f;
 	m_status->m_HitStop = 5.f * Frame::GetInstance().GetFrame();
-	m_rigidbody->m_weight = E_WEIGHT::_0;
+	m_rigidbody->m_weight = E_WEIGHT::_3;
 }
 
 

@@ -25,18 +25,8 @@ using namespace DirectX;
 static const float CIRCLE_SIZE = 300.f;
 
 
-// ベクトルの長さを計算する
-float get_vector_length(float3 v) {
-	return powf((v.x * v.x) + (v.y * v.y) + (v.z * v.z), 0.5f);
-}
 
-// ベクトル内積
-float dot_product(float3 vl, float3 vr) {
-	return vl.x * vr.x + vl.y * vr.y + vl.z * vr.z;
-}
-
-
-float3 LockOnMarker(Transform* target) {
+float3 LockOnMarker(float3 target) {
 	float3 OutPos = float3();
 
 	// ビュー行列と射影行列の取得
@@ -55,7 +45,7 @@ float3 LockOnMarker(Transform* target) {
 	));
 
 	XMVECTOR vScreenPos;
-	XMVECTOR vViewProj = XMLoadFloat3(&target->m_position);
+	XMVECTOR vViewProj = XMLoadFloat3(&target);
 
 	// ビュー変換とプロジェクション変換
 	vViewProj = XMVector3Transform(vViewProj, view);
@@ -78,37 +68,7 @@ float3 LockOnMarker(Transform* target) {
 	OutPos.x =  ScreenPos.x - SCREEN_CENTER_X;
 	OutPos.y = -ScreenPos.y + SCREEN_CENTER_Y;
 	OutPos.z =  ScreenPos.z;
-	PrintDebugProc("z = %.2f\n", OutPos.z);
 
-	return OutPos;
-}
-float3 LockOnMarker(float3 target) {
-	float3 OutPos = float3();
-	XMMATRIX view = XMLoadFloat4x4(&CCamera().Get()->GetView());
-	XMMATRIX proj = XMLoadFloat4x4(&CCamera().Get()->GetProj());
-	float w = (float)SCREEN_CENTER_X;
-	float h = (float)SCREEN_CENTER_Y;
-	XMMATRIX viewport = XMLoadFloat4x4(&XMFLOAT4X4(
-		w,  0, 0, 0,
-		0, -h, 0, 0,
-		0,  0, 1, 0,
-		w,  h, 0, 1
-	));
-	XMVECTOR vScreenPos;
-	XMVECTOR vViewProj = XMLoadFloat3(&target);
-	vViewProj = XMVector3Transform(vViewProj, view);
-	vViewProj = XMVector3Transform(vViewProj, proj);
-	XMFLOAT3 norPos;
-	XMStoreFloat3(&norPos, vViewProj);
-	norPos.x /= norPos.z; norPos.y /= norPos.z;
-	//norPos.z /= norPos.z;
-	XMVECTOR vec = XMLoadFloat3(&norPos);
-	vScreenPos = XMVector3Transform(vec, viewport);
-	XMFLOAT3 ScreenPos;
-	XMStoreFloat3(&ScreenPos, vScreenPos);
-	OutPos.x = ScreenPos.x - SCREEN_CENTER_X;
-	OutPos.y = -ScreenPos.y + SCREEN_CENTER_Y;
-	OutPos.z = ScreenPos.z;
 	return OutPos;
 }
 
@@ -128,7 +88,7 @@ void TargetCtr::Start() {
 
 void TargetCtr::Update() {
 	// ロックオンマーカー
-	float3 marker = LockOnMarker(m_target->m_transform);
+	float3 marker = LockOnMarker(m_target->m_transform->m_position);
 	m_transform->m_position = marker;
 
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);

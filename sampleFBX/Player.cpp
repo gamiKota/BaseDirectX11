@@ -156,7 +156,7 @@ void PlayerCtr::Operation() {
 	// ホーミングミサイル発射
 	if (Input::isTrigger(VK_SPACE)) {
 		GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "Player");
-		Instantiate(obj, m_transform->m_position + m_transform->m_forward * 100.f, m_transform->m_rotate);
+		Instantiate(obj, m_transform->m_position + m_transform->m_forward * 200.f, m_transform->m_rotate);
 		obj->AddComponent<Bullet>();
 	}
 }
