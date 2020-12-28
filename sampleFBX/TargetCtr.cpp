@@ -109,10 +109,8 @@ float3 LockOnMarker(float3 target) {
 	OutPos.x = ScreenPos.x - SCREEN_CENTER_X;
 	OutPos.y = -ScreenPos.y + SCREEN_CENTER_Y;
 	OutPos.z = ScreenPos.z;
-	PrintDebugProc("z = %.2f\n", OutPos.z);
 	return OutPos;
 }
-
 
 
 void TargetCtr::Start() {
@@ -181,13 +179,12 @@ void TargetCtr::Update() {
 			// スクリーン座標に変換
 			pos3D = LockOnMarker(pos3D);
 			// 補正(ここ汚ないし原因もわかんない)
-			if (pos3D.y >= 0.f) {
+			if (pos3D.y > 1.f) {
 				pos3D.y = m_colY;
 			}
 			else {
 				m_colY = pos3D.y;
 			}
-			PrintDebugProc("pos2D = %.2f, %.2f, %.2f\n", pos3D.x, pos3D.y, pos3D.z);
 			// 画面比に合わせたベクトルに変換
 			pos3D *= (float)SCREEN_RATIO;
 			// 正規化
