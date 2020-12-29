@@ -30,6 +30,7 @@ void PlayerState::Idol::Start() {
 void PlayerState::Idol::Update() {
 	// ‰½‚à‚µ‚È‚¢
 	PrintDebugProc("Idol::Update\n");
+	main->m_transform->m_position = float3();
 }
 
 
@@ -45,6 +46,7 @@ void PlayerState::Move::Start() {
 
 void PlayerState::Move::Update() {
 	PrintDebugProc("Move::Update\n");
+	//main->m_transform->m_position = float3();
 }
 
 
