@@ -52,6 +52,7 @@
 #include "Rigidbody.h"	// 物理エンジン機能
 #include "MeshBullet.h"	// メッシュ弾
 #include "TargetCtr.h"	// ロックオンマーカー
+#include "PlayerState.h"
 // システム
 #include "System.h"	// メモリ監視
 
@@ -98,7 +99,7 @@ void GameScene::Init() {
 	// 自機
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player", "Player");
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, -200.f);
-	m_object3D->AddComponent<PlayerCtr>();
+	m_object3D->AddComponent<PlayerMgr>();
 	m_object3D->m_shader = E_SHADER_TOON;
 	m_listObject.push_back(m_object3D);
 
@@ -183,6 +184,9 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_LAND;
 	m_listObject.push_back(m_object3D);
+
+
+	//PlayerState state;
 
 	// push_backの順番でUIの描画の描画順が変わる
 	// 最初に背景などのUI

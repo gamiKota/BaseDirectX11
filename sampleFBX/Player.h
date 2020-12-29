@@ -23,9 +23,9 @@ static const float VAL_MOVE_PLAYER = 0.f;
 
 
 /**
- * @class Player : inheritance Character
+ * @class PlayerMgr : inheritance Character
  */
-class PlayerCtr : public Character
+class PlayerMgr : public Character
 {
 public:
 	float3			m_vMove;	//!< ˆÚ“®—Ê

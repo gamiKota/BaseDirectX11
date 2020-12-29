@@ -123,7 +123,7 @@ void TargetCtr::Update() {
 		float tempZ;
 		float vecX;
 		float vecZ;
-		GameObject* playerTarget = player->GetComponent<PlayerCtr>()->m_target;
+		GameObject* playerTarget = player->GetComponent<PlayerMgr>()->m_target;
 		//float3 playerMaker = LockOnMarker(player->m_transform);
 
 		// プレイヤーのターゲット指定状態で処理を分ける
@@ -176,7 +176,7 @@ void TargetCtr::Update() {
 		obj->m_layer = E_LAYER::UI;
 	}
 	else {	// 画面内
-		if (m_target == GameObject::Find("Player")->GetComponent<PlayerCtr>()->m_target) {
+		if (m_target == GameObject::Find("Player")->GetComponent<PlayerMgr>()->m_target) {
 			obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_MAIN;
 			obj->m_color = float3(1.f, 0.f, 0.f);
 			m_transform->m_scale = float3(100.f, 100.f, 0.f);

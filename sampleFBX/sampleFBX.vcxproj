@@ -185,10 +185,12 @@
     <ClCompile Include="MeshBullet.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderBuffer.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="Status.cpp" />
     <ClCompile Include="TargetCtr.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -253,10 +255,12 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshBullet.h" />
     <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="PlayerState.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderBuffer.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="TargetCtr.h" />
     <ClInclude Include="TextureManager.h" />

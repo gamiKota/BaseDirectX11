@@ -15,6 +15,7 @@
 #include "Status.h"
 #include "Collision.h"
 #include "Rigidbody.h"
+#include "PlayerState.h"
 #include "Tween.h"
 #include "debugproc.h"
 #include "imgui.h"
@@ -35,9 +36,10 @@ static const float VAL_ANGLE_Z	= 2.f;
 static const float MAX_ANGLE_Z	= 30.f;
 
 
-void PlayerCtr::Start() {
+void PlayerMgr::Start() {
 	// Characterクラスの初期化
 	Character::Init();
+	m_gameObject->AddComponent<PlayerState>();
 
 	// 変数の初期化
 	m_roll = 0.f;
@@ -47,7 +49,7 @@ void PlayerCtr::Start() {
 }
 
 
-void PlayerCtr::Update() {
+void PlayerMgr::Update() {
 	
 	Tween tween;
 
@@ -60,12 +62,12 @@ void PlayerCtr::Update() {
 }
 
 
-void PlayerCtr::Uninit() {
+void PlayerMgr::Uninit() {
 }
 
 
 
-void PlayerCtr::Operation() {
+void PlayerMgr::Operation() {
 
 	// ターゲットロックオン
 	if (Input::isTrigger('T')) {
@@ -162,12 +164,12 @@ void PlayerCtr::Operation() {
 }
 
 
-void PlayerCtr::OnCollision(GameObject* obj) {
+void PlayerMgr::OnCollision(GameObject* obj) {
 
 }
 
 
-void PlayerCtr::SetImGuiVal() {
+void PlayerMgr::SetImGuiVal() {
 #if _DEBUG
 	
 #endif
