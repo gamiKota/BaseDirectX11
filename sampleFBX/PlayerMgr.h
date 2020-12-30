@@ -28,9 +28,6 @@ public:
 	void Uninit();
 	void OnCollision(GameObject* obj);
 	void SetImGuiVal();
-
-private:
-	void Operation();
 };
 
 
