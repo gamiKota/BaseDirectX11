@@ -25,8 +25,8 @@
 template<typename T>
 class State {
 private:
-
-	T m_id;	//!< 現在の状態(列挙体の要素)
+	bool m_active;	//!< ステート有効管理
+	T m_id;			//!< 現在の状態(列挙体の要素)
 
 public:
 
@@ -69,6 +69,16 @@ public:
 	 */
 	virtual void OnDestoy() {}
 
+
+	/**
+	 * @brief Active値をセット
+	 */
+	void SetActive(bool active) { m_active = active; }
+
+	/**
+	 * @brief Active値の取得
+	 */
+	bool GetActive() { return m_active; }
 };
 
 
@@ -76,14 +86,13 @@ public:
  * @class StateMachine<typename T>
  * @brief 状態管理クラス
  * @details テンプレートは列挙体を想定
+ *			現在有効な状態が複数存在する場合を想定
  */
 template<typename T>
 class StateMachine : public Component {
 
 private:
-
 	std::list<State<T>*>	m_stateList;	//!< 状態リスト
-	State<T>*				m_state;		//!< 現在の状態
 
 public:
 
@@ -112,35 +121,45 @@ public:
 	 * @更新処理
 	 */
 	void Update() {
-		if (m_state == nullptr) {
-			return;
+		for (auto state : m_stateList) {
+			if (state->GetActive()) {	// アクティブ値が有効の状態
+				state->Update();	// 更新処理
+			}
 		}
-		m_state->Update();
 	}
 	
 	/**
 	 * @brief 現在の状態のIDの取得
 	 * @return 現在の状態のID
 	 */
-	const T GetCurrentStateName() const {
-		if (m_state == nullptr) {
-			return nullptr;
+	const bool GetCurrentState(T stateID) const {
+		for (auto state : m_stateList) {
+			if (state->Id() == stateID && state->GetActive()) {
+				return true;	// 状態が有効
+			}
+			else if (state->Id() == stateID && !state->GetActive())  {
+				return false;	// 状態が無効
+			}
 		}
-		return m_state->Id();	// 列挙体の要素を返す
+		return false;	// 状態がリストに登録されてない
 	}
 	
 	/**
-	 * @brief 指定の状態へ移行
-	 * @return 移行先の状態ID
+	 * @brief 指定の状態のアクティブ設定
+	 * @param[in] アクティブを更新したい状態
+	 * @param[in] アクティブ値
 	 */
-	void GoToState(T nextStateId) {
+	void SetStateActive(T stateID, bool active) {
 		for (auto state : m_stateList) {
-			if (state->Id() == nextStateId) {
-				if (m_state != nullptr) {
-					m_state->OnDestoy();
+			if (state->Id() == stateID && state->GetActive() != active) {	// リストに状態が登録されて、Active状態の更新がかかる場合
+				state->SetActive(active);
+				if (active) {	// 無効から有効に切り替え
+					state->Start();
 				}
-				m_state = state;
-				m_state->Start();
+				else {	// 有効から無効に切り替え
+					state->OnDestoy();
+				}
+				break;
 			}
 		}
 	}
@@ -148,14 +167,12 @@ public:
 	/**
 	 * @brief 状態の追加
 	 * @param[in] 追加する状態
-	 * @param[in] 現在の状態を第一引数の状態に更新
+	 * @param[in] 第一引数の状態のアクティブ値の初期値
 	 */
-	void AddState(State<T>* state, bool isNextState = false) {
+	void AddState(State<T>* state, bool active = false) {
 		if (state == nullptr)	return;
 		m_stateList.push_back(state);
-		if (isNextState) {
-			GoToState(state->Id());
-		}
+		SetStateActive(state->Id(), active);
 	}
 };
 

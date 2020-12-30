@@ -12,7 +12,7 @@
 #include "SceneManager.h"
 #include "Collision.h"
 #include "Rigidbody.h"
-#include "Player.h"
+#include "PlayerMgr.h"
 #include "Status.h"
 #include "Score.h"
 #include "Explosion.h"

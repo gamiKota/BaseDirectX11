@@ -8,7 +8,7 @@
  */
 #include "FixedEnemy.h"
 #include "GameObject3D.h"
-#include "Player.h"
+#include "PlayerMgr.h"
 #include "Status.h"
 #include "Collision.h"
 #include "Transform.h"

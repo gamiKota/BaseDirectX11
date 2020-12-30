@@ -6,53 +6,190 @@
 /**
  * @include
  */
+// 自身の宣言先
 #include "PlayerState.h"
+// オブジェクトシステム
 #include "Transform.h"
 #include "GameObject.h"
+#include "GameObject3D.h"
+// コンポーネント
+#include "Bullet.h"
+// システム
 #include "debugproc.h"
 #include "System.h"
 
 
+using namespace DirectX;
 
+
+/**
+ * @constant
+ */
+static const float SPEED = 15.0f;	// 速さ
+static const float VAL_ANGLE_Z = 2.f;
+static const float MAX_ANGLE_Z = 30.f;
+
+
+// ステートマシンの初期化
 void PlayerState::Initialize() {
 	// 状態の追加
-	StateMachine::AddState(new PlayerState::Idol(this));
-	StateMachine::AddState(new PlayerState::Move(this), true);
+	StateMachine::AddState(new PlayerState::Idol(this), true);
+	StateMachine::AddState(new PlayerState::Move(this));
+	StateMachine::AddState(new PlayerState::TargetOn(this));
+	StateMachine::AddState(new PlayerState::TargetOff(this), true);
+	StateMachine::AddState(new PlayerState::AttackBullet(this));
+
+	// 変数の初期化
+	m_roll = 0.f;
+}
+
+// 状態に依存しない共通処理
+void PlayerState::Update() {
+	StateMachine::Update();
+	m_transform->m_rotate.z = XMConvertToRadians(m_roll);
 }
 
 
-
+/**************************************************************************************************
+ * @state 静止
+ *************************************************************************************************/
 void PlayerState::Idol::Start() {
-	// 何もしない
+	main->SetStateActive(PLAYER_STATE::MOVE, false);
 }
-
 
 void PlayerState::Idol::Update() {
-	// 何もしない
-	PrintDebugProc("Idol::Update\n");
-	main->m_transform->m_position = float3();
+	if (main->m_roll > 0.f) {
+		main->m_roll -= VAL_ANGLE_Z * 0.5f;
+	}
+	else if (main->m_roll < 0.f) {
+		main->m_roll += VAL_ANGLE_Z * 0.5f;
+	}
 }
-
 
 void PlayerState::Idol::OnDestoy() {
-	// 何もしない
 }
 
 
+/**************************************************************************************************
+ * @state 移動
+ *************************************************************************************************/
 void PlayerState::Move::Start() {
-	// 何もしない
+	main->SetStateActive(PLAYER_STATE::IDOL, false);
 }
-
 
 void PlayerState::Move::Update() {
-	PrintDebugProc("Move::Update\n");
-	//main->m_transform->m_position = float3();
-}
+	// モデル姿勢に依存しない平行移動
+	XMFLOAT4X4 mtx = XMFLOAT4X4();
+	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(main->m_transform->m_rotate.x, main->m_transform->m_rotate.y, 0.f));
+	float3 right = float3(mtx._11, mtx._12, mtx._13);
+	float3 up = float3(mtx._21, mtx._22, mtx._23);
+	float3 forward = float3(mtx._31, mtx._32, mtx._33);
 
+	// Z軸移動
+	if (main->m_movement.z > 0.f) {
+		main->m_transform->m_position += forward * SPEED;
+	}
+	else if (main->m_movement.z < 0.f) {
+		main->m_transform->m_position -= forward * SPEED;
+	}
+	// X軸移動
+	if (main->m_movement.x > 0.f) {
+		main->m_transform->m_position += right * SPEED;
+		if (main->m_roll >= -MAX_ANGLE_Z)
+			main->m_roll -= VAL_ANGLE_Z;
+	}
+	else if (main->m_movement.x < 0.f) {
+		main->m_transform->m_position -= right * SPEED;
+		if (main->m_roll <= MAX_ANGLE_Z)
+			main->m_roll += VAL_ANGLE_Z;
+	}
+	// Y軸移動(ターゲットの方に向いてるのでy要素で直接移動処理)
+	if (main->m_movement.y > 0.f) {
+		main->m_transform->m_position.y += SPEED;
+	}
+	else if (main->m_movement.y < 0.f) {
+		main->m_transform->m_position.y -= SPEED;
+	}
+}
 
 void PlayerState::Move::OnDestoy() {
-	// 何もしない
 }
+
+
+/**************************************************************************************************
+ * @state ターゲットON
+ *************************************************************************************************/
+void PlayerState::TargetOn::Start() {
+	main->m_target = nullptr;
+	main->SetStateActive(PLAYER_STATE::TARGET_OFF, false);
+
+	// メモ
+	// 複数敵が居たら近い順(もしくはソート基準なし)で
+	// 順番に敵をロックオンする
+	// 今のままだとリストの1番目と2番目を交互に見続けるだけ
+	std::list<GameObject*> objlist = GameObject::FindGameObjectsWithTag("Enemy");
+	for (auto obj : objlist) {
+		if (main->m_target != obj) {		// すでにロックオン状態なので、違う敵をロックオン
+			main->m_target = obj;
+			break;
+		}
+	}
+}
+
+void PlayerState::TargetOn::Update() {
+	if (main->m_target != nullptr) {
+		bool b = false;
+		std::list<GameObject*> objlist = GameObject::FindGameObjectsWithTag("Enemy");
+		for (auto obj : objlist) {
+			if (main->m_target == obj) {		// ターゲットと一致
+				b = true;
+				main->m_transform->LookAt(main->m_target->m_transform);
+				break;
+			}
+		}
+		if (!b) {	// ターゲットが消滅してる場合
+			main->SetStateActive(PLAYER_STATE::TARGET_OFF, true);
+		}
+	}
+}
+
+void PlayerState::TargetOn::OnDestoy() {
+	main->m_target = nullptr;
+}
+
+
+/**************************************************************************************************
+ * @state ターゲットOFF
+ *************************************************************************************************/
+void PlayerState::TargetOff::Start() {
+	main->SetStateActive(PLAYER_STATE::TARGET_ON, false);
+}
+
+void PlayerState::TargetOff::Update() {
+	main->m_transform->m_rotate.y = 0.f;	// Y軸に回転して欲しくない
+}
+
+void PlayerState::TargetOff::OnDestoy() {
+}
+
+
+/**************************************************************************************************
+ * @state 射撃
+ *************************************************************************************************/
+void PlayerState::AttackBullet::Start() {
+	GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "BulletPlayer");
+	Instantiate(obj, main->m_transform->m_position + main->m_transform->m_forward * 200.f, main->m_transform->m_rotate);
+	obj->AddComponent<Bullet>();
+}
+
+void PlayerState::AttackBullet::Update() {
+	// Start関数で撃ち終わったので状態終了
+	main->SetStateActive(PLAYER_STATE::ATTACK_BULLET, false);
+}
+
+void PlayerState::AttackBullet::OnDestoy() {
+}
+
 
 
 // EOF

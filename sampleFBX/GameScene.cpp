@@ -46,7 +46,7 @@
 #include "FPCamera.h"	// FPSカメラ
 #include "Light.h"		// ライト
 #include "Sky.h"		// スカイドーム
-#include "Player.h"		// プレイヤー
+#include "PlayerMgr.h"	// プレイヤーマネージャー
 #include "FixedEnemy.h"	// 敵
 #include "Collision.h"	// 当たり判定
 #include "Rigidbody.h"	// 物理エンジン機能
@@ -108,7 +108,7 @@ void GameScene::Init() {
 	for (int i = 0; i < MAX_ENEMY; ++i) {
 		m_object3D = new GameObject3D(E_MODEL_ENEMY, "FixedEnemy (" + std::to_string(i) + ")", "Enemy");
 
-		vEnemyPos.x = (float)GetRandom((int)(-MAX_MOVE_WIDTH + 30.f), (int)(MAX_MOVE_WIDTH - 30.f));
+		vEnemyPos.x = (float)GetRandom((int)(-1000.f + 30.f), (int)(1000.f - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 
 		m_object3D->m_transform->m_position = vEnemyPos;

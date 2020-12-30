@@ -1,6 +1,6 @@
 // ˆêlÌƒJƒƒ‰ [FPCamera.cpp]
 #include "FPCamera.h"
-#include "Player.h"
+#include "PlayerMgr.h"
 #include "D3DClass.h"
 #include "Graphics.h"
 #include "GameObject.h"
