@@ -19,6 +19,9 @@
 #include "System.h"
 
 
+/**
+ * @abridgement namespace
+ */
 using namespace DirectX;
 
 
@@ -103,6 +106,14 @@ void PlayerState::Move::Update() {
 		if (main->m_roll <= MAX_ANGLE_Z)
 			main->m_roll += VAL_ANGLE_Z;
 	}
+	else {
+		if (main->m_roll > 0.f) {
+			main->m_roll -= VAL_ANGLE_Z * 0.5f;
+		}
+		else if (main->m_roll < 0.f) {
+			main->m_roll += VAL_ANGLE_Z * 0.5f;
+		}
+	}
 	// Y軸移動(ターゲットの方に向いてるのでy要素で直接移動処理)
 	if (main->m_movement.y > 0.f) {
 		main->m_transform->m_position.y += SPEED;
@@ -180,11 +191,11 @@ void PlayerState::AttackBullet::Start() {
 	GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "BulletPlayer");
 	Instantiate(obj, main->m_transform->m_position + main->m_transform->m_forward * 200.f, main->m_transform->m_rotate);
 	obj->AddComponent<Bullet>();
+	// Start関数で撃ち終わったので状態終了
+	main->SetStateActive(PLAYER_STATE::ATTACK_BULLET, false);
 }
 
 void PlayerState::AttackBullet::Update() {
-	// Start関数で撃ち終わったので状態終了
-	main->SetStateActive(PLAYER_STATE::ATTACK_BULLET, false);
 }
 
 void PlayerState::AttackBullet::OnDestoy() {
