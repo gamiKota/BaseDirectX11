@@ -57,6 +57,7 @@ public:
 	 * @brief 初期化処理
 	 */
 	virtual void Start() {}
+	virtual void Start(bool active) {}
 
 	/**
 	 * @brief 更新処理
@@ -160,6 +161,9 @@ public:
 					state->OnDestoy();
 				}
 				break;
+			}
+			else if (state->Id() == stateID && state->GetActive() == active) {	// 再度アクティブ値の更新がかかった場合
+				state->Start(active);
 			}
 		}
 	}

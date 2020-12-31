@@ -23,14 +23,16 @@ class PlayerState;
 
 
 /**
- * @class PlayerMgr : inheritance StateMachine<template T>
+ * @class PlayerOperation : inheritance StateMachine<template T>
  */
 class PlayerOperation : public Component {
 private:
-	PlayerState* m_stateMachine;
+	PlayerState* m_stateMachine;	//!< ó‘ÔŠÇ—ƒNƒ‰ƒX
 
 public:
 	void Start();
 	void Update();
 };
 
+
+// EOF

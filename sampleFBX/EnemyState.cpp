@@ -1,13 +1,13 @@
 /**
- * @file PlayerState.cpp
+ * @EnemyState.cpp
  */
 
 
 /**
  * @include
  */
-// 自身の宣言先
-#include "PlayerState.h"
+ // 自身の宣言先
+#include "EnemyState.h"
 // オブジェクトシステム
 #include "Transform.h"
 #include "GameObject.h"
@@ -34,20 +34,20 @@ static const float MAX_ANGLE_Z = 30.f;
 
 
 // ステートマシンの初期化
-void PlayerState::Initialize() {
+void EnemyState::Initialize() {
 	// 状態の追加
-	StateMachine::AddState(new PlayerState::Idol(this), true);
-	StateMachine::AddState(new PlayerState::Move(this));
-	StateMachine::AddState(new PlayerState::TargetOn(this));
-	StateMachine::AddState(new PlayerState::TargetOff(this), true);
-	StateMachine::AddState(new PlayerState::AttackBullet(this));
+	StateMachine::AddState(new EnemyState::Idol(this), true);
+	StateMachine::AddState(new EnemyState::Move(this));
+	StateMachine::AddState(new EnemyState::TargetOn(this));
+	StateMachine::AddState(new EnemyState::TargetOff(this));
+	StateMachine::AddState(new EnemyState::AttackBullet(this));
 
 	// 変数の初期化
 	m_roll = 0.f;
 }
 
 // 状態に依存しない共通処理
-void PlayerState::Update() {
+void EnemyState::Update() {
 	StateMachine::Update();
 	m_transform->m_rotate.z = XMConvertToRadians(m_roll);
 }
@@ -56,31 +56,32 @@ void PlayerState::Update() {
 /**************************************************************************************************
  * @state 静止
  *************************************************************************************************/
-void PlayerState::Idol::Start() {
-	main->SetStateActive(PLAYER_STATE::MOVE, false);
+void EnemyState::Idol::Start() {
+	main->SetStateActive(ENEMY_STATE::MOVE, false);
 }
 
-void PlayerState::Idol::Update() {
+void EnemyState::Idol::Update() {
 	if (main->m_roll > 0.f) {
 		main->m_roll -= VAL_ANGLE_Z * 0.5f;
 	}
 	else if (main->m_roll < 0.f) {
 		main->m_roll += VAL_ANGLE_Z * 0.5f;
 	}
+	PrintDebugProc("Idol\n");
 }
 
-void PlayerState::Idol::OnDestoy() {
+void EnemyState::Idol::OnDestoy() {
 }
 
 
 /**************************************************************************************************
  * @state 移動
  *************************************************************************************************/
-void PlayerState::Move::Start() {
-	main->SetStateActive(PLAYER_STATE::IDOL, false);
+void EnemyState::Move::Start() {
+	main->SetStateActive(ENEMY_STATE::IDOL, false);
 }
 
-void PlayerState::Move::Update() {
+void EnemyState::Move::Update() {
 	// モデル姿勢に依存しない平行移動
 	XMFLOAT4X4 mtx = XMFLOAT4X4();
 	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(main->m_transform->m_rotate.x, main->m_transform->m_rotate.y, 0.f));
@@ -116,88 +117,69 @@ void PlayerState::Move::Update() {
 	if (main->m_movement.y != 0.f) {
 		main->m_transform->m_position.y += (SPEED * main->m_movement.y);
 	}
+
+	PrintDebugProc("Move\n");
 }
 
-void PlayerState::Move::OnDestoy() {
+void EnemyState::Move::OnDestoy() {
 }
 
 
 /**************************************************************************************************
  * @state ターゲットON
  *************************************************************************************************/
-void PlayerState::TargetOn::Start() {
+void EnemyState::TargetOn::Start() {
 	// 変数の初期化
 	main->m_target = nullptr;
-	m_cnt = 0;
-	// ターゲット処理
-	main->SetStateActive(PLAYER_STATE::TARGET_OFF, false);
-	std::list<GameObject*> objlist = GameObject::FindGameObjectsWithTag("Enemy");
-	for (auto obj : objlist) {
-		if (main->m_target != obj) {		// すでにロックオン状態なので、違う敵をロックオン
-			main->m_target = obj;
-			break;
-		}
-	}
-}
-void PlayerState::TargetOn::Start(bool active) {
-	// まだ優先順位によるロックオンになってない
-	if (active) {
-		m_cnt++;
-		std::list<GameObject*> objlist = GameObject::FindGameObjectsWithTag("Enemy");
-		if ((unsigned)m_cnt >= objlist.size()) {
-			m_cnt = 0;
-		}
-		auto l_front = objlist.begin();
-		std::advance(l_front, m_cnt);
-		main->m_target = *l_front;
-	}
+	main->SetStateActive(ENEMY_STATE::TARGET_OFF, false);
 }
 
-void PlayerState::TargetOn::Update() {
+void EnemyState::TargetOn::Update() {
 	if (main->m_target == nullptr) {
-		main->SetStateActive(PLAYER_STATE::TARGET_OFF, true);
+		main->SetStateActive(ENEMY_STATE::TARGET_OFF, true);
 		return;
 	}
 	main->m_transform->LookAt(main->m_target->m_transform);
+	PrintDebugProc("TargetOn\n");
 }
 
-void PlayerState::TargetOn::OnDestoy() {
+void EnemyState::TargetOn::OnDestoy() {
 	main->m_target = nullptr;
 }
 
 
 /**************************************************************************************************
- * @state ターゲットOFF
+ * @state ターゲットOFF(敵が何もターゲットしてない時ある？)
  *************************************************************************************************/
-void PlayerState::TargetOff::Start() {
-	main->SetStateActive(PLAYER_STATE::TARGET_ON, false);
+void EnemyState::TargetOff::Start() {
+	main->SetStateActive(ENEMY_STATE::TARGET_ON, false);
 }
 
-void PlayerState::TargetOff::Update() {
+void EnemyState::TargetOff::Update() {
 	main->m_transform->m_rotate.y = 0.f;	// Y軸に回転して欲しくない
+	PrintDebugProc("TargetOff\n");
 }
 
-void PlayerState::TargetOff::OnDestoy() {
+void EnemyState::TargetOff::OnDestoy() {
 }
 
 
 /**************************************************************************************************
  * @state 射撃
  *************************************************************************************************/
-void PlayerState::AttackBullet::Start() {
+void EnemyState::AttackBullet::Start() {
 	GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "BulletPlayer");
 	Instantiate(obj, main->m_transform->m_position + main->m_transform->m_forward * 200.f, main->m_transform->m_rotate);
 	obj->AddComponent<Bullet>();
 	// Start関数で撃ち終わったので状態終了
-	main->SetStateActive(PLAYER_STATE::ATTACK_BULLET, false);
+	main->SetStateActive(ENEMY_STATE::ATTACK_BULLET, false);
 }
 
-void PlayerState::AttackBullet::Update() {
+void EnemyState::AttackBullet::Update() {
 }
 
-void PlayerState::AttackBullet::OnDestoy() {
+void EnemyState::AttackBullet::OnDestoy() {
 }
-
 
 
 // EOF

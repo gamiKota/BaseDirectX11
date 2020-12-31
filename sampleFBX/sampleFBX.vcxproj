@@ -166,6 +166,8 @@
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="Drop.cpp" />
+    <ClCompile Include="EnemyOperation.cpp" />
+    <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="FixedEnemy.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectMesh.cpp" />
@@ -238,6 +240,8 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="DomainShader.h" />
     <ClInclude Include="Drop.h" />
+    <ClInclude Include="EnemyOperation.h" />
+    <ClInclude Include="EnemyState.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="FixedEnemy.h" />
     <ClInclude Include="GameObject3D.h" />
