@@ -118,7 +118,7 @@ Tween* Transform::DOMove(float3 position, float time) {
 }
 
 
-void Transform::LookAt(Transform* target) {
+void Transform::LookAt(Transform* target, float angle) {
 	if (!target)	return;
 	float3 rotate = float3();	// à⁄ìÆêÊâÒì]é≤ÇÃämï€
 	rotate.x = -atan2f(
@@ -129,10 +129,39 @@ void Transform::LookAt(Transform* target) {
 		target->m_position.z - m_position.z);
 
 
-	// Ç±Ç±Ç≈äpìxêßå¿Ç™Ç©ÇØÇÁÇÍÇÈÇ©Ç‡...
 
-	m_rotate.x = rotate.x;
-	m_rotate.y = rotate.y;
+	PrintDebugProc("%.2f\n", rotate.y);
+	float3 diffAngle = rotate - m_rotate;
+
+	// äpìxêßå¿
+	if (angle > 0.f && angle < XM_2PI) {
+		if (diffAngle.x > angle) {
+			diffAngle.x = angle;
+		}
+		else if (diffAngle.x < -angle) {
+			diffAngle.x = -angle;
+		}
+		if (diffAngle.y > angle) {
+			diffAngle.y = angle;
+		}
+		else if (diffAngle.y < -angle) {
+			diffAngle.y = -angle;
+		}
+	}
+	//if (diffAngle.x > XM_PI) {
+	//	diffAngle.x = -(diffAngle.x - XM_PI);
+	//}
+	//else if (diffAngle.x < -XM_PI) {
+	//	diffAngle.x = -(diffAngle.x + XM_PI);
+	//}
+	//if (diffAngle.y > XM_PI) {
+	//	diffAngle.y = (XM_PI - diffAngle.y);
+	//}
+	//else if (diffAngle.y < XM_PI) {
+	//	diffAngle.y = (XM_PI - diffAngle.y);
+	//}
+	m_rotate.x += diffAngle.x;
+	m_rotate.y += diffAngle.y;
 }
 
 
@@ -245,37 +274,6 @@ bool transformRotMatToQuaternion(Quaternion &q, XMFLOAT4X4 matrix) {
 	}
 
 	return true;
-}
-
-
-
-
-void Transform::LookAtA(Transform* target) {
-	//float3 rotate = float3();	// à⁄ìÆêÊâÒì]é≤ÇÃämï€
-	//rotate.x = XMConvertToDegrees(-atan2f(
-	//	target->m_position.y - m_position.y,
-	//	sqrtf(powf(target->m_position.z - m_position.z, 2) + powf(target->m_position.x - m_position.x, 2))));
-	//rotate.y = XMConvertToDegrees(atan2f(
-	//	target->m_position.x - m_position.x,
-	//	target->m_position.z - m_position.z));
-	//rotate.z = m_rotate.z;
-	//
-	//m_DORotate.start	= m_rotate;
-	//m_DORotate.end		= rotate;
-	//m_DORotate.time		= 5;
-
-	//PrintDebugProc("LookAtA = %.2f, %.2f, %.2f\n", rotate.x, rotate.y, rotate.z);
-	//float3 rot = float3(rotate.x - m_rotate.x, rotate.y - m_rotate.y, rotate.z - m_rotate.z);
-	//PrintDebugProc("LookAtA = %.2f, %.2f, %.2f\n", rot.x, rot.y, rot.z);
-	//// Ç±Ç±ÉJÅ[ÉuÇ…ÇµÇΩÇ¢...
-	//if (abs(rot.x) <= 10.f && abs(rot.y) <= 10.f && abs(rot.z) <= 10.f) {
-	//	rot *= 0.1f;
-	//}
-	//else {
-	//	rot *= 0.01f;
-	//}
-	//m_rotate.x += rot.x;
-	//m_rotate.y += rot.y;
 }
 
 

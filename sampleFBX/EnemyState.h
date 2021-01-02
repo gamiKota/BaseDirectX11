@@ -67,11 +67,17 @@ public:
 	struct TargetOn : public State<ENEMY_STATE> {
 		EnemyState*		m_main;
 		GameObject*		m_target;	//!< ターゲット
-		TargetOn(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::TARGET_ON), m_main(_main), m_target(nullptr) {}
+		float			m_valAngle;	//!< 制限角度
+
+		TargetOn(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::TARGET_ON),
+			m_main(_main), m_target(nullptr), m_valAngle(360.f)
+		{}
+
 		void Start()		override;		// 状態移行直後
 		void Update()		override;		// 状態の最中
 		void OnDestoy()		override;		// 状態終了時
 		void SetTarget(GameObject* target = nullptr) { m_target = target; }
+		void SetAngle(float angle) { m_valAngle = angle; }
 	};
 	// ターゲットオフ
 	struct TargetOff : public State<ENEMY_STATE> {

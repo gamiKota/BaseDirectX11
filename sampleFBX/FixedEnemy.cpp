@@ -31,6 +31,7 @@ void FixedEnemy::Start() {
 	// 状態の初期化
 	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
 	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
+	m_state->GetState<EnemyState::TargetOn>()->SetAngle(1.f);
 }
 
 
@@ -40,10 +41,11 @@ void FixedEnemy::Update() {
 
 	// ターゲット方向に向く処理
 	// このコンポーネントはターゲットがプレイヤーから変わることはない
-	if (!m_state->GetCurrentState(ENEMY_STATE::TARGET_ON)) {
-		m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
-		m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
-	}
+	//if (!m_state->GetCurrentState(ENEMY_STATE::TARGET_ON)) {
+	//	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
+	//	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
+	//	m_state->GetState<EnemyState::TargetOn>()->SetAngle(1.f);
+	//}
 
 	// 射撃攻撃
 	if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {

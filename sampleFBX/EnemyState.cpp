@@ -130,6 +130,7 @@ void EnemyState::Move::OnDestoy() {
 void EnemyState::TargetOn::Start() {
 	// •Ï”‚Ì‰Šú‰»
 	m_target = nullptr;
+	m_valAngle = 360.f;
 	m_main->SetStateActive(ENEMY_STATE::TARGET_OFF, false);
 }
 
@@ -138,7 +139,7 @@ void EnemyState::TargetOn::Update() {
 		m_main->SetStateActive(ENEMY_STATE::TARGET_OFF, true);
 		return;
 	}
-	m_main->m_transform->LookAt(m_target->m_transform);
+	m_main->m_transform->LookAt(m_target->m_transform, ToRadians(m_valAngle));
 	PrintDebugProc("TargetOn\n");
 }
 
