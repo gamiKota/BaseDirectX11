@@ -25,6 +25,8 @@ enum class ENEMY_STATE {
 	TARGET_ON,		// ターゲットON
 	TARGET_OFF,		// ターゲットOFF
 	ATTACK_BULLET,	// 射撃攻撃
+
+	MAX,
 };
 
 
@@ -32,11 +34,6 @@ enum class ENEMY_STATE {
  * @class EnemyState : inheritance StateMachine<template T>
  */
 class EnemyState : public StateMachine<ENEMY_STATE> {
-private:
-	GameObject*		m_target;		//!< ターゲット
-	float			m_roll;			//!< 傾き(Z軸)
-	float3			m_movement;		//!< 移動ベクトル
-
 public:
 	void Awake() { Initialize(); }
 	void Update();
@@ -49,8 +46,8 @@ public:
 
 	// 静止状態
 	struct Idol : public State<ENEMY_STATE> {
-		EnemyState* main;
-		Idol(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::IDOL), main(_main) {}
+		EnemyState* m_main;
+		Idol(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::IDOL), m_main(_main) {}
 		void Start()	override;		// 状態移行直後
 		void Update()	override;		// 状態の最中
 		void OnDestoy() override;		// 状態終了時
@@ -58,8 +55,9 @@ public:
 
 	// 移動状態
 	struct Move : public State<ENEMY_STATE> {
-		EnemyState* main;
-		Move(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::MOVE), main(_main) {}
+		EnemyState* m_main;
+		float3	m_movement;
+		Move(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::MOVE), m_main(_main), m_movement(float3()) {}
 		void Start()	override;		// 状態移行直後
 		void Update()	override;		// 状態の最中
 		void OnDestoy() override;		// 状態終了時
@@ -67,16 +65,18 @@ public:
 
 	// ターゲットオン
 	struct TargetOn : public State<ENEMY_STATE> {
-		EnemyState* main;
-		TargetOn(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::TARGET_ON), main(_main) {}
+		EnemyState*		m_main;
+		GameObject*		m_target;	//!< ターゲット
+		TargetOn(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::TARGET_ON), m_main(_main), m_target(nullptr) {}
 		void Start()		override;		// 状態移行直後
 		void Update()		override;		// 状態の最中
 		void OnDestoy()		override;		// 状態終了時
+		void SetTarget(GameObject* target = nullptr) { m_target = target; }
 	};
 	// ターゲットオフ
 	struct TargetOff : public State<ENEMY_STATE> {
-		EnemyState* main;
-		TargetOff(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::TARGET_OFF), main(_main) {}
+		EnemyState* m_main;
+		TargetOff(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::TARGET_OFF), m_main(_main) {}
 		void Start()	override;		// 状態移行直後
 		void Update()	override;		// 状態の最中
 		void OnDestoy() override;		// 状態終了時
@@ -84,16 +84,12 @@ public:
 
 	// 射撃状態
 	struct AttackBullet : public State<ENEMY_STATE> {
-		EnemyState* main;
-		AttackBullet(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::ATTACK_BULLET), main(_main) {}
+		EnemyState* m_main;
+		AttackBullet(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::ATTACK_BULLET), m_main(_main) {}
 		void Start()	override;		// 状態移行直後
 		void Update()	override;		// 状態の最中
 		void OnDestoy() override;		// 状態終了時
 	};
-
-	GameObject* GetTarget() { return m_target; }
-	void SetTarget(GameObject* target = nullptr) { m_target = target; }
-	void SetMovement(float3 move) { m_movement = move; }
 };
 
 

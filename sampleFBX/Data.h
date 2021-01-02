@@ -45,6 +45,12 @@ public:
 
 	static float Dot(float3 data1, float3 data2);
 
+	static float Length(float3 pos1, float3 pos2) {
+		return sqrtf((pos2.x - pos1.x) * (pos2.x - pos1.x) +
+			(pos2.y - pos1.y) * (pos2.y - pos1.y) +
+			(pos2.z - pos1.z) * (pos2.z - pos1.z));
+	}
+
 	float3 operator + (float3 data) {
 		return float3(x + data.x, y + data.y, z + data.z);
 	}

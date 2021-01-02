@@ -144,6 +144,22 @@ public:
 		}
 		return false;	// 状態がリストに登録されてない
 	}
+
+
+	/**
+	 * @brief 状の取得
+	 * @return 状態(list != classT > nullptr)
+	 */
+	template<class classT>
+	classT* GetState() const {
+		for (auto state : m_stateList) {
+			classT* buff = dynamic_cast<classT*>(state);
+			if (buff != nullptr)
+				return buff;
+		}
+		return nullptr;	// 状態がリストに登録されてない
+	}
+
 	
 	/**
 	 * @brief 指定の状態のアクティブ設定

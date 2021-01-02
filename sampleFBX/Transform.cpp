@@ -128,6 +128,9 @@ void Transform::LookAt(Transform* target) {
 		target->m_position.x - m_position.x,
 		target->m_position.z - m_position.z);
 
+
+	// Ç±Ç±Ç≈äpìxêßå¿Ç™Ç©ÇØÇÁÇÍÇÈÇ©Ç‡...
+
 	m_rotate.x = rotate.x;
 	m_rotate.y = rotate.y;
 }

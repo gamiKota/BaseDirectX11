@@ -35,7 +35,7 @@ void Bullet::Start() {
 	m_nLife = LIFE_TIME * Frame::GetInstance().GetFrame();	// 5•b
 	m_status->m_HP = 10.f;
 	m_status->m_AttakPower = 100.f;
-	m_status->m_HitStop = 5.f * Frame::GetInstance().GetFrame();
+	//m_status->m_HitStop = 5.f * Frame::GetInstance().GetFrame();
 	m_rigidbody->m_weight = E_WEIGHT::_3;
 }
 
@@ -60,7 +60,7 @@ void Bullet::OnCollision(GameObject* obj) {
 	Destroy(m_gameObject);
 	if (obj->GetComponent<Status>() != nullptr) {
 		obj->GetComponent<Status>()->m_HP -= m_status->m_AttakPower;
-		obj->GetComponent<Status>()->m_HitStop -= m_status->m_HitStop;
+		//obj->GetComponent<Status>()->m_HitStop -= m_status->m_HitStop;
 	}
 	if (GameObject::Find("Score") != nullptr) {
 		GameObject::Find("Score")->GetComponent<Score>()->AddScore(100);

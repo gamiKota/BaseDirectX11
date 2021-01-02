@@ -19,6 +19,9 @@
 #include "System.h"
 
 
+#define ToRadians(dig) XMConvertToRadians(dig)
+
+
 /**
  * @abridgement namespace
  */
@@ -41,15 +44,11 @@ void EnemyState::Initialize() {
 	StateMachine::AddState(new EnemyState::TargetOn(this));
 	StateMachine::AddState(new EnemyState::TargetOff(this));
 	StateMachine::AddState(new EnemyState::AttackBullet(this));
-
-	// •Ï”‚Ì‰Šú‰»
-	m_roll = 0.f;
 }
 
 // ó‘Ô‚ÉˆË‘¶‚µ‚È‚¢‹¤’Êˆ—
 void EnemyState::Update() {
 	StateMachine::Update();
-	m_transform->m_rotate.z = XMConvertToRadians(m_roll);
 }
 
 
@@ -57,15 +56,15 @@ void EnemyState::Update() {
  * @state ÃŽ~
  *************************************************************************************************/
 void EnemyState::Idol::Start() {
-	main->SetStateActive(ENEMY_STATE::MOVE, false);
+	m_main->SetStateActive(ENEMY_STATE::MOVE, false);
 }
 
 void EnemyState::Idol::Update() {
-	if (main->m_roll > 0.f) {
-		main->m_roll -= VAL_ANGLE_Z * 0.5f;
+	if (m_main->m_transform->m_rotate.z > 0.f) {
+		m_main->m_transform->m_rotate.z -= ToRadians(VAL_ANGLE_Z * 0.5f);
 	}
-	else if (main->m_roll < 0.f) {
-		main->m_roll += VAL_ANGLE_Z * 0.5f;
+	else if (m_main->m_transform->m_rotate.z < 0.f) {
+		m_main->m_transform->m_rotate.z += ToRadians(VAL_ANGLE_Z * 0.5f);
 	}
 	PrintDebugProc("Idol\n");
 }
@@ -78,44 +77,44 @@ void EnemyState::Idol::OnDestoy() {
  * @state ˆÚ“®
  *************************************************************************************************/
 void EnemyState::Move::Start() {
-	main->SetStateActive(ENEMY_STATE::IDOL, false);
+	m_main->SetStateActive(ENEMY_STATE::IDOL, false);
 }
 
 void EnemyState::Move::Update() {
 	// ƒ‚ƒfƒ‹Žp¨‚ÉˆË‘¶‚µ‚È‚¢•½sˆÚ“®
 	XMFLOAT4X4 mtx = XMFLOAT4X4();
-	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(main->m_transform->m_rotate.x, main->m_transform->m_rotate.y, 0.f));
+	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(m_main->m_transform->m_rotate.x, m_main->m_transform->m_rotate.y, 0.f));
 	float3 right = float3(mtx._11, mtx._12, mtx._13);
 	float3 up = float3(mtx._21, mtx._22, mtx._23);
 	float3 forward = float3(mtx._31, mtx._32, mtx._33);
 
 	// ZŽ²ˆÚ“®
-	if (main->m_movement.z != 0.f) {
-		main->m_transform->m_position += forward * (SPEED * main->m_movement.z);
+	if (m_movement.z != 0.f) {
+		m_main->m_transform->m_position += forward * (SPEED * m_movement.z);
 	}
 	// XŽ²ˆÚ“®
-	if (main->m_movement.x != 0.f) {
-		main->m_transform->m_position += right * (SPEED * main->m_movement.x);
-		if (main->m_movement.x > 0.f) {
-			if (main->m_roll >= -MAX_ANGLE_Z)
-				main->m_roll -= VAL_ANGLE_Z;
+	if (m_movement.x != 0.f) {
+		m_main->m_transform->m_position += right * (SPEED * m_movement.x);
+		if (m_movement.x > 0.f) {
+			if (m_main->m_transform->m_rotate.z >= ToRadians(-MAX_ANGLE_Z))
+				m_main->m_transform->m_rotate.z -= ToRadians(VAL_ANGLE_Z);
 		}
 		else {
-			if (main->m_roll <= MAX_ANGLE_Z)
-				main->m_roll += VAL_ANGLE_Z;
+			if (m_main->m_transform->m_rotate.z <= ToRadians(MAX_ANGLE_Z))
+				m_main->m_transform->m_rotate.z += ToRadians(VAL_ANGLE_Z);
 		}
 	}
 	else {
-		if (main->m_roll > 0.f) {
-			main->m_roll -= VAL_ANGLE_Z * 0.5f;
+		if (m_main->m_transform->m_rotate.z > 0.f) {
+			m_main->m_transform->m_rotate.z -= ToRadians(VAL_ANGLE_Z * 0.5f);
 		}
-		else if (main->m_roll < 0.f) {
-			main->m_roll += VAL_ANGLE_Z * 0.5f;
+		else if (m_main->m_transform->m_rotate.z < 0.f) {
+			m_main->m_transform->m_rotate.z += ToRadians(VAL_ANGLE_Z * 0.5f);
 		}
 	}
 	// YŽ²ˆÚ“®(ƒ^[ƒQƒbƒg‚Ì•û‚ÉŒü‚¢‚Ä‚é‚Ì‚Åy—v‘f‚Å’¼ÚˆÚ“®ˆ—)
-	if (main->m_movement.y != 0.f) {
-		main->m_transform->m_position.y += (SPEED * main->m_movement.y);
+	if (m_movement.y != 0.f) {
+		m_main->m_transform->m_position.y += (SPEED * m_movement.y);
 	}
 
 	PrintDebugProc("Move\n");
@@ -130,21 +129,21 @@ void EnemyState::Move::OnDestoy() {
  *************************************************************************************************/
 void EnemyState::TargetOn::Start() {
 	// •Ï”‚Ì‰Šú‰»
-	main->m_target = nullptr;
-	main->SetStateActive(ENEMY_STATE::TARGET_OFF, false);
+	m_target = nullptr;
+	m_main->SetStateActive(ENEMY_STATE::TARGET_OFF, false);
 }
 
 void EnemyState::TargetOn::Update() {
-	if (main->m_target == nullptr) {
-		main->SetStateActive(ENEMY_STATE::TARGET_OFF, true);
+	if (m_target == nullptr) {
+		m_main->SetStateActive(ENEMY_STATE::TARGET_OFF, true);
 		return;
 	}
-	main->m_transform->LookAt(main->m_target->m_transform);
+	m_main->m_transform->LookAt(m_target->m_transform);
 	PrintDebugProc("TargetOn\n");
 }
 
 void EnemyState::TargetOn::OnDestoy() {
-	main->m_target = nullptr;
+	m_target = nullptr;
 }
 
 
@@ -152,11 +151,11 @@ void EnemyState::TargetOn::OnDestoy() {
  * @state ƒ^[ƒQƒbƒgOFF(“G‚ª‰½‚àƒ^[ƒQƒbƒg‚µ‚Ä‚È‚¢Žž‚ ‚éH)
  *************************************************************************************************/
 void EnemyState::TargetOff::Start() {
-	main->SetStateActive(ENEMY_STATE::TARGET_ON, false);
+	m_main->SetStateActive(ENEMY_STATE::TARGET_ON, false);
 }
 
 void EnemyState::TargetOff::Update() {
-	main->m_transform->m_rotate.y = 0.f;	// YŽ²‚É‰ñ“]‚µ‚Ä—~‚µ‚­‚È‚¢
+	m_main->m_transform->m_rotate.y = 0.f;	// YŽ²‚É‰ñ“]‚µ‚Ä—~‚µ‚­‚È‚¢
 	PrintDebugProc("TargetOff\n");
 }
 
@@ -169,10 +168,10 @@ void EnemyState::TargetOff::OnDestoy() {
  *************************************************************************************************/
 void EnemyState::AttackBullet::Start() {
 	GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "BulletPlayer");
-	Instantiate(obj, main->m_transform->m_position + main->m_transform->m_forward * 200.f, main->m_transform->m_rotate);
+	Instantiate(obj, m_main->m_transform->m_position + m_main->m_transform->m_forward * 200.f, m_main->m_transform->m_rotate);
 	obj->AddComponent<Bullet>();
 	// StartŠÖ”‚ÅŒ‚‚¿I‚í‚Á‚½‚Ì‚Åó‘ÔI—¹
-	main->SetStateActive(ENEMY_STATE::ATTACK_BULLET, false);
+	m_main->SetStateActive(ENEMY_STATE::ATTACK_BULLET, false);
 }
 
 void EnemyState::AttackBullet::Update() {

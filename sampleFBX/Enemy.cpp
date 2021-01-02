@@ -25,11 +25,11 @@ void Enemy::Start() {
 	Character::Init();
 
 	// 敵AIに必要なコンポーネントの追加
+	// 操作は各敵継承コンポーネントで行う
 	m_state = m_gameObject->AddComponent<EnemyState>();
-	m_operate = m_gameObject->AddComponent<EnemyOperation>();
+	//m_operate = m_gameObject->AddComponent<EnemyOperation>();
 
 	// 変数の初期化(敵クラスのデフォルト値の設定)
-	m_deleteTime = 3.f;						// 秒数
 	m_rigidbody->m_weight = E_WEIGHT::_1;	// 二番目に軽い
 
 	// ロックオンマーカーの追加
@@ -46,14 +46,11 @@ void Enemy::Uninit() {
 
 void Enemy::Update() {
 	if (m_status->m_isDead) {
-		if (m_deleteTime <= 0.f) {
-			if (m_gameObject->GetInstanceID() == 
-				GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget()->GetInstanceID()) {	// 今自分がターゲットの場合
-				GameObject::Find("Player")->GetComponent<PlayerState>()->SetTarget();
-			}
-			Destroy(m_gameObject);
+		if (m_gameObject->GetInstanceID() == 
+			GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget()->GetInstanceID()) {	// 今自分がターゲットの場合
+			GameObject::Find("Player")->GetComponent<PlayerState>()->SetTarget();
 		}
-		m_deleteTime -= Frame::GetInstance().GetDeltaTime();
+		Destroy(m_gameObject);
 	}
 }
 
