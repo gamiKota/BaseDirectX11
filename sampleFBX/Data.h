@@ -16,7 +16,7 @@
 
 
 /**
- * @class float3 : inheritance CCamera
+ * @class float3 : inheritance DirectX::XMFLOAT
  */
 class float3 : public DirectX::XMFLOAT3 {
 
