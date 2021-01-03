@@ -15,25 +15,18 @@
 
 // 静的メンバ
 CCamera* CCamera::m_pCamera = nullptr;
-float3 CCamera::m_vNowEye;		// 現在の視点
-float3 CCamera::m_vNowLook;		// 現在の注視点
-float3 CCamera::m_vNowUp;		// 現在の上方ベクトル
 
 
 void CCamera::Start() {
 	m_transform->m_position	= float3(0.0f, 200.0f, -400.0f);
-	//m_transform->m_rotate = float3(0.f, 0.f, 0.f);
-	m_transform->m_scale = float3(1.f, 1.f, 1.f);
-	//m_vLook = float3(0.0f, 0.0f, 0.0f);
-	//m_vUp	= float3(0.0f, 1.0f, 0.0f);
+	m_transform->m_scale = float3(0.1f, 0.1f, 0.1f);
+
 	m_fFovy = XMConvertToRadians(45);
 	m_fAspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 	m_fNearZ = 10.0f;
 	m_fFarZ = 10000.0f;
-	m_vNowEye = m_transform->m_position;
-	//m_vNowLook = m_vLook;
-	//m_vNowUp = m_vUp;
-	Update();
+
+	m_lookTarget = nullptr;
 }
 
 
@@ -63,9 +56,16 @@ void CCamera::LastUpdate() {
 		XMVector3Normalize(XMLoadFloat3(&m_transform->m_up)));
 
 	// ビュー変換更新
+	float3 look = float3();
+	if (m_lookTarget != nullptr) {
+		look = m_lookTarget->m_position;
+	}
+	else {
+		look = m_transform->m_position + m_transform->m_forward * CAMERA_LOOK_LENG;
+	}
 	XMStoreFloat4x4(&m_mView, XMMatrixLookAtLH(
 		XMLoadFloat3(&m_transform->m_position),
-		XMLoadFloat3(&(m_transform->m_position + m_transform->m_forward * CAMERA_LOOK_LENG)),
+		XMLoadFloat3(&look),
 		XMLoadFloat3(&m_transform->m_up)));
 
 	// 射影変換更新

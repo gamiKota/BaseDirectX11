@@ -15,13 +15,16 @@
 #include "Camera.h"
 
 
+class PlayerMgr;
+
+
 /**
  * @class TPCamera : inheritance CCamera
  */
 class TPCamera : public CCamera
 {
 protected:
-	GameObject* m_player;
+	PlayerMgr* m_player;
 
 public:
 	void Awake();
