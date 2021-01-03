@@ -15,14 +15,18 @@
 #include "Component.h"
 
 
+#define CAMERA_LOOK_LENG (500.f)
+#define CAMERA_LOOK_POS (m_transform->m_forward * CAMERA_LOOK_LENG)
+
+
 /**
  * @class CCamera : inheritance Component
  */
 class CCamera : public Component
 {
 protected:
-	float3					m_vLook;	//!< 注視点座標
-	float3					m_vUp;		//!< 上方ベクトル
+	//float3					m_vLook;	//!< 注視点座標
+	//float3					m_vUp;		//!< 上方ベクトル
 	DirectX::XMFLOAT4X4		m_mView;	//!< ビュー変換
 	DirectX::XMFLOAT4X4		m_mProj;	//!< 射影変換
 	float					m_fFovy;	//!< 視野角
@@ -40,15 +44,19 @@ private:
 public:
 	virtual void Start();
 	virtual void Uninit();
+	virtual void Update();
 	virtual void LastUpdate();
 	//virtual void Draw();
 
 	DirectX::XMFLOAT4X4& GetView() { return m_mView; }
 	DirectX::XMFLOAT4X4& GetProj() { return m_mProj; }
-	float3& GetLook() { return m_vLook; }
-	void SetLook(float3 vLook) { m_vLook = vLook; }
-	static void Set(CCamera* pCamera)
-		{ m_pCamera = pCamera; }
+
+	//float3& GetLook() { return m_vLook; }
+	//void SetLook(float3 vLook) { m_vLook = vLook; }
+
+	void SetLook(Transform* transform) {}
+
+	static void Set(CCamera* pCamera) { m_pCamera = pCamera; }
 	static CCamera* Get() { return m_pCamera; }
 };
 
