@@ -15,6 +15,19 @@ bool transformRotMatToQuaternion(Quaternion &q, XMFLOAT4X4 matrix);
 void transformQuaternionToRotMat(XMFLOAT4X4 &matrix, Quaternion q);
 
 
+float normalize(float num, float min = 0, float max = 1) {
+	float range = abs(max - min);
+	if (num < min) {
+		return num + range * ceil(abs(num - min) / range);
+	}
+	else if(max <= num) {
+		return num - range * (floor(abs(num - max) / range) + 1);
+	}
+
+	return num;
+}
+
+
 
 Transform::Transform() : m_position(float3()), m_rotate(Quaternion()), m_scale(float3()), m_tween(new Tween[3]()), m_Parent(nullptr) {
 	XMStoreFloat4x4(&m_world, XMMatrixIdentity());
@@ -58,6 +71,10 @@ void Transform::LastUpdate() {
 	if (dynamic_cast<GameObjectMeshBase*>(m_gameObject) != nullptr) {
 		m_transform->m_scale.z = 0;
 	}
+
+	m_rotate.x = normalize(m_rotate.x, -XM_PI, XM_PI);
+	m_rotate.y = normalize(m_rotate.y, -XM_PI, XM_PI);
+	m_rotate.z = normalize(m_rotate.z, -XM_PI, XM_PI);
 
 	// ƒƒ‚
 	// Šù‚Éíœ‚³‚ê‚½‚©‚Ç‚¤‚©‚Í¡‚ÌŠl‚¦‚È‚¢
@@ -128,10 +145,18 @@ void Transform::LookAt(Transform* target, float angle) {
 		target->m_position.x - m_position.x,
 		target->m_position.z - m_position.z);
 
-
-
-	PrintDebugProc("%.2f\n", rotate.y);
+	
 	float3 diffAngle = rotate - m_rotate;
+	float unti = 1.f;
+
+	if (diffAngle.y < -XM_PI) {
+		unti = -1.f;
+		diffAngle.y = (m_rotate.y - rotate.y) - XM_2PI;
+	}
+	else if (diffAngle.y > XM_PI) {
+		unti = -1.f;
+		diffAngle.y = (m_rotate.y - rotate.y) + XM_2PI;
+	}
 
 	// Šp“x§ŒÀ
 	if (angle > 0.f && angle < XM_2PI) {
@@ -148,20 +173,9 @@ void Transform::LookAt(Transform* target, float angle) {
 			diffAngle.y = -angle;
 		}
 	}
-	//if (diffAngle.x > XM_PI) {
-	//	diffAngle.x = -(diffAngle.x - XM_PI);
-	//}
-	//else if (diffAngle.x < -XM_PI) {
-	//	diffAngle.x = -(diffAngle.x + XM_PI);
-	//}
-	//if (diffAngle.y > XM_PI) {
-	//	diffAngle.y = (XM_PI - diffAngle.y);
-	//}
-	//else if (diffAngle.y < XM_PI) {
-	//	diffAngle.y = (XM_PI - diffAngle.y);
-	//}
-	m_rotate.x += diffAngle.x;
-	m_rotate.y += diffAngle.y;
+
+	m_rotate.x += diffAngle.x * unti;
+	m_rotate.y += diffAngle.y * unti;
 }
 
 

@@ -26,7 +26,7 @@ void FixedEnemy::Start() {
 	m_status->m_HP = 500.f;
 	m_status->m_AttakPower = 10.f;
 	m_status->m_deleteTime.max = 2.f;	// •bÁ–Å
-	m_status->m_bulletTime.max = 3.f;	// ’e”­ŽËŠÔŠu
+	m_status->m_bulletTime.max = 5.f;	// ’e”­ŽËŠÔŠu
 
 	// ó‘Ô‚Ì‰Šú‰»
 	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
