@@ -32,17 +32,19 @@ void Bullet::Start() {
 	Character::Init();
 
 	// ‰Šú‰»
-	m_nLife = LIFE_TIME * Frame::GetInstance().GetFrame();	// 5•b
+	m_nLife = 0.f;
 	m_status->m_HP = 10.f;
 	m_status->m_AttakPower = 100.f;
 	//m_status->m_HitStop = 5.f * Frame::GetInstance().GetFrame();
 	m_rigidbody->m_weight = E_WEIGHT::_3;
+
+	//m_transform->m_rotate.y = XMConvertToRadians(180.f);
 }
 
 
 void Bullet::Update() {
-	--m_nLife;
-	if (m_nLife <= 0) {
+	m_nLife += Frame::GetInstance().GetDeltaTime();
+	if (m_nLife >= LIFE_TIME) {
 		Destroy(m_gameObject);
 		return;
 	}

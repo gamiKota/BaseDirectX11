@@ -136,6 +136,30 @@
     <Filter Include="ソース ファイル\System\Object">
       <UniqueIdentifier>{0cc6209c-aee6-4d44-8d1b-378fa9b6fcdd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\02Game\Script\Enemy">
+      <UniqueIdentifier>{1788e3f4-68a1-4832-afb7-0442ddc4325a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\02Game\Script\Player">
+      <UniqueIdentifier>{9f8dded5-646f-4bf1-9c48-413d86648d44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\02Game\Script\Bullet">
+      <UniqueIdentifier>{b7ab2615-88dc-4b84-ba14-e50ad7546f3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\02Game\Script\Enemy">
+      <UniqueIdentifier>{f2d66c7c-68f0-4632-b37a-3df9a01e475d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\02Game\Script\Player">
+      <UniqueIdentifier>{dd2fba09-4906-4894-ac60-ce63a0e28c47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\02Game\Script\Bullet">
+      <UniqueIdentifier>{09f3f02f-f8a6-4f32-9428-2aff36e54d9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\02Game\Script\Particle">
+      <UniqueIdentifier>{3cfacd35-a816-4570-9f33-75aec29f8b6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\02Game\Script\Particle">
+      <UniqueIdentifier>{e853f8ba-2062-40eb-a3bd-423b5036451a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -222,9 +246,6 @@
     <ClCompile Include="State.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>ソース ファイル\00Share\Script</Filter>
     </ClCompile>
@@ -237,31 +258,7 @@
     <ClCompile Include="Character.cpp">
       <Filter>ソース ファイル\02Game\Script</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Explosion.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="FixedEnemy.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Laser.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshBullet.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
     <ClCompile Include="Number.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerMgr.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerOperation.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerState.cpp">
       <Filter>ソース ファイル\02Game\Script</Filter>
     </ClCompile>
     <ClCompile Include="Score.cpp">
@@ -274,12 +271,6 @@
       <Filter>ソース ファイル\02Game\Script</Filter>
     </ClCompile>
     <ClCompile Include="Status.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyOperation.cpp">
-      <Filter>ソース ファイル\02Game\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyState.cpp">
       <Filter>ソース ファイル\02Game\Script</Filter>
     </ClCompile>
     <ClCompile Include="Drop.cpp">
@@ -353,6 +344,39 @@
     </ClCompile>
     <ClCompile Include="WaterSurface.cpp">
       <Filter>ソース ファイル\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>ソース ファイル\02Game\Script\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Laser.cpp">
+      <Filter>ソース ファイル\02Game\Script\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyOperation.cpp">
+      <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyState.cpp">
+      <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="FixedEnemy.cpp">
+      <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMgr.cpp">
+      <Filter>ソース ファイル\02Game\Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerOperation.cpp">
+      <Filter>ソース ファイル\02Game\Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerState.cpp">
+      <Filter>ソース ファイル\02Game\Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshBullet.cpp">
+      <Filter>ソース ファイル\02Game\Script\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>ソース ファイル\02Game\Script\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -455,9 +479,6 @@
     <ClInclude Include="FPCamera.h">
       <Filter>ヘッダー ファイル\02Game\Script</Filter>
     </ClInclude>
-    <ClInclude Include="MeshBullet.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Status.h">
       <Filter>ヘッダー ファイル\02Game\Script</Filter>
     </ClInclude>
@@ -467,19 +488,7 @@
     <ClInclude Include="Score.h">
       <Filter>ヘッダー ファイル\02Game\Script</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerState.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerOperation.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerMgr.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Number.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Laser.h">
       <Filter>ヘッダー ファイル\02Game\Script</Filter>
     </ClInclude>
     <ClInclude Include="Sky.h">
@@ -491,29 +500,11 @@
     <ClInclude Include="ggCamera.h">
       <Filter>ヘッダー ファイル\00Share\Script</Filter>
     </ClInclude>
-    <ClInclude Include="FixedEnemy.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Character.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Explosion.h">
       <Filter>ヘッダー ファイル\02Game\Script</Filter>
     </ClInclude>
     <ClInclude Include="Drop.h">
       <Filter>ヘッダー ファイル\01Title\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyState.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyOperation.h">
-      <Filter>ヘッダー ファイル\02Game\Script</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>ヘッダー ファイル\System\Component</Filter>
@@ -571,6 +562,39 @@
     </ClInclude>
     <ClInclude Include="CollisionMesh.h">
       <Filter>ヘッダー ファイル\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerOperation.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMgr.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyOperation.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyState.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="FixedEnemy.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Laser.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshBullet.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
