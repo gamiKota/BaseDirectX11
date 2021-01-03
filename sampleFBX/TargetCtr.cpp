@@ -16,6 +16,7 @@
 #include "GameObjectUI.h"
 #include "GameObject3D.h"
 #include "PlayerState.h"
+#include "Collision.h"
 #include "System.h"
 
 
@@ -88,7 +89,8 @@ void TargetCtr::Start() {
 
 void TargetCtr::Update() {
 	// ロックオンマーカー
-	float3 marker = LockOnMarker(m_target->m_transform->m_position);
+	float3 centerPos = m_target->GetComponent<Collision>()->m_vCenter;
+	float3 marker = LockOnMarker(m_target->m_transform->m_position + centerPos);
 	m_transform->m_position = marker;
 
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);

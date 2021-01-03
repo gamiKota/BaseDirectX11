@@ -206,8 +206,10 @@ void Collision::Init(E_MODEL model) {
 	if (model >= E_MODEL_NONE && model < E_MODEL_MAX) {
 		// 境界ボックス初期化
 		m_model = model;
-		m_vCenter = ModelManager::GetInstance().Get(model)->GetCenter();
-		m_vBBox = ModelManager::GetInstance().Get(model)->GetBBox();
+		XMFLOAT3 temp = ModelManager::GetInstance().Get(model)->GetCenter();
+		m_vCenter = float3(temp.x, temp.y, temp.z);
+		temp = ModelManager::GetInstance().Get(model)->GetBBox();
+		m_vBBox = float3(temp.x, temp.y, temp.z);
 		m_vPosBBox = m_vCenter;
 	}
 

@@ -131,7 +131,7 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_position = float3(0.f, 0.f, 100.f);
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>();
-	m_object3D->m_transform->m_scale = float3(20.f, 20.f, 20.f);
+	m_object3D->m_transform->m_scale = float3(20.f, 20.f, 100.f);
 	m_listObject.push_back(m_object3D);
 
 

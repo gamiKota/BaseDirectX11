@@ -24,9 +24,9 @@ class Collision : public Component {
 public:
 	E_MODEL				m_model;
 	DirectX::XMFLOAT4	m_color;
-	DirectX::XMFLOAT3	m_vCenter;		//!< 境界ボックス中心座標
-	DirectX::XMFLOAT3	m_vBBox;		//!< 境界ボックス サイズ
-	DirectX::XMFLOAT3	m_vPosBBox;		//!< 境界ボックス中心座標(ワールド空間)
+	float3				m_vCenter;		//!< 境界ボックス中心座標
+	float3				m_vBBox;		//!< 境界ボックス サイズ
+	float3				m_vPosBBox;		//!< 境界ボックス中心座標(ワールド空間)
 	DirectX::XMFLOAT4X4	m_world;		//!< 当たり判定用行列
 	bool				m_bHit;			//!< 衝突有無
 
