@@ -42,7 +42,7 @@
 static const char* name[E_MODEL_MAX] = {
 	"data/model/box2.fbx",				// ボックス
 	"data/model/Squadron/X_wing.fbx",	// プレイヤー
-	"data/model/robot/dodaifu.fbx",		// 敵
+	"data/model/robot/robo1b_pose.fbx",		// 敵
 	"data/model/FA-18/sparrow.fbx",		// ミサイル
 	"data/model/laser.fbx",				// ミサイル
 	"data/model/Land/Land.fbx",			// 地形
