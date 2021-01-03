@@ -58,13 +58,12 @@ void PlayerMgr::Uninit() {
 
 
 void PlayerMgr::OnCollision(GameObject* obj) {
-
+	PrintDebugProc("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
 }
 
 
 void PlayerMgr::SetImGuiVal() {
 #if _DEBUG
-	
 #endif
 }
 

@@ -16,16 +16,33 @@
 #include "GameObject.h"
 #include "GameObject3D.h"
 #include "TPCamera.h"
+#include "input.h"
 #include "System.h"
+
+
+//------------- 確定の設定
+// blender設定
+// FBXでエクスポート
+// バイナリデータ
+// 拡縮率 0.01倍
+// Yが上
+
+
+//-------------	未確定の設定
+// スケール
+//	全てローカル
+//	全てFBX
+// Zが前方
+
 
 
 /**
  * @const
  */
 static const char* name[E_MODEL_MAX] = {
-	"data/model/box.fbx",				// ボックス
+	"data/model/box2.fbx",				// ボックス
 	"data/model/Squadron/X_wing.fbx",	// プレイヤー
-	"data/model/Squadron/X_wing.fbx",	// 敵
+	"data/model/robot/dodaifu.fbx",		// 敵
 	"data/model/FA-18/sparrow.fbx",		// ミサイル
 	"data/model/laser.fbx",				// ミサイル
 	"data/model/Land/Land.fbx",			// 地形
@@ -95,8 +112,16 @@ void ModelManager::Update(GameObject3D *obj) {
 void ModelManager::Draw(GameObject3D* obj) {
 
 	E_MODEL model = obj->m_model;
-	if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
-		return ;
+
+	if (Input::isPress('L')) {
+		if (model <= E_MODEL_NONE || model > E_MODEL_MAX) {
+			return;
+		}
+	}
+	else {
+		if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
+			return;
+		}
 	}
 
 	// マテリアル反映

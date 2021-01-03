@@ -129,7 +129,7 @@ void Collision::DebugDraw() {
 
 	if (!m_isInit)	return;
 
-	if (true) { return; }
+	//if (true) { return; }
 
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
 	D3DClass::GetInstance().SetZWrite(true);
@@ -317,11 +317,12 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 
 bool Collision::OBB(Collision obj1, Collision obj2) {
 	// ワールド空間上のOBB中心座標を求める
+	// m_vCenterから(0, 0, 0)に変えたらなんか動いたっぽい
 	XMFLOAT3 vPos1, vPos2;
 	XMStoreFloat3(&vPos1, XMVector3TransformCoord(
-		XMLoadFloat3(&obj1.m_vCenter), XMLoadFloat4x4(&obj1.m_gameObject->m_transform->GetMatrix())));
+		XMLoadFloat3(&float3()), XMLoadFloat4x4(&obj1.m_gameObject->m_transform->GetMatrix())));
 	XMStoreFloat3(&vPos2, XMVector3TransformCoord(
-		XMLoadFloat3(&obj1.m_vCenter), XMLoadFloat4x4(&obj2.m_gameObject->m_transform->GetMatrix())));
+		XMLoadFloat3(&float3()), XMLoadFloat4x4(&obj2.m_gameObject->m_transform->GetMatrix())));
 	// 中心座標間のベクトルを求める
 	XMVECTOR vD = XMVectorSet(vPos2.x - vPos1.x,
 		vPos2.y - vPos1.y,
