@@ -65,7 +65,7 @@ void CCamera::LastUpdate() {
 	// ビュー変換更新
 	XMStoreFloat4x4(&m_mView, XMMatrixLookAtLH(
 		XMLoadFloat3(&m_transform->m_position),
-		XMLoadFloat3(&CAMERA_LOOK_POS),
+		XMLoadFloat3(&(m_transform->m_position + m_transform->m_forward * CAMERA_LOOK_LENG)),
 		XMLoadFloat3(&m_transform->m_up)));
 
 	// 射影変換更新
