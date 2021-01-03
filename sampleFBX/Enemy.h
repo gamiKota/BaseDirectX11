@@ -16,7 +16,6 @@
 
 
 class EnemyState;
-class EnemyOperation;
 
 
 /**
