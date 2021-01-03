@@ -74,7 +74,7 @@ void Transform::LastUpdate() {
 
 	m_rotate.x = normalize(m_rotate.x, -XM_PI, XM_PI);
 	m_rotate.y = normalize(m_rotate.y, -XM_PI, XM_PI);
-	m_rotate.z = normalize(m_rotate.z, -XM_PI, XM_PI);
+	//m_rotate.z = normalize(m_rotate.z, -XM_PI, XM_PI);
 
 	// ÉÅÉÇ
 	// ä˘Ç…çÌèúÇ≥ÇÍÇΩÇ©Ç«Ç§Ç©ÇÕç°ÇÃèäçlÇ¶Ç»Ç¢
@@ -147,14 +147,22 @@ void Transform::LookAt(Transform* target, float angle) {
 
 	
 	float3 diffAngle = rotate - m_rotate;
-	float unti = 1.f;
+	float3 unti = float3(1.f, 1.f, 1.f);
 
+	if (diffAngle.x < -XM_PI) {
+		unti.x = -1.f;
+		diffAngle.x = (m_rotate.x - rotate.x) - XM_2PI;
+	}
+	else if (diffAngle.x > XM_PI) {
+		unti.x = -1.f;
+		diffAngle.x = (m_rotate.x - rotate.x) + XM_2PI;
+	}
 	if (diffAngle.y < -XM_PI) {
-		unti = -1.f;
+		unti.y = -1.f;
 		diffAngle.y = (m_rotate.y - rotate.y) - XM_2PI;
 	}
 	else if (diffAngle.y > XM_PI) {
-		unti = -1.f;
+		unti.y = -1.f;
 		diffAngle.y = (m_rotate.y - rotate.y) + XM_2PI;
 	}
 
@@ -174,8 +182,8 @@ void Transform::LookAt(Transform* target, float angle) {
 		}
 	}
 
-	m_rotate.x += diffAngle.x * unti;
-	m_rotate.y += diffAngle.y * unti;
+	m_rotate.x += diffAngle.x * unti.x;
+	m_rotate.y += diffAngle.y * unti.y;
 }
 
 

@@ -21,7 +21,7 @@
  */
 class Bullet : public Character {
 protected:
-	int	m_nLife;	//!< Žõ–½
+	float	m_nLife;	//!< Žõ–½
 
 public:
 
