@@ -11,14 +11,31 @@
 #include "debugproc.h"
 
 
+#define PI (3.1415926535f)
+#define ConvertToRadians(deg) (deg * PI / 180.f)
+
+
 using namespace DirectX;
 
 
 const Quaternion Quaternion::identity = Quaternion(0.f, 0.f, 0.f, 1.f);
 
-void QuaternionMultiply(Quaternion *pOut, Quaternion *pQ1, Quaternion *pQ2);
-void Vec3RotationAxis(float3 *pQut, float3 *pIn, float3 *pAxis, float fDegree);
 
+/*
+クォータニオンは複素数に基づいており、直感的に理解するのは容易ではありません。
+個々のクォータニオンの成分 (x,y,z,w) にアクセスしたり変更したりすることはほとんどありません。
+たいてい、既存の回転 (例えば、Transform から取得) を使用して新しい回転を構築するために使用します
+(例えば、2 つのローテーションの間を円滑に補間するなど)。
+*/
+
+
+float3 float3::Cross(float3 data1, float3 data2) {
+	float3 out = float3();
+	out.x = data1.y * data2.z - data1.z * data2.y;
+	out.y = data1.z * data2.x - data1.x * data2.z;
+	out.z = data1.x * data2.y - data1.y * data2.x;
+	return out;
+}
 
 
 float float3::Dot(float3 data1, float3 data2) {
@@ -69,25 +86,42 @@ Quaternion Quaternion::Dot(Quaternion q1, Quaternion q2) {
 // 一周が720°なんだけどうんこ
 // なんか掛けたり色々しなきゃいけなさそうブルキナサソウ
 Quaternion Quaternion::AngleAxis(float angle, float3 axis) {
-	if (axis.x == 0.f && axis.y == 0.f && axis.z == 0.f || angle == 0.f) return Quaternion();
-	float RadiansAngle = XMConvertToRadians(angle);
-	XMVECTOR axisRot; //回転用軸
-	XMFLOAT4 result;
-	Quaternion out = Quaternion();
-	
-	axisRot = XMVector3Normalize(XMVectorSet(axis.x, axis.y, axis.z, 1.f));
-	XMStoreFloat4(&result, XMQuaternionRotationAxis(axisRot, RadiansAngle));
-	
-	out.x = result.x;
-	out.y = result.y;
-	out.z = result.z;
-	out.w = result.w;
-	return out;
 
-	//float3 out0 = float3(0.f, 0.f, 0.f);
-	//float3 vec0 = axis;
-	//Vec3RotationAxis(&out0, &vec0, &axis, angle);
-	//return Quaternion(out0.x, out0.y, out0.z, 0.f);
+	Quaternion quaternion;		//!< 作成するクォータニオン
+	float halfSin, halfCos;		//!< 動かす角度の半分のsin,cos
+	float normal;
+	float radian = ConvertToRadians(angle);
+
+	quaternion = { 0.f, 0.f, 0.f, 0.f };
+	// 回転軸の長さを求める
+	normal = axis.x * axis.x + axis.y * axis.y + axis.z * axis.z;
+	if (normal <= 0.0f) return quaternion;
+
+	// 方向ベクトルへ（単位ベクトル：長さは1）
+	normal = 1.0f / sqrtf(normal);
+	axis = axis * normal;
+
+
+	halfSin = sinf(radian * 0.5f);
+	halfCos = cosf(radian * 0.5f);
+
+	quaternion.w = halfCos;
+	quaternion.x = axis.x * halfSin;
+	quaternion.y = axis.y * halfSin;
+	quaternion.z = axis.z * halfSin;
+
+	return quaternion;
+}
+
+
+Quaternion Quaternion::Normalize(Quaternion data) {
+	if (data.x == 0 && data.y == 0 && data.z == 0 && data.w == 0.f)	return Quaternion();
+	float scalar = sqrtf(data.x * data.x + data.y * data.y + data.z * data.z + data.w * data.w);
+	data.x /= scalar;
+	data.y /= scalar;
+	data.z /= scalar;
+	data.w /= scalar;
+	return data;
 }
 
 
@@ -114,7 +148,7 @@ void Vec3RotationAxis(float3 *pQut, float3 *pIn, float3 *pAxis, float fDegree) {
 	// 角度をラジアンに変換
 	rad = XMConvertToRadians(fDegree);
 
-	// 回転用クウォータニオン設定
+	// 回転用クウォータニオン設定(Vector3)
 	q_src.x = pIn->x;
 	q_src.y = pIn->y;
 	q_src.z = pIn->z;

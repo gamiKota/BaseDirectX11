@@ -129,7 +129,7 @@ void Collision::DebugDraw() {
 
 	if (!m_isInit)	return;
 
-	if (true) { return; }
+	//if (true) { return; }
 
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// ”w–ÊƒJƒŠƒ“ƒO(— ‚ð•`‚©‚È‚¢)
 	D3DClass::GetInstance().SetZWrite(true);

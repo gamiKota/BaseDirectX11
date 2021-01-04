@@ -43,13 +43,13 @@ void PlayerMgr::Start() {
 
 
 void PlayerMgr::Update() {
-	
-	Tween tween;
+	//Tween tween;
+	//float3 end = float3(20.f, 10.f, 30.f);
+	//if (Input::isTrigger('M')) {
+	//	m_transform->DOMove(end, 2.f);
+	//}
 
-	float3 end = float3(20.f, 10.f, 30.f);
-	if (Input::isTrigger('M')) {
-		m_transform->DOMove(end, 2.f);
-	}
+
 }
 
 

@@ -66,7 +66,6 @@ void EnemyState::Idol::Update() {
 	else if (m_main->m_transform->m_rotate.z < 0.f) {
 		m_main->m_transform->m_rotate.z += ToRadians(VAL_ANGLE_Z * 0.5f);
 	}
-	PrintDebugProc("Idol\n");
 }
 
 void EnemyState::Idol::OnDestoy() {
@@ -116,8 +115,6 @@ void EnemyState::Move::Update() {
 	if (m_movement.y != 0.f) {
 		m_main->m_transform->m_position.y += (SPEED * m_movement.y);
 	}
-
-	PrintDebugProc("Move\n");
 }
 
 void EnemyState::Move::OnDestoy() {
@@ -140,7 +137,6 @@ void EnemyState::TargetOn::Update() {
 		return;
 	}
 	m_main->m_transform->LookAt(m_target->m_transform, ToRadians(m_valAngle));
-	PrintDebugProc("TargetOn\n");
 }
 
 void EnemyState::TargetOn::OnDestoy() {
@@ -157,7 +153,6 @@ void EnemyState::TargetOff::Start() {
 
 void EnemyState::TargetOff::Update() {
 	m_main->m_transform->m_rotate.y = 0.f;	// YŽ²‚É‰ñ“]‚µ‚Ä—~‚µ‚­‚È‚¢
-	PrintDebugProc("TargetOff\n");
 }
 
 void EnemyState::TargetOff::OnDestoy() {

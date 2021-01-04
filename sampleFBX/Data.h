@@ -45,6 +45,8 @@ public:
 
 	static float Dot(float3 data1, float3 data2);
 
+	static float3 Cross(float3 data1, float3 data2);
+
 	static float Length(float3 pos1, float3 pos2) {
 		return sqrtf((pos2.x - pos1.x) * (pos2.x - pos1.x) +
 			(pos2.y - pos1.y) * (pos2.y - pos1.y) +
@@ -206,6 +208,12 @@ public:
 	 */
 	static Quaternion Euler(float x, float y, float z);
 
+	/**
+	 * @brief Normalize
+	 * @param[in] data
+	 * @return Quaternion型
+	 */
+	static Quaternion Normalize(Quaternion data);
 
 	Quaternion operator = (float3 data) {
 		x = data.x;
@@ -213,45 +221,25 @@ public:
 		z = data.z;
 		return *this;
 	}
+	//Quaternion operator = (float3 data) = delete;
+	//Quaternion operator = (Quaternion data) = delete;
+
 
 	Quaternion operator * (Quaternion data) {
-		Quaternion quaternion;
-		float   num1, num2, num3, num4;
-	
-		num1 = this->w * data.w;
-		num2 = -this->x * data.x;
-		num3 = -this->y * data.y;
-		num4 = -this->z * data.z;
-		quaternion.w = num1 + num2 + num3 + num4;
-	
-		num1 = this->w * data.x;
-		num2 = this->x * data.w;
-		num3 = this->y * data.z;
-		num4 = -this->z * data.y;
-		quaternion.x = num1 + num2 + num3 + num4;
-	
-		num1 = this->w * data.y;
-		num2 = this->y * data.w;
-		num3 = this->z * data.x;
-		num4 = -this->x * data.z;
-		quaternion.y = num1 + num2 + num3 + num4;
-	
-		num1 = this->w * data.z;
-		num2 = this->z * data.w;
-		num3 = this->x * data.y;
-		num4 = -this->y * data.x;
-		quaternion.z = num1 + num2 + num3 + num4;
-	
-		// q1 * q2 = s1 * s2 - v1 * v2 + s1 * v2 + s2 * v1 + v1 * v2
-		// q1とq2、v1とv2はベクトル
-		// s1とs2はQuaternionのスカラー成分
-	
-		return   quaternion;
+		Quaternion out;
+		out.x =  w * data.x - z * data.y + y * data.z + x * data.w;
+		out.y =  z * data.x + w * data.y - x * data.z + y * data.w;
+		out.z = -y * data.x + x * data.y + w * data.z + z * data.w;
+		out.w = -x * data.x - y * data.y - z * data.z + w * data.w;
+		return   out;
 	}
 };
 
 
 int GetRandom(int min, int max);
+
+void QuaternionMultiply(Quaternion *pOut, Quaternion *pQ1, Quaternion *pQ2);
+void Vec3RotationAxis(float3 *pQut, float3 *pIn, float3 *pAxis, float fDegree);
 
 
 /**

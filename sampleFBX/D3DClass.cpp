@@ -185,7 +185,7 @@ void D3DClass::Update(void) {
 //=============================================================================
 void D3DClass::Draw(void) {
 	// バックバッファ＆Ｚバッファのクリア
-	float ClearColor[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
+	float ClearColor[4] = { 0.117647f * 2.f, 0.254902f * 2.f, 0.352941f * 2.f, 1.0f };
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView,
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
