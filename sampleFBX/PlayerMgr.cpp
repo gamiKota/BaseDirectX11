@@ -34,8 +34,8 @@ void PlayerMgr::Start() {
 	Character::Init();
 
 	// プレイヤーに必要なコンポーネントの追加
-	m_state = m_gameObject->AddComponent<PlayerState>();
-	m_operate = m_gameObject->AddComponent<PlayerOperation>();
+	//m_state = m_gameObject->AddComponent<PlayerState>();
+	//m_operate = m_gameObject->AddComponent<PlayerOperation>();
 
 	// 変数の初期化
 	m_rigidbody->m_weight = E_WEIGHT::_2;
@@ -51,11 +51,12 @@ void PlayerMgr::Update() {
 	//}
 	//static float RotY = 0.f;
 	//RotY += 0.5f;
-	//Quaternion q1 = Quaternion::AngleAxis(-90.f,   float3(1.f, 0.f, 0.f));
-	//Quaternion q2 = Quaternion::AngleAxis( 25.f,   float3(0.f, 0.f, 1.f));
-	//Quaternion q3 = Quaternion::AngleAxis(-RotY,   float3(0.f, 1.f, 0.f));
-	//Quaternion q_1 = q3 * q2 * q1;
+	//Quaternion q1 = Quaternion::AngleAxis(-90.f,   float3(1.f, 0.f, 0.f));	// 最初はx軸で-90度のクォータニオンの作成
+	//Quaternion q2 = Quaternion::AngleAxis( 25.f,   float3(0.f, 0.f, 1.f));	// q1の状態からz軸に-25回転
+	//Quaternion q3 = Quaternion::AngleAxis(-RotY,   float3(0.f, 1.f, 0.f));	// q2の状態からy軸に回転
+	//Quaternion q_1 = q1 * q2 * q3;
 	//m_transform->m_rotate = q_1;
+	//m_transform->m_rotate = Quaternion::Euler(float3(-90.f, -90.f, -90.f));
 }
 
 

@@ -128,6 +128,8 @@ Tween* Transform::DOMove(float3 position, float time) {
 }
 
 
+// メモ
+// Unityでは上方ベクトルが引数
 void Transform::LookAt(Transform* target, float angle) {
 	if (!target)	return;
 	float3 rotate = float3();	// 移動先回転軸の確保

@@ -207,15 +207,17 @@ public:
 	static Quaternion AngleAxis(float angle, float3 axis);
 
 	/**
-	 * @brief Euler
+	 * @brief オイラー角指定でクォータニオンの作成
 	 * @param[in] float3
 	 * @return Quaternion
+	 * @details z軸を中心にz度、x軸を中心にx度、y軸を中心にy度（この順序で）回転する回転を返します。
 	 */
 	static Quaternion Euler(float3 vec);
 	/**
-	 * @brief Euler
+	 * @brief オイラー角指定でクォータニオンの作成
 	 * @param[in] float x, float y, float z
 	 * @return Quaternion
+	 * @details z軸を中心にz度、x軸を中心にx度、y軸を中心にy度（この順序で）回転する回転を返します。
 	 */
 	static Quaternion Euler(float x, float y, float z);
 
@@ -246,15 +248,23 @@ public:
 
 	Quaternion operator * (Quaternion data) {
 		Quaternion q;
-		q.x =  w * data.x - z * data.y + y * data.z + x * data.w;
-		q.y =  z * data.x + w * data.y - x * data.z + y * data.w;
-		q.z = -y * data.x + x * data.y + w * data.z + z * data.w;
-		q.w = -x * data.x - y * data.y - z * data.z + w * data.w;
+		q.x =  data.w * x - data.z * y + data.y * z + data.x * w;
+		q.y =  data.z * x + data.w * y - data.x * z + data.y * w;
+		q.z = -data.y * x + data.x * y + data.w * z + data.z * w;
+		q.w = -data.x * x - data.y * y - data.z * z + data.w * w;
 		return Quaternion::Normalize(q);
 	}
 	Quaternion operator *= (Quaternion data) {
 		*this = *this * data;
 		return *this;
+	}
+	Quaternion operator * (float3 data) {
+		Quaternion _data;
+		_data.x = data.x;
+		_data.y = data.y;
+		_data.z = data.z;
+		_data.w = 0.f;
+		return Quaternion::Normalize(*this * _data);
 	}
 };
 

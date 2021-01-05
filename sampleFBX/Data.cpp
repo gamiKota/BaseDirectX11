@@ -59,9 +59,12 @@ float float3::Dot(float3 data1, float3 data2) {
 }
 
 
+// zxyÇÃèáèò
 Quaternion Quaternion::Euler(float3 vec) {
-	Quaternion q = Quaternion(XMConvertToRadians(vec.x), XMConvertToRadians(vec.y), XMConvertToRadians(vec.z), 1.f);
-	return q;
+	Quaternion qx = Quaternion::AngleAxis(vec.x, float3(1.f, 0.f, 0.f));
+	Quaternion qy = Quaternion::AngleAxis(vec.y, float3(0.f, 1.f, 0.f));
+	Quaternion qz = Quaternion::AngleAxis(vec.z, float3(0.f, 0.f, 1.f));
+	return Quaternion::Normalize(qz * qx * qy);
 }
 Quaternion Quaternion::Euler(float x, float y, float z) {
 	return Euler(float3(x, y, z));
