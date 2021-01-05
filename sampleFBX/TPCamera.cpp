@@ -47,18 +47,18 @@ void TPCamera::Update() {
 		float3 right = float3(mtx._11, mtx._12, mtx._13);
 		float3 up = float3(mtx._21, mtx._22, mtx._23);
 		float3 forward = float3(mtx._31, mtx._32, mtx._33);
-		//if (target != nullptr) {	// ターゲットオン
-		//	m_transform->LookAt(target->m_transform);
-		//	SetLook(target->m_transform);
-		//}
-		//else {	// ターゲットオフ
-			//m_transform->LookAt(m_player->m_transform);
+		if (target != nullptr) {	// ターゲットオン
+			m_transform->LookAt(target->m_transform);
+			//SetLook(target->m_transform);
+		}
+		else {	// ターゲットオフ
+			m_transform->LookAt(m_player->m_transform);
 			//SetLook(nullptr);
-		//}
+		}
 		m_transform->m_position = m_player->m_transform->m_position;
 		m_transform->m_position -= forward * 500.f;
 		m_transform->m_position += up * 150.f;
-		CCamera::Get()->SetLook(m_player->m_transform);
+		//CCamera::Get()->SetLook(m_player->m_transform);
 	}
 
 	CCamera::Update();

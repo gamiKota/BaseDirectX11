@@ -44,7 +44,7 @@ void PlayerState::Initialize() {
 	StateMachine::AddState(new PlayerState::AttackBullet(this));
 
 	// •Ï”‚Ì‰Šú‰»
-	m_rotate.z = 0.f;
+	m_rotate = float3();
 }
 
 // ó‘Ô‚ÉˆË‘¶‚µ‚È‚¢‹¤’Êˆ—
