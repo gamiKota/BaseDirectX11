@@ -49,10 +49,12 @@ void PlayerMgr::Update() {
 	//if (Input::isTrigger('M')) {
 	//	m_transform->DOMove(end, 2.f);
 	//}
+	//static float RotY = 0.f;
+	//RotY += 0.5f;
 	//Quaternion q1 = Quaternion::AngleAxis(-90.f,   float3(1.f, 0.f, 0.f));
-	//Quaternion q2 = Quaternion::AngleAxis(-90.f,   float3(0.f, 1.f, 0.f));
-	//Quaternion q3 = Quaternion::AngleAxis(-90.f,   float3(0.f, 0.f, 1.f));
-	//Quaternion q_1 = q1 * q2 * q3;
+	//Quaternion q2 = Quaternion::AngleAxis( 25.f,   float3(0.f, 0.f, 1.f));
+	//Quaternion q3 = Quaternion::AngleAxis(-RotY,   float3(0.f, 1.f, 0.f));
+	//Quaternion q_1 = q3 * q2 * q1;
 	//m_transform->m_rotate = q_1;
 }
 

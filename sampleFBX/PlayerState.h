@@ -34,7 +34,7 @@ enum class PLAYER_STATE {
 class PlayerState : public StateMachine<PLAYER_STATE> {
 private:
 	GameObject*		m_target;		//!< ƒ^[ƒQƒbƒg(“G‚Æ‘ŠŒÝŠÇ—)
-	float			m_roll;			//!< ŒX‚«(ZŽ²)
+	float3			m_rotate;		//!< ŒX‚«
 	float3			m_movement;		//!< ˆÚ“®—Ê(â‘Î‚±‚±‚É‚ ‚Á‚Ä—Ç‚¢•Ï”‚¶‚á‚È‚¢)
 
 public:

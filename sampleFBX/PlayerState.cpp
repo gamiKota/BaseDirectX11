@@ -44,23 +44,27 @@ void PlayerState::Initialize() {
 	StateMachine::AddState(new PlayerState::AttackBullet(this));
 
 	// 変数の初期化
-	m_roll = 0.f;
+	m_rotate.z = 0.f;
 }
 
 // 状態に依存しない共通処理
 void PlayerState::Update() {
-	StateMachine::Update();
 
-	static float YRot = 0.f;
 	if (Input::isPress(VK_LEFT)) {
-		YRot -= 1.f;
+		m_rotate.y -= 1.f;
 	}
 	if (Input::isPress(VK_RIGHT)) {
-		YRot += 1.f;
+		m_rotate.y += 1.f;
 	}
-	Quaternion q1 = Quaternion::AngleAxis(m_roll, m_transform->m_forward);	// オブジェクトの前軸に対して回転
-	Quaternion q2 = Quaternion::AngleAxis(YRot, float3(0.f, 1.f, 0.f));		// ワールドの縦軸に対して回転
-	m_transform->m_rotate = q1 * q2;
+
+	// 各状態の更新
+	StateMachine::Update();
+
+	// このクラスでの共通更新処理
+	m_transform->m_rotate = Quaternion(0.f, 0.f, 0.f, 1.f);
+	Quaternion q1 = Quaternion::AngleAxis(m_rotate.y, float3(0.f, 1.f, 0.f));	// ワールドの縦軸に対して回転
+	Quaternion q2 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);	// オブジェクトの前軸に対して回転
+	m_transform->m_rotate = q2 * q1;
 }
 
 
@@ -72,11 +76,11 @@ void PlayerState::Idol::Start() {
 }
 
 void PlayerState::Idol::Update() {
-	if (main->m_roll > 0.f) {
-		main->m_roll -= VAL_ANGLE_Z * 0.5f;
+	if (main->m_rotate.z > 0.f) {
+		main->m_rotate.z -= VAL_ANGLE_Z * 0.5f;
 	}
-	else if (main->m_roll < 0.f) {
-		main->m_roll += VAL_ANGLE_Z * 0.5f;
+	else if (main->m_rotate.z < 0.f) {
+		main->m_rotate.z += VAL_ANGLE_Z * 0.5f;
 	}
 }
 
@@ -109,20 +113,20 @@ void PlayerState::Move::Update() {
 	if (main->m_movement.x != 0.f) {
 		main->m_transform->m_position += right * (SPEED * main->m_movement.x);
 		if (main->m_movement.x > 0.f) {
-			if (main->m_roll >= -MAX_ANGLE_Z)
-				main->m_roll -= VAL_ANGLE_Z;
+			if (main->m_rotate.z >= -MAX_ANGLE_Z)
+				main->m_rotate.z -= VAL_ANGLE_Z;
 		}
 		else {
-			if (main->m_roll <= MAX_ANGLE_Z)
-				main->m_roll += VAL_ANGLE_Z;
+			if (main->m_rotate.z <= MAX_ANGLE_Z)
+				main->m_rotate.z += VAL_ANGLE_Z;
 		}
 	}
 	else {
-		if (main->m_roll > 0.f) {
-			main->m_roll -= VAL_ANGLE_Z * 0.5f;
+		if (main->m_rotate.z > 0.f) {
+			main->m_rotate.z -= VAL_ANGLE_Z * 0.5f;
 		}
-		else if (main->m_roll < 0.f) {
-			main->m_roll += VAL_ANGLE_Z * 0.5f;
+		else if (main->m_rotate.z < 0.f) {
+			main->m_rotate.z += VAL_ANGLE_Z * 0.5f;
 		}
 	}
 	// Y軸移動(ターゲットの方に向いてるのでy要素で直接移動処理)
@@ -172,6 +176,7 @@ void PlayerState::TargetOn::Update() {
 		return;
 	}
 	main->m_transform->LookAt(main->m_target->m_transform);
+	PrintDebugProc("TargetOn\n");
 }
 
 void PlayerState::TargetOn::OnDestoy() {
@@ -187,7 +192,8 @@ void PlayerState::TargetOff::Start() {
 }
 
 void PlayerState::TargetOff::Update() {
-	main->m_transform->m_rotate.y = 0.f;	// Y軸に回転して欲しくない
+	main->m_rotate.y = 0.f;	// Y軸に回転して欲しくない
+	PrintDebugProc("TargetOff\n");
 }
 
 void PlayerState::TargetOff::OnDestoy() {
