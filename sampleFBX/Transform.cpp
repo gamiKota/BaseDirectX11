@@ -13,6 +13,62 @@
 using namespace DirectX;
 
 
+Quaternion GetRotation(XMFLOAT4X4 m)
+{
+	float* elem = new float[4];
+	elem[0] =  m._11 - m._22 - m._33 + 1.0f;
+	elem[1] = -m._11 + m._22 - m._33 + 1.0f;
+	elem[2] = -m._11 - m._22 + m._33 + 1.0f;
+	elem[3] =  m._11 + m._22 + m._33 + 1.0f;
+
+	int biggestIdx = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (elem[i] > elem[biggestIdx])
+		{
+			biggestIdx = i;
+		}
+	}
+
+	if (elem[biggestIdx] < 0)
+	{
+		//Debug.Log("Wrong matrix.");
+		return Quaternion(0.f, 0.f, 0.f, 0.f);
+	}
+
+	float* q = new float[4];
+	float v = sqrtf(elem[biggestIdx]) * 0.5f;
+	q[biggestIdx] = v;
+	float mult = 0.25f / v;
+
+	switch (biggestIdx)
+	{
+	case 0:
+		q[1] = (m._21 + m._12) * mult;
+		q[2] = (m._13 + m._31) * mult;
+		q[3] = (m._32 - m._23) * mult;
+		break;
+	case 1:
+		q[0] = (m._21 + m._12) * mult;
+		q[2] = (m._32 + m._23) * mult;
+		q[3] = (m._13 - m._31) * mult;
+		break;
+	case 2:
+		q[0] = (m._13 + m._31) * mult;
+		q[1] = (m._32 + m._23) * mult;
+		q[3] = (m._21 - m._12) * mult;
+		break;
+	case 3:
+		q[0] = (m._32 - m._23) * mult;
+		q[1] = (m._13 - m._31) * mult;
+		q[2] = (m._21 - m._12) * mult;
+		break;
+	}
+
+	return Quaternion(q[0], q[1], q[2], q[3]);
+}
+
+
 // メモ
 // クォータニオンをベクトルととらえる
 // 各要素(x, y, z)は180を境に0～1～0に数値が正規化
@@ -22,7 +78,7 @@ using namespace DirectX;
 // 逆に、クォータニオンが与えられたときに具体的な回転や姿勢をイメージしにくい
 
 
-Transform::Transform() : m_position(float3()), m_rotate(Quaternion()), m_scale(float3()), m_tween(new Tween[3]()), m_Parent(nullptr) {
+Transform::Transform() : m_position(float3()), m_rotation(Quaternion()), m_scale(float3()), m_tween(new Tween[3]()), m_Parent(nullptr) {
 	XMStoreFloat4x4(&m_world, XMMatrixIdentity());
 }
 
@@ -70,8 +126,8 @@ void Transform::LastUpdate() {
 	//m_rotate.z = normalize(m_rotate.z, -XM_PI, XM_PI);
 
 	// クォータニオンは正規化されていることが前提
-	m_rotate = Quaternion::Normalize(m_rotate);
-	float3 rotate = Quaternion::RadianAngle(m_rotate);
+	m_rotation = Quaternion::Normalize(m_rotation);
+	float3 rotate = Quaternion::RadianAngle(m_rotation);
 
 	// メモ
 	// 既に削除されたかどうかは今の所考えない
@@ -110,7 +166,7 @@ void Transform::LastUpdate() {
 void Transform::SetImGuiVal() {
 #if _DEBUG
 	ImGui::DragFloat3("position", (float*)&m_transform->m_position);
-	ImGui::DragFloat3("rotation", (float*)&m_transform->m_rotate, 0.01f);
+	ImGui::DragFloat3("rotation", (float*)&m_transform->m_rotation, 0.01f);
 	ImGui::DragFloat3("scale", (float*)&m_transform->m_scale);
 
 	ImGui::DragFloat3("forward", (float*)&m_transform->m_forward);
@@ -130,55 +186,21 @@ Tween* Transform::DOMove(float3 position, float time) {
 
 // メモ
 // Unityでは上方ベクトルが引数
-void Transform::LookAt(Transform* target, float angle) {
+void Transform::LookAt(Transform* target, float3 worldUp) {
 	if (!target)	return;
-	float3 rotate = float3();	// 移動先回転軸の確保
-	rotate.x = -atan2f(
-		target->m_position.y - m_position.y,
-		sqrtf(powf(target->m_position.z - m_position.z, 2) + powf(target->m_position.x - m_position.x, 2)));
-	rotate.y = atan2f(
-		target->m_position.x - m_position.x,
-		target->m_position.z - m_position.z);
 
-	
-	float3 diffAngle = rotate - float3(m_rotate.x, m_rotate.y, m_rotate.z);
-	float3 unti = float3(1.f, 1.f, 1.f);
+	float3 z = float3::Normalize(target->m_position - m_position);
+	float3 x = float3::Normalize(float3::Cross(worldUp, z));
+	float3 y = float3::Normalize(float3::Cross(z, x));
 
-	if (diffAngle.x < -XM_PI) {
-		unti.x = -1.f;
-		diffAngle.x = (m_rotate.x - rotate.x) - XM_2PI;
-	}
-	else if (diffAngle.x > XM_PI) {
-		unti.x = -1.f;
-		diffAngle.x = (m_rotate.x - rotate.x) + XM_2PI;
-	}
-	if (diffAngle.y < -XM_PI) {
-		unti.y = -1.f;
-		diffAngle.y = (m_rotate.y - rotate.y) - XM_2PI;
-	}
-	else if (diffAngle.y > XM_PI) {
-		unti.y = -1.f;
-		diffAngle.y = (m_rotate.y - rotate.y) + XM_2PI;
-	}
+	XMFLOAT4X4 m;
+	XMStoreFloat4x4(&m, XMMatrixIdentity());
+	m._11 = x.x; m._12 = y.x; m._13 = z.x;
+	m._21 = x.y; m._22 = y.y; m._23 = z.y;
+	m._31 = x.z; m._32 = y.z; m._33 = z.z;
 
-	// 角度制限
-	if (angle > 0.f && angle < XM_2PI) {
-		if (diffAngle.x > angle) {
-			diffAngle.x = angle;
-		}
-		else if (diffAngle.x < -angle) {
-			diffAngle.x = -angle;
-		}
-		if (diffAngle.y > angle) {
-			diffAngle.y = angle;
-		}
-		else if (diffAngle.y < -angle) {
-			diffAngle.y = -angle;
-		}
-	}
-
-	m_rotate.x += diffAngle.x * unti.x;
-	m_rotate.y += diffAngle.y * unti.y;
+	Quaternion rot = GetRotation(m);
+	m_rotation = rot;
 }
 
 

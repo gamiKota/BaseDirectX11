@@ -232,7 +232,7 @@ public:
 		x = data.x;
 		y = data.y;
 		z = data.z;
-		return *this;
+		return Quaternion::Normalize(*this);
 	}
 	//Quaternion operator = (float3 data) = delete;
 	//Quaternion operator = (Quaternion data) = delete;
@@ -246,8 +246,22 @@ public:
 		return Quaternion::Normalize(q);
 	}
 
+	// ƒNƒH[ƒ^ƒjƒIƒ“ p ‚É‘Î‚µ‚ÄA‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“ q
+	// ‚ÌŠ|‚¯ŽZ	
 	Quaternion operator * (Quaternion data) {
 		Quaternion q;
+		//float3 _v;
+		//float _w;
+		//float3 pv = float3(this->x, this->y, this->z);	// Š|‚¯‚ç‚ê‚é‰ñ“]
+		//float pw = this->w;
+		//float3 qv = float3(data.x, data.y, data.z);		// Š|‚¯‚é‰ñ“]
+		//float qw = data.w;
+		//_v = qv * pv + qv * pw + pv * qw;
+		//_w = qw * pw - float3::Dot(qv, pv);
+		//q.x = _v.x;
+		//q.y = _v.y;
+		//q.z = _v.z;
+		//q.w = _w;
 		q.x =  data.w * x - data.z * y + data.y * z + data.x * w;
 		q.y =  data.z * x + data.w * y - data.x * z + data.y * w;
 		q.z = -data.y * x + data.x * y + data.w * z + data.z * w;
@@ -256,7 +270,7 @@ public:
 	}
 	Quaternion operator *= (Quaternion data) {
 		*this = *this * data;
-		return *this;
+		return Quaternion::Normalize(*this);
 	}
 	Quaternion operator * (float3 data) {
 		Quaternion _data;

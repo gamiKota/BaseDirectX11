@@ -154,14 +154,14 @@ void TargetCtr::Update() {
 			// 座標に反映
 			m_transform->m_position += pos3D;
 			// ターゲット方向の更新
-			m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
+			m_transform->m_rotation.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
 		}
 		else {
 			// 二次元ベクトルに変換
 			tempX = m_target->m_transform->m_position.x - player->m_transform->m_position.x;
 			tempZ = m_target->m_transform->m_position.z - player->m_transform->m_position.z;
-			vecX = tempX * cosf(player->m_transform->m_rotate.y) - tempZ * sinf(player->m_transform->m_rotate.y);
-			vecZ = tempX * sinf(player->m_transform->m_rotate.y) + tempZ * cosf(player->m_transform->m_rotate.y);
+			vecX = tempX * cosf(player->m_transform->m_rotation.y) - tempZ * sinf(player->m_transform->m_rotation.y);
+			vecZ = tempX * sinf(player->m_transform->m_rotation.y) + tempZ * cosf(player->m_transform->m_rotation.y);
 			// 画面比に合わせたベクトルに補正
 			vecX *= (float)SCREEN_RATIO;
 			vecZ *= (float)SCREEN_RATIO;
@@ -170,7 +170,7 @@ void TargetCtr::Update() {
 			// 座標に反映
 			m_transform->m_position += vec;
 			// ターゲット方向の更新
-			m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
+			m_transform->m_rotation.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
 		}
 
 		obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
@@ -190,7 +190,7 @@ void TargetCtr::Update() {
 			m_transform->m_scale = float3(80.f, 80.f, 0.f);
 			obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 1);
 		}
-		m_transform->m_rotate.z = 0.f;
+		m_transform->m_rotation.z = 0.f;
 	}
 
 	// 画面外

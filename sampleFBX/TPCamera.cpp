@@ -42,7 +42,7 @@ void TPCamera::Update() {
 		GameObject* target = m_player->m_state->GetTarget();
 		// ƒ‚ƒfƒ‹Žp¨‚ÉˆË‘¶‚µ‚È‚¢•½sˆÚ“®
 		XMFLOAT4X4 mtx = XMFLOAT4X4();
-		float3 rotate = Quaternion::RadianAngle(m_player->m_transform->m_rotate);
+		float3 rotate = Quaternion::RadianAngle(m_player->m_transform->m_rotation);
 		XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(rotate.x, rotate.y, 0.f));
 		float3 right = float3(mtx._11, mtx._12, mtx._13);
 		float3 up = float3(mtx._21, mtx._22, mtx._23);

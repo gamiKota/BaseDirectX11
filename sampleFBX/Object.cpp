@@ -18,7 +18,7 @@ GameObject* Object::Instantiate(GameObject* obj, float3 transform, Quaternion ro
 	if (obj == nullptr)	return nullptr;
 
 	obj->m_transform->m_position = transform;
-	obj->m_transform->m_rotate = rotate;
+	obj->m_transform->m_rotation = rotate;
 	obj->m_transform->m_scale = scale;
 
 	SceneManager::GetInstance().m_scene->m_listObject.push_back(obj);

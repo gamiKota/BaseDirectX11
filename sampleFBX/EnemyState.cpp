@@ -60,11 +60,11 @@ void EnemyState::Idol::Start() {
 }
 
 void EnemyState::Idol::Update() {
-	if (m_main->m_transform->m_rotate.z > 0.f) {
-		m_main->m_transform->m_rotate.z -= ToRadians(VAL_ANGLE_Z * 0.5f);
+	if (m_main->m_transform->m_rotation.z > 0.f) {
+		m_main->m_transform->m_rotation.z -= ToRadians(VAL_ANGLE_Z * 0.5f);
 	}
-	else if (m_main->m_transform->m_rotate.z < 0.f) {
-		m_main->m_transform->m_rotate.z += ToRadians(VAL_ANGLE_Z * 0.5f);
+	else if (m_main->m_transform->m_rotation.z < 0.f) {
+		m_main->m_transform->m_rotation.z += ToRadians(VAL_ANGLE_Z * 0.5f);
 	}
 }
 
@@ -82,7 +82,7 @@ void EnemyState::Move::Start() {
 void EnemyState::Move::Update() {
 	// ƒ‚ƒfƒ‹Žp¨‚ÉˆË‘¶‚µ‚È‚¢•½sˆÚ“®
 	XMFLOAT4X4 mtx = XMFLOAT4X4();
-	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(m_main->m_transform->m_rotate.x, m_main->m_transform->m_rotate.y, 0.f));
+	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(m_main->m_transform->m_rotation.x, m_main->m_transform->m_rotation.y, 0.f));
 	float3 right = float3(mtx._11, mtx._12, mtx._13);
 	float3 up = float3(mtx._21, mtx._22, mtx._23);
 	float3 forward = float3(mtx._31, mtx._32, mtx._33);
@@ -95,20 +95,20 @@ void EnemyState::Move::Update() {
 	if (m_movement.x != 0.f) {
 		m_main->m_transform->m_position += right * (SPEED * m_movement.x);
 		if (m_movement.x > 0.f) {
-			if (m_main->m_transform->m_rotate.z >= ToRadians(-MAX_ANGLE_Z))
-				m_main->m_transform->m_rotate.z -= ToRadians(VAL_ANGLE_Z);
+			if (m_main->m_transform->m_rotation.z >= ToRadians(-MAX_ANGLE_Z))
+				m_main->m_transform->m_rotation.z -= ToRadians(VAL_ANGLE_Z);
 		}
 		else {
-			if (m_main->m_transform->m_rotate.z <= ToRadians(MAX_ANGLE_Z))
-				m_main->m_transform->m_rotate.z += ToRadians(VAL_ANGLE_Z);
+			if (m_main->m_transform->m_rotation.z <= ToRadians(MAX_ANGLE_Z))
+				m_main->m_transform->m_rotation.z += ToRadians(VAL_ANGLE_Z);
 		}
 	}
 	else {
-		if (m_main->m_transform->m_rotate.z > 0.f) {
-			m_main->m_transform->m_rotate.z -= ToRadians(VAL_ANGLE_Z * 0.5f);
+		if (m_main->m_transform->m_rotation.z > 0.f) {
+			m_main->m_transform->m_rotation.z -= ToRadians(VAL_ANGLE_Z * 0.5f);
 		}
-		else if (m_main->m_transform->m_rotate.z < 0.f) {
-			m_main->m_transform->m_rotate.z += ToRadians(VAL_ANGLE_Z * 0.5f);
+		else if (m_main->m_transform->m_rotation.z < 0.f) {
+			m_main->m_transform->m_rotation.z += ToRadians(VAL_ANGLE_Z * 0.5f);
 		}
 	}
 	// YŽ²ˆÚ“®(ƒ^[ƒQƒbƒg‚Ì•û‚ÉŒü‚¢‚Ä‚é‚Ì‚Åy—v‘f‚Å’¼ÚˆÚ“®ˆ—)
@@ -136,7 +136,8 @@ void EnemyState::TargetOn::Update() {
 		m_main->SetStateActive(ENEMY_STATE::TARGET_OFF, true);
 		return;
 	}
-	m_main->m_transform->LookAt(m_target->m_transform, ToRadians(m_valAngle));
+	//m_main->m_transform->LookAt(m_target->m_transform, ToRadians(m_valAngle));
+	m_main->m_transform->LookAt(m_target->m_transform);
 }
 
 void EnemyState::TargetOn::OnDestoy() {
@@ -152,7 +153,7 @@ void EnemyState::TargetOff::Start() {
 }
 
 void EnemyState::TargetOff::Update() {
-	m_main->m_transform->m_rotate.y = 0.f;	// YŽ²‚É‰ñ“]‚µ‚Ä—~‚µ‚­‚È‚¢
+	m_main->m_transform->m_rotation.y = 0.f;	// YŽ²‚É‰ñ“]‚µ‚Ä—~‚µ‚­‚È‚¢
 }
 
 void EnemyState::TargetOff::OnDestoy() {
@@ -164,7 +165,7 @@ void EnemyState::TargetOff::OnDestoy() {
  *************************************************************************************************/
 void EnemyState::AttackBullet::Start() {
 	GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "BulletPlayer");
-	Instantiate(obj, m_main->m_transform->m_position + m_main->m_transform->m_forward * 200.f, m_main->m_transform->m_rotate);
+	Instantiate(obj, m_main->m_transform->m_position + m_main->m_transform->m_forward * 200.f, m_main->m_transform->m_rotation);
 	obj->AddComponent<Bullet>();
 	// StartŠÖ”‚ÅŒ‚‚¿I‚í‚Á‚½‚Ì‚Åó‘ÔI—¹
 	m_main->SetStateActive(ENEMY_STATE::ATTACK_BULLET, false);

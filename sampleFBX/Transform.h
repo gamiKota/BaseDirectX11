@@ -20,7 +20,7 @@ class GameObject;
 class Transform : public Component {
 public:
 	float3		m_position;		//!< À•W
-	Quaternion	m_rotate;		//!< ‰ñ“]
+	Quaternion	m_rotation;		//!< ‰ñ“]
 	float3		m_scale;		//!< Šgk
 	float3		m_forward;		//!< ‘O•ûŒü
 	float3		m_right;		//!< ‰E•ûŒü
@@ -43,7 +43,7 @@ public:
 
 	Tween* DOMove(float3 position, float time = 0.f);
 
-	void LookAt(Transform* target, float angle = 0.f);
+	void LookAt(Transform* target, float3 worldUp = float3(0.f, 1.f, 0.f));
 
 	DirectX::XMFLOAT4X4 GetMatrixBillboard();
 

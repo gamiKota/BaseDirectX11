@@ -61,10 +61,10 @@ void PlayerState::Update() {
 	StateMachine::Update();
 
 	// このクラスでの共通更新処理
-	m_transform->m_rotate = Quaternion(0.f, 0.f, 0.f, 1.f);
-	Quaternion q1 = Quaternion::AngleAxis(m_rotate.y, float3(0.f, 1.f, 0.f));	// ワールドの縦軸に対して回転
-	Quaternion q2 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);	// オブジェクトの前軸に対して回転
-	m_transform->m_rotate = q2 * q1;
+	//m_transform->m_rotate = Quaternion(0.f, 0.f, 0.f, 1.f);
+	//Quaternion q1 = Quaternion::AngleAxis(m_rotate.y, float3(0.f, 1.f, 0.f));
+	//Quaternion q2 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
+	//m_transform->m_rotate = q1 * q2;
 }
 
 
@@ -98,7 +98,7 @@ void PlayerState::Move::Start() {
 void PlayerState::Move::Update() {
 	// モデル姿勢に依存しない平行移動
 	XMFLOAT4X4 mtx = XMFLOAT4X4();
-	float3 rotate = Quaternion::RadianAngle(main->m_transform->m_rotate);
+	float3 rotate = Quaternion::RadianAngle(main->m_transform->m_rotation);
 
 	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(rotate.x, rotate.y, 0.f));
 	float3 right = float3(mtx._11, mtx._12, mtx._13);
@@ -131,7 +131,7 @@ void PlayerState::Move::Update() {
 	}
 	// Y軸移動(ターゲットの方に向いてるのでy要素で直接移動処理)
 	if (main->m_movement.y != 0.f) {
-		main->m_transform->m_position.y += (SPEED * main->m_movement.y);
+		main->m_transform->m_position += up * (SPEED * main->m_movement.y);
 	}
 }
 
@@ -175,7 +175,9 @@ void PlayerState::TargetOn::Update() {
 		main->SetStateActive(PLAYER_STATE::TARGET_OFF, true);
 		return;
 	}
+	
 	main->m_transform->LookAt(main->m_target->m_transform);
+
 	PrintDebugProc("TargetOn\n");
 }
 
@@ -205,7 +207,7 @@ void PlayerState::TargetOff::OnDestoy() {
  *************************************************************************************************/
 void PlayerState::AttackBullet::Start() {
 	GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "BulletPlayer");
-	Instantiate(obj, main->m_transform->m_position + main->m_transform->m_forward * 200.f, main->m_transform->m_rotate);
+	Instantiate(obj, main->m_transform->m_position + main->m_transform->m_forward * 200.f, main->m_transform->m_rotation);
 	obj->AddComponent<Bullet>();
 	// Start関数で撃ち終わったので状態終了
 	main->SetStateActive(PLAYER_STATE::ATTACK_BULLET, false);

@@ -34,8 +34,8 @@ void PlayerMgr::Start() {
 	Character::Init();
 
 	// プレイヤーに必要なコンポーネントの追加
-	//m_state = m_gameObject->AddComponent<PlayerState>();
-	//m_operate = m_gameObject->AddComponent<PlayerOperation>();
+	m_state = m_gameObject->AddComponent<PlayerState>();
+	m_operate = m_gameObject->AddComponent<PlayerOperation>();
 
 	// 変数の初期化
 	m_rigidbody->m_weight = E_WEIGHT::_2;

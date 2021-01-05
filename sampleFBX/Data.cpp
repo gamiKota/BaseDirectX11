@@ -37,14 +37,6 @@ bool AlmostEqualRelative(float A, float B, float maxRelDiff = FLT_EPSILON) {
 }
 
 
-/*
-クォータニオンは複素数に基づいており、直感的に理解するのは容易ではありません。
-個々のクォータニオンの成分 (x,y,z,w) にアクセスしたり変更したりすることはほとんどありません。
-たいてい、既存の回転 (例えば、Transform から取得) を使用して新しい回転を構築するために使用します
-(例えば、2 つのローテーションの間を円滑に補間するなど)。
-*/
-
-
 float3 float3::Cross(float3 data1, float3 data2) {
 	float3 out = float3();
 	out.x = data1.y * data2.z - data1.z * data2.y;
@@ -143,13 +135,12 @@ float3 Quaternion::EulerAngle(Quaternion q) {
 }
 
 Quaternion Quaternion::Inverse(Quaternion rotation) {
-	Quaternion Result;
-	float LengthSq = rotation.x * rotation.x + rotation.y * rotation.y + rotation.z * rotation.z + rotation.w * rotation.w;
-	Result.x = -rotation.x / LengthSq;
-	Result.y = -rotation.y / LengthSq;
-	Result.z = -rotation.z / LengthSq;
-	Result.w = rotation.w / LengthSq;
-	return Result;
+	Quaternion q;
+	q.x = -rotation.x;
+	q.y = -rotation.y;
+	q.z = -rotation.z;
+	q.w = rotation.w;
+	return Quaternion::Normalize(q);
 }
 
 Quaternion Quaternion::Slerp(Quaternion q1, Quaternion q2, float t) {
