@@ -15,6 +15,7 @@
 // コンポーネント
 #include "Bullet.h"
 // システム
+#include "input.h"
 #include "debugproc.h"
 #include "System.h"
 
@@ -49,7 +50,17 @@ void PlayerState::Initialize() {
 // 状態に依存しない共通処理
 void PlayerState::Update() {
 	StateMachine::Update();
-	m_transform->m_rotate.z = XMConvertToRadians(m_roll);
+
+	static float YRot = 0.f;
+	if (Input::isPress(VK_LEFT)) {
+		YRot -= 1.f;
+	}
+	if (Input::isPress(VK_RIGHT)) {
+		YRot += 1.f;
+	}
+	Quaternion q1 = Quaternion::AngleAxis(m_roll, m_transform->m_forward);	// オブジェクトの前軸に対して回転
+	Quaternion q2 = Quaternion::AngleAxis(YRot, float3(0.f, 1.f, 0.f));		// ワールドの縦軸に対して回転
+	m_transform->m_rotate = q1 * q2;
 }
 
 
@@ -83,7 +94,9 @@ void PlayerState::Move::Start() {
 void PlayerState::Move::Update() {
 	// モデル姿勢に依存しない平行移動
 	XMFLOAT4X4 mtx = XMFLOAT4X4();
-	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(main->m_transform->m_rotate.x, main->m_transform->m_rotate.y, 0.f));
+	float3 rotate = Quaternion::RadianAngle(main->m_transform->m_rotate);
+
+	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(rotate.x, rotate.y, 0.f));
 	float3 right = float3(mtx._11, mtx._12, mtx._13);
 	float3 up = float3(mtx._21, mtx._22, mtx._23);
 	float3 forward = float3(mtx._31, mtx._32, mtx._33);

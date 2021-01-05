@@ -141,8 +141,11 @@ public:
 /**
  * @brief クォータニオン
  */
-class Quaternion : public float3 {
+class Quaternion {
 public:
+	float x;
+	float y;
+	float z;
 	float w;
 
 	static const Quaternion identity;	//!< 恒等回転（無回転状態）
@@ -159,9 +162,17 @@ public:
 		this->w = w;
 	}
 
-	float3 EulerAngle() {
-		return float3(DirectX::XMConvertToDegrees(x), DirectX::XMConvertToDegrees(y), DirectX::XMConvertToDegrees(z));
-	}
+	/**
+	 * @brief オイラー角変換
+	 * @return オイラー角
+	 */
+	static float3 EulerAngle(Quaternion q);
+
+	/**
+	 * @brief ラジアン角変換
+	 * @return ラジアン角
+	 */
+	static float3 RadianAngle(Quaternion q);
 
 	/**
 	 * @brief 逆クォータニオン
@@ -188,7 +199,7 @@ public:
 	static Quaternion Dot(Quaternion q1, Quaternion q2);
 
 	/**
-	 * @brief 2つのQuaternionの間を計算
+	 * @brief 軸回転クォータニオンの作成
 	 * @param[in] angle
 	 * @param[in] axis
 	 * return 算出されたQuaternion
@@ -224,14 +235,26 @@ public:
 	//Quaternion operator = (float3 data) = delete;
 	//Quaternion operator = (Quaternion data) = delete;
 
+	Quaternion operator + (Quaternion data) {
+		Quaternion q;
+		q.x = x + data.x;
+		q.y = y + data.y;
+		q.z = z + data.z;
+		q.w = w + data.w;
+		return Quaternion::Normalize(q);
+	}
 
 	Quaternion operator * (Quaternion data) {
-		Quaternion out;
-		out.x =  w * data.x - z * data.y + y * data.z + x * data.w;
-		out.y =  z * data.x + w * data.y - x * data.z + y * data.w;
-		out.z = -y * data.x + x * data.y + w * data.z + z * data.w;
-		out.w = -x * data.x - y * data.y - z * data.z + w * data.w;
-		return   out;
+		Quaternion q;
+		q.x =  w * data.x - z * data.y + y * data.z + x * data.w;
+		q.y =  z * data.x + w * data.y - x * data.z + y * data.w;
+		q.z = -y * data.x + x * data.y + w * data.z + z * data.w;
+		q.w = -x * data.x - y * data.y - z * data.z + w * data.w;
+		return Quaternion::Normalize(q);
+	}
+	Quaternion operator *= (Quaternion data) {
+		*this = *this * data;
+		return *this;
 	}
 };
 

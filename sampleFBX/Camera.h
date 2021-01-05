@@ -44,7 +44,7 @@ public:
 	DirectX::XMFLOAT4X4& GetView() { return m_mView; }
 	DirectX::XMFLOAT4X4& GetProj() { return m_mProj; }
 
-	void SetLook(Transform* transform) {}
+	void SetLook(Transform* transform) { m_lookTarget = transform; }
 
 	static void Set(CCamera* pCamera) { m_pCamera = pCamera; }
 	static CCamera* Get() { return m_pCamera; }

@@ -37,25 +37,28 @@ void TPCamera::Update() {
 
 	// 追従処理
 	// プレイヤーの横移動でずらしたい
+	// 処理順のせいなのかガクつく
 	if (m_player != nullptr) {
 		GameObject* target = m_player->m_state->GetTarget();
 		// モデル姿勢に依存しない平行移動
 		XMFLOAT4X4 mtx = XMFLOAT4X4();
-		XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(m_player->m_transform->m_rotate.x, m_player->m_transform->m_rotate.y, 0.f));
+		float3 rotate = Quaternion::RadianAngle(m_player->m_transform->m_rotate);
+		XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(rotate.x, rotate.y, 0.f));
 		float3 right = float3(mtx._11, mtx._12, mtx._13);
 		float3 up = float3(mtx._21, mtx._22, mtx._23);
 		float3 forward = float3(mtx._31, mtx._32, mtx._33);
-		if (target != nullptr) {	// ターゲットオン
-			m_transform->LookAt(target->m_transform);
-			SetLook(target->m_transform);
-		}
-		else {	// ターゲットオフ
-			m_transform->LookAt(m_player->m_transform);
-			SetLook(nullptr);
-		}
+		//if (target != nullptr) {	// ターゲットオン
+		//	m_transform->LookAt(target->m_transform);
+		//	SetLook(target->m_transform);
+		//}
+		//else {	// ターゲットオフ
+			//m_transform->LookAt(m_player->m_transform);
+			//SetLook(nullptr);
+		//}
 		m_transform->m_position = m_player->m_transform->m_position;
-		m_transform->m_position -= forward * 250.f;
+		m_transform->m_position -= forward * 500.f;
 		m_transform->m_position += up * 150.f;
+		CCamera::Get()->SetLook(m_player->m_transform);
 	}
 
 	CCamera::Update();

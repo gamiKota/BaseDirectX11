@@ -29,9 +29,9 @@ void FixedEnemy::Start() {
 	m_status->m_bulletTime.max = 5.f;	// ’e”­ŽËŠÔŠu
 
 	// ó‘Ô‚Ì‰Šú‰»
-	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
-	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
-	m_state->GetState<EnemyState::TargetOn>()->SetAngle(1.f);
+	//m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
+	//m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
+	//m_state->GetState<EnemyState::TargetOn>()->SetAngle(1.f);
 }
 
 

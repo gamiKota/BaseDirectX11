@@ -11,14 +11,30 @@
 #include "debugproc.h"
 
 
-#define PI (3.1415926535f)
-#define ConvertToRadians(deg) (deg * PI / 180.f)
+//#define PI (3.1415926535f)
+#define ConvertToRadians(deg) (deg * XM_PI / 180.f)
 
 
 using namespace DirectX;
 
 
 const Quaternion Quaternion::identity = Quaternion(0.f, 0.f, 0.f, 1.f);
+
+
+bool AlmostEqualRelative(float A, float B, float maxRelDiff = FLT_EPSILON) {
+	// Calculate the difference.
+	float diff = fabsf(A - B);
+	A = fabsf(A);
+	B = fabsf(B);
+
+	// Find the largest
+	float largest = (B > A) ? B : A;
+
+	if (diff <= largest * maxRelDiff)
+		return true;
+
+	return false;
+}
 
 
 /*
@@ -49,6 +65,78 @@ Quaternion Quaternion::Euler(float3 vec) {
 }
 Quaternion Quaternion::Euler(float x, float y, float z) {
 	return Euler(float3(x, y, z));
+}
+
+// メモ
+// 二番目の要素で挙動が可笑しい
+// ジンバルロックかなんかが原因っぽい
+// 特異点(±90)の判定をする
+float3 Quaternion::RadianAngle(Quaternion q) {
+
+	float _x = q.x;
+	float _y = q.y;
+	float _z = q.z;
+	float _w = q.w;
+
+	float x2 = _x * _x;
+	float y2 = _y * _y;
+	float z2 = _z * _z;
+
+	float xy = _x * _y;
+	float xz = _x * _z;
+	float yz = _y * _z;
+	float wx = _w * _x;
+	float wy = _w * _y;
+	float wz = _w * _z;
+
+	// 1 - 2y^2 - 2z^2
+	float m00 = 1.f - (2.f * y2) - (2.f * z2);
+
+	// 2xy + 2wz
+	float m01 = (2.f * xy) + (2.f * wz);
+
+	// 2xy - 2wz
+	float m10 = (2.f * xy) - (2.f * wz);
+
+	// 1 - 2x^2 - 2z^2
+	float m11 = 1.f - (2.f * x2) - (2.f * z2);
+
+	// 2xz + 2wy
+	float m20 = (2.f * xz) + (2.f * wy);
+
+	// 2yz+2wx
+	float m21 = (2.f * yz) - (2.f * wx);
+
+	// 1 - 2x^2 - 2y^2
+	float m22 = 1.f - (2.f * x2) - (2.f * y2);
+
+
+	float tx, ty, tz;
+
+	// 角度90を境に特異点が生まれる
+	if (AlmostEqualRelative(m21, 1.f))
+	{
+		tx = -XM_PI * 0.5f;
+		ty = 0.f;
+		tz = atan2f(m10, m00);
+	}
+	else if (AlmostEqualRelative(m21, -1.f))
+	{
+		tx = XM_PI * 0.5f;
+		ty = 0.f;
+		tz = atan2f(m10, m00);
+	}
+	else
+	{
+		tx = asinf(-m21);
+		ty = atan2f(m20, m22);
+		tz = atan2f(m01, m11);
+	}
+	return float3(tx, ty, tz);
+}
+float3 Quaternion::EulerAngle(Quaternion q) {
+	float3 _q = Quaternion::RadianAngle(q);
+	return float3(XMConvertToDegrees(_q.x), XMConvertToDegrees(_q.y), XMConvertToDegrees(_q.z));
 }
 
 Quaternion Quaternion::Inverse(Quaternion rotation) {
