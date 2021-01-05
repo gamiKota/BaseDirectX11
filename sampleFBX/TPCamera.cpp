@@ -48,7 +48,8 @@ void TPCamera::Update() {
 		float3 up = float3(mtx._21, mtx._22, mtx._23);
 		float3 forward = float3(mtx._31, mtx._32, mtx._33);
 		if (target != nullptr) {	// ターゲットオン
-			m_transform->LookAt(target->m_transform);
+			//m_transform->LookAt(target->m_transform);
+			m_transform->LookAt(target->m_transform, m_player->m_transform->m_up);
 			//SetLook(target->m_transform);
 		}
 		else {	// ターゲットオフ

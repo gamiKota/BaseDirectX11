@@ -50,21 +50,20 @@ void PlayerState::Initialize() {
 // ó‘Ô‚ÉˆË‘¶‚µ‚È‚¢‹¤’Êˆ—
 void PlayerState::Update() {
 
-	if (Input::isPress(VK_LEFT)) {
-		m_rotate.y -= 1.f;
-	}
-	if (Input::isPress(VK_RIGHT)) {
-		m_rotate.y += 1.f;
-	}
+	//if (Input::isPress(VK_LEFT)) {
+	//	m_rotate.y -= 1.f;
+	//}
+	//if (Input::isPress(VK_RIGHT)) {
+	//	m_rotate.y += 1.f;
+	//}
 
 	// Šeó‘Ô‚ÌXV
 	StateMachine::Update();
 
 	// ‚±‚ÌƒNƒ‰ƒX‚Å‚Ì‹¤’ÊXVˆ—
-	//m_transform->m_rotate = Quaternion(0.f, 0.f, 0.f, 1.f);
-	//Quaternion q1 = Quaternion::AngleAxis(m_rotate.y, float3(0.f, 1.f, 0.f));
-	//Quaternion q2 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
-	//m_transform->m_rotate = q1 * q2;
+	Quaternion q = m_transform->m_rotation;
+	Quaternion q1 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
+	m_transform->m_rotation = q * q1;
 }
 
 
@@ -194,7 +193,8 @@ void PlayerState::TargetOff::Start() {
 }
 
 void PlayerState::TargetOff::Update() {
-	main->m_rotate.y = 0.f;	// YŽ²‚É‰ñ“]‚µ‚Ä—~‚µ‚­‚È‚¢
+	// YŽ²‚É‰ñ“]‚µ‚Ä—~‚µ‚­‚È‚¢
+	main->m_transform->m_rotation = Quaternion::AngleAxis(0.f, float3(0.f, 1.f, 0.f));
 	PrintDebugProc("TargetOff\n");
 }
 
