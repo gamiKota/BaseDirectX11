@@ -43,7 +43,7 @@ void PlayerMgr::Start() {
 	m_rigidbody->m_weight = E_WEIGHT::_2;
 
 	m_transform->DOMove(float3(0.f, 0.f, 0.f), 2.f)->OnComplete([transform = m_transform, state = m_state]() {
-		transform->DOMove(float3(0.f, 0.f, 20.f), 2.f);
+		state->SetStateActive(PLAYER_STATE::TARGET_ON, true);
 	});
 }
 

@@ -15,7 +15,7 @@ using namespace DirectX;
 
 Quaternion GetRotation(XMFLOAT4X4 m)
 {
-	float* elem = new float[4];
+	float elem[4];
 	elem[0] =  m._11 - m._22 - m._33 + 1.0f;
 	elem[1] = -m._11 + m._22 - m._33 + 1.0f;
 	elem[2] = -m._11 - m._22 + m._33 + 1.0f;
@@ -36,7 +36,7 @@ Quaternion GetRotation(XMFLOAT4X4 m)
 		return Quaternion(0.f, 0.f, 0.f, 0.f);
 	}
 
-	float* q = new float[4];
+	float q[4];
 	float v = sqrtf(elem[biggestIdx]) * 0.5f;
 	q[biggestIdx] = v;
 	float mult = 0.25f / v;

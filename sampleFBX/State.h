@@ -119,7 +119,7 @@ public:
 	virtual void Initialize() = 0;
 
 	/**
-	 * @更新処理
+	 * @brief 更新処理
 	 */
 	void Update() {
 		for (auto state : m_stateList) {
