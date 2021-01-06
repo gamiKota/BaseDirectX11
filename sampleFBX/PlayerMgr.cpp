@@ -20,6 +20,8 @@
 #include "Tween.h"
 #include "debugproc.h"
 #include "imgui.h"
+
+
 #include "System.h"
 
 
@@ -39,15 +41,21 @@ void PlayerMgr::Start() {
 
 	// 変数の初期化
 	m_rigidbody->m_weight = E_WEIGHT::_2;
+
+	//m_transform->DOMove(float3(0.f, 0.f, 0.f), 2.f)->OnComplete([transform = m_transform, state = m_state]() {
+	//	state->SetStateActive(PLAYER_STATE::TARGET_ON, true);
+	//});
 }
+
 
 
 void PlayerMgr::Update() {
 	// 主にデバッグ用
-	//Tween tween;
 	//float3 end = float3(20.f, 10.f, 30.f);
 	//if (Input::isTrigger('M')) {
-	//	m_transform->DOMove(end, 2.f);
+	//	m_transform->DOMove(end, 2.f)->OnComplete([transform = m_transform, state = m_state]() {
+	//		state->SetStateActive(PLAYER_STATE::TARGET_ON, true);
+	//	});
 	//}
 	//static float RotY = 0.f;
 	//RotY += 0.5f;

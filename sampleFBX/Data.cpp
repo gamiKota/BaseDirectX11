@@ -163,10 +163,6 @@ Quaternion Quaternion::Dot(Quaternion q1, Quaternion q2) {
 	return out;
 }
 
-// バグではないけど、挙動が可笑しい(というより回転角度が小さい)
-// 一回転出来ないなんで？
-// 一周が720°なんだけどうんこ
-// なんか掛けたり色々しなきゃいけなさそうブルキナサソウ
 Quaternion Quaternion::AngleAxis(float angle, float3 axis) {
 
 	Quaternion quaternion;		//!< 作成するクォータニオン

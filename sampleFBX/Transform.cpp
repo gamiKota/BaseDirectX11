@@ -78,13 +78,13 @@ Quaternion GetRotation(XMFLOAT4X4 m)
 // 逆に、クォータニオンが与えられたときに具体的な回転や姿勢をイメージしにくい
 
 
-Transform::Transform() : m_position(float3()), m_rotation(Quaternion()), m_scale(float3()), m_tween(new Tween[3]()), m_Parent(nullptr) {
+Transform::Transform() : m_position(float3()), m_rotation(Quaternion()), m_scale(float3()), m_tween(new Tween()), m_Parent(nullptr) {
 	XMStoreFloat4x4(&m_world, XMMatrixIdentity());
 }
 
 
 void Transform::Uninit() {
-	delete[] m_tween;
+	delete m_tween;
 }
 
 
@@ -95,14 +95,12 @@ void Transform::Update() {
 
 void Transform::LastUpdate() {
 
-	for (int i = 0; i < 3; i++) {
-		m_tween[i].Update();
+	{	// テストTween
+		m_tween->Update();
 
-		if (m_tween[i].m_isTween == E_TWEEN::DO ||
-			m_tween[i].m_isTween == E_TWEEN::END) {	// うんち
-			if (i == 0) {
-				m_position = m_tween[i].GetResult();
-			}
+		if (m_tween->m_isTween == E_TWEEN::DO ||
+			m_tween->m_isTween == E_TWEEN::END) {	// うんち
+			m_position = m_tween->GetResult();
 			//if (i == 1) {
 			//	m_rotate = m_tween[i].GetResult();
 			//}
@@ -178,9 +176,9 @@ void Transform::SetImGuiVal() {
 
 Tween* Transform::DOMove(float3 position, float time) {
 
-	m_tween[0].DOTween(m_position, position, time);
+	m_tween->DOTween(m_position, position, time);
 
-	return &m_tween[0];
+	return m_tween;
 }
 
 

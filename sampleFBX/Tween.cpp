@@ -53,6 +53,7 @@ void Tween::Update() {
 
 	if (m_isTween == E_TWEEN::END) {
 		m_isTween = E_TWEEN::NONE;
+		m_onCompleteCallBuck();
 	}
 	else if (m_isTween == E_TWEEN::DO) {
 
