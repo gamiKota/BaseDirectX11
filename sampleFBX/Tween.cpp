@@ -13,7 +13,7 @@
 #include "System.h"
 
 
-Tween::Tween() {
+Tween::Tween() : Object() {
 	m_name		= "tween";
 	m_isTween	= E_TWEEN::NONE;
 	m_result	= float3();
@@ -21,17 +21,12 @@ Tween::Tween() {
 	m_end		= float3();
 	m_nowTime	= 0.f;
 	m_maxTime	= 0.f;
+	m_onCompleteCallBuck = nullptr;
 }
 
 
-Tween::Tween(std::string name) : Object() {
-	m_name		= "tween";
-	m_isTween	= E_TWEEN::NONE;
-	m_result	= float3();
-	m_start		= float3();
-	m_end		= float3();
-	m_nowTime	= 0.f;
-	m_maxTime	= 0.f;
+Tween::Tween(std::string name) : Object(name) {
+	Tween();
 }
 
 
@@ -53,7 +48,10 @@ void Tween::Update() {
 
 	if (m_isTween == E_TWEEN::END) {
 		m_isTween = E_TWEEN::NONE;
-		m_onCompleteCallBuck();
+		if (m_onCompleteCallBuck != nullptr) {
+			m_onCompleteCallBuck();
+			m_onCompleteCallBuck = nullptr;
+		}
 	}
 	else if (m_isTween == E_TWEEN::DO) {
 

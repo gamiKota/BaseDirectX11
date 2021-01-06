@@ -99,7 +99,7 @@ void Transform::LastUpdate() {
 		m_tween->Update();
 
 		if (m_tween->m_isTween == E_TWEEN::DO ||
-			m_tween->m_isTween == E_TWEEN::END) {	// ‚¤‚ñ‚¿
+			m_tween->m_isTween == E_TWEEN::END) {
 			m_position = m_tween->GetResult();
 			//if (i == 1) {
 			//	m_rotate = m_tween[i].GetResult();
