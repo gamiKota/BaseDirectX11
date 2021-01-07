@@ -6,7 +6,7 @@
 /**
  * @include
  */
-#include "FixedEnemy.h"
+#include "EnemyFixed.h"
 #include "GameObject3D.h"
 #include "PlayerMgr.h"
 #include "Status.h"
@@ -18,7 +18,11 @@
 #include "System.h"
 
 
-void FixedEnemy::Start() {
+ // 対象オブジェクト
+GameObject* gameObject;
+
+
+void EnemyFixed::Start() {
 	// 敵の共通処理
 	Enemy::Start();
 
@@ -32,10 +36,12 @@ void FixedEnemy::Start() {
 	//m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
 	//m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
 	//m_state->GetState<EnemyState::TargetOn>()->SetAngle(1.f);
+
+	gameObject = GameObject::FindGameObjectWithTag("Player");
 }
 
 
-void FixedEnemy::Update() {
+void EnemyFixed::Update() {
 	// 敵の共通処理
 	Enemy::Update();
 
@@ -52,10 +58,20 @@ void FixedEnemy::Update() {
 	//	m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
 	//	m_status->m_bulletTime.InitData();
 	//}
+
+
+	// 補完スピードを決める
+	float speed = 0.1f;
+	// ターゲット方向のベクトルを取得
+	float3 relativePos = gameObject->m_transform->m_position - m_transform->m_position;
+	// 方向を、回転情報に変換
+	Quaternion rotation = Quaternion::LookRotation(relativePos);
+	// 現在の回転情報と、ターゲット方向の回転情報を補完する
+	m_transform->m_rotation = Quaternion::Slerp(m_transform->m_rotation, rotation, speed);
 }
 
 
-void FixedEnemy::OnCollision(GameObject* obj) {
+void EnemyFixed::OnCollision(GameObject* obj) {
 
 }
 

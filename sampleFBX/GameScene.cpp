@@ -47,7 +47,7 @@
 #include "Light.h"		// ライト
 #include "Sky.h"		// スカイドーム
 #include "PlayerMgr.h"	// プレイヤーマネージャー
-#include "FixedEnemy.h"	// 敵
+#include "EnemyFixed.h"	// 固定敵
 #include "Collision.h"	// 当たり判定
 #include "Rigidbody.h"	// 物理エンジン機能
 #include "MeshBullet.h"	// メッシュ弾
@@ -106,15 +106,16 @@ void GameScene::Init() {
 	// 敵機初期化
 	float3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
 	for (int i = 0; i < MAX_ENEMY; ++i) {
-		m_object3D = new GameObject3D(E_MODEL_ENEMY, "FixedEnemy (" + std::to_string(i) + ")", "Enemy");
+		m_object3D = new GameObject3D(E_MODEL_ENEMY, "EnemyFixed (" + std::to_string(i) + ")", "Enemy");
 
 		vEnemyPos.x = (float)GetRandom((int)(-1000.f + 30.f), (int)(1000.f - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 
 		m_object3D->m_transform->m_position = vEnemyPos;
 		//m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 180, 0.f);
-		m_object3D->m_transform->m_scale = float3(2.f, 2.f, 2.f);
-		m_object3D->AddComponent<FixedEnemy>();
+		//m_object3D->m_transform->m_scale = float3(2.f, 2.f, 2.f);
+		m_object3D->m_transform->m_scale = float3(0.5f, 0.5f, 0.5f);
+		m_object3D->AddComponent<EnemyFixed>();
 		m_object3D->m_shader = E_SHADER_TOON;
 		m_listObject.push_back(m_object3D);
 	}

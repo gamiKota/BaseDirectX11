@@ -360,9 +360,6 @@
     <ClCompile Include="EnemyState.cpp">
       <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="FixedEnemy.cpp">
-      <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerMgr.cpp">
       <Filter>ソース ファイル\02Game\Script\Player</Filter>
     </ClCompile>
@@ -377,6 +374,9 @@
     </ClCompile>
     <ClCompile Include="Explosion.cpp">
       <Filter>ソース ファイル\02Game\Script\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyFixed.cpp">
+      <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -581,9 +581,6 @@
     <ClInclude Include="EnemyState.h">
       <Filter>ヘッダー ファイル\02Game\Script\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="FixedEnemy.h">
-      <Filter>ヘッダー ファイル\02Game\Script\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>ヘッダー ファイル\02Game\Script\Bullet</Filter>
     </ClInclude>
@@ -595,6 +592,9 @@
     </ClInclude>
     <ClInclude Include="Explosion.h">
       <Filter>ヘッダー ファイル\02Game\Script\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyFixed.h">
+      <Filter>ヘッダー ファイル\02Game\Script\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -130,7 +130,8 @@ void PlayerState::Move::Update() {
 	}
 	// Y軸移動(ターゲットの方に向いてるのでy要素で直接移動処理)
 	if (main->m_movement.y != 0.f) {
-		main->m_transform->m_position += up * (SPEED * main->m_movement.y);
+		main->m_transform->m_position.y += (SPEED * main->m_movement.y);
+		//main->m_transform->m_position += up * (SPEED * main->m_movement.y);
 	}
 }
 

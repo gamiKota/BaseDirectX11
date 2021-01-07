@@ -191,12 +191,20 @@ public:
 	static Quaternion Slerp(Quaternion q1, Quaternion q2, float t);
 
 	/**
+	 * @brief 指定された forward と upwards 方向に回転
+	 * @param[in] forward 対象オブジェクトとのベクトル
+	 * @param[in] upwards 情報ベクトル
+	 * @return 算出されたQuaternion
+	 */
+	static Quaternion LookRotation(float3 forward, float3 upwards = float3(0.f, 1.f, 0.f));
+
+	/**
 	 * @brief 2つのQuaternionの内積
 	 * @param[in] q1
 	 * @param[in] q2
-	 * return 算出されたQuaternion
+	 * return スカラー積
 	 */
-	static Quaternion Dot(Quaternion q1, Quaternion q2);
+	static float Dot(Quaternion q1, Quaternion q2);
 
 	/**
 	 * @brief 軸回転クォータニオンの作成

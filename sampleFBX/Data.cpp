@@ -11,7 +11,6 @@
 #include "debugproc.h"
 
 
-//#define PI (3.1415926535f)
 #define ConvertToRadians(deg) (deg * XM_PI / 180.f)
 
 
@@ -36,6 +35,63 @@ bool AlmostEqualRelative(float A, float B, float maxRelDiff = FLT_EPSILON) {
 	return false;
 }
 
+Quaternion __GetRotation(XMFLOAT4X4 m)
+{
+	float elem[4];
+	elem[0] = m._11 - m._22 - m._33 + 1.0f;
+	elem[1] = -m._11 + m._22 - m._33 + 1.0f;
+	elem[2] = -m._11 - m._22 + m._33 + 1.0f;
+	elem[3] = m._11 + m._22 + m._33 + 1.0f;
+
+	int biggestIdx = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (elem[i] > elem[biggestIdx])
+		{
+			biggestIdx = i;
+		}
+	}
+
+	if (elem[biggestIdx] < 0)
+	{
+		//Debug.Log("Wrong matrix.");
+		return Quaternion(0.f, 0.f, 0.f, 0.f);
+	}
+
+	float q[4];
+	float v = sqrtf(elem[biggestIdx]) * 0.5f;
+	q[biggestIdx] = v;
+	float mult = 0.25f / v;
+
+	switch (biggestIdx)
+	{
+	case 0:
+		q[1] = (m._21 + m._12) * mult;
+		q[2] = (m._13 + m._31) * mult;
+		q[3] = (m._32 - m._23) * mult;
+		break;
+	case 1:
+		q[0] = (m._21 + m._12) * mult;
+		q[2] = (m._32 + m._23) * mult;
+		q[3] = (m._13 - m._31) * mult;
+		break;
+	case 2:
+		q[0] = (m._13 + m._31) * mult;
+		q[1] = (m._32 + m._23) * mult;
+		q[3] = (m._21 - m._12) * mult;
+		break;
+	case 3:
+		q[0] = (m._32 - m._23) * mult;
+		q[1] = (m._13 - m._31) * mult;
+		q[2] = (m._21 - m._12) * mult;
+		break;
+	}
+
+	return Quaternion(q[0], q[1], q[2], q[3]);
+}
+
+
+
 
 float3 float3::Cross(float3 data1, float3 data2) {
 	float3 out = float3();
@@ -44,7 +100,6 @@ float3 float3::Cross(float3 data1, float3 data2) {
 	out.z = data1.x * data2.y - data1.y * data2.x;
 	return out;
 }
-
 
 float float3::Dot(float3 data1, float3 data2) {
 	return (float)(data1.x * data2.x + data1.y * data2.y + data1.z * data2.z);
@@ -135,17 +190,16 @@ float3 Quaternion::EulerAngle(Quaternion q) {
 }
 
 Quaternion Quaternion::Inverse(Quaternion rotation) {
-	Quaternion q;
-	q.x = -rotation.x;
-	q.y = -rotation.y;
-	q.z = -rotation.z;
-	q.w = rotation.w;
-	return Quaternion::Normalize(q);
+	return Quaternion::Normalize(Quaternion(-rotation.x, -rotation.y, -rotation.z, rotation.w));
 }
 
 Quaternion Quaternion::Slerp(Quaternion q1, Quaternion q2, float t) {
 	XMFLOAT4 f1, f2, result;
 	Quaternion out = Quaternion();
+	if (AlmostEqualRelative(q1.w, q2.w) && AlmostEqualRelative(q1.x, q2.x) &&
+		AlmostEqualRelative(q1.y, q2.y) && AlmostEqualRelative(q1.z, q2.z)) {
+		return q2;
+	}
 	f1.w = q1.w; f1.x = q1.x; f1.y = q1.y; f1.z = q1.z;
 	f2.w = q2.w; f2.x = q2.x; f2.y = q2.y; f2.z = q2.z;
 	XMStoreFloat4(&result, XMQuaternionSlerp(XMLoadFloat4(&f1), XMLoadFloat4(&f2), t));
@@ -153,53 +207,38 @@ Quaternion Quaternion::Slerp(Quaternion q1, Quaternion q2, float t) {
 	return out;
 }
 
-Quaternion Quaternion::Dot(Quaternion q1, Quaternion q2) {
-	XMFLOAT4 f1, f2, result;
-	Quaternion out = Quaternion();
-	f1.w = q1.w; f1.x = q1.x; f1.y = q1.y; f1.z = q1.z;
-	f2.w = q2.w; f2.x = q2.x; f2.y = q2.y; f2.z = q2.z;
-	XMStoreFloat4(&result, XMQuaternionDot(XMLoadFloat4(&f1), XMLoadFloat4(&f2)));
-	out.x = result.x; out.y = result.y; out.z = result.z; out.w = result.w;
-	return out;
+Quaternion Quaternion::LookRotation(float3 forward, float3 upwards) {
+	if (forward.x == 0.f && forward.y == 0.f && forward.z == 0.f)	return Quaternion();
+	float3 z = float3::Normalize(forward);
+	float3 x = float3::Normalize(float3::Cross(upwards, z));
+	float3 y = float3::Normalize(float3::Cross(z, x));
+
+	XMFLOAT4X4 m;
+	XMStoreFloat4x4(&m, XMMatrixIdentity());
+	m._11 = x.x; m._12 = y.x; m._13 = z.x;
+	m._21 = x.y; m._22 = y.y; m._23 = z.y;
+	m._31 = x.z; m._32 = y.z; m._33 = z.z;
+
+	return __GetRotation(m);
+}
+
+float Quaternion::Dot(Quaternion q1, Quaternion q2) {
+	return (float)(q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w);
 }
 
 Quaternion Quaternion::AngleAxis(float angle, float3 axis) {
-
-	Quaternion quaternion;		//!< 作成するクォータニオン
-	float halfSin, halfCos;		//!< 動かす角度の半分のsin,cos
-	float normal;
-	float radian = ConvertToRadians(angle);
-
-	quaternion = { 0.f, 0.f, 0.f, 0.f };
-	// 回転軸の長さを求める
-	normal = axis.x * axis.x + axis.y * axis.y + axis.z * axis.z;
-	if (normal <= 0.0f) return quaternion;
-
-	// 方向ベクトルへ（単位ベクトル：長さは1）
-	normal = 1.0f / sqrtf(normal);
-	axis = axis * normal;
-
-
+	float halfSin;
+	float radian = XMConvertToRadians(angle);
+	axis = float3::Normalize(axis);
+	if (axis == float3()) return Quaternion();
 	halfSin = sinf(radian * 0.5f);
-	halfCos = cosf(radian * 0.5f);
-
-	quaternion.w = halfCos;
-	quaternion.x = axis.x * halfSin;
-	quaternion.y = axis.y * halfSin;
-	quaternion.z = axis.z * halfSin;
-
-	return quaternion;
+	return Quaternion(axis.x * halfSin, axis.y * halfSin, axis.z * halfSin, cosf(radian * 0.5f));
 }
-
 
 Quaternion Quaternion::Normalize(Quaternion data) {
 	if (data.x == 0 && data.y == 0 && data.z == 0 && data.w == 0.f)	return Quaternion();
 	float scalar = sqrtf(data.x * data.x + data.y * data.y + data.z * data.z + data.w * data.w);
-	data.x /= scalar;
-	data.y /= scalar;
-	data.z /= scalar;
-	data.w /= scalar;
-	return data;
+	return Quaternion(data.x /= scalar, data.y /= scalar, data.z /= scalar, data.w /= scalar);
 }
 
 
@@ -339,7 +378,7 @@ Quaternion CalcQuaternion(Quaternion left, Quaternion right)
 float3 RotateQuaternionPosition(float3 axis, float3 pos, float radius)
 {
 	Quaternion  complexNumber, complexConjugateNumber;
-	Quaternion  posQuaternion = { 0.f, pos.x, pos.y, pos.z };
+	Quaternion  posQuaternion = Quaternion(pos.x, pos.y, pos.z, 0.f);
 	float3		resultPosition;
 
 	if (axis.x == 0.f && axis.y == 0.f && axis.z == 0.f ||

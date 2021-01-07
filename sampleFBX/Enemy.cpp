@@ -46,7 +46,8 @@ void Enemy::Uninit() {
 
 void Enemy::Update() {
 	if (m_status->m_isDead) {
-		if (m_gameObject->GetInstanceID() == 
+		if (GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget() != nullptr &&
+			m_gameObject->GetInstanceID() == 
 			GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget()->GetInstanceID()) {	// 今自分がターゲットの場合
 			GameObject::Find("Player")->GetComponent<PlayerState>()->SetTarget();
 		}

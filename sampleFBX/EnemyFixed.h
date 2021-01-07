@@ -1,5 +1,5 @@
 /**
- * @file FixedEnemy.h
+ * @file EnemyFixed.h
  */
 
 
@@ -16,9 +16,9 @@
 
 
 /**
- * @class FixedEnemy : inheritance Enemy
+ * @class EnemyFixed : inheritance Enemy
  */
-class FixedEnemy : public Enemy {
+class EnemyFixed : public Enemy {
 public:
 	void Start();
 	void Update();
