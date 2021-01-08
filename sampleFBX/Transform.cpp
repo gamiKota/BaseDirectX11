@@ -184,12 +184,14 @@ Tween* Transform::DOMove(float3 position, float time) {
 
 // メモ
 // Unityでは上方ベクトルが引数
+// 自身の座標と相手の座標からベクトル(向いた時のZ軸、前方向)が決まる
+// そこから上方ベクトルを用いてX軸を求める
 void Transform::LookAt(Transform* target, float3 worldUp) {
 	if (!target)	return;
 
-	float3 z = float3::Normalize(target->m_position - m_position);
-	float3 x = float3::Normalize(float3::Cross(worldUp, z));
-	float3 y = float3::Normalize(float3::Cross(z, x));
+	float3 z = float3::Normalize(target->m_position - m_position);	// Z軸ベクトル
+	float3 x = float3::Normalize(float3::Cross(worldUp, z));		// X軸ベクトル
+	float3 y = float3::Normalize(float3::Cross(z, x));				// Y軸ベクトル
 
 	XMFLOAT4X4 m;
 	XMStoreFloat4x4(&m, XMMatrixIdentity());

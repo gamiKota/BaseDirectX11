@@ -199,6 +199,15 @@ public:
 	static Quaternion LookRotation(float3 forward, float3 upwards = float3(0.f, 1.f, 0.f));
 
 	/**
+	 * @brief ‹…–ÊüŒ`•âŠÔ
+	 * @param[in] q1
+	 * @param[in] q2
+	 * @param[in] maxAngle
+	 * @return ŽZo‚³‚ê‚½Quaternion
+	 */
+	static Quaternion RotateTowards(Quaternion q1, Quaternion q2, float maxAngle = 1.f);
+
+	/**
 	 * @brief 2‚Â‚ÌQuaternion‚Ì“àÏ
 	 * @param[in] q1
 	 * @param[in] q2
@@ -258,18 +267,6 @@ public:
 	// ‚ÌŠ|‚¯ŽZ	
 	Quaternion operator * (Quaternion data) {
 		Quaternion q;
-		//float3 _v;
-		//float _w;
-		//float3 pv = float3(this->x, this->y, this->z);	// Š|‚¯‚ç‚ê‚é‰ñ“]
-		//float pw = this->w;
-		//float3 qv = float3(data.x, data.y, data.z);		// Š|‚¯‚é‰ñ“]
-		//float qw = data.w;
-		//_v = qv * pv + qv * pw + pv * qw;
-		//_w = qw * pw - float3::Dot(qv, pv);
-		//q.x = _v.x;
-		//q.y = _v.y;
-		//q.z = _v.z;
-		//q.w = _w;
 		q.x =  data.w * x - data.z * y + data.y * z + data.x * w;
 		q.y =  data.z * x + data.w * y - data.x * z + data.y * w;
 		q.z = -data.y * x + data.x * y + data.w * z + data.z * w;
@@ -287,6 +284,15 @@ public:
 		_data.z = data.z;
 		_data.w = 0.f;
 		return Quaternion::Normalize(*this * _data);
+	}
+	Quaternion operator * (float data) {
+		return Quaternion::Normalize(
+			Quaternion(this->x * data, this->y * data, this->z * data, this->w));
+	}
+
+	Quaternion operator / (float data) {
+		return Quaternion::Normalize(
+			Quaternion(this->x / data, this->y / data, this->z / data, this->w));
 	}
 };
 

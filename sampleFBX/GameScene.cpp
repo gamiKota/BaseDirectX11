@@ -77,7 +77,7 @@ void GameScene::Init() {
 
 	// TPSŽ‹“_ƒJƒƒ‰
 	m_empty = new GameObject("MainCamera");
-#if 0
+#if 1
 	CCamera::Set(m_empty->AddComponent<CCamera>());
 #else
 	CCamera::Set(m_empty->AddComponent<TPCamera>());

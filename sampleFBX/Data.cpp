@@ -204,11 +204,11 @@ Quaternion Quaternion::Slerp(Quaternion q1, Quaternion q2, float t) {
 	f2.w = q2.w; f2.x = q2.x; f2.y = q2.y; f2.z = q2.z;
 	XMStoreFloat4(&result, XMQuaternionSlerp(XMLoadFloat4(&f1), XMLoadFloat4(&f2), t));
 	out.x = result.x; out.y = result.y; out.z = result.z; out.w = result.w;
-	return out;
+	return Quaternion::Normalize(out);
 }
 
 Quaternion Quaternion::LookRotation(float3 forward, float3 upwards) {
-	if (forward.x == 0.f && forward.y == 0.f && forward.z == 0.f)	return Quaternion();
+	//if (forward.x == 0.f && forward.y == 0.f && forward.z == 0.f)	return Quaternion();
 	float3 z = float3::Normalize(forward);
 	float3 x = float3::Normalize(float3::Cross(upwards, z));
 	float3 y = float3::Normalize(float3::Cross(z, x));
@@ -219,7 +219,43 @@ Quaternion Quaternion::LookRotation(float3 forward, float3 upwards) {
 	m._21 = x.y; m._22 = y.y; m._23 = z.y;
 	m._31 = x.z; m._32 = y.z; m._33 = z.z;
 
-	return __GetRotation(m);
+	return Quaternion::Normalize(__GetRotation(m));
+}
+
+Quaternion Quaternion::RotateTowards(Quaternion q1, Quaternion q2, float maxAngle) {
+	if (maxAngle < 0.001f) {
+		// No rotation allowed. Prevent dividing by 0 later.
+		return q1;
+	}
+
+	float cosTheta = Quaternion::Dot(q1, q2);
+
+	// q1とq2は既に同じです。
+	// q2を返します。
+	if (cosTheta > 0.9999f) {
+		return q2;
+	}
+
+	// 球の周りの長いパスを取るのを防ぎます。
+	if (cosTheta < 0) {
+		q1 = q1 * -1.0f;
+		//q1 = Quaternion::Inverse(q1);
+		cosTheta *= -1.0f;
+	}
+
+	float angle = acosf(cosTheta);
+
+	// もし5度ずつ回転させてるときに2度しかない場合は到着させます。
+	if (angle < maxAngle) {
+		return q2;
+	}
+
+	float fT = maxAngle / angle;
+	angle = maxAngle;
+
+	Quaternion res = ((q1 * sinf((1.f - fT) * angle)) + (q2 * sinf(fT * angle))) / sinf(angle);
+	res = Quaternion::Normalize(res);
+	return res;
 }
 
 float Quaternion::Dot(Quaternion q1, Quaternion q2) {

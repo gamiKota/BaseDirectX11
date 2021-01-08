@@ -61,9 +61,9 @@ void PlayerState::Update() {
 	StateMachine::Update();
 
 	// ó‘Ô‚ÉˆË‘¶‚µ‚È‚¢‚±‚ÌƒNƒ‰ƒX‚Å‚Ì‹¤’Êˆ—
-	Quaternion q = m_transform->m_rotation;
-	Quaternion q1 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
-	m_transform->m_rotation = q * q1;
+	//Quaternion q = m_transform->m_rotation;
+	//Quaternion q1 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
+	//m_transform->m_rotation = q * q1;
 }
 
 
