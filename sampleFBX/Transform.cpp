@@ -190,13 +190,13 @@ void Transform::LookAt(Transform* target, float3 worldUp) {
 	float3 z = float3::Normalize(target->m_position - m_position);
 	float3 x = float3::Normalize(float3::Cross(worldUp, z));
 	float3 y = float3::Normalize(float3::Cross(z, x));
-
+	
 	XMFLOAT3X3 m;
 	XMStoreFloat3x3(&m, XMMatrixIdentity());
 	m._11 = x.x; m._12 = y.x; m._13 = z.x;
 	m._21 = x.y; m._22 = y.y; m._23 = z.y;
 	m._31 = x.z; m._32 = y.z; m._33 = z.z;
-
+	
 	Quaternion rot = GetRotation(m);
 	m_rotation = Quaternion::Normalize(rot);
 }

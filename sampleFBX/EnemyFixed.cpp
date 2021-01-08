@@ -18,10 +18,6 @@
 #include "System.h"
 
 
- // 対象オブジェクト
-GameObject* gameObject;
-
-
 void EnemyFixed::Start() {
 	// 敵の共通処理
 	Enemy::Start();
@@ -33,11 +29,9 @@ void EnemyFixed::Start() {
 	m_status->m_bulletTime.max = 5.f;	// 弾発射間隔
 
 	// 状態の初期化
-	//m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
-	//m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
-	//m_state->GetState<EnemyState::TargetOn>()->SetAngle(1.f);
-
-	gameObject = GameObject::FindGameObjectWithTag("Player");
+	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
+	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
+	m_state->GetState<EnemyState::TargetOn>()->SetAngle(1.f);
 }
 
 
@@ -60,18 +54,14 @@ void EnemyFixed::Update() {
 	//}
 
 
-	// 補完スピードを決める
+	//// 補完スピードを決める
 	//float speed = 0.01f;
 	//// ターゲット方向のベクトルを取得
 	//float3 relativePos = gameObject->m_transform->m_position - m_transform->m_position;
 	//// 方向を、回転情報に変換
-	//Quaternion q1 = Quaternion::Normalize(m_transform->m_rotation);
-	//Quaternion q2 = Quaternion::LookRotation(relativePos);
-	// 現在の回転情報と、ターゲット方向の回転情報を補完する
-	//m_transform->m_rotation = Quaternion::Slerp(q1, q2, speed);
-	//m_transform->m_rotation = q2;
-	//m_transform->m_rotation = Quaternion::RotateTowards(m_transform->m_rotation, rotation, speed);
-	m_transform->LookAt(gameObject->m_transform);
+	//Quaternion q1 = Quaternion::LookRotation(relativePos);
+	//// 現在の回転情報と、ターゲット方向の回転情報を補完する
+	//m_transform->m_rotation = Quaternion::Slerp(m_transform->m_rotation, q1, speed);
 }
 
 

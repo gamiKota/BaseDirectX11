@@ -19,9 +19,6 @@
 #include "System.h"
 
 
-#define ToRadians(dig) XMConvertToRadians(dig)
-
-
 /**
  * @abridgement namespace
  */
@@ -49,6 +46,11 @@ void EnemyState::Initialize() {
 // 状態に依存しない共通処理
 void EnemyState::Update() {
 	StateMachine::Update();
+
+	Quaternion q = m_transform->m_rotation;
+	Quaternion qz = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
+	Quaternion qy = Quaternion::AngleAxis(m_rotate.y, float3(0.f, 1.f, 0.f));
+	m_transform->m_rotation = q * qy * qz;
 }
 
 
@@ -60,11 +62,11 @@ void EnemyState::Idol::Start() {
 }
 
 void EnemyState::Idol::Update() {
-	if (m_main->m_transform->m_rotation.z > 0.f) {
-		m_main->m_transform->m_rotation.z -= ToRadians(VAL_ANGLE_Z * 0.5f);
+	if (m_main->m_rotate.z > 0.f) {
+		m_main->m_rotate.z -= VAL_ANGLE_Z * 0.5f;
 	}
-	else if (m_main->m_transform->m_rotation.z < 0.f) {
-		m_main->m_transform->m_rotation.z += ToRadians(VAL_ANGLE_Z * 0.5f);
+	else if (m_main->m_rotate.z < 0.f) {
+		m_main->m_rotate.z += VAL_ANGLE_Z * 0.5f;
 	}
 }
 
@@ -82,7 +84,7 @@ void EnemyState::Move::Start() {
 void EnemyState::Move::Update() {
 	// モデル姿勢に依存しない平行移動
 	XMFLOAT4X4 mtx = XMFLOAT4X4();
-	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(m_main->m_transform->m_rotation.x, m_main->m_transform->m_rotation.y, 0.f));
+	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(m_main->m_rotate.x, m_main->m_rotate.y, 0.f));
 	float3 right = float3(mtx._11, mtx._12, mtx._13);
 	float3 up = float3(mtx._21, mtx._22, mtx._23);
 	float3 forward = float3(mtx._31, mtx._32, mtx._33);
@@ -95,20 +97,20 @@ void EnemyState::Move::Update() {
 	if (m_movement.x != 0.f) {
 		m_main->m_transform->m_position += right * (SPEED * m_movement.x);
 		if (m_movement.x > 0.f) {
-			if (m_main->m_transform->m_rotation.z >= ToRadians(-MAX_ANGLE_Z))
-				m_main->m_transform->m_rotation.z -= ToRadians(VAL_ANGLE_Z);
+			if (m_main->m_rotate.z >= -MAX_ANGLE_Z)
+				m_main->m_rotate.z -= VAL_ANGLE_Z;
 		}
 		else {
-			if (m_main->m_transform->m_rotation.z <= ToRadians(MAX_ANGLE_Z))
-				m_main->m_transform->m_rotation.z += ToRadians(VAL_ANGLE_Z);
+			if (m_main->m_rotate.z <= MAX_ANGLE_Z)
+				m_main->m_rotate.z += VAL_ANGLE_Z;
 		}
 	}
 	else {
-		if (m_main->m_transform->m_rotation.z > 0.f) {
-			m_main->m_transform->m_rotation.z -= ToRadians(VAL_ANGLE_Z * 0.5f);
+		if (m_main->m_rotate.z > 0.f) {
+			m_main->m_rotate.z -= VAL_ANGLE_Z * 0.5f;
 		}
-		else if (m_main->m_transform->m_rotation.z < 0.f) {
-			m_main->m_transform->m_rotation.z += ToRadians(VAL_ANGLE_Z * 0.5f);
+		else if (m_main->m_rotate.z < 0.f) {
+			m_main->m_rotate.z += VAL_ANGLE_Z * 0.5f;
 		}
 	}
 	// Y軸移動(ターゲットの方に向いてるのでy要素で直接移動処理)
@@ -136,8 +138,14 @@ void EnemyState::TargetOn::Update() {
 		m_main->SetStateActive(ENEMY_STATE::TARGET_OFF, true);
 		return;
 	}
-	//m_main->m_transform->LookAt(m_target->m_transform, ToRadians(m_valAngle));
-	m_main->m_transform->LookAt(m_target->m_transform);
+	// 補完スピードを決める
+	float speed = 0.1f;
+	// ターゲット方向のベクトルを取得
+	float3 relativePos = m_target->m_transform->m_position - m_main->m_transform->m_position;
+	// 方向を、回転情報に変換
+	Quaternion q1 = Quaternion::LookRotation(relativePos);
+	// 現在の回転情報と、ターゲット方向の回転情報を補完する
+	m_main->m_transform->m_rotation = Quaternion::Slerp(m_main->m_transform->m_rotation, q1, speed);
 }
 
 void EnemyState::TargetOn::OnDestoy() {
@@ -153,7 +161,7 @@ void EnemyState::TargetOff::Start() {
 }
 
 void EnemyState::TargetOff::Update() {
-	m_main->m_transform->m_rotation.y = 0.f;	// Y軸に回転して欲しくない
+	m_main->m_rotate.y = 0.f;
 }
 
 void EnemyState::TargetOff::OnDestoy() {

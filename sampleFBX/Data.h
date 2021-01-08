@@ -205,7 +205,7 @@ public:
 	 * @param[in] maxAngle
 	 * @return Zo‚³‚ê‚½Quaternion
 	 */
-	static Quaternion RotateTowards(Quaternion q1, Quaternion q2, float maxAngle = 1.f);
+	static Quaternion RotateTowards(Quaternion q1, Quaternion q2, float maxAngle = 360.f);
 
 	/**
 	 * @brief 2‚Â‚ÌQuaternion‚Ì“àÏ

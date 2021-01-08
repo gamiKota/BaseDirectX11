@@ -49,21 +49,11 @@ void PlayerState::Initialize() {
 
 // 状態に依存しない共通処理
 void PlayerState::Update() {
-
-	//if (Input::isPress(VK_LEFT)) {
-	//	m_rotate.z -= 2.f;
-	//}
-	//if (Input::isPress(VK_RIGHT)) {
-	//	m_rotate.z += 2.f;
-	//}
-
-	// 各状態の更新
 	StateMachine::Update();
 
-	// 状態に依存しないこのクラスでの共通処理
-	//Quaternion q = m_transform->m_rotation;
-	//Quaternion q1 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
-	//m_transform->m_rotation = q * q1;
+	Quaternion q = m_transform->m_rotation;
+	Quaternion q1 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
+	m_transform->m_rotation = q * q1;
 }
 
 
