@@ -131,7 +131,7 @@ void EnemyState::Move::OnDestoy() {
 void EnemyState::TargetOn::Start() {
 	// •Ï”‚Ì‰Šú‰»
 	m_target = nullptr;
-	m_maxAngle = 1.f;
+	m_maxAngle = 180.f;
 	m_main->SetStateActive(ENEMY_STATE::TARGET_OFF, false);
 }
 

@@ -32,10 +32,10 @@ void Enemy::Start() {
 	// 変数の初期化(敵クラスのデフォルト値の設定)
 	m_rigidbody->m_weight = E_WEIGHT::_1;	// 二番目に軽い
 
-	//// ロックオンマーカーの追加
-	//GameObjectUI* obj = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_MAIN, "EnemyIcon");
-	//obj->AddComponent<TargetCtr>()->m_target = m_gameObject;
-	//m_LockIcon = GameObject::Instantiate(obj);
+	// ロックオンマーカーの追加
+	GameObjectUI* obj = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_MAIN, "EnemyIcon");
+	obj->AddComponent<TargetCtr>()->m_target = m_gameObject;
+	m_LockIcon = GameObject::Instantiate(obj);
 }
 
 

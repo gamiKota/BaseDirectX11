@@ -90,7 +90,7 @@ void TargetCtr::Start() {
 void TargetCtr::Update() {
 	// ロックオンマーカー
 	float3 centerPos = m_target->GetComponent<Collision>()->m_vCenter;
-	float3 marker = LockOnMarker(m_target->m_transform->m_position + centerPos);
+	float3 marker = LockOnMarker(m_target->m_transform->m_position);
 	m_transform->m_position = marker;
 
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
@@ -154,14 +154,16 @@ void TargetCtr::Update() {
 			// 座標に反映
 			m_transform->m_position += pos3D;
 			// ターゲット方向の更新
-			m_transform->m_rotation.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
+			float angle = atan2(m_transform->m_position.y, m_transform->m_position.x);
+			m_transform->m_rotation = Quaternion::AngleAxis(angle, float3(0.f, 0.f, 1.f));
 		}
 		else {
 			// 二次元ベクトルに変換
+			float3 playerRot = Quaternion::RadianAngle(player->m_transform->m_rotation);
 			tempX = m_target->m_transform->m_position.x - player->m_transform->m_position.x;
 			tempZ = m_target->m_transform->m_position.z - player->m_transform->m_position.z;
-			vecX = tempX * cosf(player->m_transform->m_rotation.y) - tempZ * sinf(player->m_transform->m_rotation.y);
-			vecZ = tempX * sinf(player->m_transform->m_rotation.y) + tempZ * cosf(player->m_transform->m_rotation.y);
+			vecX = tempX * cosf(playerRot.y) - tempZ * sinf(playerRot.y);
+			vecZ = tempX * sinf(playerRot.y) + tempZ * cosf(playerRot.y);
 			// 画面比に合わせたベクトルに補正
 			vecX *= (float)SCREEN_RATIO;
 			vecZ *= (float)SCREEN_RATIO;
@@ -170,7 +172,8 @@ void TargetCtr::Update() {
 			// 座標に反映
 			m_transform->m_position += vec;
 			// ターゲット方向の更新
-			m_transform->m_rotation.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
+			float angle = XMConvertToDegrees(atan2(m_transform->m_position.y, m_transform->m_position.x));
+			m_transform->m_rotation = Quaternion::AngleAxis(angle, float3(0.f, 0.f, 1.f));
 		}
 
 		obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
@@ -190,7 +193,7 @@ void TargetCtr::Update() {
 			m_transform->m_scale = float3(80.f, 80.f, 0.f);
 			obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 1);
 		}
-		m_transform->m_rotation.z = 0.f;
+		m_transform->m_rotation = Quaternion::AngleAxis(0.f, float3(0.f, 0.f, 1.f));
 	}
 
 	// 画面外
