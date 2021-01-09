@@ -11,11 +11,11 @@
 #include "debugproc.h"
 
 
-#define ConvertToRadians(deg) (deg * XM_PI / 180.f)
-
-
 using namespace DirectX;
 
+
+const float radToDeg = (float)(180.f / XM_PI);
+const float degToRad = (float)(XM_PI / 180.f);
 
 const Quaternion Quaternion::identity = Quaternion(0.f, 0.f, 0.f, 1.f);
 
@@ -105,6 +105,16 @@ float float3::Dot(float3 data1, float3 data2) {
 	return (float)(data1.x * data2.x + data1.y * data2.y + data1.z * data2.z);
 }
 
+
+
+float Quaternion::Angle(Quaternion q1, Quaternion q2) {
+	float f = Quaternion::Dot(Quaternion::Normalize(q1), Quaternion::Normalize(q2));
+	if (f < 0.f) {
+		f *= -1.f;
+	}
+	return acosf(min(f, 1.f)) * 2.f * radToDeg;
+	//return Mathf.Acos(Mathf.Min(Mathf.Abs(f), 1f)) * 2f * radToDeg;
+}
 
 // zxyの順序
 Quaternion Quaternion::Euler(float3 vec) {
@@ -223,39 +233,13 @@ Quaternion Quaternion::LookRotation(float3 forward, float3 upwards) {
 }
 
 Quaternion Quaternion::RotateTowards(Quaternion q1, Quaternion q2, float maxAngle) {
-	if (maxAngle < 0.001f) {
-		// No rotation allowed. Prevent dividing by 0 later.
-		return q1;
-	}
-
-	float cosTheta = Quaternion::Dot(q1, q2);
-
-	// q1とq2は既に同じです。
-	// q2を返します。
-	if (cosTheta > 0.9999f) {
+	float num = Quaternion::Angle(q1, q2);
+	if (num == 0.f)
+	{
 		return q2;
 	}
-
-	// 球の周りの長いパスを取るのを防ぎます。
-	if (cosTheta < 0) {
-		q1 = q1 * -1.0f;
-		//q1 = Quaternion::Inverse(q1);
-		cosTheta *= -1.0f;
-	}
-
-	float angle = acosf(cosTheta);
-
-	// もし5度ずつ回転させてるときに2度しかない場合は到着させます。
-	if (angle < maxAngle) {
-		return q2;
-	}
-
-	float fT = maxAngle / angle;
-	angle = maxAngle;
-
-	Quaternion res = ((q1 * sinf((1.f - fT) * angle)) + (q2 * sinf(fT * angle))) / sinf(angle);
-	res = Quaternion::Normalize(res);
-	return res;
+	float t = min(1.f, maxAngle / num);
+	return Quaternion::Slerp(q1, q2, t);
 }
 
 float Quaternion::Dot(Quaternion q1, Quaternion q2) {

@@ -163,6 +163,14 @@ public:
 	}
 
 	/**
+	 * @brief 二つのクォータニオンから間の角度を取得
+	 * @param[in] q1 クォータニオン
+	 * @param[in] q2 クォータニオン
+	 * @return 角度
+	 */
+	static float Angle(Quaternion q1, Quaternion q2);
+
+	/**
 	 * @brief オイラー角変換
 	 * @return オイラー角
 	 */
@@ -211,7 +219,7 @@ public:
 	 * @brief 2つのQuaternionの内積
 	 * @param[in] q1
 	 * @param[in] q2
-	 * return スカラー積
+	 * @return スカラー積
 	 */
 	static float Dot(Quaternion q1, Quaternion q2);
 
@@ -219,7 +227,7 @@ public:
 	 * @brief 軸回転クォータニオンの作成
 	 * @param[in] angle
 	 * @param[in] axis
-	 * return 算出されたQuaternion
+	 * @return 算出されたQuaternion
 	 */
 	static Quaternion AngleAxis(float angle, float3 axis);
 
@@ -287,12 +295,12 @@ public:
 	}
 	Quaternion operator * (float data) {
 		return Quaternion::Normalize(
-			Quaternion(this->x * data, this->y * data, this->z * data, this->w));
+			Quaternion(this->x * data, this->y * data, this->z * data, this->w * data));
 	}
 
 	Quaternion operator / (float data) {
 		return Quaternion::Normalize(
-			Quaternion(this->x / data, this->y / data, this->z / data, this->w));
+			Quaternion(this->x / data, this->y / data, this->z / data, this->w / data));
 	}
 };
 

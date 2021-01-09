@@ -31,7 +31,7 @@ void EnemyFixed::Start() {
 	// 状態の初期化
 	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
 	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
-	m_state->GetState<EnemyState::TargetOn>()->SetAngle(1.f);
+	m_state->GetState<EnemyState::TargetOn>()->SetMaxAngle(1.f);
 }
 
 
@@ -52,16 +52,6 @@ void EnemyFixed::Update() {
 	//	m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
 	//	m_status->m_bulletTime.InitData();
 	//}
-
-
-	//// 補完スピードを決める
-	//float speed = 0.01f;
-	//// ターゲット方向のベクトルを取得
-	//float3 relativePos = gameObject->m_transform->m_position - m_transform->m_position;
-	//// 方向を、回転情報に変換
-	//Quaternion q1 = Quaternion::LookRotation(relativePos);
-	//// 現在の回転情報と、ターゲット方向の回転情報を補完する
-	//m_transform->m_rotation = Quaternion::Slerp(m_transform->m_rotation, q1, speed);
 }
 
 

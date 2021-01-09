@@ -84,7 +84,9 @@ void EnemyState::Move::Start() {
 void EnemyState::Move::Update() {
 	// ƒ‚ƒfƒ‹Žp¨‚ÉˆË‘¶‚µ‚È‚¢•½sˆÚ“®
 	XMFLOAT4X4 mtx = XMFLOAT4X4();
-	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(m_main->m_rotate.x, m_main->m_rotate.y, 0.f));
+	float3 rotate = Quaternion::RadianAngle(m_main->m_transform->m_rotation);
+
+	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(rotate.x, rotate.y, 0.f));
 	float3 right = float3(mtx._11, mtx._12, mtx._13);
 	float3 up = float3(mtx._21, mtx._22, mtx._23);
 	float3 forward = float3(mtx._31, mtx._32, mtx._33);
@@ -129,7 +131,7 @@ void EnemyState::Move::OnDestoy() {
 void EnemyState::TargetOn::Start() {
 	// •Ï”‚Ì‰Šú‰»
 	m_target = nullptr;
-	m_valAngle = 360.f;
+	m_maxAngle = 1.f;
 	m_main->SetStateActive(ENEMY_STATE::TARGET_OFF, false);
 }
 
@@ -138,14 +140,14 @@ void EnemyState::TargetOn::Update() {
 		m_main->SetStateActive(ENEMY_STATE::TARGET_OFF, true);
 		return;
 	}
-	// •âŠ®ƒXƒs[ƒh‚ðŒˆ‚ß‚é
-	float speed = 0.1f;
+
 	// ƒ^[ƒQƒbƒg•ûŒü‚ÌƒxƒNƒgƒ‹‚ðŽæ“¾
-	float3 relativePos = m_target->m_transform->m_position - m_main->m_transform->m_position;
-	// •ûŒü‚ðA‰ñ“]î•ñ‚É•ÏŠ·
-	Quaternion q1 = Quaternion::LookRotation(relativePos);
-	// Œ»Ý‚Ì‰ñ“]î•ñ‚ÆAƒ^[ƒQƒbƒg•ûŒü‚Ì‰ñ“]î•ñ‚ð•âŠ®‚·‚é
-	m_main->m_transform->m_rotation = Quaternion::Slerp(m_main->m_transform->m_rotation, q1, speed);
+	float3 v1 = m_target->m_transform->m_position - m_main->m_transform->m_position;
+	// ‰ñ“]î•ñ‚ÌŠi”[
+	Quaternion q1 = m_main->m_transform->m_rotation;
+	Quaternion q2 = Quaternion::LookRotation(v1);
+	// Œ»Ý‚Ì‰ñ“]î•ñ‚ÆAƒ^[ƒQƒbƒg•ûŒü‚Ì‰ñ“]î•ñ‚ðŠp“x§ŒÀ•t‚«‚Å•âŠÔ‚·‚é
+	m_main->m_transform->m_rotation = Quaternion::RotateTowards(q1, q2, m_maxAngle);
 }
 
 void EnemyState::TargetOn::OnDestoy() {
