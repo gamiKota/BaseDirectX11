@@ -13,10 +13,6 @@
 
 using namespace DirectX;
 
-
-const float radToDeg = (float)(180.f / XM_PI);
-const float degToRad = (float)(XM_PI / 180.f);
-
 const Quaternion Quaternion::identity = Quaternion(0.f, 0.f, 0.f, 1.f);
 
 
@@ -112,8 +108,8 @@ float Quaternion::Angle(Quaternion q1, Quaternion q2) {
 	if (f < 0.f) {
 		f *= -1.f;
 	}
-	return acosf(min(f, 1.f)) * 2.f * radToDeg;
-	//return Mathf.Acos(Mathf.Min(Mathf.Abs(f), 1f)) * 2f * radToDeg;
+	//float angle = acosf(min(f, 1.f)) * 2.f * radToDeg;
+	return XMConvertToDegrees(acosf(min(f, 1.f)) * 2.f);
 }
 
 // zxy‚Ì‡˜
