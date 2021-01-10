@@ -119,10 +119,6 @@ void Transform::LastUpdate() {
 		m_transform->m_scale.z = 0;
 	}
 
-	//m_rotate.x = normalize(m_rotate.x, -XM_PI, XM_PI);
-	//m_rotate.y = normalize(m_rotate.y, -XM_PI, XM_PI);
-	//m_rotate.z = normalize(m_rotate.z, -XM_PI, XM_PI);
-
 	// クォータニオンは正規化されていることが前提
 	m_rotation = Quaternion::Normalize(m_rotation);
 	float3 rotate = Quaternion::RadianAngle(m_rotation);

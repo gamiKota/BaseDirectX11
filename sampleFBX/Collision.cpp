@@ -52,6 +52,7 @@ struct SHADER_GLOBAL2 {
 
 // コンストラクタ
 Collision::Collision() : m_color(1.0f, 1.0f, 1.0f, 0.5f), m_bHit(false), m_isInit(false) {
+	m_selfTag.clear();
 }
 
 // デストラクタ
@@ -84,6 +85,8 @@ void Collision::Uninit()
 	SAFE_RELEASE(m_pInputLayout);
 	// 頂点シェーダ解放
 	SAFE_RELEASE(m_pVertexShader);
+	// タグの解放
+	m_selfTag.clear();
 }
 
 void Collision::Update() {
@@ -318,6 +321,18 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 
 
 bool Collision::OBB(Collision obj1, Collision obj2) {
+
+	for (auto tag1 = obj1.m_selfTag.begin(); tag1 != obj1.m_selfTag.end(); tag1++) {
+		for (auto tag2 = obj2.m_selfTag.begin(); tag2 != obj2.m_selfTag.end(); tag2++) {
+			std::string temp1 = *tag1;
+			std::string temp2 = *tag2;
+			if (temp1 == temp2) {
+				return false;
+			}
+		}
+	}
+	
+
 	// ワールド空間上のOBB中心座標を求める
 	// m_vCenterから(0, 0, 0)に変えたらなんか動いたっぽい
 	XMFLOAT3 vPos1, vPos2;

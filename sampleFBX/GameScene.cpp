@@ -147,7 +147,7 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_rotation = Quaternion::AngleAxis(180.f, float3(0.f, 1.f, 0.f));
 	m_object3D->m_transform->m_scale = scale;
 	m_object3D->m_material = material;
-	m_object3D->AddComponent<Collision>();
+	m_object3D->AddComponent<Collision>()->m_selfTag.push_back("Area");
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 	// •Ç
@@ -156,7 +156,7 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_rotation = Quaternion::AngleAxis(90.f, float3(0.f, 1.f, 0.f));
 	m_object3D->m_transform->m_scale = scale;
 	m_object3D->m_material = material;
-	m_object3D->AddComponent<Collision>();
+	m_object3D->AddComponent<Collision>()->m_selfTag.push_back("Area");
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 	// •Ç
@@ -165,7 +165,7 @@ void GameScene::Init() {
 	//m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 0.f, 0.f);
 	m_object3D->m_transform->m_scale = scale;
 	m_object3D->m_material = material;
-	m_object3D->AddComponent<Collision>();
+	m_object3D->AddComponent<Collision>()->m_selfTag.push_back("Area");
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 	// •Ç
@@ -174,7 +174,7 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_rotation = Quaternion::AngleAxis(-90.f, float3(0.f, 1.f, 0.f));
 	m_object3D->m_transform->m_scale = scale;
 	m_object3D->m_material = material;
-	m_object3D->AddComponent<Collision>();
+	m_object3D->AddComponent<Collision>()->m_selfTag.push_back("Area");
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 	// •Ç
@@ -183,14 +183,14 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_rotation = Quaternion::AngleAxis(90.f, float3(1.f, 0.f, 0.f));
 	m_object3D->m_transform->m_scale = float3(6000.f, 6000.f, 0.1f);
 	m_object3D->m_material = material;
-	m_object3D->AddComponent<Collision>();
+	m_object3D->AddComponent<Collision>()->m_selfTag.push_back("Area");
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
 	m_listObject.push_back(m_object3D);
 	// ’n–Ê
 	m_object3D = new GameObject3D(E_MODEL_LAND, "Land", "Land");
 	m_object3D->m_transform->m_position = float3(0.f, -3000.f, 0.f);
 	m_object3D->m_transform->m_scale = float3(3.1f, 3.1f, 3.1f);
-	m_object3D->AddComponent<Collision>();
+	m_object3D->AddComponent<Collision>()->m_selfTag.push_back("Area");
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_LAND;
 	m_listObject.push_back(m_object3D);
 

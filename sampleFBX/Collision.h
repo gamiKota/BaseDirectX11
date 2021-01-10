@@ -15,6 +15,7 @@
 #include "Component.h"
 #include "ModelManager.h"
 #include <d3d11.h>
+#include <list>
 
 
 /**
@@ -30,9 +31,11 @@ public:
 	DirectX::XMFLOAT4X4	m_world;		//!< 当たり判定用行列
 	bool				m_bHit;			//!< 衝突有無
 
+	std::list<std::string> m_selfTag;	//!< セルフタグ
+
 	ID3D11Buffer* m_pVertexBuffer;			//!< 頂点バッファ
 	ID3D11Buffer* m_pConstantBuffer[2];		//!< 定数バッファ
-	ID3D11VertexShader* m_pVertexShader;		//!< 頂点シェーダ
+	ID3D11VertexShader* m_pVertexShader;	//!< 頂点シェーダ
 	ID3D11InputLayout* m_pInputLayout;		//!< 頂点フォーマット
 	ID3D11PixelShader* m_pPixelShader;		//!< ピクセルシェーダ
 	ID3D11Buffer* m_pIndexBuffer;			//!< インデックスバッファ
@@ -52,9 +55,7 @@ public:
 	void SetImGuiVal();
 	void DebugDraw();
 
-	inline void SetHit() {
-		m_bHit = true;
-	}
+	inline void SetHit() { m_bHit = true; }
 
 	static bool AABB(Collision obj1, Collision obj2);
 	static bool OBB(Collision obj1, Collision obj2);

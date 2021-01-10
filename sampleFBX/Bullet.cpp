@@ -36,7 +36,8 @@ void Bullet::Start() {
 	m_status->m_HP = 10.f;
 	m_status->m_AttakPower = 100.f;
 	//m_status->m_HitStop = 5.f * Frame::GetInstance().GetFrame();
-	m_rigidbody->m_weight = E_WEIGHT::_3;
+	m_rigidbody->m_weight = E_WEIGHT::_1;
+	m_collision->m_selfTag.push_back("Area");
 
 	//m_transform->m_rotate.y = XMConvertToRadians(180.f);
 }
