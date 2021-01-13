@@ -48,10 +48,10 @@ void EnemyFixed::Update() {
 	//}
 
 	// ŽËŒ‚UŒ‚
-	//if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
-	//	m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
-	//	m_status->m_bulletTime.InitData();
-	//}
+	if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
+		m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
+		m_status->m_bulletTime.InitData();
+	}
 }
 
 

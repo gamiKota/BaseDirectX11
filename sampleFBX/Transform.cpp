@@ -13,62 +13,6 @@
 using namespace DirectX;
 
 
-Quaternion GetRotation(XMFLOAT3X3 m)
-{
-	float elem[4];
-	elem[0] =  m._11 - m._22 - m._33 + 1.0f;
-	elem[1] = -m._11 + m._22 - m._33 + 1.0f;
-	elem[2] = -m._11 - m._22 + m._33 + 1.0f;
-	elem[3] =  m._11 + m._22 + m._33 + 1.0f;
-
-	int biggestIdx = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (elem[i] > elem[biggestIdx])
-		{
-			biggestIdx = i;
-		}
-	}
-
-	if (elem[biggestIdx] < 0)
-	{
-		//Debug.Log("Wrong matrix.");
-		return Quaternion(0.f, 0.f, 0.f, 0.f);
-	}
-
-	float q[4];
-	float v = sqrtf(elem[biggestIdx]) * 0.5f;
-	q[biggestIdx] = v;
-	float mult = 0.25f / v;
-
-	switch (biggestIdx)
-	{
-	case 0:
-		q[1] = (m._21 + m._12) * mult;
-		q[2] = (m._13 + m._31) * mult;
-		q[3] = (m._32 - m._23) * mult;
-		break;
-	case 1:
-		q[0] = (m._21 + m._12) * mult;
-		q[2] = (m._32 + m._23) * mult;
-		q[3] = (m._13 - m._31) * mult;
-		break;
-	case 2:
-		q[0] = (m._13 + m._31) * mult;
-		q[1] = (m._32 + m._23) * mult;
-		q[3] = (m._21 - m._12) * mult;
-		break;
-	case 3:
-		q[0] = (m._32 - m._23) * mult;
-		q[1] = (m._13 - m._31) * mult;
-		q[2] = (m._21 - m._12) * mult;
-		break;
-	}
-
-	return Quaternion(q[0], q[1], q[2], q[3]);
-}
-
-
 // メモ
 // クォータニオンをベクトルととらえる
 // 各要素(x, y, z)は180を境に0～1～0に数値が正規化
@@ -182,19 +126,7 @@ Tween* Transform::DOMove(float3 position, float time) {
 // Unityでは上方ベクトルが引数
 void Transform::LookAt(Transform* target, float3 worldUp) {
 	if (!target)	return;
-
-	float3 z = float3::Normalize(target->m_position - m_position);
-	float3 x = float3::Normalize(float3::Cross(worldUp, z));
-	float3 y = float3::Normalize(float3::Cross(z, x));
-	
-	XMFLOAT3X3 m;
-	XMStoreFloat3x3(&m, XMMatrixIdentity());
-	m._11 = x.x; m._12 = y.x; m._13 = z.x;
-	m._21 = x.y; m._22 = y.y; m._23 = z.y;
-	m._31 = x.z; m._32 = y.z; m._33 = z.z;
-	
-	Quaternion rot = GetRotation(m);
-	m_rotation = Quaternion::Normalize(rot);
+	m_rotation = Quaternion::LookRotation(target->m_position - m_position, worldUp);
 }
 
 

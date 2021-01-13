@@ -165,10 +165,7 @@ void PlayerState::TargetOn::Update() {
 		main->SetStateActive(PLAYER_STATE::TARGET_OFF, true);
 		return;
 	}
-	
 	main->m_transform->LookAt(main->m_target->m_transform);
-
-	PrintDebugProc("TargetOn\n");
 }
 
 void PlayerState::TargetOn::OnDestoy() {
@@ -186,7 +183,6 @@ void PlayerState::TargetOff::Start() {
 void PlayerState::TargetOff::Update() {
 	// YŽ²‚É‰ñ“]‚µ‚Ä—~‚µ‚­‚È‚¢
 	main->m_transform->m_rotation = Quaternion::AngleAxis(0.f, float3(0.f, 1.f, 0.f));
-	PrintDebugProc("TargetOff\n");
 }
 
 void PlayerState::TargetOff::OnDestoy() {

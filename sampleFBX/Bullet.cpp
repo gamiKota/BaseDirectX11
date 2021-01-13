@@ -24,7 +24,7 @@
  * @constant
  */
 static const float	SPEED		= 50.0f;	// 速さ
-static const char	LIFE_TIME	= 5;		// 生存時間
+static const char	LIFE_TIME	= 3;		// 生存時間
 
 
 void Bullet::Start() {
@@ -38,8 +38,6 @@ void Bullet::Start() {
 	//m_status->m_HitStop = 5.f * Frame::GetInstance().GetFrame();
 	m_rigidbody->m_weight = E_WEIGHT::_1;
 	m_collision->m_selfTag.push_back("Area");
-
-	//m_transform->m_rotate.y = XMConvertToRadians(180.f);
 }
 
 
@@ -55,11 +53,6 @@ void Bullet::Update() {
 
 
 void Bullet::OnCollision(GameObject* obj) {
-	if (obj->GetTag() == m_gameObject->GetTag() ||	// 同じタグなら衝突判定なし
-		obj->GetTag() == "AreaWall"					// エリア外
-		) {
-		return;
-	}
 	Destroy(m_gameObject);
 	if (obj->GetComponent<Status>() != nullptr) {
 		obj->GetComponent<Status>()->m_HP -= m_status->m_AttakPower;

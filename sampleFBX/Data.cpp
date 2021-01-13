@@ -210,7 +210,6 @@ Quaternion Quaternion::Slerp(Quaternion q1, Quaternion q2, float t) {
 }
 
 Quaternion Quaternion::LookRotation(float3 forward, float3 upwards) {
-	//if (forward.x == 0.f && forward.y == 0.f && forward.z == 0.f)	return Quaternion();
 	float3 z = float3::Normalize(forward);
 	float3 x = float3::Normalize(float3::Cross(upwards, z));
 	float3 y = float3::Normalize(float3::Cross(z, x));
