@@ -14,6 +14,7 @@
 #include "Transform.h"
 #include "TargetCtr.h"
 #include "EnemyState.h"
+#include "Rigidbody.h"
 #include "debugproc.h"
 #include "System.h"
 
@@ -21,6 +22,9 @@
 void EnemyFixed::Start() {
 	// 敵の共通処理
 	Enemy::Start();
+
+	// 変数の初期化
+	m_rigidbody->m_weight = E_WEIGHT::_5;
 
 	// ステータス変数の初期化
 	m_status->m_HP = 500.f;
@@ -48,9 +52,12 @@ void EnemyFixed::Update() {
 	//}
 
 	// 射撃攻撃
-	if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
-		m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
-		m_status->m_bulletTime.InitData();
+	if (float3::Length(m_transform->m_position,
+		m_state->GetState<EnemyState::TargetOn>()->GetTarget()->m_transform->m_position) < 2000.f) {
+		if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
+			m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
+			m_status->m_bulletTime.InitData();
+		}
 	}
 }
 

@@ -29,7 +29,7 @@ using namespace DirectX;
 /**
  * @constant
  */
-static const float SPEED = 15.0f;	// ‘¬‚³
+static const float SPEED = 20.0f;	// ‘¬‚³
 static const float VAL_ANGLE_Z = 2.f;
 static const float MAX_ANGLE_Z = 30.f;
 

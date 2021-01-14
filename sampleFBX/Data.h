@@ -30,7 +30,7 @@ public:
 		this->z = z;
 	}
 
-	static float3 lerp3(float3 start, float3 end, float t) {
+	static float3 Lerp(float3 start, float3 end, float t) {
 		if (t > 1.f)	t = 1.f;
 		if (t < 0.f)	t = 0.f;
 		return float3(((1.f - t) * start.x + t * end.x), ((1.f - t) * start.y + t * end.y), ((1.f - t) * start.z + t * end.z));

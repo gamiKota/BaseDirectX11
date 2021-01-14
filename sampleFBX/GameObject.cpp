@@ -24,6 +24,7 @@ std::list<GameObject*>	GameObject::m_listFinds = std::list<GameObject*>();		//!<
 
 GameObject::GameObject(std::string name, std::string tag) : Object(name), m_tag(tag) {
 	m_transform = AddComponent<Transform>();
+	m_transform->m_scale = float3(1.f, 1.f, 1.f);
 }
 
 

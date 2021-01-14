@@ -81,6 +81,7 @@ public:
 		void OnDestoy()		override;		// 状態終了時
 		void SetTarget(GameObject* target = nullptr) { m_target = target; }
 		void SetMaxAngle(float maxAngle) { m_maxAngle = maxAngle; }
+		GameObject* GetTarget() { return m_target; }
 	};
 	// ターゲットオフ
 	struct TargetOff : public State<ENEMY_STATE> {

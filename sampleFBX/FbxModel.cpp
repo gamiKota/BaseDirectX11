@@ -1162,6 +1162,7 @@ void CFbxModel::Render(XMFLOAT4X4& mWorld, XMFLOAT4X4& mView, XMFLOAT4X4& mProj,
 	//// 頂点インプットレイアウトをセット
 	//m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
 
+	
 	RecursiveRender(m_pRootMesh, byOpacity);
 }
 

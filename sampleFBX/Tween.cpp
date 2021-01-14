@@ -61,7 +61,7 @@ void Tween::Update() {
 		// 0 Å` 1ÇÃîÕàÕÇ…ê≥ãKâª
 		float time = m_nowTime / m_maxTime;
 
-		m_result = float3::lerp3(m_start, m_end, time);
+		m_result = float3::Lerp(m_start, m_end, time);
 
 		if (time >= 1.f && m_isTween == E_TWEEN::DO) {	// ç°tweeníÜ
 			m_result = m_end;

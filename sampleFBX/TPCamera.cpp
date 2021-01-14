@@ -14,7 +14,13 @@
 #include "GameObject3D.h"
 #include "input.h"
 #include "debugproc.h"
+#include "Frame.h"
 #include "System.h"
+
+
+static const float LerpCorrection = 3.f;
+static const float ValFovy = 45.f;
+static const float FovyCorrection = 0.075f;
 
 
 void TPCamera::Awake() {
@@ -47,6 +53,8 @@ void TPCamera::Update() {
 		float3 right = float3(mtx._11, mtx._12, mtx._13);
 		float3 up = float3(mtx._21, mtx._22, mtx._23);
 		float3 forward = float3(mtx._31, mtx._32, mtx._33);
+
+
 		if (target != nullptr) {	// ターゲットオン
 			//m_transform->LookAt(target->m_transform);
 			m_transform->LookAt(target->m_transform, m_player->m_transform->m_up);
@@ -56,9 +64,15 @@ void TPCamera::Update() {
 			m_transform->LookAt(m_player->m_transform);
 			//SetLook(nullptr);
 		}
-		m_transform->m_position = m_player->m_transform->m_position;
-		m_transform->m_position -= forward * 500.f;
-		m_transform->m_position += up * 150.f;
+		float3 targetPos;
+		targetPos = m_player->m_transform->m_position;
+		targetPos -= forward * 500.f;
+		targetPos += up * 150.f;
+		m_transform->m_position = float3::Lerp(m_transform->m_position, targetPos, Frame::GetInstance().GetDeltaTime() * LerpCorrection);
+		// FoV値を上げる
+		float fovy = ValFovy + float3::Length(m_transform->m_position, targetPos) * FovyCorrection;
+		m_fFovy = XMConvertToRadians(fovy);
+
 		//CCamera::Get()->SetLook(m_player->m_transform);
 	}
 

@@ -26,6 +26,14 @@ HRESULT ShaderBuffer::Create(UINT size) {
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	hr = pDevice->CreateBuffer(&bd, NULL, &m_pBuffer);
 
+	//// 頂点バッファ インスタンシング用 作成
+	//bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//bd.ByteWidth = sizeof(XMMATRIX) * 100;
+	//bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//bd.MiscFlags = 0;
+	//bd.Usage = D3D11_USAGE_DYNAMIC;
+	//hr = pDevice->CreateBuffer(&bd, nullptr, &m_pBuffer);
+
 	return hr;
 }
 
