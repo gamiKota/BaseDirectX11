@@ -33,14 +33,14 @@ void Enemy::Start() {
 	m_rigidbody->m_weight = E_WEIGHT::_2;	// 二番目に軽い
 
 	// ロックオンマーカーの追加(とりあえず今は表示しない)
-	//GameObjectUI* obj = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_MAIN, "EnemyIcon");
-	//obj->AddComponent<TargetCtr>()->m_target = m_gameObject;
-	//m_LockIcon = GameObject::Instantiate(obj);
+	GameObjectUI* obj = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_MAIN, "EnemyIcon");
+	obj->AddComponent<TargetCtr>()->m_target = m_gameObject;
+	m_LockIcon = GameObject::Instantiate(obj);
 }
 
 
 void Enemy::Uninit() {
-	//Destroy(m_LockIcon);
+	Destroy(m_LockIcon);
 }
 
 

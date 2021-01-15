@@ -31,6 +31,7 @@ void GameObjectUI::Init() {
 	// •Ï”‚Ì‰Šú‰»
 	m_transform->m_scale = { 100.f, 100.f, 0 };
 	m_color = float3(1.f, 1.f, 1.f);
+	m_alpha = 1.f;
 	m_shader = E_SHADER_2D::_NORMAL;
 
 	GameObject::Init();
@@ -60,7 +61,7 @@ void GameObjectUI::Draw() {
 	SetPolygonUV(0.f, 0.f);
 	SetPolygonFrameSize(1.f, 1.f);
 	SetPolygonColor(m_color.x, m_color.y, m_color.z);
-	SetPolygonAlpha(1.0f);
+	SetPolygonAlpha(m_alpha);
 	SetPolygonShader(m_shader);
 	DrawPolygon(D3DClass::GetInstance().GetDeviceContext());
 	

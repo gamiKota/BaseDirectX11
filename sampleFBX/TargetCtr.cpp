@@ -94,6 +94,7 @@ void TargetCtr::Update() {
 	m_transform->m_position = marker;
 
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
+	obj->m_alpha = 0.f;
 
 	// メモ
 	// メインターゲット以外のロックオンマーカーの表示は、
@@ -116,69 +117,70 @@ void TargetCtr::Update() {
 
 		// ロックオン時は3D座標上でベクトルを出してそっからスクリーン変換が一番簡単そう
 
-		GameObject* player = GameObject::Find("Player");
-		CCamera* camera = CCamera::Get();
+		//GameObject* player = GameObject::Find("Player");
+		//CCamera* camera = CCamera::Get();
 
-		// 座標の初期化
-		m_transform->m_position = float3();
-		float tempX;
-		float tempZ;
-		float vecX;
-		float vecZ;
-		GameObject* playerTarget = player->GetComponent<PlayerState>()->GetTarget();
-		//float3 playerMaker = LockOnMarker(player->m_transform);
+		//// 座標の初期化
+		//m_transform->m_position = float3();
+		//float tempX;
+		//float tempZ;
+		//float vecX;
+		//float vecZ;
+		//GameObject* playerTarget = player->GetComponent<PlayerState>()->GetTarget();
+		////float3 playerMaker = LockOnMarker(player->m_transform);
 
-		// プレイヤーのターゲット指定状態で処理を分ける
-		// ターゲットと密着してる時に挙動が可笑しい
-		if (playerTarget != nullptr) {
-			// 3D上でのベクトル
-			float3 vec3D = m_target->m_transform->m_position - playerTarget->m_transform->m_position;
-			// 正規化
-			vec3D = float3::Normalize(vec3D);
-			// 座標ひ変換
-			float3 pos3D = playerTarget->m_transform->m_position;
-			pos3D += vec3D;
-			// スクリーン座標に変換
-			pos3D = LockOnMarker(pos3D);
-			// 補正(ここ汚ないし原因もわかんない)
-			if (pos3D.y > 1.f) {
-				pos3D.y = m_colY;
-			}
-			else {
-				m_colY = pos3D.y;
-			}
-			// 画面比に合わせたベクトルに変換
-			pos3D *= (float)SCREEN_RATIO;
-			// 正規化
-			pos3D = float3::Normalize(float3(pos3D.x, pos3D.y, 0.f)) * CIRCLE_SIZE;
-			// 座標に反映
-			m_transform->m_position += pos3D;
-			// ターゲット方向の更新
-			float angle = atan2(m_transform->m_position.y, m_transform->m_position.x);
-			m_transform->m_rotation = Quaternion::AngleAxis(angle, float3(0.f, 0.f, 1.f));
-		}
-		else {
-			// 二次元ベクトルに変換
-			float3 playerRot = Quaternion::RadianAngle(player->m_transform->m_rotation);
-			tempX = m_target->m_transform->m_position.x - player->m_transform->m_position.x;
-			tempZ = m_target->m_transform->m_position.z - player->m_transform->m_position.z;
-			vecX = tempX * cosf(playerRot.y) - tempZ * sinf(playerRot.y);
-			vecZ = tempX * sinf(playerRot.y) + tempZ * cosf(playerRot.y);
-			// 画面比に合わせたベクトルに補正
-			vecX *= (float)SCREEN_RATIO;
-			vecZ *= (float)SCREEN_RATIO;
-			// 正規化
-			float3 vec = float3::Normalize(float3(vecX, vecZ, 0.f)) * CIRCLE_SIZE;
-			// 座標に反映
-			m_transform->m_position += vec;
-			// ターゲット方向の更新
-			float angle = XMConvertToDegrees(atan2(m_transform->m_position.y, m_transform->m_position.x));
-			m_transform->m_rotation = Quaternion::AngleAxis(angle, float3(0.f, 0.f, 1.f));
-		}
+		//// プレイヤーのターゲット指定状態で処理を分ける
+		//// ターゲットと密着してる時に挙動が可笑しい
+		//if (playerTarget != nullptr) {
+		//	// 3D上でのベクトル
+		//	float3 vec3D = m_target->m_transform->m_position - playerTarget->m_transform->m_position;
+		//	// 正規化
+		//	vec3D = float3::Normalize(vec3D);
+		//	// 座標ひ変換
+		//	float3 pos3D = playerTarget->m_transform->m_position;
+		//	pos3D += vec3D;
+		//	// スクリーン座標に変換
+		//	pos3D = LockOnMarker(pos3D);
+		//	// 補正(ここ汚ないし原因もわかんない)
+		//	if (pos3D.y > 1.f) {
+		//		pos3D.y = m_colY;
+		//	}
+		//	else {
+		//		m_colY = pos3D.y;
+		//	}
+		//	// 画面比に合わせたベクトルに変換
+		//	pos3D *= (float)SCREEN_RATIO;
+		//	// 正規化
+		//	pos3D = float3::Normalize(float3(pos3D.x, pos3D.y, 0.f)) * CIRCLE_SIZE;
+		//	// 座標に反映
+		//	m_transform->m_position += pos3D;
+		//	// ターゲット方向の更新
+		//	float angle = atan2(m_transform->m_position.y, m_transform->m_position.x);
+		//	m_transform->m_rotation = Quaternion::AngleAxis(angle, float3(0.f, 0.f, 1.f));
+		//}
+		//else {
+		//	// 二次元ベクトルに変換
+		//	float3 playerRot = Quaternion::RadianAngle(player->m_transform->m_rotation);
+		//	tempX = m_target->m_transform->m_position.x - player->m_transform->m_position.x;
+		//	tempZ = m_target->m_transform->m_position.z - player->m_transform->m_position.z;
+		//	vecX = tempX * cosf(playerRot.y) - tempZ * sinf(playerRot.y);
+		//	vecZ = tempX * sinf(playerRot.y) + tempZ * cosf(playerRot.y);
+		//	// 画面比に合わせたベクトルに補正
+		//	vecX *= (float)SCREEN_RATIO;
+		//	vecZ *= (float)SCREEN_RATIO;
+		//	// 正規化
+		//	float3 vec = float3::Normalize(float3(vecX, vecZ, 0.f)) * CIRCLE_SIZE;
+		//	// 座標に反映
+		//	m_transform->m_position += vec;
+		//	// ターゲット方向の更新
+		//	float angle = XMConvertToDegrees(atan2(m_transform->m_position.y, m_transform->m_position.x));
+		//	m_transform->m_rotation = Quaternion::AngleAxis(angle, float3(0.f, 0.f, 1.f));
+		//}
 
-		obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
-		obj->m_color = float3(1.f, 0.f, 0.f);
-		obj->m_layer = E_LAYER::UI;
+		//obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
+		//obj->m_color = float3(1.f, 0.f, 0.f);
+		//obj->m_layer = E_LAYER::UI;
+
 	}
 	else {	// 画面内
 		if (m_target == GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget()) {
@@ -186,6 +188,7 @@ void TargetCtr::Update() {
 			obj->m_color = float3(1.f, 0.f, 0.f);
 			m_transform->m_scale = float3(100.f, 100.f, 0.f);
 			obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 2);
+			obj->m_alpha = 1.f;
 		}
 		else {
 			obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_SUB;
@@ -195,72 +198,6 @@ void TargetCtr::Update() {
 		}
 		m_transform->m_rotation = Quaternion::AngleAxis(0.f, float3(0.f, 0.f, 1.f));
 	}
-
-	// 画面外
-	// 挙動が可笑しい原因
-	// あくまでも座標は3Dオブジェクトを追ってるからスクリーン座標へ変換した時の値が望んでるものとは限らない
-	// 取り合えずくそコードで実装
-	//if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X ||
-	//	m_transform->m_position.x - m_transform->m_scale.x * 0.5f >  (float)SCREEN_CENTER_X	||
-	//	m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y ||
-	//	m_transform->m_position.y + m_transform->m_scale.y * 0.5f >  (float)SCREEN_CENTER_Y) {
-	//
-	//	if (marker.z) {	// カメラ外
-	//		float3 pos = CCamera::Get()->m_transform->m_position - m_target->m_transform->m_position;
-	//		float3 vec = float3::Normalize(pos);
-	//		if (vec.y >= vec.z) {
-	//			if (pos.y > 0) {
-	//				m_transform->m_position.y += SCREEN_HEIGHT;
-	//			}
-	//			else {
-	//				m_transform->m_position.y -= SCREEN_HEIGHT;
-	//			}
-	//		}
-	//		else {
-	//			if (pos.z > 0) {	// 上
-	//				m_transform->m_position.x += SCREEN_HEIGHT;
-	//			}
-	//			else {
-	//				m_transform->m_position.x -= SCREEN_HEIGHT;
-	//			}
-	//		}
-	//	}
-	//	
-	//	{
-	//		if (m_transform->m_position.x + m_transform->m_scale.x * 0.5f < -(float)SCREEN_CENTER_X) {
-	//			m_transform->m_position.x = -(float)SCREEN_CENTER_X + m_transform->m_scale.x * 0.5f;
-	//		}
-	//		if (m_transform->m_position.x - m_transform->m_scale.x * 0.5f > (float)SCREEN_CENTER_X) {
-	//			m_transform->m_position.x = (float)SCREEN_CENTER_X - m_transform->m_scale.x * 0.5f;
-	//		}
-	//		if (m_transform->m_position.y - m_transform->m_scale.y * 0.5f < -(float)SCREEN_CENTER_Y) {
-	//			m_transform->m_position.y = -(float)SCREEN_CENTER_Y + m_transform->m_scale.y * 0.5f;
-	//		}
-	//		if (m_transform->m_position.y + m_transform->m_scale.y * 0.5f > (float)SCREEN_CENTER_Y) {
-	//			m_transform->m_position.y = (float)SCREEN_CENTER_Y - m_transform->m_scale.y * 0.5f;
-	//		}
-	//	}
-	//	obj->m_texture = E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI;
-	//	obj->m_color = float3(1.f, 0.f, 0.f);
-	//	obj->m_layer = E_LAYER::UI;
-	//	m_transform->m_rotate.z = atan2(m_transform->m_position.y, m_transform->m_position.x) * 180.f / XM_PI;
-	//}
-	//// 画面内
-	//else {
-	//	if (m_target == GameObject::Find("Player")->GetComponent<PlayerCtr>()->m_target) {
-	//		obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_MAIN;
-	//		obj->m_color = float3(1.f, 0.f, 0.f);
-	//		m_transform->m_scale = float3(100.f, 100.f, 0.f);
-	//		obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 2);
-	//	}
-	//	else {
-	//		obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_SUB;
-	//		obj->m_color = float3(1.f, 0.6f, 0.f);
-	//		m_transform->m_scale = float3(80.f, 80.f, 0.f);
-	//		obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 1);
-	//	}
-	//	m_transform->m_rotate.z = 0.f;
-	//}
 }
 
 

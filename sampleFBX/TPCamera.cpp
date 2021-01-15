@@ -42,8 +42,6 @@ void TPCamera::Uninit() {
 void TPCamera::Update() {
 
 	// 追従処理
-	// プレイヤーの横移動でずらしたい
-	// 処理順のせいなのかガクつく
 	if (m_player != nullptr) {
 		GameObject* target = m_player->m_state->GetTarget();
 		// モデル姿勢に依存しない平行移動
@@ -81,11 +79,6 @@ void TPCamera::Update() {
 
 
 void TPCamera::LastUpdate() {
-	// メモ
-	// 注視点はロックオンされているターゲット(ロックオンしてない時はプレイヤー)
-	// 座標はターゲットとプレイヤーのベクトル上の少し後ろでプレイヤーのY軸から真横に移動
-	// 視点と注視点を移動、上方ベクトルを回転
-
 	//行列更新
 	CCamera::LastUpdate();
 }

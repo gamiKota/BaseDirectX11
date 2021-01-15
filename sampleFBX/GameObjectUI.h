@@ -32,6 +32,7 @@ public:
 	E_TEXTURE	m_texture;
 	E_LAYER		m_layer;
 	float3		m_color;
+	float		m_alpha;
 	E_SHADER_2D m_shader;
 
 public:

@@ -29,7 +29,7 @@ using namespace DirectX;
 /**
  * @constant
  */
-static const float SPEED = 20.0f;	// 速さ
+static const float SPEED = 25.0f;	// 速さ
 static const float VAL_ANGLE_Z = 2.f;
 static const float MAX_ANGLE_Z = 30.f;
 
@@ -120,7 +120,7 @@ void PlayerState::Move::Update() {
 	}
 	// Y軸移動(ターゲットの方に向いてるのでy要素で直接移動処理)
 	if (main->m_movement.y != 0.f) {
-		main->m_transform->m_position.y += (SPEED * main->m_movement.y);
+		main->m_transform->m_position.y += ((SPEED * 0.5f) * main->m_movement.y);
 		//main->m_transform->m_position += up * (SPEED * main->m_movement.y);
 	}
 }
