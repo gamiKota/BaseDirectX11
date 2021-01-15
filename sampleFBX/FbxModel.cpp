@@ -931,8 +931,8 @@ CFbxModel::CFbxModel()
 	m_pDevice = nullptr;
 	m_pDeviceContext = nullptr;
 	m_pSampleLinear = nullptr;
-	m_pConstantBuffer0 = nullptr;
-	m_pConstantBuffer1 = nullptr;
+	//m_pConstantBuffer0 = nullptr;
+	//m_pConstantBuffer1 = nullptr;
 	//m_pVertexLayout = nullptr;
 	//m_pVertexShader = nullptr;
 	//m_pPixelShader = nullptr;
@@ -970,8 +970,8 @@ HRESULT CFbxModel::LoadRecursive(FbxNode* pNode, CFbxMesh* pFBXMesh)
 
 	pFBXMesh->m_pDevice = m_pDevice;
 	pFBXMesh->m_pDeviceContext = m_pDeviceContext;
-	pFBXMesh->m_pConstantBuffer0 = m_pConstantBuffer0;
-	pFBXMesh->m_pConstantBuffer1 = m_pConstantBuffer1;
+	pFBXMesh->m_pConstantBuffer0 = m_constantBuffer0.GetBuffer();
+	pFBXMesh->m_pConstantBuffer1 = m_constantBuffer1.GetBuffer();
 	pFBXMesh->m_pSampleLinear = m_pSampleLinear;
 	pFBXMesh->m_pFBXNode = pNode;
 
@@ -1055,34 +1055,10 @@ HRESULT CFbxModel::Init(ID3D11Device* pDevice, ID3D11DeviceContext *pContext, LP
 //---------------------------------------------------------------------------------------
 HRESULT CFbxModel::InitShader()
 {
-	// シェーダ読み込み
-	HRESULT hr;// = LoadShader("FbxModelVertex", "FbxModelPixel",
-	//	&m_pVertexShader, &m_pVertexLayout, &m_pPixelShader);
-	//if (FAILED(hr)) {
-	//	MessageBoxW(0, L"hlsl読み込み失敗", nullptr, MB_OK);
-	//	return hr;
-	//}
+	HRESULT hr;
 
-	// コンスタントバッファ作成 変換行列渡し用
-	D3D11_BUFFER_DESC cb;
-	ZeroMemory(&cb, sizeof(cb));
-	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cb.ByteWidth = sizeof(SHADER_GLOBAL);
-	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cb.MiscFlags = 0;
-	cb.Usage = D3D11_USAGE_DYNAMIC;
-	hr = m_pDevice->CreateBuffer(&cb, nullptr, &m_pConstantBuffer0);
-	if (FAILED(hr)) {
-		return hr;
-	}
-
-	// コンスタントバッファ作成 マテリアル渡し用
-	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cb.ByteWidth = sizeof(SHADER_MATERIAL);
-	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cb.MiscFlags = 0;
-	cb.Usage = D3D11_USAGE_DYNAMIC;
-	hr = m_pDevice->CreateBuffer(&cb, nullptr, &m_pConstantBuffer1);
+	hr = m_constantBuffer0.Create(sizeof(SHADER_GLOBAL));
+	hr = m_constantBuffer1.Create(sizeof(SHADER_MATERIAL));
 
 	return hr;
 }

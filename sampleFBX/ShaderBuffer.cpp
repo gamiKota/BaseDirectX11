@@ -16,11 +16,13 @@ ShaderBuffer::~ShaderBuffer() {
 
 HRESULT ShaderBuffer::Create(UINT size) {
 	// 作成するバッファの情報を設定
-	D3D11_BUFFER_DESC bd = {};
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));	// HMY
 	bd.ByteWidth = size;
-	bd.Usage = D3D11_USAGE_DEFAULT;
+	//bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;	// HMY
+	bd.Usage = D3D11_USAGE_DYNAMIC;	// HMY
 	// バッファの生成
 	HRESULT hr;
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
