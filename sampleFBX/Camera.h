@@ -32,6 +32,7 @@ protected:
 	float					m_fFarZ;		//!< 後方クリップ距離
 	Transform*				m_lookTarget;	//!< 注視点情報
 
+
 private:
 	static CCamera*	m_pCamera;	//!< 現在有効なカメラ
 

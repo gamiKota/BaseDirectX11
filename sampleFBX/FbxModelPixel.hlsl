@@ -1,9 +1,8 @@
 // FBX用ピクセルシェーダ (FbxModelPixel.hlsl)
 
-// グローバル
-cbuffer global : register(b0) {
+// カメラ
+cbuffer global_camera : register(b0) {
 	matrix	g_WorldViewProj;	// ワールド×ビュー×射影行列
-	matrix	g_World;			// ワールド行列
 	float4	g_cameraPos;		// 視点座標(ワールド空間)
 };
 
@@ -13,6 +12,12 @@ cbuffer global_light : register(b1) {
 	float4	g_lightAmbient;		// 環境光
 	float4	g_lightDiffuse;		// 拡散光
 	float4	g_lightSpecular;	// 鏡面反射光
+};
+
+// 描画オブジェクトの行列情報
+cbuffer global_world : register(b2) {
+	matrix	g_World;		// ワールド行列
+	matrix	g_mTexture;		// テクスチャ行列
 };
 
 // マテリアル

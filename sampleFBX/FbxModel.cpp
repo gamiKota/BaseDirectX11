@@ -20,17 +20,24 @@
 
 using namespace DirectX;
 
-// シェーダに渡す値
+// カメラ
 struct SHADER_CAMERA {
-	XMMATRIX	mWVP;		// ワールド×ビュー×射影行列(転置行列)
-	XMMATRIX	mW;			// ワールド行列(転置行列)
 	XMVECTOR	vEye;		// 視点座標
+	XMMATRIX	mWVP;		// ワールド×ビュー×射影行列(転置行列)
 };
+
+// ライト
 struct SHADER_LIGHT {
 	XMVECTOR	vLightDir;	// 光源方向
 	XMVECTOR	vLa;		// 光源色(アンビエント)
 	XMVECTOR	vLd;		// 光源色(ディフューズ)
 	XMVECTOR	vLs;		// 光源色(スペキュラ)
+};
+
+// 行列情報
+struct SHADER_WORLD {
+	XMMATRIX mW;
+	XMMATRIX mTexture;
 };
 
 // マテリアル (シェーダ用)
@@ -113,6 +120,7 @@ CFbxMesh::CFbxMesh()
 	m_pSampleLinear = nullptr;
 	m_pConstantBufferCamera = nullptr;
 	m_pConstantBufferLight = nullptr;
+	m_pConstantBufferWorld = nullptr;
 	m_pConstantBufferMaterial = nullptr;
 	m_pConstantBufferBone = nullptr;
 	m_pFBXNode = nullptr;
@@ -537,7 +545,6 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 			XMMATRIX mtxWorld = XMLoadFloat4x4(&m_mFinalWorld);
 			XMMATRIX mtxView = XMLoadFloat4x4(&m_mView);
 			XMMATRIX mtxProj = XMLoadFloat4x4(&m_mProj);
-			sg.mW = XMMatrixTranspose(mtxWorld);
 			sg.mWVP = mtxWorld * mtxView * mtxProj;
 			sg.mWVP = XMMatrixTranspose(sg.mWVP);
 			sg.vEye = XMLoadFloat3(m_pCamera);
@@ -559,6 +566,17 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 		}
 		m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pConstantBufferLight);
 		m_pDeviceContext->PSSetConstantBuffers(1, 1, &m_pConstantBufferLight);
+	}
+	{// こことれそう(cv おじいちゃん)
+		if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBufferWorld, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
+			SHADER_WORLD sWorld;
+			XMMATRIX mtxWorld = XMLoadFloat4x4(&m_mFinalWorld);
+			sWorld.mW = XMMatrixTranspose(mtxWorld);
+			memcpy_s(pData.pData, pData.RowPitch, (void*)&sWorld, sizeof(sWorld));
+			m_pDeviceContext->Unmap(m_pConstantBufferWorld, 0);
+		}
+		m_pDeviceContext->VSSetConstantBuffers(2, 1, &m_pConstantBufferWorld);
+		m_pDeviceContext->PSSetConstantBuffers(2, 1, &m_pConstantBufferWorld);
 	}
 
 	// 頂点バッファをセット (頂点バッファは1つ)
@@ -992,6 +1010,7 @@ HRESULT CFbxModel::LoadRecursive(FbxNode* pNode, CFbxMesh* pFBXMesh)
 	pFBXMesh->m_pDeviceContext = m_pDeviceContext;
 	pFBXMesh->m_pConstantBufferCamera = m_constantBufferCamera.GetBuffer();
 	pFBXMesh->m_pConstantBufferLight = m_constantBufferLight.GetBuffer();
+	pFBXMesh->m_pConstantBufferWorld = m_constantBufferWorld.GetBuffer();
 	pFBXMesh->m_pConstantBufferMaterial = m_constantBufferMaterial.GetBuffer();
 	pFBXMesh->m_pSampleLinear = m_pSampleLinear;
 	pFBXMesh->m_pFBXNode = pNode;
@@ -1080,6 +1099,7 @@ HRESULT CFbxModel::InitShader()
 
 	hr = m_constantBufferCamera.Create(sizeof(SHADER_CAMERA));
 	hr = m_constantBufferLight.Create(sizeof(SHADER_LIGHT));
+	hr = m_constantBufferWorld.Create(sizeof(SHADER_WORLD));
 	hr = m_constantBufferMaterial.Create(sizeof(SHADER_MATERIAL));
 
 	return hr;
