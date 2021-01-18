@@ -5,16 +5,18 @@ cbuffer global : register(b0) {
 	matrix	g_WorldViewProj;	// ワールド×ビュー×射影行列
 	matrix	g_World;			// ワールド行列
 	float4	g_cameraPos;		// 視点座標(ワールド空間)
-	float4	g_lightDir;			// 光源方向(ワールド空間)
+};
 
-	// メインライトの値
+// ライト
+cbuffer global_light : register(b1) {
+	float4	g_lightDir;			// 光源方向(ワールド空間)
 	float4	g_lightAmbient;		// 環境光
 	float4	g_lightDiffuse;		// 拡散光
 	float4	g_lightSpecular;	// 鏡面反射光
 };
 
 // マテリアル
-cbuffer global2 : register(b1) {
+cbuffer global2 : register(b3) {
 	// モデルごとの値
 	float4	g_Ambient;			// 環境色
 	float4	g_Diffuse;			// 拡散色

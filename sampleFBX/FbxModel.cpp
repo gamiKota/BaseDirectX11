@@ -21,10 +21,12 @@
 using namespace DirectX;
 
 // シェーダに渡す値
-struct SHADER_GLOBAL {
+struct SHADER_CAMERA {
 	XMMATRIX	mWVP;		// ワールド×ビュー×射影行列(転置行列)
 	XMMATRIX	mW;			// ワールド行列(転置行列)
 	XMVECTOR	vEye;		// 視点座標
+};
+struct SHADER_LIGHT {
 	XMVECTOR	vLightDir;	// 光源方向
 	XMVECTOR	vLa;		// 光源色(アンビエント)
 	XMVECTOR	vLd;		// 光源色(ディフューズ)
@@ -109,8 +111,9 @@ CFbxMesh::CFbxMesh()
 	m_pDevice = nullptr;
 	m_pDeviceContext = nullptr;
 	m_pSampleLinear = nullptr;
-	m_pConstantBuffer0 = nullptr;
-	m_pConstantBuffer1 = nullptr;
+	m_pConstantBufferCamera = nullptr;
+	m_pConstantBufferLight = nullptr;
+	m_pConstantBufferMaterial = nullptr;
 	m_pConstantBufferBone = nullptr;
 	m_pFBXNode = nullptr;
 	XMStoreFloat4x4(&m_mView, XMMatrixIdentity());
@@ -529,29 +532,33 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 	// 全てのオブジェクトで共通のバッファとオブジェクトごとのバッファがある
 	D3D11_MAPPED_SUBRESOURCE pData;
 	{// こことれそう(cv おじいちゃん)
-		if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBuffer0, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
-			SHADER_GLOBAL sg;
-
+		if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBufferCamera, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
+			SHADER_CAMERA sg;
 			XMMATRIX mtxWorld = XMLoadFloat4x4(&m_mFinalWorld);
-
 			XMMATRIX mtxView = XMLoadFloat4x4(&m_mView);
 			XMMATRIX mtxProj = XMLoadFloat4x4(&m_mProj);
 			sg.mW = XMMatrixTranspose(mtxWorld);
 			sg.mWVP = mtxWorld * mtxView * mtxProj;
 			sg.mWVP = XMMatrixTranspose(sg.mWVP);
-
 			sg.vEye = XMLoadFloat3(m_pCamera);
-
-			sg.vLightDir = XMLoadFloat3(&m_pLight->m_direction);
-			sg.vLd = XMLoadFloat4(&m_pLight->m_diffuse);
-			sg.vLa = XMLoadFloat4(&m_pLight->m_ambient);
-			sg.vLs = XMLoadFloat4(&m_pLight->m_specular);
-
 			memcpy_s(pData.pData, pData.RowPitch, (void*)&sg, sizeof(sg));
-			m_pDeviceContext->Unmap(m_pConstantBuffer0, 0);
+			m_pDeviceContext->Unmap(m_pConstantBufferCamera, 0);
 		}
-		m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer0);
-		m_pDeviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer0);
+		m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBufferCamera);
+		m_pDeviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBufferCamera);
+	}
+	{// こことれそう(cv おじいちゃん)
+		if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBufferLight, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
+			SHADER_LIGHT sLight;
+			sLight.vLightDir = XMLoadFloat3(&m_pLight->m_direction);
+			sLight.vLd = XMLoadFloat4(&m_pLight->m_diffuse);
+			sLight.vLa = XMLoadFloat4(&m_pLight->m_ambient);
+			sLight.vLs = XMLoadFloat4(&m_pLight->m_specular);
+			memcpy_s(pData.pData, pData.RowPitch, (void*)&sLight, sizeof(sLight));
+			m_pDeviceContext->Unmap(m_pConstantBufferLight, 0);
+		}
+		m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pConstantBufferLight);
+		m_pDeviceContext->PSSetConstantBuffers(1, 1, &m_pConstantBufferLight);
 	}
 
 	// 頂点バッファをセット (頂点バッファは1つ)
@@ -591,17 +598,17 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 		// マテリアルの各要素をシェーダに渡す
 		{
 			D3D11_MAPPED_SUBRESOURCE pData;
-			if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBuffer1, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
+			if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBufferMaterial, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
 				SHADER_MATERIAL sg;
 				sg.vAmbient = XMLoadFloat4(&pMaterial->Ka);
 				sg.vDiffuse = XMLoadFloat4(&pMaterial->Kd);
 				sg.vSpecular = XMLoadFloat4(&pMaterial->Ks);
 				sg.vEmissive = XMLoadFloat4(&pMaterial->Ke);
 				memcpy_s(pData.pData, pData.RowPitch, (void*)&sg, sizeof(sg));
-				m_pDeviceContext->Unmap(m_pConstantBuffer1, 0);
+				m_pDeviceContext->Unmap(m_pConstantBufferMaterial, 0);
 			}
-			m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pConstantBuffer1);
-			m_pDeviceContext->PSSetConstantBuffers(1, 1, &m_pConstantBuffer1);
+			m_pDeviceContext->VSSetConstantBuffers(3, 1, &m_pConstantBufferMaterial);
+			m_pDeviceContext->PSSetConstantBuffers(3, 1, &m_pConstantBufferMaterial);
 		}
 
 
@@ -616,8 +623,8 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 			m_pDeviceContext->PSSetShaderResources(2, 1, TextureManager::GetInstance().GetToonTex());
 		}
 		// ボーンをシェーダに渡す
-		m_pDeviceContext->VSSetConstantBuffers(2, 1, &m_pConstantBufferBone);
-		m_pDeviceContext->PSSetConstantBuffers(2, 1, &m_pConstantBufferBone);
+		m_pDeviceContext->VSSetConstantBuffers(4, 1, &m_pConstantBufferBone);
+		m_pDeviceContext->PSSetConstantBuffers(4, 1, &m_pConstantBufferBone);
 		// 描画
 		m_pDeviceContext->DrawIndexed(m_pMaterial[i].dwNumFace * 3, 0, 0);
 	}
@@ -983,8 +990,9 @@ HRESULT CFbxModel::LoadRecursive(FbxNode* pNode, CFbxMesh* pFBXMesh)
 
 	pFBXMesh->m_pDevice = m_pDevice;
 	pFBXMesh->m_pDeviceContext = m_pDeviceContext;
-	pFBXMesh->m_pConstantBuffer0 = m_constantBuffer0.GetBuffer();
-	pFBXMesh->m_pConstantBuffer1 = m_constantBuffer1.GetBuffer();
+	pFBXMesh->m_pConstantBufferCamera = m_constantBufferCamera.GetBuffer();
+	pFBXMesh->m_pConstantBufferLight = m_constantBufferLight.GetBuffer();
+	pFBXMesh->m_pConstantBufferMaterial = m_constantBufferMaterial.GetBuffer();
 	pFBXMesh->m_pSampleLinear = m_pSampleLinear;
 	pFBXMesh->m_pFBXNode = pNode;
 
@@ -1070,8 +1078,9 @@ HRESULT CFbxModel::InitShader()
 {
 	HRESULT hr;
 
-	hr = m_constantBuffer0.Create(sizeof(SHADER_GLOBAL));
-	hr = m_constantBuffer1.Create(sizeof(SHADER_MATERIAL));
+	hr = m_constantBufferCamera.Create(sizeof(SHADER_CAMERA));
+	hr = m_constantBufferLight.Create(sizeof(SHADER_LIGHT));
+	hr = m_constantBufferMaterial.Create(sizeof(SHADER_MATERIAL));
 
 	return hr;
 }

@@ -7,6 +7,10 @@ cbuffer global : register(b0) {
 	matrix	g_WorldViewProj;	// ワールド×ビュー×射影行列
 	matrix	g_World;			// ワールド行列
 	float4	g_cameraPos;		// 視点座標(ワールド空間)
+};
+
+// ライト
+cbuffer global_light : register(b1) {
 	float4	g_lightDir;			// 光源方向(ワールド空間)
 	float4	g_lightAmbient;		// 環境光
 	float4	g_lightDiffuse;		// 拡散光
@@ -14,7 +18,7 @@ cbuffer global : register(b0) {
 };
 
 // ボーンのポーズ行列
-cbuffer global_bones : register(b2) {
+cbuffer global_bones : register(b4) {
 	matrix g_BoneWorld[MAX_BONE_MATRIX];
 };
 

@@ -90,8 +90,9 @@ public:
 	ID3D11Device* m_pDevice;
 	ID3D11DeviceContext* m_pDeviceContext;
 	ID3D11SamplerState* m_pSampleLinear;
-	ID3D11Buffer* m_pConstantBuffer0;
-	ID3D11Buffer* m_pConstantBuffer1;
+	ID3D11Buffer* m_pConstantBufferCamera;
+	ID3D11Buffer* m_pConstantBufferLight;
+	ID3D11Buffer* m_pConstantBufferMaterial;
 	FbxNode* m_pFBXNode;						// FBXから姿勢行列を取り出す際に使うFBXポインタ
 	DirectX::XMFLOAT4X4 m_mView;
 	DirectX::XMFLOAT4X4 m_mProj;
@@ -184,8 +185,9 @@ private:
 	//ID3D11Buffer* m_pConstantBuffer0;
 	//ID3D11Buffer* m_pConstantBuffer1;
 
-	ShaderBuffer m_constantBuffer0;
-	ShaderBuffer m_constantBuffer1;
+	ShaderBuffer m_constantBufferCamera;
+	ShaderBuffer m_constantBufferLight;
+	ShaderBuffer m_constantBufferMaterial;
 	// シェーダ
 	//ID3D11InputLayout* m_pVertexLayout;
 	//ID3D11VertexShader* m_pVertexShader;
