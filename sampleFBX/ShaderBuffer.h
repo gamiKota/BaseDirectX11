@@ -2,6 +2,13 @@
 
 #include <Windows.h>
 #include <d3d11.h>
+#include <map>
+#include "Singleton.h"
+
+
+#define RE_WORLD 0
+#define RE_VIEWPROJ 1
+#define RE_CAMERA 2
 
 
 /**
@@ -34,3 +41,14 @@ public:
 private:
 	ID3D11Buffer* m_pBuffer;
 };
+
+
+class ShaderBufferManager : public Singleton<ShaderBufferManager> {
+public:
+	std::map<std::string, int> m_registerMap;
+
+	void Initialize();
+};
+
+
+// EOF

@@ -65,4 +65,13 @@ void ShaderBuffer::BindGS(UINT slot) {
 }
 
 
+
+
+void ShaderBufferManager::Initialize() {
+	m_registerMap.clear();
+	m_registerMap["World"] = 0;
+	m_registerMap["ViewPro"] = 1;
+}
+
+
 // EOF
