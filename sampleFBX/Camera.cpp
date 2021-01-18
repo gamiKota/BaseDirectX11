@@ -13,6 +13,7 @@
 #include "Transform.h"
 #include "System.h"
 
+
 // 静的メンバ
 CCamera* CCamera::m_pCamera = nullptr;
 
@@ -40,6 +41,9 @@ void CCamera::Update() {
 
 
 void CCamera::LastUpdate() {
+
+	ID3D11DeviceContext* DeviceContext = D3DClass::GetInstance().GetDeviceContext();
+
 	// 上方ベクトル更新
 	XMStoreFloat3(&m_transform->m_up,
 		XMVector3Normalize(XMLoadFloat3(&m_transform->m_up)));
@@ -61,6 +65,29 @@ void CCamera::LastUpdate() {
 	XMStoreFloat4x4(&m_mProj,
 		XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect,
 			m_fNearZ, m_fFarZ));
+
+
+	SHADER_CAMERA buf;
+	XMMATRIX mtxView = XMLoadFloat4x4(&m_mView);
+	XMMATRIX mtxProj = XMLoadFloat4x4(&m_mProj);
+	buf.vEye = XMLoadFloat3(&m_transform->m_position);
+	buf.mV = XMMatrixTranspose(mtxView);
+	buf.mP = XMMatrixTranspose(mtxProj);
+	ShaderBufferManager::GetInstance().Update("MainCamera", &buf);
+	ShaderBufferManager::GetInstance().Bind("MainCamera");
+
+	//ID3D11Buffer* buf = m_buffer.GetBuffer();
+	//if (SUCCEEDED(DeviceContext->Map(buf, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
+	//	XMMATRIX mtxView = XMLoadFloat4x4(&m_mView);
+	//	XMMATRIX mtxProj = XMLoadFloat4x4(&m_mProj);
+	//	sg.vEye = XMLoadFloat3(&m_transform->m_position);
+	//	sg.mV = XMMatrixTranspose(mtxView);
+	//	sg.mP = XMMatrixTranspose(mtxProj);
+	//	memcpy_s(pData.pData, pData.RowPitch, (void*)&sg, sizeof(sg));
+	//	DeviceContext->Unmap(m_buffer.GetBuffer(), 0);
+	//}
+	//DeviceContext->VSSetConstantBuffers(0, 1, &buf);
+	//DeviceContext->PSSetConstantBuffers(0, 1, &buf);
 }
 
 

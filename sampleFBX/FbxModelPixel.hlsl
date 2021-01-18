@@ -21,7 +21,7 @@ cbuffer global_world : register(b2) {
 };
 
 // マテリアル
-cbuffer global2 : register(b3) {
+cbuffer global_material : register(b3) {
 	// モデルごとの値
 	float4	g_Ambient;			// 環境色
 	float4	g_Diffuse;			// 拡散色

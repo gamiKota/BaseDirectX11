@@ -3,9 +3,10 @@
 #define MAX_BONE_MATRIX	256
 
 // カメラ
-cbuffer global : register(b0) {
-	float4	g_cameraPos;		// 視点座標(ワールド空間)
-	matrix	g_WorldViewProj;	// ワールド×ビュー×射影行列
+cbuffer global_camera : register(b0) {
+	float4	g_cameraPos;	// 視点座標(ワールド空間)
+	matrix	g_View;			// ビュー
+	matrix	g_Proj;			// プロジェクション
 };
 
 // ライト
@@ -40,7 +41,7 @@ struct VS_OUTPUT {
 	float4	Pos			: SV_Position;
 	float2	Tex			: TEXCOORD0;
 	float3	Normal		: TEXCOORD1;
-	float3	PosForPS	: TEXCOORD2;
+	float3	PosForPS	: TEXCOORD2;	// wPos
 };
 
 // スキニング後の頂点・法線
@@ -94,9 +95,12 @@ SKIN SkinVert(VS_INPUT input)
 //
 VS_OUTPUT main(VS_INPUT input)
 {
+	matrix WVP;
 	VS_OUTPUT output;
 	SKIN vSkinned	= SkinVert(input);
-	output.Pos		= mul(vSkinned.Pos, g_WorldViewProj);
+	WVP				= mul(g_World, g_View);
+	WVP				= mul(WVP, g_Proj);
+	output.Pos		= mul(vSkinned.Pos, WVP);
 	output.Tex		= input.Tex;
 	output.Normal	= mul(vSkinned.Norm, (float3x3)g_World);
 	output.PosForPS = mul(vSkinned.Pos, g_World).xyz;

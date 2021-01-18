@@ -13,9 +13,18 @@
  * @include
  */
 #include "Component.h"
+#include "ShaderBuffer.h"
 
 
 #define CAMERA_LOOK_LENG (500.f)
+
+
+ // カメラ
+struct SHADER_CAMERA {
+	DirectX::XMVECTOR	vEye;	// 視点座標
+	DirectX::XMMATRIX	mV;		// ビュー
+	DirectX::XMMATRIX	mP;		// プロジェクション
+};
 
 
 /**
@@ -31,7 +40,6 @@ protected:
 	float					m_fNearZ;		//!< 前方クリップ距離
 	float					m_fFarZ;		//!< 後方クリップ距離
 	Transform*				m_lookTarget;	//!< 注視点情報
-
 
 private:
 	static CCamera*	m_pCamera;	//!< 現在有効なカメラ

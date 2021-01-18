@@ -90,7 +90,7 @@ public:
 	ID3D11Device* m_pDevice;
 	ID3D11DeviceContext* m_pDeviceContext;
 	ID3D11SamplerState* m_pSampleLinear;
-	ID3D11Buffer* m_pConstantBufferCamera;
+	//ID3D11Buffer* m_pConstantBufferCamera;
 	ID3D11Buffer* m_pConstantBufferLight;
 	ID3D11Buffer* m_pConstantBufferWorld;
 	ID3D11Buffer* m_pConstantBufferMaterial;
@@ -185,8 +185,6 @@ private:
 
 	//ID3D11Buffer* m_pConstantBuffer0;
 	//ID3D11Buffer* m_pConstantBuffer1;
-
-	ShaderBuffer m_constantBufferCamera;
 	ShaderBuffer m_constantBufferLight;
 	ShaderBuffer m_constantBufferWorld;
 	ShaderBuffer m_constantBufferMaterial;

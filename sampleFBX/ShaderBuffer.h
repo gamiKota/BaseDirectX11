@@ -6,11 +6,6 @@
 #include "Singleton.h"
 
 
-#define RE_WORLD 0
-#define RE_VIEWPROJ 1
-#define RE_CAMERA 2
-
-
 /**
  * @brief シェーダの定数バッファにデータを渡す
  */
@@ -31,7 +26,7 @@ public:
 	 * @brief 生成
 	 * @return HRESULT
 	 */
-	HRESULT Create(UINT size);
+	HRESULT Create(UINT size, bool f = true);
 	void UpdateSource(void* pData);
 	void BindVS(UINT slot);
 	void BindPS(UINT slot);
@@ -45,9 +40,17 @@ private:
 
 class ShaderBufferManager : public Singleton<ShaderBufferManager> {
 public:
-	std::map<std::string, int> m_registerMap;
+	//std::map<std::string, int> m_registerMap;
+	std::map<std::string, ShaderBuffer *> m_bufferMap;
 
 	void Initialize();
+	void Terminate();
+
+	void Update(std::string bufName, void* pData);
+	void Bind(std::string bufName);
+
+private:
+	void Create(std::string bufName, UINT size);
 };
 
 

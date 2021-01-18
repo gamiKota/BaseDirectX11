@@ -7,6 +7,7 @@
 #include "mesh.h"			// メッシュ
 #include "SceneManager.h"	// シーンの管理
 #include "ShaderManager.h"	// シェーダの管理
+#include "ShaderBuffer.h"	// シェーダバッファの管理
 #include "System.h"			// ポインターの解放
 
 
@@ -114,6 +115,9 @@ HRESULT D3DClass::Initialize(HWND hWnd, BOOL bWindow) {
 	// シェーダの初期化
 	ShaderManager::GetInstance().Initialize();
 
+	// シェーダバッファの初期化
+	ShaderBufferManager::GetInstance().Initialize();
+
 	// シーンの初期化
 	SceneManager::GetInstance().Init();
 
@@ -129,6 +133,9 @@ void D3DClass::Uninit(void) {
 	// シーンの終了処理
 	SceneManager::GetInstance().Uninit();
 	SceneManager::GetInstance().m_scene->Shutdown();
+
+	// シェーダバッファの終了
+	ShaderBufferManager::GetInstance().Terminate();
 
 	// シェーダの終了
 	ShaderManager::GetInstance().Terminate();
