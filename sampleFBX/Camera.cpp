@@ -42,8 +42,6 @@ void CCamera::Update() {
 
 void CCamera::LastUpdate() {
 
-	ID3D11DeviceContext* DeviceContext = D3DClass::GetInstance().GetDeviceContext();
-
 	// 上方ベクトル更新
 	XMStoreFloat3(&m_transform->m_up,
 		XMVector3Normalize(XMLoadFloat3(&m_transform->m_up)));
@@ -66,7 +64,9 @@ void CCamera::LastUpdate() {
 		XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect,
 			m_fNearZ, m_fFarZ));
 
+	// カメラのシェーダバッファの更新
 	if (this == m_pCamera) {
+		ID3D11DeviceContext* DeviceContext = D3DClass::GetInstance().GetDeviceContext();
 		SHADER_CAMERA buf;
 		XMMATRIX mtxView = XMLoadFloat4x4(&m_mView);
 		XMMATRIX mtxProj = XMLoadFloat4x4(&m_mProj);
