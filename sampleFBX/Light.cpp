@@ -69,13 +69,15 @@ void Light::Update() {
 
 
 void Light::LastUpdate() {
-	SHADER_LIGHT buf;
-	buf.vLightDir = XMLoadFloat3(&m_pLight->m_direction);
-	buf.vLd = XMLoadFloat4(&m_pLight->m_diffuse);
-	buf.vLa = XMLoadFloat4(&m_pLight->m_ambient);
-	buf.vLs = XMLoadFloat4(&m_pLight->m_specular);
-	ShaderBufferManager::GetInstance().Update("MainLight", &buf);
-	ShaderBufferManager::GetInstance().Bind("MainLight");
+	if (this == m_pLight) {
+		SHADER_LIGHT buf;
+		buf.vLightDir = XMLoadFloat3(&m_pLight->m_direction);
+		buf.vLd = XMLoadFloat4(&m_pLight->m_diffuse);
+		buf.vLa = XMLoadFloat4(&m_pLight->m_ambient);
+		buf.vLs = XMLoadFloat4(&m_pLight->m_specular);
+		ShaderBufferManager::GetInstance().Update("MainLight", &buf);
+		ShaderBufferManager::GetInstance().Bind("MainLight");
+	}
 }
 
 

@@ -66,7 +66,6 @@ void CCamera::LastUpdate() {
 
 	// カメラのシェーダバッファの更新
 	if (this == m_pCamera) {
-		ID3D11DeviceContext* DeviceContext = D3DClass::GetInstance().GetDeviceContext();
 		SHADER_CAMERA buf;
 		XMMATRIX mtxView = XMLoadFloat4x4(&m_mView);
 		XMMATRIX mtxProj = XMLoadFloat4x4(&m_mProj);
