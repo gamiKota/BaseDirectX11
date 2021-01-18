@@ -10,6 +10,7 @@
 #include "ShaderBuffer.h"
 #include "D3DClass.h"
 #include "Camera.h"
+#include "Light.h"
 #include "System.h"
 
 
@@ -93,7 +94,8 @@ void ShaderBuffer::BindGS(UINT slot) {
 
 void ShaderBufferManager::Initialize() {
 	m_bufferMap.clear();
-	this->Create("MainCamera", sizeof(SHADER_CAMERA));
+	this->Create("MainCamera", sizeof(SHADER_CAMERA), 0);
+	this->Create("MainLight", sizeof(SHADER_LIGHT), 1);
 	//m_bufferMap["MainCamera"]	= new ShaderBuffer();
 	//m_bufferMap["MainLight"]	= new ShaderBuffer();
 	//m_bufferMap["World"]		= new ShaderBuffer();
@@ -104,8 +106,8 @@ void ShaderBufferManager::Initialize() {
 void ShaderBufferManager::Terminate() {
 	//delete m_bufferMap["Bone"];
 	//delete m_bufferMap["Material"];
-	//delete m_bufferMap["MainLight"];
 	//delete m_bufferMap["World"];
+	delete m_bufferMap["MainLight"];
 	delete m_bufferMap["MainCamera"];
 	m_bufferMap.clear();
 }
@@ -115,14 +117,15 @@ void ShaderBufferManager::Update(std::string bufName, void* pData) {
 }
 
 void ShaderBufferManager::Bind(std::string bufName) {
-	m_bufferMap[bufName]->BindPS(0);
-	m_bufferMap[bufName]->BindVS(0);
-	m_bufferMap[bufName]->BindGS(0);
+	m_bufferMap[bufName]->BindPS(m_registerMap[bufName]);
+	m_bufferMap[bufName]->BindVS(m_registerMap[bufName]);
+	m_bufferMap[bufName]->BindGS(m_registerMap[bufName]);
 }
 
-void ShaderBufferManager::Create(std::string bufName, UINT size) {
+void ShaderBufferManager::Create(std::string bufName, UINT size, int regNum) {
 	m_bufferMap[bufName] = new ShaderBuffer;
 	m_bufferMap[bufName]->Create(size, false);
+	m_registerMap[bufName] = regNum;
 }
 
 

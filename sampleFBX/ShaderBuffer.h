@@ -40,7 +40,7 @@ private:
 
 class ShaderBufferManager : public Singleton<ShaderBufferManager> {
 public:
-	//std::map<std::string, int> m_registerMap;
+	std::map<std::string, int> m_registerMap;
 	std::map<std::string, ShaderBuffer *> m_bufferMap;
 
 	void Initialize();
@@ -50,7 +50,7 @@ public:
 	void Bind(std::string bufName);
 
 private:
-	void Create(std::string bufName, UINT size);
+	void Create(std::string bufName, UINT size, int regNum);
 };
 
 

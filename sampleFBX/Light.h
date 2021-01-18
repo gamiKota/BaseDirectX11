@@ -10,6 +10,15 @@
 #include "Component.h"
 
 
+ // ライトのシェーダバッファ
+struct SHADER_LIGHT {
+	DirectX::XMVECTOR	vLightDir;	// 光源方向
+	DirectX::XMVECTOR	vLa;		// 光源色(アンビエント)
+	DirectX::XMVECTOR	vLd;		// 光源色(ディフューズ)
+	DirectX::XMVECTOR	vLs;		// 光源色(スペキュラ)
+};
+
+
 /**
  * @class Light : inheritance Component
  */
@@ -31,6 +40,7 @@ public:
 	void Awake();
 	void Start();
 	void Update();
+	void LastUpdate();
 
 	void SetEnable(bool enable) { m_isLight = enable; }
 	static void Set(Light* light) { m_pLight = light; }

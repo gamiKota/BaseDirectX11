@@ -20,14 +20,6 @@
 
 using namespace DirectX;
 
-// ライト
-struct SHADER_LIGHT {
-	XMVECTOR	vLightDir;	// 光源方向
-	XMVECTOR	vLa;		// 光源色(アンビエント)
-	XMVECTOR	vLd;		// 光源色(ディフューズ)
-	XMVECTOR	vLs;		// 光源色(スペキュラ)
-};
-
 // 行列情報
 struct SHADER_WORLD {
 	XMMATRIX mW;
@@ -112,8 +104,6 @@ CFbxMesh::CFbxMesh()
 	m_pDevice = nullptr;
 	m_pDeviceContext = nullptr;
 	m_pSampleLinear = nullptr;
-	//m_pConstantBufferCamera = nullptr;
-	m_pConstantBufferLight = nullptr;
 	m_pConstantBufferWorld = nullptr;
 	m_pConstantBufferMaterial = nullptr;
 	m_pConstantBufferBone = nullptr;
@@ -533,19 +523,6 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 	// FbxModelとFbxMeshでシェーダー情報を持ってるオブジェクトを保持しておく
 	// 全てのオブジェクトで共通のバッファとオブジェクトごとのバッファがある
 	D3D11_MAPPED_SUBRESOURCE pData;
-	{// こことれそう(cv おじいちゃん)
-		if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBufferLight, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
-			SHADER_LIGHT sLight;
-			sLight.vLightDir = XMLoadFloat3(&m_pLight->m_direction);
-			sLight.vLd = XMLoadFloat4(&m_pLight->m_diffuse);
-			sLight.vLa = XMLoadFloat4(&m_pLight->m_ambient);
-			sLight.vLs = XMLoadFloat4(&m_pLight->m_specular);
-			memcpy_s(pData.pData, pData.RowPitch, (void*)&sLight, sizeof(sLight));
-			m_pDeviceContext->Unmap(m_pConstantBufferLight, 0);
-		}
-		m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pConstantBufferLight);
-		m_pDeviceContext->PSSetConstantBuffers(1, 1, &m_pConstantBufferLight);
-	}
 	{// こことれそう(cv おじいちゃん)
 		if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBufferWorld, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
 			SHADER_WORLD sWorld;
@@ -987,8 +964,6 @@ HRESULT CFbxModel::LoadRecursive(FbxNode* pNode, CFbxMesh* pFBXMesh)
 
 	pFBXMesh->m_pDevice = m_pDevice;
 	pFBXMesh->m_pDeviceContext = m_pDeviceContext;
-	//pFBXMesh->m_pConstantBufferCamera = m_constantBufferCamera.GetBuffer();
-	pFBXMesh->m_pConstantBufferLight = m_constantBufferLight.GetBuffer();
 	pFBXMesh->m_pConstantBufferWorld = m_constantBufferWorld.GetBuffer();
 	pFBXMesh->m_pConstantBufferMaterial = m_constantBufferMaterial.GetBuffer();
 	pFBXMesh->m_pSampleLinear = m_pSampleLinear;
@@ -1076,8 +1051,6 @@ HRESULT CFbxModel::InitShader()
 {
 	HRESULT hr;
 
-	//hr = m_constantBufferCamera.Create(sizeof(SHADER_CAMERA));
-	hr = m_constantBufferLight.Create(sizeof(SHADER_LIGHT));
 	hr = m_constantBufferWorld.Create(sizeof(SHADER_WORLD));
 	hr = m_constantBufferMaterial.Create(sizeof(SHADER_MATERIAL));
 

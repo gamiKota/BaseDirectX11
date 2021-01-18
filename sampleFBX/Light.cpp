@@ -8,6 +8,7 @@
  */
 #include "Light.h"
 #include "D3DClass.h"
+#include "ShaderBuffer.h"
 #include "System.h"
 
 
@@ -64,6 +65,17 @@ void Light::Update() {
 	m_diffuse	= LIGHT0_DIFFUSE;
 	m_ambient	= LIGHT0_AMBIENT;
 	m_specular	= LIGHT0_SPECULAR;
+}
+
+
+void Light::LastUpdate() {
+	SHADER_LIGHT buf;
+	buf.vLightDir = XMLoadFloat3(&m_pLight->m_direction);
+	buf.vLd = XMLoadFloat4(&m_pLight->m_diffuse);
+	buf.vLa = XMLoadFloat4(&m_pLight->m_ambient);
+	buf.vLs = XMLoadFloat4(&m_pLight->m_specular);
+	ShaderBufferManager::GetInstance().Update("MainLight", &buf);
+	ShaderBufferManager::GetInstance().Bind("MainLight");
 }
 
 
