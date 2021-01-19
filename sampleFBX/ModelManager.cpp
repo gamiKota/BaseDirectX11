@@ -40,8 +40,9 @@
  * @const
  */
 static const char* name[E_MODEL_MAX] = {
-	"data/model/box2.fbx",				// ボックス
-	"data/model/Squadron/X_wing.fbx",	// プレイヤー
+	"data/model/none.fbx",				// ボックス
+	"data/model/Sword And Shield Idle.fbx",	// プレイヤー
+	//"data/model/Squadron/X_wing.fbx",	// プレイヤー
 	"data/model/Squadron/X_wing.fbx",	// 敵
 	"data/model/FA-18/sparrow.fbx",		// ミサイル
 	"data/model/laser.fbx",				// レーザー
@@ -78,7 +79,7 @@ void ModelManager::Init() {
 		m_pModel[i] = new CFbxModel();
 		hr = m_pModel[i]->Init(pDevice, pDeviceContext, name[i]);
 		if (FAILED(hr)) {
-			MessageBoxA(System::GetInstance().GetWnd(), name[i], "Failed Load Model", MB_OK | MB_ICONWARNING | MB_TOPMOST);
+			MessageBoxA(NULL, name[i], "Failed Load Model", MB_OK | MB_ICONWARNING | MB_TOPMOST);
 		}
 	}
 }
@@ -148,6 +149,8 @@ void ModelManager::Draw(GameObject3D* obj) {
 	pDeviceContext->CSSetShader(NULL, NULL, 0);
 
 	//--- FBXファイル表示
+
+	m_pModel[model]->SetAnimFrame(0);
 
 	D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない
 	D3DClass::GetInstance().SetZWrite(true);			// Zバッファ有効
