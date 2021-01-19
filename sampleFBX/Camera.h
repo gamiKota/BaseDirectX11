@@ -13,18 +13,9 @@
  * @include
  */
 #include "Component.h"
-#include "ShaderBuffer.h"
 
 
 #define CAMERA_LOOK_LENG (500.f)
-
-
- // カメラ
-struct SHADER_CAMERA {
-	DirectX::XMVECTOR	vEye;	// 視点座標
-	DirectX::XMMATRIX	mV;		// ビュー
-	DirectX::XMMATRIX	mP;		// プロジェクション
-};
 
 
 /**

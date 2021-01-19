@@ -1,14 +1,14 @@
 //*****************************************************************************
 // インクルード部
 //*****************************************************************************
-#include "D3DClass.h"		// クラスの宣言先
-#include "Graphics.h"		// ウィンドウサイズの取得
-#include "polygon.h"		// ポリゴン
-#include "mesh.h"			// メッシュ
-#include "SceneManager.h"	// シーンの管理
-#include "ShaderManager.h"	// シェーダの管理
-#include "ShaderBuffer.h"	// シェーダバッファの管理
-#include "System.h"			// ポインターの解放
+#include "D3DClass.h"				// クラスの宣言先
+#include "Graphics.h"				// ウィンドウサイズの取得
+#include "polygon.h"				// ポリゴン
+#include "mesh.h"					// メッシュ
+#include "SceneManager.h"			// シーンの管理
+#include "ShaderManager.h"			// シェーダの管理
+#include "ShaderBufferManager.h"	// シェーダバッファの管理
+#include "System.h"					// ポインターの解放
 
 
 //=============================================================================

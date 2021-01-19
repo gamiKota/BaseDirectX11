@@ -38,20 +38,4 @@ private:
 };
 
 
-class ShaderBufferManager : public Singleton<ShaderBufferManager> {
-public:
-	std::map<std::string, int> m_registerMap;
-	std::map<std::string, ShaderBuffer *> m_bufferMap;
-
-	void Initialize();
-	void Terminate();
-
-	void Update(std::string bufName, void* pData);
-	void Bind(std::string bufName);
-
-private:
-	void Create(std::string bufName, UINT size, int regNum);
-};
-
-
 // EOF

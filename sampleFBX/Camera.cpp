@@ -11,6 +11,7 @@
 #include "Graphics.h"
 #include "debugproc.h"
 #include "Transform.h"
+#include "ShaderBufferManager.h"
 #include "System.h"
 
 

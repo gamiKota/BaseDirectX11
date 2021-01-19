@@ -8,7 +8,7 @@
  */
 #include "Light.h"
 #include "D3DClass.h"
-#include "ShaderBuffer.h"
+#include "ShaderBufferManager.h"
 #include "System.h"
 
 

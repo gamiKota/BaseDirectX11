@@ -192,6 +192,7 @@
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderBuffer.cpp" />
+    <ClCompile Include="ShaderBufferManager.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Status.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderBuffer.h" />
+    <ClInclude Include="ShaderBufferManager.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Status.h" />

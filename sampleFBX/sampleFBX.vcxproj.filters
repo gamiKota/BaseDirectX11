@@ -186,9 +186,6 @@
     <ClCompile Include="polygon.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>ソース ファイル\System</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
@@ -378,6 +375,12 @@
     <ClCompile Include="EnemyFixed.cpp">
       <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderBufferManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>ソース ファイル\00Share\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DClass.h">
@@ -390,9 +393,6 @@
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
     <ClInclude Include="Graphics.h">
-      <Filter>ヘッダー ファイル\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
@@ -595,6 +595,12 @@
     </ClInclude>
     <ClInclude Include="EnemyFixed.h">
       <Filter>ヘッダー ファイル\02Game\Script\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderBufferManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>ヘッダー ファイル\00Share\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
