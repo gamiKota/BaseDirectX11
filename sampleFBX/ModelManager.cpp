@@ -81,6 +81,11 @@ void ModelManager::Init() {
 		if (FAILED(hr)) {
 			MessageBoxA(NULL, name[i], "Failed Load Model", MB_OK | MB_ICONWARNING | MB_TOPMOST);
 		}
+		int nStack = m_pModel[i]->GetMaxAnimStack();
+		if (nStack > 0) {
+			m_pModel[i]->SetAnimStack(nStack - 1);
+		}
+		m_nAnimFrame[i] = 0;
 	}
 }
 
@@ -106,28 +111,24 @@ void ModelManager::Update(GameObject3D *obj) {
 		return;
 	}
 	// カメラ座標を反映
-	m_pModel[model]->SetCamera(CCamera::Get()->m_transform->m_position);
+	if (++m_nAnimFrame[model] >= m_pModel[model]->GetMaxAnimFrame()) {
+		m_nAnimFrame[model] = 0;
+	}
 }
 
 
 void ModelManager::Draw(GameObject3D* obj) {
 
 	E_MODEL model = obj->m_model;
-
-	if (Input::isPress('L')) {
-		if (model <= E_MODEL_NONE || model > E_MODEL_MAX) {
-			return;
-		}
-	}
-	else {
-		if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
-			return;
-		}
+	if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
+		return;
 	}
 
-	// マテリアル反映
+	// マテリアル情報を反映
 	m_pModel[model]->SetMaterial(&obj->m_material);
-	// 光源上方を反映
+	// カメラ座標を反映
+	m_pModel[model]->SetCamera(CCamera::Get()->m_transform->m_position);
+	// 光源情報を反映
 	if (obj->m_isLight) {
 		m_pModel[model]->SetLight(*Light::Get());
 	}
@@ -150,37 +151,19 @@ void ModelManager::Draw(GameObject3D* obj) {
 
 	//--- FBXファイル表示
 
-	m_pModel[model]->SetAnimFrame(0);
-
+	// フレーム更新
+	m_pModel[model]->SetAnimFrame(m_nAnimFrame[model]);
+	// 描画
 	D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない
 	D3DClass::GetInstance().SetZWrite(true);			// Zバッファ有効
-
-	if (obj->m_model == E_MODEL_SKY) {
-		D3DClass::GetInstance().SetZWrite(false);
-	}
+	if (obj->m_model == E_MODEL_SKY) { D3DClass::GetInstance().SetZWrite(false); }
 	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eOpacityOnly);
-
 	if (model == E_MODEL_SKY) {
-		D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);		// アルファ処理しない
-		D3DClass::GetInstance().SetZWrite(true);					// Zバッファ有効
 		return;
 	}
-
 	D3DClass::GetInstance().SetZWrite(false);
 	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);	// 半透明描画
 	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eTransparentOnly);
-
-	// エッジ検出のやり方じゃないと複雑なモデル描画時に
-	// カリングの設定だけでは足りずに黒い部分が描画されてしまう
-	//if (obj->m_shader == E_SHADER_TOON) {
-	//	// シェーダの適用
-	//	D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない
-	//	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 前面カリング (FBXは表裏が反転するため)
-	//	D3DClass::GetInstance().SetZWrite(true);			// Zバッファ有効
-	//	ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
-	//	ShaderManager::GetInstance().Bind(E_SHADER_OUTLINE);
-	//	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eNoAffect);
-	//}
 }
 
 

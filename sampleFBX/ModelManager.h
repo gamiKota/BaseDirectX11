@@ -54,6 +54,7 @@ public:
 
 private:
 	CFbxModel* m_pModel[E_MODEL_MAX];
+	int m_nAnimFrame[E_MODEL_MAX];
 };
 
 
