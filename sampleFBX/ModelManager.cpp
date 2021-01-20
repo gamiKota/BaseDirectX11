@@ -128,8 +128,9 @@ void ModelManager::Draw(GameObject3D* obj) {
 	m_pModel[model]->SetMaterial(&obj->m_material);
 
 	// 使用する変数
-	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
-	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
+	D3DClass* d3dClass = &D3DClass::GetInstance();
+	ID3D11Device* pDevice = d3dClass->GetDevice();
+	ID3D11DeviceContext* pDeviceContext = d3dClass->GetDeviceContext();
 	CCamera* pCamera = CCamera::Get();
 
 	// シェーダの適用
@@ -145,15 +146,13 @@ void ModelManager::Draw(GameObject3D* obj) {
 	// フレーム更新
 	m_pModel[model]->SetAnimFrame(m_nAnimFrame[model]);
 	// 描画
-	D3DClass::GetInstance().SetBlendState(BS_NONE);		// アルファ処理しない
-	D3DClass::GetInstance().SetZWrite(true);			// Zバッファ有効
-	if (obj->m_model == E_MODEL_SKY) { D3DClass::GetInstance().SetZWrite(false); }
+	d3dClass->SetBlendState(BS_NONE);		// アルファ処理しない
+	d3dClass->SetZWrite(true);			// Zバッファ有効
+	if (obj->m_model == E_MODEL_SKY) { d3dClass->SetZWrite(false); }
 	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eOpacityOnly);
-	if (model == E_MODEL_SKY) {
-		return;
-	}
-	D3DClass::GetInstance().SetZWrite(false);
-	D3DClass::GetInstance().SetBlendState(BS_ALPHABLEND);	// 半透明描画
+	if (model == E_MODEL_SKY) { return; }
+	d3dClass->SetZWrite(false);
+	d3dClass->SetBlendState(BS_ALPHABLEND);	// 半透明描画
 	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eTransparentOnly);
 }
 
