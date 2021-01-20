@@ -18,7 +18,7 @@
 #include "System.h"
 
 
-static const float LerpCorrection = 5.f;
+static const float LerpCorrection = 10.f;
 static const float ValFovy = 45.f;
 static const float FovyCorrection = 0.075f;
 

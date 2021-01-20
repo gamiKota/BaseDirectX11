@@ -2,21 +2,11 @@
 #include "ShaderBuffer.h"
 #include "Camera.h"
 #include "Transform.h"
+#include "D3DClass.h"
 #include "System.h"
 
 
 using namespace DirectX;
-
-
-ShaderBuffer g_worldBuf;		//!< 定数バッファ
-DirectX::XMFLOAT4X4 g_world;	//!< 定数バッファに格納されるデータ
-
-ShaderBuffer g_ViewProjBuf;			//!< 定数バッファ
-DirectX::XMFLOAT4X4 g_ViewProj[2];	//!< 定数バッファに格納されるデータ
-
-
-XMFLOAT4 g_value;
-ShaderBuffer g_valueBuf;
 
 
 void ShaderManager::Initialize() {
@@ -69,13 +59,6 @@ void ShaderManager::Initialize() {
 	//m_PS[E_SHADER_PS_OUTLINE] = new PixelShader;
 	//hr = m_PS[E_SHADER_PS_OUTLINE]->Create("data/shader/OutLinePS.cso");
 	//if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
-
-	// 定数バッファ
-	// シェーダにデータを渡す際には、
-	// 必ず16バイトアライメント(float型4つ分)で定数バッファを作成しないといけない
-	g_worldBuf.Create(sizeof(g_world));
-	g_ViewProjBuf.Create(sizeof(g_ViewProj));
-	g_valueBuf.Create(sizeof(g_value));
 }
 
 
@@ -93,36 +76,57 @@ void ShaderManager::Terminate() {
 
 
 void ShaderManager::Bind(E_SHADER shader, E_SHADER_GS gs) {
+	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
 	switch (shader)
 	{
 	case E_SHADER_FBX:
 		m_VS[E_SHADER_VS_FBX]->Bind();
 		//m_GS[gs]->Bind();
 		m_PS[E_SHADER_PS_FBX]->Bind();
+		pDeviceContext->HSSetShader(NULL, NULL, 0);
+		pDeviceContext->DSSetShader(NULL, NULL, 0);
+		pDeviceContext->GSSetShader(NULL, NULL, 0);
+		pDeviceContext->CSSetShader(NULL, NULL, 0);
 		break;
 
 	case E_SHADER_DEFAULT:
 		m_VS[E_SHADER_VS_FBX]->Bind();
 		//m_GS[gs]->Bind();
 		m_PS[E_SHADER_PS_FBX]->Bind();
+		pDeviceContext->HSSetShader(NULL, NULL, 0);
+		pDeviceContext->DSSetShader(NULL, NULL, 0);
+		pDeviceContext->GSSetShader(NULL, NULL, 0);
+		pDeviceContext->CSSetShader(NULL, NULL, 0);
 		break;
 
 	case E_SHADER_MONOCHROME:
 		m_VS[E_SHADER_VS_FBX]->Bind();
 		//m_GS[gs]->Bind();
 		m_PS[E_SHADER_PS_MONOCHRO]->Bind();
+		pDeviceContext->HSSetShader(NULL, NULL, 0);
+		pDeviceContext->DSSetShader(NULL, NULL, 0);
+		pDeviceContext->GSSetShader(NULL, NULL, 0);
+		pDeviceContext->CSSetShader(NULL, NULL, 0);
 		break;
 
 	case E_SHADER_PHONG:
 		m_VS[E_SHADER_VS_DEFAULT]->Bind();
 		//m_GS[gs]->Bind();
 		m_PS[E_SHADER_PS_PHONG]->Bind();
+		pDeviceContext->HSSetShader(NULL, NULL, 0);
+		pDeviceContext->DSSetShader(NULL, NULL, 0);
+		pDeviceContext->GSSetShader(NULL, NULL, 0);
+		pDeviceContext->CSSetShader(NULL, NULL, 0);
 		break;
 
 	case E_SHADER_TOON:
 		m_VS[E_SHADER_VS_FBX]->Bind();
 		//m_GS[gs]->Bind();
 		m_PS[E_SHADER_PS_TOON]->Bind();
+		pDeviceContext->HSSetShader(NULL, NULL, 0);
+		pDeviceContext->DSSetShader(NULL, NULL, 0);
+		pDeviceContext->GSSetShader(NULL, NULL, 0);
+		pDeviceContext->CSSetShader(NULL, NULL, 0);
 		break;
 
 	case E_SHADER_OUTLINE:
@@ -141,37 +145,6 @@ void ShaderManager::Bind(E_SHADER shader, E_SHADER_GS gs) {
 
 void ShaderManager::UpdateBuffer(XMFLOAT4X4 world) {
 
-	// ワールド座標
-	g_world = world;
-	// ワールド変換行列を求める
-	DirectX::XMMATRIX trans = DirectX::XMMatrixTranslation(0.f, 0.f, 0.f);
-
-	// 行列の並び順が異なるため、シェーダに渡す際に転置を行う
-	trans = DirectX::XMMatrixTranspose(trans);
-	DirectX::XMStoreFloat4x4(&g_world, trans);
-
-	// ビュー・プロジェクション行列
-	g_ViewProj[0] = CCamera::Get()->GetView();
-	g_ViewProj[1] = CCamera::Get()->GetProj();
-
-	// カメラ座標
-	g_value.x = CCamera::Get()->m_transform->m_position.x;
-	g_value.y = CCamera::Get()->m_transform->m_position.y;
-	g_value.z = CCamera::Get()->m_transform->m_position.z;
-	g_value.w = 1.f;
-
-	
-	//--- バッファの更新
-	g_worldBuf.UpdateSource(&g_world);
-	g_ViewProjBuf.UpdateSource(&g_ViewProj);
-	g_valueBuf.UpdateSource(&g_value);
-
-	//--- シェーダに渡す
-	// 頂点シェーダ
-	g_worldBuf.BindVS(3);
-	g_ViewProjBuf.BindVS(4);
-	// ピクセルシェーダ
-	g_valueBuf.BindPS(5);
 }
 
 

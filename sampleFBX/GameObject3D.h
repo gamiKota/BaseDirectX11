@@ -31,11 +31,6 @@ public:
 public:
 	/**
 	 * @brief コンストラクタ
-	 */
-	GameObject3D();
-
-	/**
-	 * @brief コンストラクタ
 	 * @param[in] name
 	 * @param[in] tag
 	 */

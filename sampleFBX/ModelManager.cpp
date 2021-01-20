@@ -130,23 +130,7 @@ void ModelManager::Draw(GameObject3D* obj) {
 
 	// 使用する変数
 	D3DClass* d3dClass = &D3DClass::GetInstance();
-	ID3D11Device* pDevice = d3dClass->GetDevice();
-	ID3D11DeviceContext* pDeviceContext = d3dClass->GetDeviceContext();
 	CCamera* pCamera = CCamera::Get();
-
-	// シェーダの適用
-	//ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
-	ShaderManager::GetInstance().Bind(obj->m_shader);
-	pDeviceContext->HSSetShader(NULL, NULL, 0);
-	pDeviceContext->DSSetShader(NULL, NULL, 0);
-	pDeviceContext->GSSetShader(NULL, NULL, 0);
-	pDeviceContext->CSSetShader(NULL, NULL, 0);
-
-	// シェーダの設定
-	SHADER_LIGHT_SETTING buf;
-	buf.light = (obj->m_isLight) ? XMFLOAT4(1.f, 1.f, 1.f, 1.f) : XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	ShaderBufferManager::GetInstance().Update("MainLightSetting", &buf);
-	ShaderBufferManager::GetInstance().Bind("MainLightSetting");
 
 	//--- FBXファイル表示
 
