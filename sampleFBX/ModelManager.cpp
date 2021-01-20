@@ -126,15 +126,6 @@ void ModelManager::Draw(GameObject3D* obj) {
 
 	// マテリアル情報を反映
 	m_pModel[model]->SetMaterial(&obj->m_material);
-	// カメラ座標を反映
-	m_pModel[model]->SetCamera(CCamera::Get()->m_transform->m_position);
-	// 光源情報を反映
-	if (obj->m_isLight) {
-		m_pModel[model]->SetLight(*Light::Get());
-	}
-	else {
-		m_pModel[model]->SetLight(m_lightOff);
-	}
 
 	// 使用する変数
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();

@@ -98,8 +98,6 @@ public:
 	FbxNode* m_pFBXNode;						// FBXから姿勢行列を取り出す際に使うFBXポインタ
 	DirectX::XMFLOAT4X4 m_mView;
 	DirectX::XMFLOAT4X4 m_mProj;
-	Light* m_pLight;
-	DirectX::XMFLOAT3* m_pCamera;
 	// アニメーション関連
 	DirectX::XMFLOAT4X4 m_mParentOrientation;	// 親の姿勢行列
 	DirectX::XMFLOAT4X4 m_mFBXOrientation;		// 自分の姿勢行列 (親から見た相対姿勢)
@@ -157,8 +155,6 @@ public:
 	// メソッド
 	void Render(DirectX::XMFLOAT4X4& mWorld, DirectX::XMFLOAT4X4& mView, DirectX::XMFLOAT4X4& mProj, EByOpacity byOpacity = eNoAffect);
 	HRESULT Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LPCSTR pszFileName);
-	void SetLight(Light& light);
-	void SetCamera(DirectX::XMFLOAT3& vCamera);
 	void SetAnimFrame(int nFrame);
 	int GetMaxAnimFrame();
 	void SetAnimStack(int nAnimStack);
@@ -186,10 +182,6 @@ private:
 
 	ShaderBuffer m_constantBufferWorld;
 	ShaderBuffer m_constantBufferMaterial;
-	// シェーダ
-	//ID3D11InputLayout* m_pVertexLayout;
-	//ID3D11VertexShader* m_pVertexShader;
-	//ID3D11PixelShader* m_pPixelShader;
 
 	DirectX::XMFLOAT4X4 m_mView;
 	DirectX::XMFLOAT4X4 m_mProj;
@@ -199,8 +191,6 @@ private:
 	FbxImporter* m_pImporter;
 	FbxScene* m_pScene;
 	DirectX::XMFLOAT4X4 m_mFinalWorld;//最終的なワールド行列（この姿勢でレンダリングする）
-	Light* m_light;
-	DirectX::XMFLOAT3 m_vCamera;
 
 	DirectX::XMFLOAT3 m_vCenter;
 	DirectX::XMFLOAT3 m_vBBox;

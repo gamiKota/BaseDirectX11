@@ -114,8 +114,6 @@ CFbxMesh::CFbxMesh()
 	m_mFBXOrientation = m_mView;
 	m_mFinalWorld = m_mView;
 	m_pMateUsr = nullptr;
-	m_pLight = nullptr;
-	m_pCamera = nullptr;
 	m_dwNumVert = 0;
 	m_dwNumFace = 0;
 	m_dwNumUV = 0;
@@ -937,7 +935,6 @@ CFbxModel::CFbxModel()
 	m_pSdkManager = nullptr;
 	m_pImporter = nullptr;
 	m_pScene = nullptr;
-	m_vCamera = XMFLOAT3(0, 0, -1);
 	m_nAnimFrame = 0;
 	m_nAnimStack = 0;
 	m_pMaterial = nullptr;
@@ -1143,8 +1140,6 @@ void CFbxModel::RenderMesh(CFbxMesh* pMesh, EByOpacity byOpacity)
 {
 	pMesh->m_mView = m_mView;
 	pMesh->m_mProj = m_mProj;
-	pMesh->m_pLight = m_light;
-	pMesh->m_pCamera = &m_vCamera;
 	pMesh->m_pMateUsr = m_pMaterial;
 	pMesh->RenderMesh(byOpacity);
 }
@@ -1241,22 +1236,6 @@ void CFbxModel::SetAnimStack(int nAnimStack)
 	FbxTakeInfo *takeInfo = m_pScene->GetTakeInfo(*m_strAnimStackName[m_nAnimStack]);
 	m_tStart = takeInfo->mLocalTimeSpan.GetStart();
 	m_tStop = takeInfo->mLocalTimeSpan.GetStop();
-}
-
-//---------------------------------------------------------------------------------------
-// åıåπê›íË
-//---------------------------------------------------------------------------------------
-void CFbxModel::SetLight(Light& light)
-{
-	m_light = &light;
-}
-
-//---------------------------------------------------------------------------------------
-// éãì_ç¿ïWê›íË
-//---------------------------------------------------------------------------------------
-void CFbxModel::SetCamera(DirectX::XMFLOAT3& vCamera)
-{
-	m_vCamera = vCamera;
 }
 
 //---------------------------------------------------------------------------------------
