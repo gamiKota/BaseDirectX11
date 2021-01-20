@@ -7,13 +7,13 @@
  * @include
  */
 #include "Sky.h"
-#include "GameObject.h"
+#include "GameObject3D.h"
 #include "Camera.h"
 #include "System.h"
 
 
 void SkyDome::Start() {
-
+	GameObject3D* obj = dynamic_cast<GameObject3D*>(m_gameObject);
 }
 
 

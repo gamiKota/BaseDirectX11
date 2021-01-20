@@ -18,13 +18,13 @@ cbuffer global_light : register(b1) {
 };
 
 // 描画オブジェクトの行列情報
-cbuffer global_world : register(b2) {
+cbuffer global_world : register(b3) {
 	matrix	g_World;		// ワールド行列
 	matrix	g_mTexture;		// テクスチャ行列
 };
 
 // ボーンのポーズ行列
-cbuffer global_bones : register(b4) {
+cbuffer global_bones : register(b5) {
 	matrix g_BoneWorld[MAX_BONE_MATRIX];
 };
 

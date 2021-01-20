@@ -527,8 +527,8 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 			memcpy_s(pData.pData, pData.RowPitch, (void*)&sWorld, sizeof(sWorld));
 			m_pDeviceContext->Unmap(m_pConstantBufferWorld, 0);
 		}
-		m_pDeviceContext->VSSetConstantBuffers(2, 1, &m_pConstantBufferWorld);
-		m_pDeviceContext->PSSetConstantBuffers(2, 1, &m_pConstantBufferWorld);
+		m_pDeviceContext->VSSetConstantBuffers(3, 1, &m_pConstantBufferWorld);
+		m_pDeviceContext->PSSetConstantBuffers(3, 1, &m_pConstantBufferWorld);
 	}
 
 	// 頂点バッファをセット (頂点バッファは1つ)
@@ -577,8 +577,8 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 				memcpy_s(pData.pData, pData.RowPitch, (void*)&sg, sizeof(sg));
 				m_pDeviceContext->Unmap(m_pConstantBufferMaterial, 0);
 			}
-			m_pDeviceContext->VSSetConstantBuffers(3, 1, &m_pConstantBufferMaterial);
-			m_pDeviceContext->PSSetConstantBuffers(3, 1, &m_pConstantBufferMaterial);
+			m_pDeviceContext->VSSetConstantBuffers(4, 1, &m_pConstantBufferMaterial);
+			m_pDeviceContext->PSSetConstantBuffers(4, 1, &m_pConstantBufferMaterial);
 		}
 
 
@@ -593,8 +593,8 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 			m_pDeviceContext->PSSetShaderResources(2, 1, TextureManager::GetInstance().GetToonTex());
 		}
 		// ボーンをシェーダに渡す
-		m_pDeviceContext->VSSetConstantBuffers(4, 1, &m_pConstantBufferBone);
-		m_pDeviceContext->PSSetConstantBuffers(4, 1, &m_pConstantBufferBone);
+		m_pDeviceContext->VSSetConstantBuffers(5, 1, &m_pConstantBufferBone);
+		m_pDeviceContext->PSSetConstantBuffers(5, 1, &m_pConstantBufferBone);
 		// 描画
 		m_pDeviceContext->DrawIndexed(m_pMaterial[i].dwNumFace * 3, 0, 0);
 	}

@@ -4,13 +4,13 @@
 
 
 enum E_SHADER_PS {
-	E_SHADER_PS_FBX,		// HMY-FBX
-	E_SHADER_PS_DEFAULT,	// デフォルト
-	E_SHADER_PS_MONOCHRO,	// モノクロ
-	E_SHADER_PS_PHONG,		// ふぉん
-	E_SHADER_PS_TOON,		// トゥーン
-	E_SHADER_PS_OUTLINE,	// エッジ
-	E_SHADER_PS_MAX			// 最大値
+	E_SHADER_PS_FBX,			// HMY-FBX
+	E_SHADER_PS_DEFAULT,		// デフォルト
+	E_SHADER_PS_MONOCHRO,		// モノクロ
+	E_SHADER_PS_PHONG,			// ふぉん
+	E_SHADER_PS_TOON,			// トゥーン
+	E_SHADER_PS_OUTLINE,		// エッジ
+	E_SHADER_PS_MAX				// 最大値
 };
 
 

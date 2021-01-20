@@ -14,15 +14,19 @@ cbuffer global_light : register(b1) {
 	float4	g_lightSpecular;	// 鏡面反射光
 };
 
+// ライトのON/OFF
+cbuffer global_lightsetting : register(b2) {
+	float4 g_lightSetting;
+};
+
 // 描画オブジェクトの行列情報
-cbuffer global_world : register(b2) {
+cbuffer global_world : register(b3) {
 	matrix	g_World;		// ワールド行列
 	matrix	g_mTexture;		// テクスチャ行列
 };
 
-// マテリアル
-cbuffer global_material : register(b3) {
-	// モデルごとの値
+// 描画オブジェクトのマテリアル情報
+cbuffer global_material : register(b4) {
 	float4	g_Ambient;			// 環境色
 	float4	g_Diffuse;			// 拡散色
 	float4	g_Specular;			// 鏡面反射色
@@ -55,16 +59,18 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	}
 	if (Alpha <= 0.0f) discard;
 
-	if (g_lightDir.x != 0.0f || g_lightDir.y != 0.0f || g_lightDir.z != 0.0f) {
-		float3 L = normalize(-g_lightDir.xyz);					// 光源へのベクトル
-		float3 N = normalize(input.Normal);						// 法線ベクトル
-		float3 V = normalize(g_cameraPos.xyz - input.PosForPS);	// 視点へのベクトル
-		float3 H = normalize(L + V);							// ハーフベクトル
-		Diff = g_lightAmbient.rgb * g_Ambient.rgb +
-			g_lightDiffuse.rgb * Diff * saturate(dot(L, N));	// 拡散色 + 環境色
-		float3 Spec = g_Specular.rgb * g_lightSpecular.rgb *
-			pow(saturate(dot(N, H)), g_Specular.a);				// 鏡面反射色
-		Diff += Spec;
+	if (g_lightSetting.x > 0) {
+		if (g_lightDir.x != 0.0f || g_lightDir.y != 0.0f || g_lightDir.z != 0.0f) {
+			float3 L = normalize(-g_lightDir.xyz);					// 光源へのベクトル
+			float3 N = normalize(input.Normal);						// 法線ベクトル
+			float3 V = normalize(g_cameraPos.xyz - input.PosForPS);	// 視点へのベクトル
+			float3 H = normalize(L + V);							// ハーフベクトル
+			Diff = g_lightAmbient.rgb * g_Ambient.rgb +
+				g_lightDiffuse.rgb * Diff * saturate(dot(L, N));	// 拡散色 + 環境色
+			float3 Spec = g_Specular.rgb * g_lightSpecular.rgb *
+				pow(saturate(dot(N, H)), g_Specular.a);				// 鏡面反射色
+			Diff += Spec;
+		}
 	}
 
 	float3 Emis = g_Emissive.rgb;								// 発光色

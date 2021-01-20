@@ -25,6 +25,11 @@ struct SHADER_LIGHT {
 	DirectX::XMVECTOR	vLs;		// 光源色(スペキュラ)
 };
 
+// ライトのON/OFF(1/16)
+struct SHADER_LIGHT_SETTING {
+	DirectX::XMFLOAT4 light;
+};
+
 
 class ShaderBufferManager : public Singleton<ShaderBufferManager> {
 public:

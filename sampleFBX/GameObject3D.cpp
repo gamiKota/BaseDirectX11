@@ -12,6 +12,7 @@
 #include "D3DClass.h"
 #include "Mesh.h"
 #include "FbxModel.h"
+#include "ShaderBufferManager.h"
 #include "System.h"
 
 
@@ -62,7 +63,6 @@ void GameObject3D::Update() {
 
 void GameObject3D::LastUpdate() {
 	GameObject::LastUpdate();
-
 	ModelManager::GetInstance().Update(this);
 }
 

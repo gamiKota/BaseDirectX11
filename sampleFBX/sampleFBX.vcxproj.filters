@@ -375,11 +375,11 @@
     <ClCompile Include="EnemyFixed.cpp">
       <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderBufferManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>ソース ファイル\00Share\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderBufferManager.cpp">
+      <Filter>ソース ファイル\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -596,11 +596,11 @@
     <ClInclude Include="EnemyFixed.h">
       <Filter>ヘッダー ファイル\02Game\Script\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderBufferManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>ヘッダー ファイル\00Share\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderBufferManager.h">
+      <Filter>ヘッダー ファイル\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

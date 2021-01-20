@@ -17,6 +17,7 @@
 #include "GameObject3D.h"
 #include "TPCamera.h"
 #include "input.h"
+#include "ShaderBufferManager.h"
 #include "System.h"
 
 
@@ -140,6 +141,12 @@ void ModelManager::Draw(GameObject3D* obj) {
 	pDeviceContext->DSSetShader(NULL, NULL, 0);
 	pDeviceContext->GSSetShader(NULL, NULL, 0);
 	pDeviceContext->CSSetShader(NULL, NULL, 0);
+
+	// シェーダの設定
+	SHADER_LIGHT_SETTING buf;
+	buf.light = (obj->m_isLight) ? XMFLOAT4(1.f, 1.f, 1.f, 1.f) : XMFLOAT4(0.f, 0.f, 0.f, 0.f);
+	ShaderBufferManager::GetInstance().Update("MainLightSetting", &buf);
+	ShaderBufferManager::GetInstance().Bind("MainLightSetting");
 
 	//--- FBXファイル表示
 
