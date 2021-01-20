@@ -108,11 +108,9 @@ CFbxMesh::CFbxMesh()
 	m_pConstantBufferMaterial = nullptr;
 	m_pConstantBufferBone = nullptr;
 	m_pFBXNode = nullptr;
-	XMStoreFloat4x4(&m_mView, XMMatrixIdentity());
-	m_mProj = m_mView;
-	m_mParentOrientation = m_mView;
-	m_mFBXOrientation = m_mView;
-	m_mFinalWorld = m_mView;
+	XMStoreFloat4x4(&m_mParentOrientation, XMMatrixIdentity());
+	m_mFBXOrientation = m_mParentOrientation;
+	m_mFinalWorld = m_mParentOrientation;
 	m_pMateUsr = nullptr;
 	m_dwNumVert = 0;
 	m_dwNumFace = 0;
@@ -928,10 +926,8 @@ CFbxModel::CFbxModel()
 	//m_pVertexLayout = nullptr;
 	//m_pVertexShader = nullptr;
 	//m_pPixelShader = nullptr;
-	XMStoreFloat4x4(&m_mView, XMMatrixIdentity());
-	m_mProj = m_mView;
-	m_mWorld = m_mView;
-	m_mFinalWorld = m_mView;
+	XMStoreFloat4x4(&m_mWorld, XMMatrixIdentity());
+	m_mFinalWorld = m_mWorld;
 	m_pSdkManager = nullptr;
 	m_pImporter = nullptr;
 	m_pScene = nullptr;
@@ -1121,15 +1117,6 @@ HRESULT CFbxModel::CreateFromFBX(LPCSTR szFileName)
 void CFbxModel::Render(XMFLOAT4X4& mWorld, XMFLOAT4X4& mView, XMFLOAT4X4& mProj, EByOpacity byOpacity)
 {
 	m_mWorld = mWorld;
-	m_mView = mView;
-	m_mProj = mProj;
-	// 使用するシェーダーの登録	
-	//m_pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
-	//m_pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
-	//// 頂点インプットレイアウトをセット
-	//m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
-
-	
 	RecursiveRender(m_pRootMesh, byOpacity);
 }
 
@@ -1138,8 +1125,6 @@ void CFbxModel::Render(XMFLOAT4X4& mWorld, XMFLOAT4X4& mView, XMFLOAT4X4& mProj,
 //---------------------------------------------------------------------------------------
 void CFbxModel::RenderMesh(CFbxMesh* pMesh, EByOpacity byOpacity)
 {
-	pMesh->m_mView = m_mView;
-	pMesh->m_mProj = m_mProj;
 	pMesh->m_pMateUsr = m_pMaterial;
 	pMesh->RenderMesh(byOpacity);
 }

@@ -96,8 +96,7 @@ public:
 	ID3D11Buffer* m_pConstantBufferMaterial;
 	
 	FbxNode* m_pFBXNode;						// FBXから姿勢行列を取り出す際に使うFBXポインタ
-	DirectX::XMFLOAT4X4 m_mView;
-	DirectX::XMFLOAT4X4 m_mProj;
+
 	// アニメーション関連
 	DirectX::XMFLOAT4X4 m_mParentOrientation;	// 親の姿勢行列
 	DirectX::XMFLOAT4X4 m_mFBXOrientation;		// 自分の姿勢行列 (親から見た相対姿勢)
@@ -183,8 +182,6 @@ private:
 	ShaderBuffer m_constantBufferWorld;
 	ShaderBuffer m_constantBufferMaterial;
 
-	DirectX::XMFLOAT4X4 m_mView;
-	DirectX::XMFLOAT4X4 m_mProj;
 	DirectX::XMFLOAT4X4 m_mWorld;
 	// FBX
 	FbxManager* m_pSdkManager;
