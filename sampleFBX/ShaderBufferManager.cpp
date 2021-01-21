@@ -7,15 +7,18 @@ void ShaderBufferManager::Initialize() {
 	this->Create("MainCamera", sizeof(SHADER_CAMERA), 0);
 	this->Create("MainLight", sizeof(SHADER_LIGHT), 1);
 	this->Create("MainLightSetting", sizeof(SHADER_LIGHT_SETTING), 2);
+	this->Create("MainWorld", sizeof(SHADER_WORLD), 3);
+	this->Create("Material", sizeof(SHADER_MATERIAL), 4);
+	this->Create("Bone", sizeof(SHADER_BONE), 5);
 	//m_bufferMap["World"]		= new ShaderBuffer();
 	//m_bufferMap["Material"]		= new ShaderBuffer();
 	//m_bufferMap["Bone"]			= new ShaderBuffer();
 }
 
 void ShaderBufferManager::Terminate() {
-	//delete m_bufferMap["Bone"];
-	//delete m_bufferMap["Material"];
-	//delete m_bufferMap["World"];
+	delete m_bufferMap["Bone"];
+	delete m_bufferMap["Material"];
+	delete m_bufferMap["MainWorld"];
 	delete m_bufferMap["MainLightSetting"];
 	delete m_bufferMap["MainLight"];
 	delete m_bufferMap["MainCamera"];

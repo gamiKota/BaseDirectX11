@@ -5,6 +5,7 @@
 #include "Light.h"
 #include "debugproc.h"
 #include "TextureManager.h"
+#include "ShaderBufferManager.h"
 
 #pragma comment(lib, "d3d11")
 #ifdef D3DCOMPILER
@@ -19,31 +20,6 @@
 #define MAX_BONE_MATRIX	256
 
 using namespace DirectX;
-
-// 行列情報
-struct SHADER_WORLD {
-	XMMATRIX mW;
-	XMMATRIX mTexture;
-};
-
-// マテリアル (シェーダ用)
-struct SHADER_MATERIAL {
-	XMVECTOR	vAmbient;	// アンビエント色
-	XMVECTOR	vDiffuse;	// ディフューズ色
-	XMVECTOR	vSpecular;	// スペキュラ色
-	XMVECTOR	vEmissive;	// エミッシブ色
-};
-
-// シェーダに渡すボーン行列配列
-struct SHADER_BONE {
-	XMMATRIX mBone[MAX_BONE_MATRIX];
-	SHADER_BONE()
-	{
-		for (int i = 0; i < MAX_BONE_MATRIX; i++) {
-			mBone[i] = XMMatrixIdentity();
-		}
-	}
-};
 
 
 TFbxMaterial::TFbxMaterial()
@@ -523,7 +499,7 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 		if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBufferWorld, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
 			SHADER_WORLD sWorld;
 			XMMATRIX mtxWorld = XMLoadFloat4x4(&m_mFinalWorld);
-			sWorld.mW = XMMatrixTranspose(mtxWorld);
+			sWorld.mWorld = XMMatrixTranspose(mtxWorld);
 			memcpy_s(pData.pData, pData.RowPitch, (void*)&sWorld, sizeof(sWorld));
 			m_pDeviceContext->Unmap(m_pConstantBufferWorld, 0);
 		}
