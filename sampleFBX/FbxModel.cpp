@@ -494,6 +494,7 @@ void CFbxMesh::RenderMesh(EByOpacity byOpacity)
 	// 定数領域更新
 	// FbxModelとFbxMeshでシェーダー情報を持ってるオブジェクトを保持しておく
 	// 全てのオブジェクトで共通のバッファとオブジェクトごとのバッファがある
+	// モデルアニメーションごみ
 	D3D11_MAPPED_SUBRESOURCE pData;
 	{// こことれそう(cv おじいちゃん)
 		if (SUCCEEDED(m_pDeviceContext->Map(m_pConstantBufferWorld, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
