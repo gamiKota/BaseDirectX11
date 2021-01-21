@@ -132,6 +132,7 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Collision>();
 	m_object3D->AddComponent<Rigidbody>();
 	m_object3D->m_transform->m_scale = float3(20.f, 20.f, 100.f);
+	m_object3D->m_material.Kd = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
 	m_listObject.push_back(m_object3D);
 
 
