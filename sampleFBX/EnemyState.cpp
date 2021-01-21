@@ -43,8 +43,8 @@ void EnemyState::Initialize() {
 	StateMachine::AddState(new EnemyState::AttackBullet(this));
 }
 
-// ó‘Ô‚ÉˆË‘¶‚µ‚È‚¢‹¤’Êˆ—
 void EnemyState::Update() {
+	// ó‘Ô‚ÉˆË‘¶‚µ‚È‚¢‹¤’Êˆ—
 	StateMachine::Update();
 
 	Quaternion q = m_transform->m_rotation;
