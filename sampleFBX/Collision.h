@@ -28,7 +28,6 @@ public:
 	float3				m_vCenter;		//!< 境界ボックス中心座標
 	float3				m_vBBox;		//!< 境界ボックス サイズ
 	float3				m_vPosBBox;		//!< 境界ボックス中心座標(ワールド空間)
-	DirectX::XMFLOAT4X4	m_world;		//!< 当たり判定用行列
 	bool				m_bHit;			//!< 衝突有無
 
 	std::list<std::string> m_selfTag;	//!< セルフタグ
@@ -49,8 +48,12 @@ public:
 	void Update();
 	void LastUpdate();
 	void SetImGuiVal();
+	void OnCollision(GameObject* obj);
+
 	void DebugDraw();
 
+
+	DirectX::XMFLOAT4X4 GetWorld();
 	inline void SetHit() { m_bHit = true; }
 
 	static bool AABB(Collision obj1, Collision obj2);
@@ -58,8 +61,6 @@ public:
 
 private:
 	void Init(E_MODEL model);
-	void SetWorld(DirectX::XMFLOAT4X4 world);
-	void OnCollision(GameObject* obj);
 };
 
 

@@ -76,26 +76,6 @@ void Collision::LastUpdate() {
 			m_isInit = true;
 		}
 	}
-	
-	if (m_isInit) {
-		XMStoreFloat3(&m_vPosBBox,
-			XMVector3TransformCoord(
-				XMLoadFloat3(&m_vCenter),
-				XMLoadFloat4x4(&m_gameObject->m_transform->GetMatrix())));
-		XMFLOAT4X4 matrix;
-		XMStoreFloat4x4(&matrix, XMMatrixTranslation(
-			m_vPosBBox.x, m_vPosBBox.y, m_vPosBBox.z));
-		SetWorld(matrix);
-		m_world._11 = m_transform->GetMatrix()._11;
-		m_world._12 = m_transform->GetMatrix()._12;
-		m_world._13 = m_transform->GetMatrix()._13;
-		m_world._21 = m_transform->GetMatrix()._21;
-		m_world._22 = m_transform->GetMatrix()._22;
-		m_world._23 = m_transform->GetMatrix()._23;
-		m_world._31 = m_transform->GetMatrix()._31;
-		m_world._32 = m_transform->GetMatrix()._32;
-		m_world._33 = m_transform->GetMatrix()._33;
-	}
 }
 
 // 描画
@@ -140,7 +120,7 @@ void Collision::DebugDraw() {
 	// 定数バッファ設定
 	
 	SHADER_WORLD world;
-	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_world));
+	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&GetWorld()));
 	ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
 
 	SHADER_MATERIAL material;
@@ -157,11 +137,6 @@ void Collision::DebugDraw() {
 	D3DClass::GetInstance().SetZWrite(true);
 
 #endif
-}
-
-
-void Collision::SetWorld(XMFLOAT4X4 world) {
-	m_world = world;
 }
 
 
@@ -239,16 +214,18 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 	bool hit = false;
 
 	// 衝突判定(AABB)
-	float& Ax = obj1.m_world._41;
-	float& Ay = obj1.m_world._42;
-	float& Az = obj1.m_world._43;
+	XMFLOAT4X4 world1 = obj1.GetWorld();
+	XMFLOAT4X4 world2 = obj2.GetWorld();
+	float& Ax = world1._41;
+	float& Ay = world1._42;
+	float& Az = world1._43;
 	float& Aw = obj1.m_vBBox.x;
 	float& Ah = obj1.m_vBBox.y;
 	float& Ad = obj1.m_vBBox.z;
 	
-	float& Bx = obj2.m_world._41;
-	float& By = obj2.m_world._42;
-	float& Bz = obj2.m_world._43;
+	float& Bx = world2._41;
+	float& By = world2._42;
+	float& Bz = world2._43;
 	float& Bw = obj2.m_vBBox.x;
 	float& Bh = obj2.m_vBBox.y;
 	float& Bd = obj2.m_vBBox.z;
@@ -266,6 +243,7 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 
 bool Collision::OBB(Collision obj1, Collision obj2) {
 
+	// セルフタグ判定
 	for (auto tag1 = obj1.m_selfTag.begin(); tag1 != obj1.m_selfTag.end(); tag1++) {
 		for (auto tag2 = obj2.m_selfTag.begin(); tag2 != obj2.m_selfTag.end(); tag2++) {
 			std::string temp1 = *tag1;
@@ -275,27 +253,28 @@ bool Collision::OBB(Collision obj1, Collision obj2) {
 			}
 		}
 	}
-	
+
+	XMFLOAT4X4 world1 = obj1.m_gameObject->m_transform->GetMatrix();
+	XMFLOAT4X4 world2 = obj2.m_gameObject->m_transform->GetMatrix();
 
 	// ワールド空間上のOBB中心座標を求める
-	// m_vCenterから(0, 0, 0)に変えたらなんか動いたっぽい
 	XMFLOAT3 vPos1, vPos2;
 	XMStoreFloat3(&vPos1, XMVector3TransformCoord(
-		XMLoadFloat3(&obj1.m_vCenter), XMLoadFloat4x4(&obj1.m_gameObject->m_transform->GetMatrix())));
+		XMLoadFloat3(&obj1.m_vCenter), XMLoadFloat4x4(&world1)));
 	XMStoreFloat3(&vPos2, XMVector3TransformCoord(
-		XMLoadFloat3(&obj2.m_vCenter), XMLoadFloat4x4(&obj2.m_gameObject->m_transform->GetMatrix())));
+		XMLoadFloat3(&obj2.m_vCenter), XMLoadFloat4x4(&world2)));
 	// 中心座標間のベクトルを求める
 	XMVECTOR vD = XMVectorSet(vPos2.x - vPos1.x,
 		vPos2.y - vPos1.y,
 		vPos2.z - vPos1.z, 0.0f);
 	// モデル座標軸を求める
 	XMFLOAT3 v[6];
-	v[0] = XMFLOAT3(obj1.m_gameObject->m_transform->GetMatrix()._11, obj1.m_gameObject->m_transform->GetMatrix()._12, obj1.m_gameObject->m_transform->GetMatrix()._13);
-	v[1] = XMFLOAT3(obj1.m_gameObject->m_transform->GetMatrix()._21, obj1.m_gameObject->m_transform->GetMatrix()._22, obj1.m_gameObject->m_transform->GetMatrix()._23);
-	v[2] = XMFLOAT3(obj1.m_gameObject->m_transform->GetMatrix()._31, obj1.m_gameObject->m_transform->GetMatrix()._32, obj1.m_gameObject->m_transform->GetMatrix()._33);
-	v[3] = XMFLOAT3(obj2.m_gameObject->m_transform->GetMatrix()._11, obj2.m_gameObject->m_transform->GetMatrix()._12, obj2.m_gameObject->m_transform->GetMatrix()._13);
-	v[4] = XMFLOAT3(obj2.m_gameObject->m_transform->GetMatrix()._21, obj2.m_gameObject->m_transform->GetMatrix()._22, obj2.m_gameObject->m_transform->GetMatrix()._23);
-	v[5] = XMFLOAT3(obj2.m_gameObject->m_transform->GetMatrix()._31, obj2.m_gameObject->m_transform->GetMatrix()._32, obj2.m_gameObject->m_transform->GetMatrix()._33);
+	v[0] = XMFLOAT3(world1._11, world1._12, world1._13);
+	v[1] = XMFLOAT3(world1._21, world1._22, world1._23);
+	v[2] = XMFLOAT3(world1._31, world1._32, world1._33);
+	v[3] = XMFLOAT3(world2._11, world2._12, world2._13);
+	v[4] = XMFLOAT3(world2._21, world2._22, world2._23);
+	v[5] = XMFLOAT3(world2._31, world2._32, world2._33);
 	XMVECTOR vN[6];
 	for (int i = 0; i < 6; ++i)
 		vN[i] = XMLoadFloat3(&v[i]);
@@ -356,6 +335,27 @@ void Collision::SetImGuiVal() {
 	ImGui::InputFloat3("m_vBBox",		(float*)&m_vBBox);
 	ImGui::InputFloat3("m_vPosBBox",	(float*)&m_vPosBBox);
 #endif
+}
+
+
+DirectX::XMFLOAT4X4 Collision::GetWorld() {
+	XMFLOAT4X4 matrix;
+	XMStoreFloat3(&m_vPosBBox,
+		XMVector3TransformCoord(
+			XMLoadFloat3(&m_vCenter),
+			XMLoadFloat4x4(&m_gameObject->m_transform->GetMatrix())));
+	XMStoreFloat4x4(&matrix, XMMatrixTranslation(
+		m_vPosBBox.x, m_vPosBBox.y, m_vPosBBox.z));
+	matrix._11 = m_transform->GetMatrix()._11;
+	matrix._12 = m_transform->GetMatrix()._12;
+	matrix._13 = m_transform->GetMatrix()._13;
+	matrix._21 = m_transform->GetMatrix()._21;
+	matrix._22 = m_transform->GetMatrix()._22;
+	matrix._23 = m_transform->GetMatrix()._23;
+	matrix._31 = m_transform->GetMatrix()._31;
+	matrix._32 = m_transform->GetMatrix()._32;
+	matrix._33 = m_transform->GetMatrix()._33;
+	return matrix;
 }
 
 
