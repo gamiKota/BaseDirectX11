@@ -143,8 +143,9 @@ void ShaderManager::Bind(E_SHADER shader, E_SHADER_GS gs) {
 }
 
 
-void ShaderManager::UpdateBuffer(XMFLOAT4X4 world) {
-
+void ShaderManager::UpdateBuffer(std::string bufName, void *data) {
+	ShaderBufferManager::GetInstance().Update(bufName, data);
+	ShaderBufferManager::GetInstance().Bind(bufName);
 }
 
 

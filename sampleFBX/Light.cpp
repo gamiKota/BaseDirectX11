@@ -8,7 +8,7 @@
  */
 #include "Light.h"
 #include "D3DClass.h"
-#include "ShaderBufferManager.h"
+#include "ShaderManager.h"
 #include "System.h"
 
 
@@ -75,8 +75,7 @@ void Light::LastUpdate() {
 		buf.vLd = XMLoadFloat4(&m_pLight->m_diffuse);
 		buf.vLa = XMLoadFloat4(&m_pLight->m_ambient);
 		buf.vLs = XMLoadFloat4(&m_pLight->m_specular);
-		ShaderBufferManager::GetInstance().Update("MainLight", &buf);
-		ShaderBufferManager::GetInstance().Bind("MainLight");
+		ShaderManager::GetInstance().UpdateBuffer("MainLight", &buf);
 	}
 }
 

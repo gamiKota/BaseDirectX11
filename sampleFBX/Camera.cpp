@@ -11,7 +11,7 @@
 #include "Graphics.h"
 #include "debugproc.h"
 #include "Transform.h"
-#include "ShaderBufferManager.h"
+#include "ShaderManager.h"
 #include "System.h"
 
 
@@ -73,8 +73,7 @@ void CCamera::LastUpdate() {
 		buf.vEye = XMLoadFloat3(&m_transform->m_position);
 		buf.mV = XMMatrixTranspose(mtxView);
 		buf.mP = XMMatrixTranspose(mtxProj);
-		ShaderBufferManager::GetInstance().Update("MainCamera", &buf);
-		ShaderBufferManager::GetInstance().Bind("MainCamera");
+		ShaderManager::GetInstance().UpdateBuffer("MainCamera", &buf);
 	}
 }
 

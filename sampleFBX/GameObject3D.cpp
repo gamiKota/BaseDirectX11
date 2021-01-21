@@ -12,7 +12,7 @@
 #include "D3DClass.h"
 #include "Mesh.h"
 #include "FbxModel.h"
-#include "ShaderBufferManager.h"
+#include "ShaderManager.h"
 #include "System.h"
 
 
@@ -67,8 +67,7 @@ void GameObject3D::Draw() {
 	// シェーダの設定
 	SHADER_LIGHT_SETTING buf;
 	buf.light = (m_isLight) ? XMFLOAT4(1.f, 1.f, 1.f, 1.f) : XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	ShaderBufferManager::GetInstance().Update("MainLightSetting", &buf);
-	ShaderBufferManager::GetInstance().Bind("MainLightSetting");
+	ShaderManager::GetInstance().UpdateBuffer("MainLightSetting", &buf);
 
 	// 前面カリング (FBXは表裏が反転するため)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);

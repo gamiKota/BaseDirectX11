@@ -1091,7 +1091,7 @@ HRESULT CFbxModel::CreateFromFBX(LPCSTR szFileName)
 //---------------------------------------------------------------------------------------
 // ƒŒƒ“ƒ_ƒŠƒ“ƒO
 //---------------------------------------------------------------------------------------
-void CFbxModel::Render(XMFLOAT4X4& mWorld, XMFLOAT4X4& mView, XMFLOAT4X4& mProj, EByOpacity byOpacity)
+void CFbxModel::Render(XMFLOAT4X4& mWorld, EByOpacity byOpacity)
 {
 	m_mWorld = mWorld;
 	RecursiveRender(m_pRootMesh, byOpacity);

@@ -6,6 +6,8 @@
 #include "GeometryShader.h"
 #include "PixelShader.h"
 #include <DirectXMath.h>
+#include <string>
+#include "ShaderBufferManager.h"
 
 
 enum E_SHADER {
@@ -27,7 +29,7 @@ public:
 
 	void Bind(E_SHADER shader = E_SHADER_FBX, E_SHADER_GS GS = E_SHADER_GS_DEFAULT);
 
-	void UpdateBuffer(DirectX::XMFLOAT4X4 world);
+	void UpdateBuffer(std::string bufName, void *data);
 
 private:
 	VertexShader*	m_VS[E_SHADER_VS_MAX];

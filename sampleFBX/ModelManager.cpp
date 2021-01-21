@@ -9,15 +9,8 @@
 #include "ModelManager.h"
 #include "FbxModel.h"
 #include "D3DClass.h"
-#include "Camera.h"
-#include "Light.h"
 #include "debugproc.h"
-#include "ShaderManager.h"
-#include "GameObject.h"
 #include "GameObject3D.h"
-#include "TPCamera.h"
-#include "input.h"
-#include "ShaderBufferManager.h"
 #include "System.h"
 
 
@@ -52,15 +45,10 @@ static const char* name[E_MODEL_MAX] = {
 };
 
 
-Light			m_lightOff;		// 光源無効
-
-
 ModelManager::ModelManager() {
 	for (int i = E_MODEL_NONE; i < E_MODEL_MAX; i++) {
 		SAFE_DELETE(m_pModel[i]);
 	}
-	// 光源無効化
-	m_lightOff.m_direction = XMFLOAT3(0.f, 0.f, 0.f);
 }
 
 
@@ -130,21 +118,19 @@ void ModelManager::Draw(GameObject3D* obj) {
 
 	// 使用する変数
 	D3DClass* d3dClass = &D3DClass::GetInstance();
-	CCamera* pCamera = CCamera::Get();
 
 	//--- FBXファイル表示
-
 	// フレーム更新
 	m_pModel[model]->SetAnimFrame(m_nAnimFrame[model]);
 	// 描画
 	d3dClass->SetBlendState(BS_NONE);		// アルファ処理しない
 	d3dClass->SetZWrite(true);			// Zバッファ有効
 	if (obj->m_model == E_MODEL_SKY) { d3dClass->SetZWrite(false); }
-	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eOpacityOnly);
+	m_pModel[model]->Render(obj->m_transform->GetMatrix(), eOpacityOnly);
 	if (model == E_MODEL_SKY) { return; }
 	d3dClass->SetZWrite(false);
 	d3dClass->SetBlendState(BS_ALPHABLEND);	// 半透明描画
-	m_pModel[model]->Render(obj->m_transform->GetMatrix(), pCamera->GetView(), pCamera->GetProj(), eTransparentOnly);
+	m_pModel[model]->Render(obj->m_transform->GetMatrix(), eTransparentOnly);
 }
 
 

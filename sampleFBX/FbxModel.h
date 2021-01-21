@@ -152,7 +152,7 @@ public:
 	~CFbxModel();
 
 	// ÉÅÉ\ÉbÉh
-	void Render(DirectX::XMFLOAT4X4& mWorld, DirectX::XMFLOAT4X4& mView, DirectX::XMFLOAT4X4& mProj, EByOpacity byOpacity = eNoAffect);
+	void Render(DirectX::XMFLOAT4X4& mWorld, EByOpacity byOpacity = eNoAffect);
 	HRESULT Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LPCSTR pszFileName);
 	void SetAnimFrame(int nFrame);
 	int GetMaxAnimFrame();
