@@ -75,6 +75,16 @@ void ShaderManager::Terminate() {
 }
 
 
+void ShaderManager::BindPS(E_SHADER_PS shader) {
+	m_PS[shader]->Bind();
+}
+
+
+void ShaderManager::BindVS(E_SHADER_VS shader) {
+	m_VS[shader]->Bind();
+}
+
+
 void ShaderManager::Bind(E_SHADER shader, E_SHADER_GS gs) {
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
 	switch (shader)

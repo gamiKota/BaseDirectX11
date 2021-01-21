@@ -382,7 +382,7 @@
       <Filter>ソース ファイル\Shader</Filter>
     </ClCompile>
     <ClCompile Include="MissionState.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\02Game\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -606,7 +606,7 @@
       <Filter>ヘッダー ファイル\Shader</Filter>
     </ClInclude>
     <ClInclude Include="MissionState.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\02Game\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -34,10 +34,6 @@ public:
 	std::list<std::string> m_selfTag;	//!< セルフタグ
 
 	ID3D11Buffer* m_pVertexBuffer;			//!< 頂点バッファ
-	ID3D11Buffer* m_pConstantBuffer[2];		//!< 定数バッファ
-	ID3D11VertexShader* m_pVertexShader;	//!< 頂点シェーダ
-	ID3D11InputLayout* m_pInputLayout;		//!< 頂点フォーマット
-	ID3D11PixelShader* m_pPixelShader;		//!< ピクセルシェーダ
 	ID3D11Buffer* m_pIndexBuffer;			//!< インデックスバッファ
 
 private:

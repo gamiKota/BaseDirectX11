@@ -2,8 +2,9 @@
 
 // カメラ
 cbuffer global_camera : register(b0) {
-	matrix	g_WorldViewProj;	// ワールド×ビュー×射影行列
-	float4	g_cameraPos;		// 視点座標(ワールド空間)
+	float4	g_cameraPos;	// 視点座標(ワールド空間)
+	matrix	g_View;			// ビュー
+	matrix	g_Proj;			// プロジェクション
 };
 
 // ライト

@@ -30,24 +30,6 @@ struct VERTEX {
 	XMFLOAT3	position;
 	XMFLOAT3	normal;
 };
-//----- シェーダに渡す値
-struct SHADER_GLOBAL {
-	XMMATRIX	mWVP;		// ワールド×ビュー×射影行列(転置行列)
-	XMMATRIX	mW;			// ワールド行列(転置行列)
-};
-struct SHADER_GLOBAL2 {
-	XMVECTOR	vEye;		// 視点座標
-	// 光源
-	XMVECTOR	vLightDir;	// 光源方向
-	XMVECTOR	vLa;		// 光源色(アンビエント)
-	XMVECTOR	vLd;		// 光源色(ディフューズ)
-	XMVECTOR	vLs;		// 光源色(スペキュラ)
-	// マテリアル
-	XMVECTOR	vAmbient;	// アンビエント色
-	XMVECTOR	vDiffuse;	// ディフューズ色
-	XMVECTOR	vSpecular;	// スペキュラ色(+スペキュラ強度)
-	XMVECTOR	vEmissive;	// エミッシブ色
-};
 
 
 // コンストラクタ
@@ -75,16 +57,6 @@ void Collision::Uninit()
 	SAFE_RELEASE(m_pVertexBuffer);
 	// インデックスバッファ解放
 	SAFE_RELEASE(m_pIndexBuffer);
-	// 定数バッファの解放
-	for (int i = 0; i < _countof(m_pConstantBuffer); ++i) {
-		SAFE_RELEASE(m_pConstantBuffer[i]);
-	}
-	// ピクセルシェーダ解放
-	SAFE_RELEASE(m_pPixelShader);
-	// 頂点フォーマット解放
-	SAFE_RELEASE(m_pInputLayout);
-	// 頂点シェーダ解放
-	SAFE_RELEASE(m_pVertexShader);
 	// タグの解放
 	m_selfTag.clear();
 }
@@ -132,11 +104,10 @@ void Collision::DebugDraw() {
 
 	if (!m_isInit)	return;
 
-	if (true) { return; }
+	//if (true) { return; }
 
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
 	D3DClass::GetInstance().SetZWrite(true);
-
 
 	// 境界ボックスの色
 	if (m_bHit) {
@@ -149,9 +120,9 @@ void Collision::DebugDraw() {
 	// シェーダ設定
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // プリミティブ形状をセット
-	pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
-	pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
-	pDeviceContext->IASetInputLayout(m_pInputLayout);
+
+	ShaderManager::GetInstance().BindPS(E_SHADER_PS::E_SHADER_PS_DEFAULT);
+	ShaderManager::GetInstance().BindVS(E_SHADER_VS::E_SHADER_VS_DEFAULT);
 	pDeviceContext->GSSetShader(NULL, NULL, 0);
 	pDeviceContext->DSSetShader(NULL, NULL, 0);
 	pDeviceContext->HSSetShader(NULL, NULL, 0);
@@ -164,29 +135,21 @@ void Collision::DebugDraw() {
 	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
 	// インデックスバッファ設定
 	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+
 	// 定数バッファ設定
-	SHADER_GLOBAL cb;
-	XMMATRIX mtxWorld = XMLoadFloat4x4(&m_world);
-	CCamera* pCamera = CCamera::Get();
-	cb.mWVP = XMMatrixTranspose(mtxWorld *
-		XMLoadFloat4x4(&pCamera->GetView()) *
-		XMLoadFloat4x4(&pCamera->GetProj()));
-	cb.mW = XMMatrixTranspose(mtxWorld);
-	pDeviceContext->UpdateSubresource(m_pConstantBuffer[0], 0, nullptr, &cb, 0, 0);
-	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer[0]);
-	SHADER_GLOBAL2 cb2;
-	cb2.vEye = XMLoadFloat3(&pCamera->m_transform->m_position);
-	Light& light = *Light::Get();
-	cb2.vLightDir = XMVectorSet(light.m_direction.x, light.m_direction.y, light.m_direction.z, 0.f);
-	cb2.vLa = XMLoadFloat4(&light.m_ambient);
-	cb2.vLd = XMLoadFloat4(&light.m_diffuse);
-	cb2.vLs = XMLoadFloat4(&light.m_specular);
-	cb2.vDiffuse = XMLoadFloat4(&m_color);
-	cb2.vAmbient = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	cb2.vSpecular = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-	cb2.vEmissive = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	pDeviceContext->UpdateSubresource(m_pConstantBuffer[1], 0, nullptr, &cb2, 0, 0);
-	pDeviceContext->PSSetConstantBuffers(1, 1, &m_pConstantBuffer[1]);
+	
+	SHADER_WORLD world;
+	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_world));
+	ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
+
+	SHADER_MATERIAL material;
+	material.vDiffuse = XMLoadFloat4(&m_color);
+	material.vAmbient = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	material.vSpecular = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+	material.vEmissive = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	ShaderManager::GetInstance().UpdateBuffer("Material", &material);
+
 	// 描画
 	pDeviceContext->DrawIndexed(36, 0, 0);
 
@@ -215,25 +178,6 @@ void Collision::Init(E_MODEL model) {
 		m_vBBox = float3(temp.x, temp.y, temp.z);
 		m_vPosBBox = m_vCenter;
 	}
-
-	// シェーダ初期化
-	static const D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,                            D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-	};
-	hr = LoadShader("Vertex", "Pixel",
-		&m_pVertexShader, &m_pInputLayout, &m_pPixelShader, layout, _countof(layout));
-
-	// 定数バッファ生成
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(SHADER_GLOBAL);
-	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bd.CPUAccessFlags = 0;
-	hr = pDevice->CreateBuffer(&bd, nullptr, &m_pConstantBuffer[0]);
-	bd.ByteWidth = sizeof(SHADER_GLOBAL2);
-	hr = pDevice->CreateBuffer(&bd, nullptr, &m_pConstantBuffer[1]);
 
 	// インデックス バッファ生成
 	int index[36] = { 0, 1, 2, 2, 1, 3,

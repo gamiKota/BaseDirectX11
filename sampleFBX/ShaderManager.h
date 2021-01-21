@@ -27,6 +27,8 @@ public:
 	void Initialize();
 	void Terminate();
 
+	void BindPS(E_SHADER_PS shader);
+	void BindVS(E_SHADER_VS shader);
 	void Bind(E_SHADER shader = E_SHADER_FBX, E_SHADER_GS GS = E_SHADER_GS_DEFAULT);
 
 	void UpdateBuffer(std::string bufName, void *data);
