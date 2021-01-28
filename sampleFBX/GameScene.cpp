@@ -52,6 +52,7 @@
 #include "Rigidbody.h"	// 物理エンジン機能
 #include "MeshBullet.h"	// メッシュ弾
 #include "TargetCtr.h"	// ロックオンマーカー
+#include "Material.h"	// マテリアル
 // システム
 #include "System.h"	// メモリ監視
 
@@ -88,11 +89,11 @@ void GameScene::Init() {
 	Light::Set(m_empty->AddComponent<Light>());
 	m_listObject.push_back(m_empty);
 
-	//// スカイドーム
-	//m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
-	//m_object3D->AddComponent<SkyDome>();
-	//m_object3D->m_isLight = false;
-	//m_listObject.push_back(m_object3D);
+	// スカイドーム
+	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
+	m_object3D->AddComponent<SkyDome>();
+	m_object3D->m_isLight = false;
+	m_listObject.push_back(m_object3D);
 
 	//--- オブジェクトの生成
 	// 自機
@@ -128,9 +129,9 @@ void GameScene::Init() {
 
 	//--- フィールドの生成
 	float3 scale = float3(6000.f, 3000.f, 0.1f);
-	TFbxMaterial material;
-	material.Ka.w = 0.f;
-	material.Kd = XMFLOAT4(1.f, 1.f, 1.f, 0.f);
+	Material material;
+	material.m_ambient.w = 0.f;
+	material.m_diffuse = XMFLOAT4(1.f, 1.f, 1.f, 0.f);
 	//// 壁
 	//m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall", "AreaWall");
 	//m_object3D->m_transform->m_position = float3(0.f, 0.f, VAL_WALL_POS);

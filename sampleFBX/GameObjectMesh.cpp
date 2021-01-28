@@ -14,25 +14,8 @@
 #include "System.h"
 
 
-/**
- * @constant value
- */
-static const DirectX::XMFLOAT4 M_DIFFUSE	=	XMFLOAT4(1.0f,1.0f,1.0f,1.0f);
-static const DirectX::XMFLOAT4 M_SPECULAR	=	XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
-static const DirectX::XMFLOAT4 M_AMBIENT	=	XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
-static const DirectX::XMFLOAT4 M_EMISSIVE	=	XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
-
-
 GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh) : m_type(mesh), m_texture(E_TEXTURE_NONE), GameObjectMeshBase("GameObjectMesh") {
 	m_transform->m_scale = { 100.f, 100.f, 100.f };
-	m_material = AddComponent<Material>();
-
-	// マテリアルの初期設定
-	m_material->m_diffuse = M_DIFFUSE;
-	m_material->m_ambient = M_AMBIENT;
-	m_material->m_specular = M_SPECULAR;
-	m_material->m_power = 50.0f;
-	m_material->m_emissive = M_EMISSIVE;
 
 	// テクスチャ設定
 	XMStoreFloat4x4(&m_mesh.mtxTexture, XMMatrixIdentity());
@@ -47,14 +30,6 @@ GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh) : m_type(mesh), m_texture(E_TEX
 GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh, E_TEXTURE texture, std::string name, std::string tag) :
 	m_type(mesh), m_texture(texture), GameObjectMeshBase(name, tag) {
 	m_transform->m_scale = { 100.f, 100.f, 100.f };
-	m_material = AddComponent<Material>();
-
-	// マテリアルの初期設定
-	m_material->m_diffuse = M_DIFFUSE;
-	m_material->m_ambient = M_AMBIENT;
-	m_material->m_specular = M_SPECULAR;
-	m_material->m_power = 50.0f;
-	m_material->m_emissive = M_EMISSIVE;
 
 	// テクスチャ設定
 	XMStoreFloat4x4(&m_mesh.mtxTexture, XMMatrixIdentity());
@@ -141,10 +116,10 @@ void GameObjectMesh::Draw() {
 
 	// 描画
 	if (m_type == E_MESH_TYPE::BILLBORAD) {
-		DrawMesh(&m_mesh, m_material, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrixBillboard());
+		DrawMesh(&m_mesh, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrixBillboard());
 	}
 	else {
-		DrawMesh(&m_mesh, m_material, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrix());
+		DrawMesh(&m_mesh, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrix());
 	}
 }
 

@@ -11,7 +11,7 @@
 #include "Rigidbody.h"
 #include "D3DClass.h"
 #include "Mesh.h"
-#include "FbxModel.h"
+#include "Material.h"
 #include "ShaderManager.h"
 #include "System.h"
 
@@ -19,10 +19,11 @@
 GameObject3D::GameObject3D(E_MODEL m_model, std::string name, std::string tag) : 
 	m_model(m_model), GameObject(name, tag) {
 	m_transform->m_scale = { 0.5f, 0.5f, 0.5f };
-	m_material.Ka = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
-	m_material.Ke = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
-	m_material.Kd = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
-	m_material.Ks = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);	// 光沢
+	m_material = AddComponent<Material>();
+	m_material->m_ambient	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
+	m_material->m_emissive	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
+	m_material->m_diffuse	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
+	m_material->m_specular	= XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);	// 光沢
 
 	m_isLight = true;
 }
@@ -49,32 +50,37 @@ void GameObject3D::Update() {
 
 void GameObject3D::LastUpdate() {
 	GameObject::LastUpdate();
-	ModelManager::GetInstance().Update(this);
+	ModelManager::GetInstance().Update(m_model);
 }
 
 
 void GameObject3D::Draw() {
-	D3DClass* d3dClass = &D3DClass::GetInstance();
-	ID3D11Device* pDevice = d3dClass->GetDevice();
-	ID3D11DeviceContext* pDeviceContext = d3dClass->GetDeviceContext();
+	ShaderManager* shader = &ShaderManager::GetInstance();
 
 	// シェーダの適用
-	ShaderManager::GetInstance().BindVS(E_VS_NORMAL);
-	ShaderManager::GetInstance().BindPS(E_PS_NORMAL);
+	shader->BindVS(E_VS_NORMAL);
+	shader->BindPS(E_PS_NORMAL);
 
 	// シェーダの設定
 	// ライト
 	SHADER_LIGHT_SETTING light;
 	light.light = (m_isLight) ? XMFLOAT4(1.f, 1.f, 1.f, 1.f) : XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	ShaderManager::GetInstance().UpdateBuffer("MainLightSetting", &light);
+	shader->UpdateBuffer("MainLightSetting", &light);
 	// ワールド行列
 	SHADER_WORLD world;
 	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_transform->GetMatrix()));
-	ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
+	shader->UpdateBuffer("MainWorld", &world);
 	// マテリアル
+	SHADER_MATERIAL material;
+	material.vAmbient	= XMLoadFloat4(&m_material->m_ambient);
+	material.vDiffuse	= XMLoadFloat4(&m_material->m_diffuse);
+	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
+	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
+	shader->UpdateBuffer("Material", &material);
+	
 
 	// 前面カリング (FBXは表裏が反転するため)
-	ModelManager::GetInstance().Draw(this);
+	ModelManager::GetInstance().Draw(m_model);
 	//if (GetComponent<Collision>() != nullptr &&
 	//	GetTag() != "Land") {
 	//	GetComponent<Collision>()->DebugDraw();

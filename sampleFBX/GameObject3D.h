@@ -15,17 +15,17 @@
 #include "GameObject.h"
 #include "ModelManager.h"
 #include "ShaderManager.h"
-#include "FbxModel.h"
 
+class Material;
 
 /**
  * @class GameObject3D : inheritance GameObject
  */
 class GameObject3D : public GameObject {
 public:
-	E_MODEL			m_model;		//!< モデル(いつかコンポーネント化)
-	TFbxMaterial	m_material;		//!< マテリアル
-	bool			m_isLight;		//!< ライト設定
+	E_MODEL		m_model;		//!< モデル(いつかコンポーネント化)
+	Material*	m_material;		//!< マテリアル
+	bool		m_isLight;		//!< ライト設定
 
 public:
 	/**

@@ -28,22 +28,6 @@ enum ePrimitiveType {
 
 
 
-class Material : public Component {
-public:
-	DirectX::XMFLOAT4	m_diffuse;		//!< Diffuse color RGBA
-	DirectX::XMFLOAT4	m_ambient;		//!< Ambient color RGB
-	DirectX::XMFLOAT4	m_specular;		//!< Specular 'shininess'
-	DirectX::XMFLOAT4	m_emissive;		//!< Emissive color RGB
-	float				m_power;		//!< Sharpness if specular highlight
-
-public:
-	Material();
-	void SetImGuiVal();
-
-public:
-};
-
-
 typedef struct {
 	ID3D11Buffer* pVertexBuffer;			// 頂点バッファインターフェースへのポインタ
 	ID3D11Buffer* pIndexBuffer;				// インデックスバッファインターフェースへのポインタ
@@ -65,6 +49,6 @@ typedef struct {
 //*****************************************************************************
 HRESULT InitMesh(void);
 void UninitMesh(void);
-void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4X4* matrix);
+void DrawMesh(MESH* pMesh, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4X4* matrix);
 HRESULT MakeMeshVertex(ID3D11Device* pDevice, MESH* pMesh, VERTEX_3D vertexWk[], int indexWk[]);
 void ReleaseMesh(MESH* pMesh);

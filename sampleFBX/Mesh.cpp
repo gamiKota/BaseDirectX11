@@ -14,15 +14,6 @@
 #include "imgui.h"
 #include "System.h"
 
-//*****************************************************************************
-// マクロ定義
-//*****************************************************************************
-static const DirectX::XMFLOAT4	M_DIFFUSE	=	XMFLOAT4(1.0f,1.0f,1.0f,1.0f);
-static const DirectX::XMFLOAT4	M_SPECULAR	=	XMFLOAT4(0.0f,0.0f,0.0f,0.0f);
-static const DirectX::XMFLOAT4	M_AMBIENT	=	XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
-static const DirectX::XMFLOAT4	M_EMISSIVE	=	XMFLOAT4(0.0f,0.0f,0.0f,0.0f);
-static const float				M_POWER		=	0.f;
-
 
 //*****************************************************************************
 // 構造体定義
@@ -55,26 +46,6 @@ static ID3D11SamplerState*			g_pSamplerState;		// テクスチャ サンプラ
 static ID3D11VertexShader*			g_pVertexShader;		// 頂点シェーダ
 static ID3D11InputLayout*			g_pInputLayout;			// 頂点フォーマット
 static ID3D11PixelShader*			g_pPixelShader;			// ピクセルシェーダ
-
-
-Material::Material() {
-	m_diffuse	= M_DIFFUSE;
-	m_ambient	= M_AMBIENT;
-	m_specular	= M_SPECULAR;
-	m_emissive	= M_EMISSIVE;
-	m_power		= M_POWER;
-}
-
-
-void Material::SetImGuiVal() {
-#if _DEBUG
-	ImGui::DragFloat4("Diffuse", (float*)&m_diffuse);
-	ImGui::DragFloat4("Ambient", (float*)&m_ambient);
-	ImGui::DragFloat4("Specular", (float*)&m_specular);
-	ImGui::DragFloat4("Emissive", (float*)&m_emissive);
-	ImGui::DragFloat("SpecularHighlight", (float*)&m_power);
-#endif
-}
 
 
 //=============================================================================
@@ -150,12 +121,11 @@ void UninitMesh(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4X4* matrix)
+void DrawMesh(MESH* pMesh, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4X4* matrix)
 {
 	if (!pMesh->isDraw)	return;
 
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
-	Material* pMaterial = new Material();
 
 	// 背面カリング (通常は表面のみ描画)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);
@@ -205,20 +175,6 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 	cb2.vLd = XMLoadFloat4(&light->m_diffuse);
 	cb2.vLs = XMLoadFloat4(&light->m_specular);
 
-	//if (material) {
-		cb2.vDiffuse = XMLoadFloat4(&material->m_diffuse);
-		cb2.vAmbient = XMVectorSet(material->m_ambient.x, material->m_ambient.y, material->m_ambient.z,
-			(texture != nullptr) ? 1.f : 0.f);
-		cb2.vSpecular = XMVectorSet(material->m_specular.x, material->m_specular.y, material->m_specular.z, material->m_power);
-		cb2.vEmissive = XMLoadFloat4(&material->m_emissive);
-	//}
-	//else {
-	//	cb2.vDiffuse = XMLoadFloat4(&pMaterial->m_diffuse);
-	//	cb2.vAmbient = XMVectorSet(pMaterial->m_ambient.x, pMaterial->m_ambient.y, pMaterial->m_ambient.z,
-	//		(texture != nullptr) ? 1.f : 0.f);
-	//	cb2.vSpecular = XMVectorSet(pMaterial->m_specular.x, pMaterial->m_specular.y, pMaterial->m_specular.z, pMaterial->m_power);
-	//	cb2.vEmissive = XMLoadFloat4(&pMaterial->m_emissive);
-	//}
 	pDeviceContext->UpdateSubresource(g_pConstantBuffer[1], 0, nullptr, &cb2, 0, 0);
 	pDeviceContext->PSSetConstantBuffers(1, 1, &g_pConstantBuffer[1]);
 
@@ -244,8 +200,6 @@ void DrawMesh(MESH* pMesh, Material* material, ID3D11ShaderResourceView* texture
 	
 	// Zバッファ無効
 	D3DClass::GetInstance().SetZBuffer(true);
-
-	SAFE_DELETE(pMaterial);
 }
 
 

@@ -50,8 +50,8 @@ public:
 	void Init();
 	void Uninit();
 
-	void Update(GameObject3D* obj);
-	void Draw(GameObject3D* obj);
+	void Update(E_MODEL model);
+	void Draw(E_MODEL model);
 
 private:
 

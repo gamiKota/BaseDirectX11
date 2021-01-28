@@ -27,16 +27,16 @@
 
 
 
-bool GameObject3DKdSort(GameObject* gameObject1, GameObject* gameObject2) {
-	GameObject3D* temp1 = dynamic_cast<GameObject3D*>(gameObject1);
-	GameObject3D* temp2 = dynamic_cast<GameObject3D*>(gameObject2);
-	if (temp1 != nullptr && temp2 != nullptr) {
-		if (temp1->m_material.Kd.w > temp2->m_material.Kd.w) {
-			return true;
-		}
-	}
-	return false;
-}
+//bool GameObject3DKdSort(GameObject* gameObject1, GameObject* gameObject2) {
+//	GameObject3D* temp1 = dynamic_cast<GameObject3D*>(gameObject1);
+//	GameObject3D* temp2 = dynamic_cast<GameObject3D*>(gameObject2);
+//	if (temp1 != nullptr && temp2 != nullptr) {
+//		if (temp1->m_material.Kd.w > temp2->m_material.Kd.w) {
+//			return true;
+//		}
+//	}
+//	return false;
+//}
 
 
 
@@ -130,7 +130,7 @@ void Scene::Update() {
 	}
 
 	// É\Å[Ég
-	m_listObject.sort(GameObject3DKdSort);
+	//m_listObject.sort(GameObject3DKdSort);
 	m_listObject.sort(GameObjectUISort);
 }
 

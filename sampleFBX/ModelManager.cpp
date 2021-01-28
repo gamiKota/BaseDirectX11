@@ -7,7 +7,6 @@
  * @include
  */
 #include "ModelManager.h"
-#include "FbxModel.h"
 #include "D3DClass.h"
 #include "debugproc.h"
 #include "GameObject3D.h"
@@ -91,14 +90,13 @@ void ModelManager::Uninit() {
 }
 
 
-void ModelManager::Update(GameObject3D *obj) {
+void ModelManager::Update(E_MODEL model) {
 
 }
 
 
-void ModelManager::Draw(GameObject3D* obj) {
+void ModelManager::Draw(E_MODEL model) {
 
-	E_MODEL model = obj->m_model;
 	if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
 		return;
 	}
@@ -106,9 +104,10 @@ void ModelManager::Draw(GameObject3D* obj) {
 	// 使用する変数
 	D3DClass* d3dClass = &D3DClass::GetInstance();
 
-	d3dClass->SetBlendState(EBlendState::BS_NONE);	// アルファ処理しない
-	d3dClass->SetZWrite(true);								// Zバッファ有効
-	d3dClass->SetCullMode(CULLMODE_CCW);					// カリング
+	d3dClass->SetBlendState(EBlendState::BS_NONE);	// ブレンド
+	d3dClass->SetCullMode(CULLMODE_CCW);			// カリング
+	if (model != E_MODEL_SKY) { d3dClass->SetZWrite(true); }
+	else { d3dClass->SetZWrite(false); }
 
 	for (int i = 0; i < m_pModelData[model]->GetMeshNum(); ++i) {
 		ShaderManager::GetInstance().SetTexturePS(m_pModelData[model][i].GetTexture(i));

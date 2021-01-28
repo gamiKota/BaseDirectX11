@@ -31,7 +31,6 @@ public:
 	E_TEXTURE		m_texture;	//!< テクスチャ
 	E_MESH_TYPE		m_type;		//!< 表示方法
 	MESH			m_mesh;		//!< メッシュ
-	Material*		m_material;	//!< マテリアル
 
 public:
 	/**

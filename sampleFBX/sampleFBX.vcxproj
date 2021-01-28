@@ -190,6 +190,7 @@
     <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Laser.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshBullet.cpp" />
     <ClCompile Include="MissionState.cpp" />
@@ -214,7 +215,6 @@
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Explosion.cpp" />
-    <ClCompile Include="FbxModel.cpp" />
     <ClCompile Include="FPCamera.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -273,6 +273,7 @@
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="Laser.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshBullet.h" />
     <ClInclude Include="MissionState.h" />
@@ -295,7 +296,6 @@
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="Enemy.h" />
-    <ClInclude Include="FbxModel.h" />
     <ClInclude Include="FPCamera.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="GameObject.h" />
