@@ -28,3 +28,10 @@ HRESULT CreateTextureFromFile(_In_ ID3D11Device* d3dDevice,
 	_Out_opt_ ID3D11ShaderResourceView** textureView,
 	_Out_opt_ DirectX::TexMetadata* pTexInfo = nullptr
 );
+
+
+HRESULT LoadTextureFromFile(const char *pszFileName, ID3D11ShaderResourceView **ppTexture);
+HRESULT CreateRenderTexture(UINT width, UINT height, DXGI_FORMAT format,
+	ID3D11ShaderResourceView** ppTexture, ID3D11RenderTargetView** ppRTV);
+HRESULT CreateDepthStencil(UINT width, UINT height, DXGI_FORMAT format,
+	ID3D11DepthStencilView** ppDSV);

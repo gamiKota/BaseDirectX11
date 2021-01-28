@@ -169,6 +169,12 @@
     <ClCompile Include="EnemyOperation.cpp" />
     <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="EnemyFixed.cpp" />
+    <ClCompile Include="FBX\FBXLoadAnimation.cpp" />
+    <ClCompile Include="FBX\FBXLoadBone.cpp" />
+    <ClCompile Include="FBX\FBXLoader.cpp" />
+    <ClCompile Include="FBX\FBXLoadMaterial.cpp" />
+    <ClCompile Include="FBX\FBXLoadMesh.cpp" />
+    <ClCompile Include="FBX\FBXPlayer.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectMesh.cpp" />
     <ClCompile Include="GameObjectMeshBase.cpp" />
@@ -246,6 +252,12 @@
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="EnemyFixed.h" />
+    <ClInclude Include="FBX\FBXLoadAnimation.h" />
+    <ClInclude Include="FBX\FBXLoadBone.h" />
+    <ClInclude Include="FBX\FBXLoader.h" />
+    <ClInclude Include="FBX\FBXLoadMaterial.h" />
+    <ClInclude Include="FBX\FBXLoadMesh.h" />
+    <ClInclude Include="FBX\FBXPlayer.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GameObjectMesh.h" />
     <ClInclude Include="GameObjectMeshBase.h" />
