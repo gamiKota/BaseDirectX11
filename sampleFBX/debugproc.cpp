@@ -83,6 +83,7 @@ void DrawDebugProc(void)
 	SetPolygonSize(FONT_WIDTH, FONT_HEIGHT);
 	SetPolygonAngle(0.f);
 	SetPolygonColor(1.0f, 1.0f, 1.0f);
+	SetPolygonAlpha(1.f);
 
 	//SetPolygonAlpha(0.5f);
 

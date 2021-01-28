@@ -10,14 +10,22 @@
 #include "ShaderBufferManager.h"
 
 
-enum E_SHADER {
-	E_SHADER_FBX,
-	E_SHADER_DEFAULT,
-	E_SHADER_TOON,
-	E_SHADER_OUTLINE,
-	E_SHADER_MONOCHROME,
-	E_SHADER_PHONG,
-	E_SHADER_MAX,
+enum E_PS {
+	E_PS_NORMAL,	// í èÌï`âÊ
+	E_PS_FBX,		// HMY-FBX
+	E_PS_MAX		// ç≈ëÂíl
+};
+
+enum E_VS {
+	E_VS_NORMAL,
+	E_VS_FBX,
+	E_VS_MAX
+};
+
+enum E_GS {
+	E_GS_NORMAL,
+	E_GS_LINE,
+	E_GS_MAX,
 };
 
 
@@ -27,16 +35,16 @@ public:
 	void Initialize();
 	void Terminate();
 
-	void BindPS(E_SHADER_PS shader);
-	void BindVS(E_SHADER_VS shader);
-	void Bind(E_SHADER shader = E_SHADER_FBX, E_SHADER_GS GS = E_SHADER_GS_DEFAULT);
+	void BindVS(E_VS shader);
+	void BindPS(E_PS shader);
+	void BindGS(E_GS shader);
 
 	void UpdateBuffer(std::string bufName, void *data);
 
 private:
-	VertexShader*	m_VS[E_SHADER_VS_MAX];
-	GeometryShader* m_GS[E_SHADER_GS_MAX];
-	PixelShader*	m_PS[E_SHADER_PS_MAX];
+	VertexShader*	m_VS[E_VS_MAX];
+	GeometryShader* m_GS[E_GS_MAX];
+	PixelShader*	m_PS[E_PS_MAX];
 };
 
 

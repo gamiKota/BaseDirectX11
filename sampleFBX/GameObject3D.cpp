@@ -19,7 +19,6 @@
 GameObject3D::GameObject3D(E_MODEL m_model, std::string name, std::string tag) : 
 	m_model(m_model), GameObject(name, tag) {
 	m_transform->m_scale = { 0.5f, 0.5f, 0.5f };
-	m_shader = E_SHADER_FBX;
 	m_material.Ka = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
 	m_material.Ke = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
 	m_material.Kd = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
@@ -62,7 +61,8 @@ void GameObject3D::Draw() {
 
 	// シェーダの適用
 	//ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
-	ShaderManager::GetInstance().Bind(m_shader);
+	ShaderManager::GetInstance().BindVS(E_VS_FBX);
+	ShaderManager::GetInstance().BindPS(E_PS_FBX);
 
 	// シェーダの設定
 	SHADER_LIGHT_SETTING buf;

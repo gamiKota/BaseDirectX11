@@ -24,7 +24,6 @@
 class GameObject3D : public GameObject {
 public:
 	E_MODEL			m_model;		//!< モデル(いつかコンポーネント化)
-	E_SHADER		m_shader;		//!< シェーダ
 	TFbxMaterial	m_material;		//!< マテリアル
 	bool			m_isLight;		//!< ライト設定
 

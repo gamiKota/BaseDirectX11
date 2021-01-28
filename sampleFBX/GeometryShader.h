@@ -2,13 +2,6 @@
 #include "ShaderBase.h"
 
 
-enum E_SHADER_GS {
-	E_SHADER_GS_DEFAULT,
-	E_SHADER_GS_LINE,
-	E_SHADER_GS_MAX,
-};
-
-
 /**
  * @class GeometryShader
  */

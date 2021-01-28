@@ -8,20 +8,10 @@
  * enum 頂点レイアウトの種類を列挙
  */
 enum ShaderLayout {
-	LAYOUT_FBX,		// HMY-FBX
 	LAYOUT_PCUN,	// pos-color-uv-normal
-	LAYOUT_PNCU,	// pos-normal-color-uv
-	LAYOUT_PUN,		// pos-uv-normal
 	LAYOUT_PN,		// pos-normal
+	LAYOUT_FBX,		// HMY-FBX
 	LAYOUT_MAX
-};
-
-
-enum E_SHADER_VS {
-	E_SHADER_VS_FBX,
-	E_SHADER_VS_OUTLINE,
-	E_SHADER_VS_DEFAULT,
-	E_SHADER_VS_MAX
 };
 
 
