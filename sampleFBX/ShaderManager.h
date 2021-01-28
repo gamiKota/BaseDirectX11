@@ -7,6 +7,7 @@
 #include "PixelShader.h"
 #include <DirectXMath.h>
 #include <string>
+#include <vector>
 #include "ShaderBufferManager.h"
 
 
@@ -44,9 +45,9 @@ public:
 	void UpdateBuffer(std::string bufName, void *data);
 
 private:
-	VertexShader*	m_VS[VS_MAX];
-	GeometryShader* m_GS[GS_MAX];
-	PixelShader*	m_PS[PS_MAX];
+	std::vector<VertexShader*>		m_vsList;	//!< 頂点シェーダリスト
+	std::vector<PixelShader*>		m_psList;	//!< ピクセルシェーダリスト
+	std::vector<GeometryShader*>	m_gsList;	//!< ジオメトリシェーダリスト
 };
 
 

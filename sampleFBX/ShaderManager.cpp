@@ -44,42 +44,45 @@ void ShaderManager::Initialize() {
 
 	HRESULT hr;
 
+	m_vsList.resize(VS_MAX);
 	for (int i = 0; i < VS_MAX; ++i) {
-		m_VS[i] = new VertexShader(Layouts[i]);
-		hr = m_VS[i]->Create(pVSPath[i]);
+		m_vsList[i] = new VertexShader(Layouts[i]);
+		hr = m_vsList[i]->Create(pVSPath[i]);
 		FnAssert(hr, "頂点シェーダ読み込み失敗");
 	}
+	m_psList.resize(PS_MAX);
 	for (int i = 0; i < PS_MAX; ++i) {
-		m_PS[i] = new PixelShader();
-		hr = m_PS[i]->Create(pPSPath[i]);
+		m_psList[i] = new PixelShader();
+		hr = m_psList[i]->Create(pPSPath[i]);
 		FnAssert(hr, "ピクセルシェーダ読み込み失敗");
 	}
+	m_gsList.resize(GS_MAX);
 	for (int i = 0; i < GS_MAX; ++i) {
-		m_GS[i] = new GeometryShader();
-		hr = m_GS[i]->Create(pGSPath[i]);
+		m_gsList[i] = new GeometryShader();
+		hr = m_gsList[i]->Create(pGSPath[i]);
 		FnAssert(hr, "ジオメトリシェーダ読み込み失敗");
 	}
 }
 
 
 void ShaderManager::Terminate() {
-	for (int i = 0; i < PS_MAX; ++i) { SAFE_DELETE(m_PS[i]) }
-	for (int i = 0; i < GS_MAX; ++i) { SAFE_DELETE(m_GS[i]) }
-	for (int i = 0; i < VS_MAX; ++i) { SAFE_DELETE(m_VS[i]) }
+	for (int i = 0; i < PS_MAX; ++i) { SAFE_DELETE(m_psList[i]) }
+	for (int i = 0; i < GS_MAX; ++i) { SAFE_DELETE(m_gsList[i]) }
+	for (int i = 0; i < VS_MAX; ++i) { SAFE_DELETE(m_vsList[i]) }
 }
 
 
 void ShaderManager::BindPS(E_PS shader) {
-	m_PS[shader]->Bind();
+	m_psList[shader]->Bind();
 }
 
 
 void ShaderManager::BindVS(E_VS shader) {
-	m_VS[shader]->Bind();
+	m_vsList[shader]->Bind();
 }
 
 void ShaderManager::BindGS(E_GS shader) {
-	m_GS[shader]->Bind();
+	m_gsList[shader]->Bind();
 }
 
 
