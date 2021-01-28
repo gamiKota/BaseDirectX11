@@ -73,6 +73,9 @@ void CCamera::LastUpdate() {
 		buf.vEye = XMLoadFloat3(&m_transform->m_position);
 		buf.mV = XMMatrixTranspose(mtxView);
 		buf.mP = XMMatrixTranspose(mtxProj);
+		buf.mV2D = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+		buf.mP2D = XMMatrixOrthographicLH(SCREEN_WIDTH, SCREEN_HEIGHT, 1.0f, 100.0f);
+
 		ShaderManager::GetInstance().UpdateBuffer("MainCamera", &buf);
 	}
 }

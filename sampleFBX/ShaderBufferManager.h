@@ -15,6 +15,8 @@ struct SHADER_CAMERA {
 	DirectX::XMVECTOR	vEye;	// 視点座標
 	DirectX::XMMATRIX	mV;		// ビュー
 	DirectX::XMMATRIX	mP;		// プロジェクション
+	DirectX::XMMATRIX	mV2D;	// ビュー2D
+	DirectX::XMMATRIX	mP2D;	// プロジェクション2D
 };
 
 // ライトの定数バッファ

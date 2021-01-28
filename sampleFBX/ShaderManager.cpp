@@ -14,12 +14,12 @@ void ShaderManager::Initialize() {
 	HRESULT hr;
 
 	// 頂点シェーダ
-	m_VS[E_VS_FBX] = new VertexShader(LAYOUT_FBX);
-	hr = m_VS[E_VS_FBX]->Create("data/shader/FbxModelVertex.cso");
-	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK);}
-
 	m_VS[E_VS_NORMAL] = new VertexShader(LAYOUT_PCUN);
 	hr = m_VS[E_VS_NORMAL]->Create("data/shader/VertexShader.cso");
+	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK); }
+
+	m_VS[E_VS_2D] = new VertexShader(LAYOUT_PCU);
+	hr = m_VS[E_VS_2D]->Create("data/shader/Vertex2D.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK); }
 
 	// ジオメトリシェーダ
@@ -32,12 +32,12 @@ void ShaderManager::Initialize() {
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to GS.", NULL, MB_OK); }
 
 	// ピクセルシェーダ
-	m_PS[E_PS_FBX] = new PixelShader;
-	hr = m_PS[E_PS_FBX]->Create("data/shader/FbxModelPixel.cso");
-	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
-
 	m_PS[E_PS_NORMAL] = new PixelShader;
 	hr = m_PS[E_PS_NORMAL]->Create("data/shader/PixelShader.cso");
+	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
+
+	m_PS[E_PS_2D] = new PixelShader;
+	hr = m_PS[E_PS_2D]->Create("data/shader/Pixel2D.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
 }
 
@@ -62,6 +62,10 @@ void ShaderManager::BindPS(E_PS shader) {
 
 void ShaderManager::BindVS(E_VS shader) {
 	m_VS[shader]->Bind();
+}
+
+void ShaderManager::BindGS(E_GS shader) {
+	m_GS[shader]->Bind();
 }
 
 

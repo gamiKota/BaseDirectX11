@@ -9,7 +9,6 @@
 #include "Collision.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "FbxModel.h"
 #include "D3DClass.h"
 #include "GameObject3D.h"
 #include "GameObjectUI.h"

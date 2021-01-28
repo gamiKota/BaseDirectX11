@@ -12,19 +12,19 @@
 
 enum E_PS {
 	E_PS_NORMAL,	// ’Êí•`‰æ
-	E_PS_FBX,		// HMY-FBX
-	E_PS_MAX		// Å‘å’l
+	E_PS_2D,		// 2D
+	E_PS_MAX
 };
 
 enum E_VS {
-	E_VS_NORMAL,
-	E_VS_FBX,
+	E_VS_NORMAL,	// ’Êí•`‰æ
+	E_VS_2D,		// 2D
 	E_VS_MAX
 };
 
 enum E_GS {
-	E_GS_NORMAL,
-	E_GS_LINE,
+	E_GS_NORMAL,	// ’Êí•`‰æ
+	E_GS_LINE,		// ƒ‰ƒCƒ“•`‰æ
 	E_GS_MAX,
 };
 

@@ -9,8 +9,8 @@
  */
 enum ShaderLayout {
 	LAYOUT_PCUN,	// pos-color-uv-normal
+	LAYOUT_PCU,		// pos-color-uv
 	LAYOUT_PN,		// pos-normal
-	LAYOUT_FBX,		// HMY-FBX
 	LAYOUT_MAX
 };
 

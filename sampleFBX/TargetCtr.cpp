@@ -78,7 +78,6 @@ void TargetCtr::Start() {
 	// •Ï”‰Šú‰»
 	m_transform->m_scale = float3(100.f, 100.f, 0.f);
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
-	obj->m_shader = E_SHADER_2D::_COLOR;
 
 
 	if (m_target == nullptr) {

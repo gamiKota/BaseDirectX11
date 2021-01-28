@@ -1,18 +1,16 @@
 // 2D用ピクセルシェーダ
 
-// グローバル
-cbuffer global : register(b0) {
-	matrix g_mWorld;
-	matrix g_mView;
-	matrix g_mProjection;
-	matrix g_mTexture;
-};
-
 // パラメータ
 struct VS_OUTPUT {
 	float4	Position	: SV_Position;
 	float2	TexCoord	: TEXCOORD0;
 	float4	Diffuse		: COLOR0;
+};
+
+
+cbuffer world : register(b3) {
+	matrix g_mWorld;
+	matrix g_mTexture;
 };
 
 Texture2D    g_texture : register(t0);	// テクスチャ

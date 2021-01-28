@@ -55,6 +55,25 @@ HRESULT D3DClass::Initialize(HWND hWnd, BOOL bWindow) {
 		return hr;
 	}
 
+	//--- サンプラー
+	D3D11_SAMPLER_DESC smpDesc;
+	ID3D11SamplerState *pSampler;
+	ZeroMemory(&smpDesc, sizeof(D3D11_SAMPLER_DESC));
+	// 拡大縮小時の色の取得方法
+	// D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	smpDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	// テクスチャの繰り返し方法
+	// MIRROR
+	// CLAMP
+	smpDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	smpDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	smpDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	hr = m_pDevice->CreateSamplerState(&smpDesc, &pSampler);
+	if (FAILED(hr))
+		return hr;
+	m_pDeviceContext->PSSetSamplers(0, 1, &pSampler);
+	SAFE_RELEASE(pSampler);
+
 	// ラスタライズ設定
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));

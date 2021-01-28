@@ -1,5 +1,5 @@
 #include "Material.h"
-
+#include "imgui.h"
 
 Material::Material() {
 	m_diffuse	= DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -15,6 +15,5 @@ void Material::SetImGuiVal() {
 	ImGui::DragFloat4("Ambient", (float*)&m_ambient);
 	ImGui::DragFloat4("Specular", (float*)&m_specular);
 	ImGui::DragFloat4("Emissive", (float*)&m_emissive);
-	ImGui::DragFloat("SpecularHighlight", (float*)&m_power);
 #endif
 }
