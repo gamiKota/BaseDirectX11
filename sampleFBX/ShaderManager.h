@@ -39,6 +39,8 @@ public:
 	void BindPS(E_PS shader);
 	void BindGS(E_GS shader);
 
+	void SetTexturePS(ID3D11ShaderResourceView* pTex, UINT slot = 0U);
+
 	void UpdateBuffer(std::string bufName, void *data);
 
 private:

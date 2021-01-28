@@ -18,6 +18,9 @@
 
 
 class CFbxModel;
+class GameObject3D;
+class FBXPlayer;
+class DrawBuffer;
 
 
 /**
@@ -35,7 +38,6 @@ enum E_MODEL {
 };
 
 
-class GameObject3D;
 
 
 /**
@@ -47,14 +49,14 @@ public:
 	~ModelManager();
 	void Init();
 	void Uninit();
-	CFbxModel* Get(E_MODEL model);
 
 	void Update(GameObject3D* obj);
 	void Draw(GameObject3D* obj);
 
 private:
-	CFbxModel* m_pModel[E_MODEL_MAX];
-	int m_nAnimFrame[E_MODEL_MAX];
+
+	FBXPlayer* m_pModelData[E_MODEL_MAX];
+	DrawBuffer* m_pModelBuf[E_MODEL_MAX];
 };
 
 

@@ -335,7 +335,6 @@ void Collision::SetImGuiVal() {
 #if _DEBUG
 	ImGui::InputFloat3("m_vCenter",		(float*)&m_vCenter);
 	ImGui::InputFloat3("m_vBBox",		(float*)&m_vBBox);
-	ImGui::InputFloat3("m_vPosBBox",	(float*)&m_vPosBBox);
 #endif
 }
 

@@ -18,8 +18,8 @@ void ShaderManager::Initialize() {
 	hr = m_VS[E_VS_FBX]->Create("data/shader/FbxModelVertex.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK);}
 
-	m_VS[E_VS_NORMAL] = new VertexShader(LAYOUT_PN);
-	hr = m_VS[E_VS_NORMAL]->Create("data/shader/Vertex.cso");
+	m_VS[E_VS_NORMAL] = new VertexShader(LAYOUT_PCUN);
+	hr = m_VS[E_VS_NORMAL]->Create("data/shader/VertexShader.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK); }
 
 	// ジオメトリシェーダ
@@ -37,7 +37,7 @@ void ShaderManager::Initialize() {
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
 
 	m_PS[E_PS_NORMAL] = new PixelShader;
-	hr = m_PS[E_PS_NORMAL]->Create("data/shader/Pixel.cso");
+	hr = m_PS[E_PS_NORMAL]->Create("data/shader/PixelShader.cso");
 	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
 }
 
@@ -68,6 +68,11 @@ void ShaderManager::BindVS(E_VS shader) {
 void ShaderManager::UpdateBuffer(std::string bufName, void *data) {
 	ShaderBufferManager::GetInstance().Update(bufName, data);
 	ShaderBufferManager::GetInstance().Bind(bufName);
+}
+
+
+void ShaderManager::SetTexturePS(ID3D11ShaderResourceView* pTex, UINT slot) {
+	D3DClass::GetInstance().GetDeviceContext()->PSSetShaderResources(slot, 1, &pTex);
 }
 
 

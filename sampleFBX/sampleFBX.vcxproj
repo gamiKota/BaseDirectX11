@@ -165,6 +165,7 @@
     <ClCompile Include="CollisionMesh.cpp" />
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="DomainShader.cpp" />
+    <ClCompile Include="DrawBuffer.cpp" />
     <ClCompile Include="Drop.cpp" />
     <ClCompile Include="EnemyOperation.cpp" />
     <ClCompile Include="EnemyState.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="CollisionMesh.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="DomainShader.h" />
+    <ClInclude Include="DrawBuffer.h" />
     <ClInclude Include="Drop.h" />
     <ClInclude Include="EnemyOperation.h" />
     <ClInclude Include="EnemyState.h" />
@@ -482,6 +484,14 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)data\shader\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)data\shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)data\shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="ToonPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

@@ -11,6 +11,9 @@
 #include "D3DClass.h"
 #include "debugproc.h"
 #include "GameObject3D.h"
+#include "FBX/FBXPlayer.h"
+#include "DrawBuffer.h"
+#include "FBX/FBXLoader.h"
 #include "System.h"
 
 
@@ -46,63 +49,50 @@ static const char* name[E_MODEL_MAX] = {
 
 
 ModelManager::ModelManager() {
-	for (int i = E_MODEL_NONE; i < E_MODEL_MAX; i++) {
-		SAFE_DELETE(m_pModel[i]);
-	}
+
 }
 
 
 ModelManager::~ModelManager() {
-	for (int i = E_MODEL_NONE; i < E_MODEL_MAX; i++) {
-		SAFE_DELETE(m_pModel[i]);
-	}
+
 }
 
 
 void ModelManager::Init() {
-	HRESULT hr;
-	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
-	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
 
-	for (int i = E_MODEL_NONE; i < E_MODEL_MAX; i++) {
-		m_pModel[i] = new CFbxModel();
-		hr = m_pModel[i]->Init(pDevice, pDeviceContext, name[i]);
-		if (FAILED(hr)) {
-			MessageBoxA(NULL, name[i], "Failed Load Model", MB_OK | MB_ICONWARNING | MB_TOPMOST);
+	ggfbx::Initialize();
+
+	// モデル
+	for (int model = 0; model < E_MODEL_MAX; ++model) {
+		m_pModelData[model] = new FBXPlayer;
+		m_pModelData[model]->LoadModel(name[model]);
+		m_pModelBuf[model] = new DrawBuffer[m_pModelData[model]->GetMeshNum()];
+		for (int i = 0; i < m_pModelData[model]->GetMeshNum(); ++i)
+		{
+			m_pModelBuf[model][i].CreateVertexBuffer(
+				m_pModelData[model]->GetVertexData(i),
+				m_pModelData[model]->GetVertexSize(i),
+				m_pModelData[model]->GetVertexCount(i));
+			m_pModelBuf[model][i].CreateIndexBuffer(
+				m_pModelData[model]->GetIndexData(i),
+				sizeof(unsigned long),
+				m_pModelData[model]->GetIndexCount(i));
 		}
-		int nStack = m_pModel[i]->GetMaxAnimStack();
-		if (nStack > 0) {
-			m_pModel[i]->SetAnimStack(nStack - 1);
-		}
-		m_nAnimFrame[i] = 0;
 	}
 }
 
 
 void ModelManager::Uninit() {
 	for (int i = E_MODEL_NONE; i < E_MODEL_MAX; i++) {
-		SAFE_DELETE(m_pModel[i]);
+		delete[] m_pModelBuf[i];
+		delete m_pModelData[i];
 	}
-}
-
-
-CFbxModel* ModelManager::Get(E_MODEL model) {
-	if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
-		return nullptr;
-	}
-	return m_pModel[model];
+	ggfbx::Terminate();
 }
 
 
 void ModelManager::Update(GameObject3D *obj) {
-	E_MODEL model = obj->m_model;
-	if (model < E_MODEL_NONE || model > E_MODEL_MAX) {
-		return;
-	}
-	// カメラ座標を反映
-	if (++m_nAnimFrame[model] >= m_pModel[model]->GetMaxAnimFrame()) {
-		m_nAnimFrame[model] = 0;
-	}
+
 }
 
 
@@ -113,24 +103,17 @@ void ModelManager::Draw(GameObject3D* obj) {
 		return;
 	}
 
-	// マテリアル情報を反映
-	m_pModel[model]->SetMaterial(&obj->m_material);
-
 	// 使用する変数
 	D3DClass* d3dClass = &D3DClass::GetInstance();
 
-	//--- FBXファイル表示
-	// フレーム更新
-	m_pModel[model]->SetAnimFrame(m_nAnimFrame[model]);
-	// 描画
-	d3dClass->SetBlendState(BS_NONE);		// アルファ処理しない
-	d3dClass->SetZWrite(true);			// Zバッファ有効
-	if (obj->m_model == E_MODEL_SKY) { d3dClass->SetZWrite(false); }
-	m_pModel[model]->Render(obj->m_transform->GetMatrix(), eOpacityOnly);
-	if (model == E_MODEL_SKY) { return; }
-	d3dClass->SetZWrite(false);
-	d3dClass->SetBlendState(BS_ALPHABLEND);	// 半透明描画
-	m_pModel[model]->Render(obj->m_transform->GetMatrix(), eTransparentOnly);
+	d3dClass->SetBlendState(EBlendState::BS_NONE);	// アルファ処理しない
+	d3dClass->SetZWrite(true);								// Zバッファ有効
+	d3dClass->SetCullMode(CULLMODE_CCW);					// カリング
+
+	for (int i = 0; i < m_pModelData[model]->GetMeshNum(); ++i) {
+		ShaderManager::GetInstance().SetTexturePS(m_pModelData[model][i].GetTexture(i));
+		m_pModelBuf[model][i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
 }
 
 

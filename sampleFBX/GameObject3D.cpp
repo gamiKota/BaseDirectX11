@@ -34,7 +34,6 @@ GameObject3D::~GameObject3D() {
 
 void GameObject3D::Init() {
 	GameObject::Init();
-	ModelManager::GetInstance().Get(m_model)->SetMaterial(&m_material);
 }
 
 
@@ -60,23 +59,26 @@ void GameObject3D::Draw() {
 	ID3D11DeviceContext* pDeviceContext = d3dClass->GetDeviceContext();
 
 	// シェーダの適用
-	//ShaderManager::GetInstance().UpdateBuffer(obj->m_transform->GetMatrix());
-	ShaderManager::GetInstance().BindVS(E_VS_FBX);
-	ShaderManager::GetInstance().BindPS(E_PS_FBX);
+	ShaderManager::GetInstance().BindVS(E_VS_NORMAL);
+	ShaderManager::GetInstance().BindPS(E_PS_NORMAL);
 
 	// シェーダの設定
-	SHADER_LIGHT_SETTING buf;
-	buf.light = (m_isLight) ? XMFLOAT4(1.f, 1.f, 1.f, 1.f) : XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	ShaderManager::GetInstance().UpdateBuffer("MainLightSetting", &buf);
+	// ライト
+	SHADER_LIGHT_SETTING light;
+	light.light = (m_isLight) ? XMFLOAT4(1.f, 1.f, 1.f, 1.f) : XMFLOAT4(0.f, 0.f, 0.f, 0.f);
+	ShaderManager::GetInstance().UpdateBuffer("MainLightSetting", &light);
+	// ワールド行列
+	SHADER_WORLD world;
+	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_transform->GetMatrix()));
+	ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
+	// マテリアル
 
 	// 前面カリング (FBXは表裏が反転するため)
-	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
-	D3DClass::GetInstance().SetZWrite(true);
 	ModelManager::GetInstance().Draw(this);
-	if (GetComponent<Collision>() != nullptr &&
-		GetTag() != "Land") {
-		GetComponent<Collision>()->DebugDraw();
-	}
+	//if (GetComponent<Collision>() != nullptr &&
+	//	GetTag() != "Land") {
+	//	GetComponent<Collision>()->DebugDraw();
+	//}
 	//GameObject::Draw();
 }
 

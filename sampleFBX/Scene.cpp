@@ -170,6 +170,7 @@ void Scene::Draw() {
 
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング (通常は表面のみ描画)
 	D3DClass::GetInstance().SetZBuffer(false);			// Zバッファ無効
+	D3DClass::GetInstance().SetBlendState(EBlendState::BS_ALPHABLEND);	// アルファ処理しない
 	// 2DUI
 	buff = m_listObject;
 	for (auto obj : buff) {

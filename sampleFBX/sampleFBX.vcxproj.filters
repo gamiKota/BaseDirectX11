@@ -405,6 +405,9 @@
     <ClCompile Include="FBX\FBXPlayer.cpp">
       <Filter>FBX</Filter>
     </ClCompile>
+    <ClCompile Include="DrawBuffer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DClass.h">
@@ -647,6 +650,9 @@
     <ClInclude Include="FBX\FBXPlayer.h">
       <Filter>FBX</Filter>
     </ClInclude>
+    <ClInclude Include="DrawBuffer.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FbxModelPixel.hlsl">
@@ -714,6 +720,9 @@
     </FxCompile>
     <FxCompile Include="WaterSurfacePS.hlsl">
       <Filter>リソース ファイル\hlsl\WaterSurface</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
