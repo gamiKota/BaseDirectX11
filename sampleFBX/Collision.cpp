@@ -100,8 +100,8 @@ void Collision::DebugDraw() {
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // プリミティブ形状をセット
 
-	ShaderManager::GetInstance().BindPS(E_PS::E_PS_NORMAL);
-	ShaderManager::GetInstance().BindVS(E_VS::E_VS_NORMAL);
+	ShaderManager::GetInstance().BindPS(E_PS::PS_NORMAL);
+	ShaderManager::GetInstance().BindVS(E_VS::VS_NORMAL);
 	pDeviceContext->GSSetShader(NULL, NULL, 0);
 	pDeviceContext->DSSetShader(NULL, NULL, 0);
 	pDeviceContext->HSSetShader(NULL, NULL, 0);

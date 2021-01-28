@@ -11,21 +11,21 @@
 
 
 enum E_PS {
-	E_PS_NORMAL,	// ’Êí•`‰æ
-	E_PS_2D,		// 2D
-	E_PS_MAX
+	PS_NORMAL,	// ’Êí•`‰æ
+	PS_2D,		// 2D
+	PS_MAX
 };
 
 enum E_VS {
-	E_VS_NORMAL,	// ’Êí•`‰æ
-	E_VS_2D,		// 2D
-	E_VS_MAX
+	VS_NORMAL,	// ’Êí•`‰æ
+	VS_2D,		// 2D
+	VS_MAX
 };
 
 enum E_GS {
-	E_GS_NORMAL,	// ’Êí•`‰æ
-	E_GS_LINE,		// ƒ‰ƒCƒ“•`‰æ
-	E_GS_MAX,
+	GS_NORMAL,	// ’Êí•`‰æ
+	GS_LINE,	// ƒ‰ƒCƒ“•`‰æ
+	GS_MAX,
 };
 
 
@@ -44,9 +44,9 @@ public:
 	void UpdateBuffer(std::string bufName, void *data);
 
 private:
-	VertexShader*	m_VS[E_VS_MAX];
-	GeometryShader* m_GS[E_GS_MAX];
-	PixelShader*	m_PS[E_PS_MAX];
+	VertexShader*	m_VS[VS_MAX];
+	GeometryShader* m_GS[GS_MAX];
+	PixelShader*	m_PS[PS_MAX];
 };
 
 

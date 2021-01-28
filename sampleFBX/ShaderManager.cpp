@@ -5,6 +5,37 @@
 #include "D3DClass.h"
 #include "System.h"
 
+// 実行エラー
+#define FnAssert(fn, str) do { _ASSERT_EXPR(SUCCEEDED(fn), _CRT_WIDE(str)); } while(0)
+
+const char* pVSPath[] =
+{
+	"data/shader/VertexShader.cso",
+	"data/shader/Vertex2D.cso"
+};
+VertexShader::Layout Layouts[] =
+{
+	VertexShader::LAYOUT_PCUN,
+	VertexShader::LAYOUT_PCU,
+};
+static_assert(!(VS_MAX < _countof(pVSPath)), "E_VSへの定義追加忘れ");
+static_assert(!(VS_MAX > _countof(pVSPath)), "VSPathへの読込ファイル追加忘れ");
+static_assert(VS_MAX == _countof(Layouts), "頂点シェーダレイアウト指定忘れ");
+const char* pPSPath[] =
+{
+	"data/shader/PixelShader.cso",
+	"data/shader/Pixel2D.cso",
+};
+static_assert(!(PS_MAX < _countof(pPSPath)), "E_PSへの定義追加忘れ");
+static_assert(!(PS_MAX > _countof(pPSPath)), L"PSPathへの読込ファイル追加忘れ");
+const char* pGSPath[] =
+{
+	"data/shader/GeometryShader.cso",
+	"data/shader/LineGS.cso",
+};
+static_assert(!(GS_MAX < _countof(pGSPath)), "E_GSへの定義追加忘れ");
+static_assert(!(GS_MAX > _countof(pGSPath)), L"GSPathへの読込ファイル追加忘れ");
+
 
 using namespace DirectX;
 
@@ -13,45 +44,28 @@ void ShaderManager::Initialize() {
 
 	HRESULT hr;
 
-	// 頂点シェーダ
-	m_VS[E_VS_NORMAL] = new VertexShader(LAYOUT_PCUN);
-	hr = m_VS[E_VS_NORMAL]->Create("data/shader/VertexShader.cso");
-	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK); }
-
-	m_VS[E_VS_2D] = new VertexShader(LAYOUT_PCU);
-	hr = m_VS[E_VS_2D]->Create("data/shader/Vertex2D.cso");
-	if (FAILED(hr)) { MessageBoxW(0, L"Failed to VS.", NULL, MB_OK); }
-
-	// ジオメトリシェーダ
-	m_GS[E_GS_NORMAL] = new GeometryShader;
-	hr = m_GS[E_GS_NORMAL]->Create("data/shader/GeometryShader.cso");
-	if (FAILED(hr)) { MessageBoxW(0, L"Failed to GS.", NULL, MB_OK); }
-
-	m_GS[E_GS_LINE] = new GeometryShader;
-	hr = m_GS[E_GS_LINE]->Create("data/shader/LineGS.cso");
-	if (FAILED(hr)) { MessageBoxW(0, L"Failed to GS.", NULL, MB_OK); }
-
-	// ピクセルシェーダ
-	m_PS[E_PS_NORMAL] = new PixelShader;
-	hr = m_PS[E_PS_NORMAL]->Create("data/shader/PixelShader.cso");
-	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
-
-	m_PS[E_PS_2D] = new PixelShader;
-	hr = m_PS[E_PS_2D]->Create("data/shader/Pixel2D.cso");
-	if (FAILED(hr)) { MessageBoxW(0, L"Failed to PS.", NULL, MB_OK); }
+	for (int i = 0; i < VS_MAX; ++i) {
+		m_VS[i] = new VertexShader(Layouts[i]);
+		hr = m_VS[i]->Create(pVSPath[i]);
+		FnAssert(hr, "頂点シェーダ読み込み失敗");
+	}
+	for (int i = 0; i < PS_MAX; ++i) {
+		m_PS[i] = new PixelShader();
+		hr = m_PS[i]->Create(pPSPath[i]);
+		FnAssert(hr, "ピクセルシェーダ読み込み失敗");
+	}
+	for (int i = 0; i < GS_MAX; ++i) {
+		m_GS[i] = new GeometryShader();
+		hr = m_GS[i]->Create(pGSPath[i]);
+		FnAssert(hr, "ジオメトリシェーダ読み込み失敗");
+	}
 }
 
 
 void ShaderManager::Terminate() {
-	for (int i = 0; i < E_PS_MAX; ++i) {
-		SAFE_DELETE(m_PS[i])
-	}
-	for (int i = 0; i < E_GS_MAX; ++i) {
-		SAFE_DELETE(m_GS[i])
-	}
-	for (int i = 0; i < E_VS_MAX; ++i) {
-		SAFE_DELETE(m_VS[i])
-	}
+	for (int i = 0; i < PS_MAX; ++i) { SAFE_DELETE(m_PS[i]) }
+	for (int i = 0; i < GS_MAX; ++i) { SAFE_DELETE(m_GS[i]) }
+	for (int i = 0; i < VS_MAX; ++i) { SAFE_DELETE(m_VS[i]) }
 }
 
 

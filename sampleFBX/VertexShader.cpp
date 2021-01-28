@@ -11,7 +11,7 @@
 #include "System.h"
 
 
-VertexShader::VertexShader(ShaderLayout layout) : m_layout(layout), m_pInputLayout(nullptr) {
+VertexShader::VertexShader(Layout layout) : m_layout(layout), m_pInputLayout(nullptr) {
 }
 
 

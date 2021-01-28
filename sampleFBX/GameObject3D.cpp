@@ -58,8 +58,9 @@ void GameObject3D::Draw() {
 	ShaderManager* shader = &ShaderManager::GetInstance();
 
 	// シェーダの適用
-	shader->BindVS(E_VS_NORMAL);
-	shader->BindPS(E_PS_NORMAL);
+	shader->BindVS(VS_NORMAL);
+	shader->BindPS(PS_NORMAL);
+	shader->BindGS(GS_NORMAL);
 
 	// シェーダの設定
 	// ライト

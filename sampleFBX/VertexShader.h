@@ -5,23 +5,20 @@
 
 
 /**
- * enum 頂点レイアウトの種類を列挙
- */
-enum ShaderLayout {
-	LAYOUT_PCUN,	// pos-color-uv-normal
-	LAYOUT_PCU,		// pos-color-uv
-	LAYOUT_PN,		// pos-normal
-	LAYOUT_MAX
-};
-
-
-/**
  * @class 頂点シェーダ
  */
 class VertexShader : public ShaderBase
 {
 public:
-	VertexShader(ShaderLayout layout);
+	enum Layout {
+		LAYOUT_PCUN,	// pos-color-uv-normal
+		LAYOUT_PCU,		// pos-color-uv
+		LAYOUT_PN,		// pos-normal
+		LAYOUT_MAX
+	};
+
+public:
+	VertexShader(Layout layout);
 	virtual ~VertexShader();
 
 	virtual void Bind();
@@ -31,7 +28,7 @@ protected:
 	virtual HRESULT MakeShader(void* pData, UINT size);
 
 private:
-	ShaderLayout m_layout;
+	Layout m_layout;
 	ID3D11InputLayout* m_pInputLayout;
 	ID3D11VertexShader* m_pVertexShader;
 };

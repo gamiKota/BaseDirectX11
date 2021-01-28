@@ -35,7 +35,6 @@ static bool							g_bInvalidate;			// 頂点データ更新フラグ
 static XMFLOAT2						g_posTexFrame;			// UV座標
 static XMFLOAT2						g_sizTexFrame;			// テクスチャ抽出サイズ
 
-static ID3D11Buffer*				g_pConstantBuffer;		// 定数バッファ
 static ID3D11Buffer*				g_pVertexBuffer;		// 頂点バッファ
 
 static XMFLOAT4X4					g_mWorld;				// ワールド変換行列
@@ -76,8 +75,6 @@ void UninitPolygon(void)
 {
 	// 頂点バッファの解放
 	SAFE_RELEASE(g_pVertexBuffer);
-	// 定数バッファの解放
-	SAFE_RELEASE(g_pConstantBuffer);
 }
 
 //=============================================================================
@@ -125,8 +122,8 @@ void DrawPolygon(ID3D11DeviceContext* pDeviceContext)
 
 	ShaderManager* shader = &ShaderManager::GetInstance();
 
-	shader->BindVS(E_VS_2D);
-	shader->BindPS(E_PS_2D);
+	shader->BindVS(VS_2D);
+	shader->BindPS(PS_2D);
 
 	SHADER_WORLD world;
 	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&g_mWorld));
