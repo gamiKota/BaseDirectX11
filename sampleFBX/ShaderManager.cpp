@@ -25,6 +25,7 @@ const char* pPSPath[] =
 {
 	"data/shader/PixelShader.cso",
 	"data/shader/Pixel2D.cso",
+	"data/shader/PhongPS.cso",
 };
 static_assert(!(PS_MAX < _countof(pPSPath)), "E_PSへの定義追加忘れ");
 static_assert(!(PS_MAX > _countof(pPSPath)), L"PSPathへの読込ファイル追加忘れ");

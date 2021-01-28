@@ -655,18 +655,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="FbxModelPixel.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="FbxModelVertex.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Pixel.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Vertex.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
     <FxCompile Include="MonochromePS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
@@ -691,22 +679,7 @@
     <FxCompile Include="VertexShader.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="Color2DPS.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
     <FxCompile Include="ToonPS.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="OutLineVS.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="OutLinePS.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="MeshPS.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="MeshVS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="WaterSurfaceVS.hlsl">

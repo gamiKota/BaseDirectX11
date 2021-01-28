@@ -14,6 +14,7 @@
 enum E_PS {
 	PS_NORMAL,	// ’Êí•`‰æ
 	PS_2D,		// 2D
+	PS_PHONG,	// ƒtƒHƒ“
 	PS_MAX
 };
 
