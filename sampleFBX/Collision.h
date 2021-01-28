@@ -27,7 +27,6 @@ public:
 	DirectX::XMFLOAT4	m_color;
 	float3				m_vCenter;		//!< 境界ボックス中心座標
 	float3				m_vBBox;		//!< 境界ボックス サイズ
-	float3				m_vPosBBox;		//!< 境界ボックス中心座標(ワールド空間)
 	bool				m_bHit;			//!< 衝突有無
 
 	std::list<std::string> m_selfTag;	//!< セルフタグ

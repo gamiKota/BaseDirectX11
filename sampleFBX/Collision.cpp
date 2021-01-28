@@ -146,12 +146,14 @@ void Collision::Init(E_MODEL model) {
 
 	if (model >= E_MODEL_NONE && model < E_MODEL_MAX) {
 		// 境界ボックス初期化
-		m_model = model;
-		XMFLOAT3 temp = ModelManager::GetInstance().Get(model)->GetCenter();
-		m_vCenter = float3(temp.x, temp.y, temp.z);
-		temp = ModelManager::GetInstance().Get(model)->GetBBox();
-		m_vBBox = float3(temp.x, temp.y, temp.z);
-		m_vPosBBox = m_vCenter;
+		//m_model = model;
+		//XMFLOAT3 temp = ModelManager::GetInstance().Get(model)->GetCenter();
+		//m_vCenter = float3(temp.x, temp.y, temp.z);
+		//temp = ModelManager::GetInstance().Get(model)->GetBBox();
+		//m_vBBox = float3(temp.x, temp.y, temp.z);
+
+		m_vCenter = float3();
+		m_vBBox = float3();
 	}
 
 	// インデックス バッファ生成
@@ -340,12 +342,13 @@ void Collision::SetImGuiVal() {
 
 DirectX::XMFLOAT4X4 Collision::GetWorld() {
 	XMFLOAT4X4 matrix;
-	XMStoreFloat3(&m_vPosBBox,
+	float3 pos;
+	XMStoreFloat3(&pos,
 		XMVector3TransformCoord(
 			XMLoadFloat3(&m_vCenter),
 			XMLoadFloat4x4(&m_gameObject->m_transform->GetMatrix())));
 	XMStoreFloat4x4(&matrix, XMMatrixTranslation(
-		m_vPosBBox.x, m_vPosBBox.y, m_vPosBBox.z));
+		pos.x, pos.y, pos.z));
 	matrix._11 = m_transform->GetMatrix()._11;
 	matrix._12 = m_transform->GetMatrix()._12;
 	matrix._13 = m_transform->GetMatrix()._13;
