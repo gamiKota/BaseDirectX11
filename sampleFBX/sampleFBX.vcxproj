@@ -180,6 +180,7 @@
     <ClCompile Include="GameObjectMesh.cpp" />
     <ClCompile Include="GameObjectMeshBase.cpp" />
     <ClCompile Include="GameObjectUI.cpp" />
+    <ClCompile Include="Geometory.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
     <ClCompile Include="ggCamera.cpp" />
     <ClCompile Include="HullShader.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="GameObjectMesh.h" />
     <ClInclude Include="GameObjectMeshBase.h" />
     <ClInclude Include="GameObjectUI.h" />
+    <ClInclude Include="Geometory.h" />
     <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="ggCamera.h" />
     <ClInclude Include="HullShader.h" />

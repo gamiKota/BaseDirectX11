@@ -13,6 +13,7 @@
 #include "FBX/FBXPlayer.h"
 #include "DrawBuffer.h"
 #include "FBX/FBXLoader.h"
+#include "Geometory.h"
 #include "System.h"
 
 
@@ -60,6 +61,7 @@ ModelManager::~ModelManager() {
 void ModelManager::Init() {
 
 	ggfbx::Initialize();
+	InitGeometory();
 
 	// ƒ‚ƒfƒ‹
 	for (int model = 0; model < E_MODEL_MAX; ++model) {

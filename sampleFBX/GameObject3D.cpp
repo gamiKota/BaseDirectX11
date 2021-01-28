@@ -82,10 +82,9 @@ void GameObject3D::Draw() {
 
 	// 前面カリング (FBXは表裏が反転するため)
 	ModelManager::GetInstance().Draw(m_model);
-	//if (GetComponent<Collision>() != nullptr &&
-	//	GetTag() != "Land") {
-	//	GetComponent<Collision>()->DebugDraw();
-	//}
+	if (GetComponent<Collision>()){
+		GetComponent<Collision>()->DebugDraw();
+	}
 	//GameObject::Draw();
 }
 
