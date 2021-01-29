@@ -126,11 +126,6 @@ HRESULT D3DClass::Initialize(HWND hWnd, BOOL bWindow) {
 	if (FAILED(hr))
 		return hr;
 
-	// メッシュ表示初期化
-	hr = InitMesh();
-	if (FAILED(hr))
-		return hr;
-
 	// シェーダの初期化
 	ShaderManager::GetInstance().Initialize();
 
@@ -158,9 +153,6 @@ void D3DClass::Uninit(void) {
 
 	// シェーダの終了
 	ShaderManager::GetInstance().Terminate();
-
-	// メッシュ表示終了処理
-	UninitMesh();
 
 	// ポリゴン表示終了処理
 	UninitPolygon();

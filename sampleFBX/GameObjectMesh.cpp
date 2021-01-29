@@ -8,9 +8,7 @@
  */
 #include "GameObjectMesh.h"
 #include "D3DClass.h"
-#include "Camera.h"
-#include "Collision.h"
-#include "polygon.h"
+#include "ShaderManager.h"
 #include "System.h"
 
 
@@ -46,41 +44,6 @@ GameObjectMesh::~GameObjectMesh() {
 
 
 void GameObjectMesh::Init() {
-	// メッシュの初期化(初期設定)
-	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
-	HRESULT hr = S_OK;
-	// ワールドマトリックス初期化
-	//XMStoreFloat4x4(&m_mesh.mtxWorld, XMMatrixIdentity());
-
-	// 頂点情報の作成
-	m_mesh.nNumVertex = 4;
-	VERTEX_3D* pVertexWk = new VERTEX_3D[m_mesh.nNumVertex];
-	pVertexWk[0].vtx = XMFLOAT3(-0.5f,  0.5f, 0.0f);
-	pVertexWk[1].vtx = XMFLOAT3( 0.5f,  0.5f, 0.0f);
-	pVertexWk[2].vtx = XMFLOAT3(-0.5f, -0.5f, 0.0f);
-	pVertexWk[3].vtx = XMFLOAT3( 0.5f, -0.5f, 0.0f);
-	pVertexWk[0].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	pVertexWk[1].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	pVertexWk[2].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	pVertexWk[3].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	pVertexWk[0].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
-	pVertexWk[1].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
-	pVertexWk[2].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
-	pVertexWk[3].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
-	pVertexWk[0].tex = XMFLOAT2(0.0f, 0.0f);
-	pVertexWk[1].tex = XMFLOAT2(1.0f, 0.0f);
-	pVertexWk[2].tex = XMFLOAT2(0.0f, 1.0f);
-	pVertexWk[3].tex = XMFLOAT2(1.0f, 1.0f);
-	m_mesh.nNumIndex = 4;
-	int* pIndexWk = new int[4];
-	pIndexWk[0] = 0;
-	pIndexWk[1] = 1;
-	pIndexWk[2] = 2;
-	pIndexWk[3] = 3;
-	hr = MakeMeshVertex(pDevice, &m_mesh, pVertexWk, pIndexWk);
-	delete[] pIndexWk;
-	delete[] pVertexWk;
-
 	GameObject::Init();
 }
 
@@ -101,6 +64,18 @@ void GameObjectMesh::LastUpdate() {
 
 
 void GameObjectMesh::Draw() {
+
+	D3DClass::GetInstance().SetCullMode(CULLMODE_NONE);
+	D3DClass::GetInstance().SetZBuffer(true);
+	D3DClass::GetInstance().SetBlendState(EBlendState::BS_ALPHABLEND);
+
+	ShaderManager* shader = &ShaderManager::GetInstance();
+	shader->BindPS(PS_2D);
+	shader->BindVS(VS_MESH);
+	shader->BindGS(GS_NORMAL);
+
+	shader->SetTexturePS(TextureManager::GetInstance().Get(m_texture));
+
 	// テクスチャマトリックスの初期化
 	XMMATRIX mtxTexture, mtxScale, mtxTranslate;
 	mtxTexture = XMMatrixIdentity();

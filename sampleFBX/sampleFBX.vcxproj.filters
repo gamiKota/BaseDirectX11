@@ -703,6 +703,9 @@
     <FxCompile Include="PixelShader.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="MeshVS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="sampleFBX.rc">

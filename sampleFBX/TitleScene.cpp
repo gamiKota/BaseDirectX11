@@ -56,11 +56,11 @@ void TitleScene::Init() {
 	m_listObject.push_back(m_object3D);
 
 	// …–Ê
-	WaterSurface* waterSurface = new WaterSurface("WaterSurface", "WaterSurface");
-	waterSurface->m_transform->m_rotation = Quaternion::Euler(90.f, 0.f, 0.f);
-	waterSurface->m_transform->m_scale = float3(2000.f, 2000.f, 0.f);
-	waterSurface->m_mesh.light = false;
-	m_listObject.push_back(waterSurface);
+	//WaterSurface* waterSurface = new WaterSurface("WaterSurface", "WaterSurface");
+	//waterSurface->m_transform->m_rotation = Quaternion::Euler(90.f, 0.f, 0.f);
+	//waterSurface->m_transform->m_scale = float3(2000.f, 2000.f, 0.f);
+	//waterSurface->m_mesh.light = false;
+	//m_listObject.push_back(waterSurface);
 
 	// –Ø
 	m_mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_TREE,  "Mesh", "Mesh");

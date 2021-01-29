@@ -11,11 +11,13 @@
 const char* pVSPath[] =
 {
 	"data/shader/VertexShader.cso",
-	"data/shader/Vertex2D.cso"
+	"data/shader/Vertex2D.cso",
+	"data/shader/MeshVS.cso"
 };
 VertexShader::Layout Layouts[] =
 {
 	VertexShader::LAYOUT_PCUN,
+	VertexShader::LAYOUT_PCU,
 	VertexShader::LAYOUT_PCU,
 };
 static_assert(!(VS_MAX < _countof(pVSPath)), "E_VS‚Ö‚Ì’è‹`’Ç‰Á–Y‚ê");

@@ -29,8 +29,8 @@ void Drop::Start() {
 
 void Drop::Update() {
 
-	GameObjectMesh* mesh = dynamic_cast<GameObjectMesh*>(m_gameObject);
-	WaterSurface* waterSurface = dynamic_cast<WaterSurface*>(GameObject::Find("WaterSurface"));
+	//GameObjectMesh* mesh = dynamic_cast<GameObjectMesh*>(m_gameObject);
+	//WaterSurface* waterSurface = dynamic_cast<WaterSurface*>(GameObject::Find("WaterSurface"));
 
 
 	if (m_isCollsion) {
@@ -54,12 +54,12 @@ void Drop::Update() {
 	//	}
 	//}
 
-	if (waterSurface != nullptr && mesh != nullptr) {
-		if (CollisionMesh::isMesh2Mesh(waterSurface->m_transform, mesh->m_transform)) {
-			m_isCollsion = true;
-			mesh->m_mesh.isDraw = false;
-		}
-	}
+	//if (waterSurface != nullptr && mesh != nullptr) {
+	//	if (CollisionMesh::isMesh2Mesh(waterSurface->m_transform, mesh->m_transform)) {
+	//		m_isCollsion = true;
+	//		mesh->m_mesh.isDraw = false;
+	//	}
+	//}
 
 	m_time += Frame::GetInstance().GetDeltaTime();
 }

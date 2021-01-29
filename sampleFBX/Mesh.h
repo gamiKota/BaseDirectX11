@@ -29,11 +29,6 @@ enum ePrimitiveType {
 
 
 typedef struct {
-	ID3D11Buffer* pVertexBuffer;			// 頂点バッファインターフェースへのポインタ
-	ID3D11Buffer* pIndexBuffer;				// インデックスバッファインターフェースへのポインタ
-
-	int nNumVertex;							// 総頂点数	
-	int nNumIndex;							// 総インデックス数
 
 	DirectX::XMFLOAT4X4 mtxTexture;			// テクスチャ マトリックス
 	float3 texPattern;						// テクスチャ座標
@@ -47,8 +42,4 @@ typedef struct {
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT InitMesh(void);
-void UninitMesh(void);
 void DrawMesh(MESH* pMesh, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4X4* matrix);
-HRESULT MakeMeshVertex(ID3D11Device* pDevice, MESH* pMesh, VERTEX_3D vertexWk[], int indexWk[]);
-void ReleaseMesh(MESH* pMesh);

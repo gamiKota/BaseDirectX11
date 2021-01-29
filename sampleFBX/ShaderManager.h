@@ -21,6 +21,7 @@ enum E_PS {
 enum E_VS {
 	VS_NORMAL,	// ’Êí•`‰æ
 	VS_2D,		// 2D
+	VS_MESH,	// ƒƒbƒVƒ…
 	VS_MAX
 };
 
