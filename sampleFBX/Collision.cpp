@@ -16,8 +16,8 @@
 #include "Light.h"
 #include "imgui.h"
 #include "Geometory.h"
+#include <map>
 #include "System.h"
-
 
 
 using namespace DirectX;
@@ -72,7 +72,7 @@ void Collision::LastUpdate() {
 	// 大きさ関係がややこしい
 	// 最初のモデルのスケールを1と考えて、倍率で大きさを変更する
 	XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
-	float3 scale = m_vScale * m_vScaleRatio;
+	float3 scale = m_vScale * 2.f;
 	matrix = XMMatrixMultiply(matrix, XMMatrixScaling(scale.x, scale.y, scale.z));
 	matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(m_vCenter.x, m_vCenter.y, m_vCenter.z));
 	matrix *= XMLoadFloat4x4(&m_transform->GetMatrix());

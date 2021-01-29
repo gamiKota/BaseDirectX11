@@ -50,6 +50,8 @@ public:
 	void Init();
 	void Uninit();
 
+	FBXPlayer* Get(E_MODEL model);
+
 	void Update(E_MODEL model);
 	void Draw(E_MODEL model);
 

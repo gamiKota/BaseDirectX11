@@ -188,6 +188,8 @@ void GameScene::Init() {
 	m_object3D->m_transform->m_scale = float3(3.1f, 3.1f, 3.1f);
 	m_object3D->AddComponent<Collision>()->m_selfTag.push_back("Area");
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_LAND;
+	m_object3D->GetComponent<Collision>()->m_vCenter = float3(0.f, 0.f, 0.f);
+	m_object3D->GetComponent<Collision>()->m_vScale = float3(2000.f, 3.f, 2000.f);
 	m_listObject.push_back(m_object3D);
 
 

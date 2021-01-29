@@ -73,7 +73,7 @@ void ModelManager::Init() {
 			m_pModelBuf[model][i].CreateVertexBuffer(
 				m_pModelData[model]->GetVertexData(i),
 				m_pModelData[model]->GetVertexSize(i),
-				m_pModelData[model]->GetVertexCount(i), true);
+				m_pModelData[model]->GetVertexCount(i));
 			m_pModelBuf[model][i].CreateIndexBuffer(
 				m_pModelData[model]->GetIndexData(i),
 				sizeof(unsigned long),
@@ -115,6 +115,11 @@ void ModelManager::Draw(E_MODEL model) {
 		ShaderManager::GetInstance().SetTexturePS(m_pModelData[model][i].GetTexture(i));
 		m_pModelBuf[model][i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
+}
+
+
+FBXPlayer* ModelManager::Get(E_MODEL model) {
+	return m_pModelData[model];
 }
 
 
