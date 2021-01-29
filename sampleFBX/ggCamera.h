@@ -14,6 +14,8 @@ class ggCamera : public CCamera
 {
 protected:
 	POINT m_oldMousePos;
+	float3 m_vLook;
+	float3 m_vUp;
 
 public:
 	ggCamera();

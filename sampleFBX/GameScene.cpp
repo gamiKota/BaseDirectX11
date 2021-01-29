@@ -43,7 +43,7 @@
 #include "GameObjectMesh.h"	// メッシュオブジェクト
 // コンポーネント
 #include "TPCamera.h"	// TPSカメラ
-#include "FPCamera.h"	// FPSカメラ
+#include "ggCamera.h"	// ggカメラ
 #include "Light.h"		// ライト
 #include "Sky.h"		// スカイドーム
 #include "PlayerMgr.h"	// プレイヤーマネージャー
@@ -80,7 +80,7 @@ void GameScene::Init() {
 #if 0
 	CCamera::Set(m_empty->AddComponent<CCamera>());
 #else
-	CCamera::Set(m_empty->AddComponent<TPCamera>());
+	CCamera::Set(m_empty->AddComponent<ggCamera>());
 #endif
 	m_listObject.push_back(m_empty);
 
