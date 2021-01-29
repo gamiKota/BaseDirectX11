@@ -73,7 +73,7 @@ void ModelManager::Init() {
 			m_pModelBuf[model][i].CreateVertexBuffer(
 				m_pModelData[model]->GetVertexData(i),
 				m_pModelData[model]->GetVertexSize(i),
-				m_pModelData[model]->GetVertexCount(i));
+				m_pModelData[model]->GetVertexCount(i), true);
 			m_pModelBuf[model][i].CreateIndexBuffer(
 				m_pModelData[model]->GetIndexData(i),
 				sizeof(unsigned long),

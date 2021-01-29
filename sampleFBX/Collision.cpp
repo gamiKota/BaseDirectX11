@@ -35,8 +35,9 @@ struct VERTEX {
 // コンストラクタ
 Collision::Collision() : m_color(1.0f, 1.0f, 1.0f, 0.5f), m_bHit(false) {
 	m_selfTag.clear();
-	m_vBBox = float3(100.f, 100.f, 100.f);
+	m_vScale = float3();
 	m_vCenter = float3();
+	m_vScaleRatio = float3();
 }
 
 // デストラクタ
@@ -44,7 +45,11 @@ Collision::~Collision() {
 }
 
 void Collision::Awake() {
-	
+	GameObject3D* obj = dynamic_cast<GameObject3D*>(m_gameObject);
+	if (obj != nullptr) {	// 3Dオブジェクトのコリジョン
+		m_vScaleRatio = float3(1.f, 1.f, 1.f) / m_transform->m_scale;	// 拡縮倍率
+		m_vScale = float3(100.f, 100.f, 100.f);	// ボックスの大きさ(基準値)
+	}
 }
 
 // 初期化
@@ -65,9 +70,10 @@ void Collision::Update() {
 // 更新
 void Collision::LastUpdate() {
 	// 大きさ関係がややこしい
-	// 元のモデルのスケールを1と考えて、倍率で大きさを変更する
+	// 最初のモデルのスケールを1と考えて、倍率で大きさを変更する
 	XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
-	matrix = XMMatrixMultiply(matrix, XMMatrixScaling(m_vBBox.x, m_vBBox.y, m_vBBox.z));
+	float3 scale = m_vScale * m_vScaleRatio;
+	matrix = XMMatrixMultiply(matrix, XMMatrixScaling(scale.x, scale.y, scale.z));
 	matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(m_vCenter.x, m_vCenter.y, m_vCenter.z));
 	matrix *= XMLoadFloat4x4(&m_transform->GetMatrix());
 	XMStoreFloat4x4(&m_colWorld, matrix);
@@ -106,11 +112,8 @@ void Collision::DebugDraw() {
 	SHADER_WORLD buf;
 
 	buf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&m_colWorld));
-	shader->UpdateBuffer("MainWorld", &buf);
-
-	//SHADER_WORLD buf;
 	//buf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&GetWorld()));
-	//shader->UpdateBuffer("MainWorld", &buf);
+	shader->UpdateBuffer("MainWorld", &buf);
 
 	DrawCube();
 
@@ -165,6 +168,10 @@ bool Collision::OBB(Collision obj1, Collision obj2) {
 
 	XMFLOAT4X4 world1 = obj1.m_gameObject->m_transform->GetMatrix();
 	XMFLOAT4X4 world2 = obj2.m_gameObject->m_transform->GetMatrix();
+	XMFLOAT4X4 colWorld1 = obj1.m_colWorld;
+	XMFLOAT4X4 colWorld2 = obj2.m_colWorld;
+	float3 scale1 = float3(colWorld1._11, colWorld1._22, colWorld1._33) * 0.5f;
+	float3 scale2 = float3(colWorld2._11, colWorld2._22, colWorld2._33) * 0.5f;
 
 	// ワールド空間上のOBB中心座標を求める
 	XMFLOAT3 vPos1, vPos2;
@@ -189,12 +196,12 @@ bool Collision::OBB(Collision obj1, Collision obj2) {
 		vN[i] = XMLoadFloat3(&v[i]);
 	// OBBの大きさ(半分)の長さを掛けたベクトルを求める
 	XMVECTOR vL[6];
-	vL[0] = XMVectorSet(v[0].x * obj1.m_vBBox.x, v[0].y * obj1.m_vBBox.x, v[0].z * obj1.m_vBBox.x, 0.0f);
-	vL[1] = XMVectorSet(v[1].x * obj1.m_vBBox.y, v[1].y * obj1.m_vBBox.y, v[1].z * obj1.m_vBBox.y, 0.0f);
-	vL[2] = XMVectorSet(v[2].x * obj1.m_vBBox.z, v[2].y * obj1.m_vBBox.z, v[2].z * obj1.m_vBBox.z, 0.0f);
-	vL[3] = XMVectorSet(v[3].x * obj2.m_vBBox.x, v[3].y * obj2.m_vBBox.x, v[3].z * obj2.m_vBBox.x, 0.0f);
-	vL[4] = XMVectorSet(v[4].x * obj2.m_vBBox.y, v[4].y * obj2.m_vBBox.y, v[4].z * obj2.m_vBBox.y, 0.0f);
-	vL[5] = XMVectorSet(v[5].x * obj2.m_vBBox.z, v[5].y * obj2.m_vBBox.z, v[5].z * obj2.m_vBBox.z, 0.0f);
+	vL[0] = XMVectorSet(v[0].x * obj1.m_vScale.x, v[0].y * obj1.m_vScale.x, v[0].z * obj1.m_vScale.x, 0.0f);
+	vL[1] = XMVectorSet(v[1].x * obj1.m_vScale.y, v[1].y * obj1.m_vScale.y, v[1].z * obj1.m_vScale.y, 0.0f);
+	vL[2] = XMVectorSet(v[2].x * obj1.m_vScale.z, v[2].y * obj1.m_vScale.z, v[2].z * obj1.m_vScale.z, 0.0f);
+	vL[3] = XMVectorSet(v[3].x * obj2.m_vScale.x, v[3].y * obj2.m_vScale.x, v[3].z * obj2.m_vScale.x, 0.0f);
+	vL[4] = XMVectorSet(v[4].x * obj2.m_vScale.y, v[4].y * obj2.m_vScale.y, v[4].z * obj2.m_vScale.y, 0.0f);
+	vL[5] = XMVectorSet(v[5].x * obj2.m_vScale.z, v[5].y * obj2.m_vScale.z, v[5].z * obj2.m_vScale.z, 0.0f);
 	// 分離軸候補はモデル座標軸
 	float fL, fD;
 	for (int i = 0; i < 6; ++i) {
@@ -263,7 +270,7 @@ void Collision::OnCollision(GameObject* obj) {
 void Collision::SetImGuiVal() {
 #if _DEBUG
 	ImGui::InputFloat3("m_vCenter",		(float*)&m_vCenter);
-	ImGui::InputFloat3("m_vBBox",		(float*)&m_vBBox);
+	ImGui::InputFloat3("m_vBBox",		(float*)&m_vScale);
 #endif
 }
 
