@@ -33,11 +33,8 @@ struct VERTEX {
 
 
 // コンストラクタ
-Collision::Collision() : m_color(1.0f, 1.0f, 1.0f, 0.5f), m_bHit(false) {
+Collision::Collision() : m_bHit(false) {
 	m_selfTag.clear();
-	m_vScale = float3();
-	m_vCenter = float3();
-	m_vScaleRatio = float3();
 }
 
 // デストラクタ
@@ -47,7 +44,6 @@ Collision::~Collision() {
 void Collision::Awake() {
 	GameObject3D* obj = dynamic_cast<GameObject3D*>(m_gameObject);
 	if (obj != nullptr) {	// 3Dオブジェクトのコリジョン
-		m_vScaleRatio = float3(1.f, 1.f, 1.f) / m_transform->m_scale;	// 拡縮倍率
 		m_vScale = float3(100.f, 100.f, 100.f);	// ボックスの大きさ(基準値)
 	}
 }
@@ -69,14 +65,7 @@ void Collision::Update() {
 
 // 更新
 void Collision::LastUpdate() {
-	// 大きさ関係がややこしい
-	// 最初のモデルのスケールを1と考えて、倍率で大きさを変更する
-	XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
-	float3 scale = m_vScale * 2.f;
-	matrix = XMMatrixMultiply(matrix, XMMatrixScaling(scale.x, scale.y, scale.z));
-	matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(m_vCenter.x, m_vCenter.y, m_vCenter.z));
-	matrix *= XMLoadFloat4x4(&m_transform->GetMatrix());
-	XMStoreFloat4x4(&m_colWorld, matrix);
+
 }
 
 // 描画
@@ -87,15 +76,6 @@ void Collision::DebugDraw() {
 
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
 	D3DClass::GetInstance().SetZWrite(true);
-
-	// 境界ボックスの色
-	if (m_bHit) {
-		m_color = XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);
-	}
-	else {
-		m_color = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f);
-	}
-
 
 	// シェーダ設定
 	ShaderManager* shader = &ShaderManager::GetInstance();
@@ -111,8 +91,7 @@ void Collision::DebugDraw() {
 
 	SHADER_WORLD buf;
 
-	buf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&m_colWorld));
-	//buf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&GetWorld()));
+	buf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&GetWorld()));
 	shader->UpdateBuffer("MainWorld", &buf);
 
 	DrawCube();
@@ -125,29 +104,29 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 
 	bool hit = false;
 
-	//// 衝突判定(AABB)
-	//XMFLOAT4X4 world1 = obj1.GetWorld();
-	//XMFLOAT4X4 world2 = obj2.GetWorld();
-	//float& Ax = world1._41;
-	//float& Ay = world1._42;
-	//float& Az = world1._43;
-	//float& Aw = obj1.m_vBBox.x;
-	//float& Ah = obj1.m_vBBox.y;
-	//float& Ad = obj1.m_vBBox.z;
-	//
-	//float& Bx = world2._41;
-	//float& By = world2._42;
-	//float& Bz = world2._43;
-	//float& Bw = obj2.m_vBBox.x;
-	//float& Bh = obj2.m_vBBox.y;
-	//float& Bd = obj2.m_vBBox.z;
-	//
-	//hit = Ax - Aw <= Bx + Bw &&
-	//	Bx - Bw <= Ax + Aw &&
-	//	Ay - Ah <= By + Bh &&
-	//	By - Bh <= Ay + Ah &&
-	//	Az - Ad <= Bz + Bd &&
-	//	Bz - Bd <= Az + Ad;
+	// 衝突判定(AABB)
+	XMFLOAT4X4 world1 = obj1.GetWorld();
+	XMFLOAT4X4 world2 = obj2.GetWorld();
+	float& Ax = world1._41;
+	float& Ay = world1._42;
+	float& Az = world1._43;
+	float& Aw = obj1.m_vScale.x;
+	float& Ah = obj1.m_vScale.y;
+	float& Ad = obj1.m_vScale.z;
+	
+	float& Bx = world2._41;
+	float& By = world2._42;
+	float& Bz = world2._43;
+	float& Bw = obj2.m_vScale.x;
+	float& Bh = obj2.m_vScale.y;
+	float& Bd = obj2.m_vScale.z;
+	
+	hit = Ax - Aw <= Bx + Bw &&
+		Bx - Bw <= Ax + Aw &&
+		Ay - Ah <= By + Bh &&
+		By - Bh <= Ay + Ah &&
+		Az - Ad <= Bz + Bd &&
+		Bz - Bd <= Az + Ad;
 
 	return hit;
 }
@@ -168,10 +147,6 @@ bool Collision::OBB(Collision obj1, Collision obj2) {
 
 	XMFLOAT4X4 world1 = obj1.m_gameObject->m_transform->GetMatrix();
 	XMFLOAT4X4 world2 = obj2.m_gameObject->m_transform->GetMatrix();
-	XMFLOAT4X4 colWorld1 = obj1.m_colWorld;
-	XMFLOAT4X4 colWorld2 = obj2.m_colWorld;
-	float3 scale1 = float3(colWorld1._11, colWorld1._22, colWorld1._33) * 0.5f;
-	float3 scale2 = float3(colWorld2._11, colWorld2._22, colWorld2._33) * 0.5f;
 
 	// ワールド空間上のOBB中心座標を求める
 	XMFLOAT3 vPos1, vPos2;
@@ -241,24 +216,16 @@ bool Collision::OBB(Collision obj1, Collision obj2) {
 
 
 DirectX::XMFLOAT4X4 Collision::GetWorld() {
-	XMFLOAT4X4 matrix;
-	float3 pos;
-	XMStoreFloat3(&pos,
-		XMVector3TransformCoord(
-			XMLoadFloat3(&m_vCenter),
-			XMLoadFloat4x4(&m_gameObject->m_transform->GetMatrix())));
-	XMStoreFloat4x4(&matrix, XMMatrixTranslation(
-		pos.x, pos.y, pos.z));
-	matrix._11 = m_transform->GetMatrix()._11;
-	matrix._12 = m_transform->GetMatrix()._12;
-	matrix._13 = m_transform->GetMatrix()._13;
-	matrix._21 = m_transform->GetMatrix()._21;
-	matrix._22 = m_transform->GetMatrix()._22;
-	matrix._23 = m_transform->GetMatrix()._23;
-	matrix._31 = m_transform->GetMatrix()._31;
-	matrix._32 = m_transform->GetMatrix()._32;
-	matrix._33 = m_transform->GetMatrix()._33;
-	return matrix;
+	// 大きさ関係がややこしい
+	// 最初のモデルのスケールを1と考えて、倍率で大きさを変更する
+	XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
+	XMFLOAT4X4 world;
+	float3 scale = m_vScale * 2.f;
+	matrix = XMMatrixMultiply(matrix, XMMatrixScaling(scale.x, scale.y, scale.z));
+	matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(m_vCenter.x, m_vCenter.y, m_vCenter.z));
+	matrix *= XMLoadFloat4x4(&m_transform->GetMatrix());
+	XMStoreFloat4x4(&world, matrix);
+	return world;
 }
 
 

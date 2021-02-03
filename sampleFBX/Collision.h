@@ -24,12 +24,9 @@
 class Collision : public Component {
 public:
 	E_MODEL				m_model;
-	DirectX::XMFLOAT4	m_color;
 	float3				m_vCenter;		//!< 境界ボックス中心座標
 	float3				m_vScale;		//!< 境界ボックス サイズ
-	float3				m_vScaleRatio;	//!< 境界ボックス 倍率
 	bool				m_bHit;			//!< 衝突有無
-	DirectX::XMFLOAT4X4	m_colWorld;		//!< 当たり判定用行列
 	std::list<std::string> m_selfTag;	//!< セルフタグ
 
 

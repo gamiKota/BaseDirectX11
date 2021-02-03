@@ -38,6 +38,8 @@ void Bullet::Start() {
 	//m_status->m_HitStop = 5.f * Frame::GetInstance().GetFrame();
 	m_rigidbody->m_weight = E_WEIGHT::_1;
 	m_collision->m_selfTag.push_back("Area");
+	m_collision->m_vCenter = float3(0.f, 0.f, 1.f);
+	m_collision->m_vScale = float3(2.5f, 2.5f, 47.f);
 }
 
 
