@@ -37,8 +37,8 @@ void PlayerMgr::Start() {
 	// 変数の初期化
 	m_rigidbody->m_weight = E_WEIGHT::_3;
 
-	m_collision->m_vScale = float3(140.f, 40.f, 100.f);
-	m_collision->m_vCenter = float3(0.f, 0.f, 0.f);
+	m_collision->m_vCenter = float3(0.f, 0.f, 38.f);
+	m_collision->m_vScale = float3(130.f, 45.f, 125.f);
 
 	//m_transform->DOMove(float3(0.f, 0.f, 0.f), 2.f)->OnComplete([state = m_state]() {
 	//	state->SetStateActive(PLAYER_STATE::TARGET_ON, true);

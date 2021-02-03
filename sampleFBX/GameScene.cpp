@@ -80,7 +80,7 @@ void GameScene::Init() {
 #if 0
 	CCamera::Set(m_empty->AddComponent<CCamera>());
 #else
-	CCamera::Set(m_empty->AddComponent<ggCamera>());
+	CCamera::Set(m_empty->AddComponent<TPCamera>());
 #endif
 	m_listObject.push_back(m_empty);
 

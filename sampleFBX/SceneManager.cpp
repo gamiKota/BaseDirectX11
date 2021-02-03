@@ -4,6 +4,7 @@
 #include "TitleScene.h"
 #include "GameScene.h"
 #include "ResultScene.h"
+#include "DebugScene.h"
 #include "ModelManager.h"
 #include "TextureManager.h"
 #include "GameObject.h"
@@ -13,7 +14,7 @@
 
 
 
-SceneManager::SceneManager() : m_scene(new GameScene()) {
+SceneManager::SceneManager() : m_scene(new DebugScene()) {
 
 }
 
@@ -63,6 +64,13 @@ void SceneManager::Update() {
 			m_scene->Init();
 			break;
 
+		case E_SCENE::DEGUG:
+			m_scene->Uninit();
+			SAFE_DELETE(m_scene);
+			m_scene = new DebugScene();
+			m_scene->Init();
+			break;
+
 		}
 		m_isChange = false;
 	}
@@ -75,6 +83,9 @@ void SceneManager::Update() {
 	}
 	if (Input::isPress(VK_LSHIFT) && Input::isTrigger('3')) {
 		LoadScene(E_SCENE::RESULT);
+	}
+	if (Input::isPress(VK_LSHIFT) && Input::isTrigger('0')) {
+		LoadScene(E_SCENE::DEGUG);
 	}
 
 	m_scene->Update();

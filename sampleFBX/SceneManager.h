@@ -9,6 +9,7 @@ enum class E_SCENE {
 	TITLE,
 	GAME,
 	RESULT,
+	DEGUG,
 };
 
 class SceneManager : public Singleton<SceneManager> {

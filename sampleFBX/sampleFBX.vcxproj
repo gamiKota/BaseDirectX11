@@ -164,6 +164,7 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CollisionMesh.cpp" />
     <ClCompile Include="Data.cpp" />
+    <ClCompile Include="DebugScene.cpp" />
     <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="DrawBuffer.cpp" />
     <ClCompile Include="Drop.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="CollisionMesh.h" />
     <ClInclude Include="Data.h" />
+    <ClInclude Include="DebugScene.h" />
     <ClInclude Include="DomainShader.h" />
     <ClInclude Include="DrawBuffer.h" />
     <ClInclude Include="Drop.h" />

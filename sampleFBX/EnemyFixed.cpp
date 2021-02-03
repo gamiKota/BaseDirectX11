@@ -25,6 +25,8 @@ void EnemyFixed::Start() {
 
 	// 変数の初期化
 	m_rigidbody->m_weight = E_WEIGHT::_5;
+	m_collision->m_vCenter = float3(0.f, 0.f, 38.f);
+	m_collision->m_vScale = float3(130.f, 45.f, 125.f);
 
 	// ステータス変数の初期化
 	m_status->m_HP = 500.f;
