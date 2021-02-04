@@ -121,9 +121,6 @@
     <Filter Include="ソース ファイル\System\Component">
       <UniqueIdentifier>{399bef60-b21d-405e-82c0-d04c08e09aa3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\00Share\Game">
-      <UniqueIdentifier>{e1695551-aaec-4dd5-88fc-165a19714235}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\System\Model">
       <UniqueIdentifier>{ab675438-7c34-480d-b39d-302e205825b2}</UniqueIdentifier>
     </Filter>
@@ -162,6 +159,9 @@
     </Filter>
     <Filter Include="FBX">
       <UniqueIdentifier>{bd6d3904-3221-4e98-8eff-0bfadb7102f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\00Share\Scene">
+      <UniqueIdentifier>{e1695551-aaec-4dd5-88fc-165a19714235}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -411,8 +411,11 @@
     <ClCompile Include="Material.cpp">
       <Filter>ソース ファイル\System\Component</Filter>
     </ClCompile>
+    <ClCompile Include="AreaWall.cpp">
+      <Filter>ソース ファイル\02Game\Script</Filter>
+    </ClCompile>
     <ClCompile Include="DebugScene.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\00Share\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -662,8 +665,11 @@
     <ClInclude Include="DrawBuffer.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
+    <ClInclude Include="AreaWall.h">
+      <Filter>ヘッダー ファイル\02Game\Script</Filter>
+    </ClInclude>
     <ClInclude Include="DebugScene.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\00Share\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -680,9 +686,6 @@
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="Vertex2D.hlsl">
-      <Filter>リソース ファイル\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Geometry2D.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="PhongPS.hlsl">
@@ -710,6 +713,9 @@
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="MeshVS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorPS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

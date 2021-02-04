@@ -37,7 +37,7 @@ void main(triangle GS_IN In[3],					// トライアングル リストを構成する頂点配列の
 		Out.normal = In[i].normal;
 		Out.uv = In[i].uv;
 		Out.wPos = In[i].wPos;
-		Out.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
+		Out.color = float4(1.0f, 0.0f, 0.0f, 1.0f);
 
 		// 頂点を追加する
 		TriStream.Append(Out);

@@ -80,9 +80,9 @@ void Collision::DebugDraw() {
 	// シェーダ設定
 	ShaderManager* shader = &ShaderManager::GetInstance();
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
-	shader->BindPS(E_PS::PS_NORMAL);
 	shader->BindVS(E_VS::VS_NORMAL);
 	shader->BindGS(E_GS::GS_LINE);
+	shader->BindPS(E_PS::PS_COLOR);
 	pDeviceContext->DSSetShader(NULL, NULL, 0);
 	pDeviceContext->HSSetShader(NULL, NULL, 0);
 	pDeviceContext->CSSetShader(NULL, NULL, 0);
