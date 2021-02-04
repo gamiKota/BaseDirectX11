@@ -16,7 +16,7 @@
 #include "Light.h"
 #include "imgui.h"
 #include "Geometory.h"
-#include <map>
+#include "Material.h"
 #include "System.h"
 
 
@@ -32,13 +32,13 @@ struct VERTEX {
 };
 
 
-// コンストラクタ
 Collision::Collision() : m_bHit(false) {
 	m_selfTag.clear();
-}
-
-// デストラクタ
-Collision::~Collision() {
+	m_material = new Material;
+	m_material->m_ambient	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
+	m_material->m_emissive	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
+	m_material->m_diffuse	= XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);	// 値を小さくするとモデルが薄くなる
+	m_material->m_specular	= XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);	// 光沢
 }
 
 void Collision::Awake() {
@@ -48,27 +48,15 @@ void Collision::Awake() {
 	}
 }
 
-// 初期化
 void Collision::Start() {
 	
 }
 
-// 終了処理
-void Collision::Uninit()
-{
-	// タグの解放
+void Collision::Uninit() {
 	m_selfTag.clear();
+	delete m_material;
 }
 
-void Collision::Update() {
-}
-
-// 更新
-void Collision::LastUpdate() {
-
-}
-
-// 描画
 void Collision::DebugDraw() {
 #if _DEBUG
 
@@ -89,10 +77,17 @@ void Collision::DebugDraw() {
 
 	shader->SetTexturePS(NULL);
 
-	SHADER_WORLD buf;
-
-	buf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&GetWorld()));
-	shader->UpdateBuffer("MainWorld", &buf);
+	// ワールド
+	SHADER_WORLD WorldBuf;
+	WorldBuf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&GetWorld()));
+	shader->UpdateBuffer("MainWorld", &WorldBuf);
+	// マテリアル
+	SHADER_MATERIAL material;
+	material.vAmbient	= XMLoadFloat4(&m_material->m_ambient);
+	material.vDiffuse	= XMLoadFloat4(&m_material->m_diffuse);
+	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
+	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
+	shader->UpdateBuffer("Material", &material);
 
 	DrawCube();
 
@@ -226,11 +221,6 @@ DirectX::XMFLOAT4X4 Collision::GetWorld() {
 	matrix *= XMLoadFloat4x4(&m_transform->GetMatrix());
 	XMStoreFloat4x4(&world, matrix);
 	return world;
-}
-
-
-void Collision::OnCollision(GameObject* obj) {
-
 }
 
 

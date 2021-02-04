@@ -13,6 +13,8 @@ void AreaWall::Awake() {
 
 	m_gameObject->AddComponent<Collision>()->m_selfTag.push_back("Area");
 	m_gameObject->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_WALL;
+
+	m_gameObject->GetComponent<Collision>()->m_vScale = float3(1.f, 1.f, 1.f);
 }
 
 // EOF
