@@ -14,6 +14,7 @@
 #include "Rigidbody.h"
 #include "PlayerState.h"
 #include "PlayerOperation.h"
+#include "Material.h"
 #include "Tween.h"
 #include "debugproc.h"
 #include "imgui.h"
@@ -39,6 +40,9 @@ void PlayerMgr::Start() {
 
 	m_collision->m_vCenter = float3(0.f, 0.f, 38.f);
 	m_collision->m_vScale = float3(130.f, 45.f, 125.f);
+
+	GameObject3D* obj = dynamic_cast<GameObject3D*>(m_gameObject);
+	obj->m_material->m_specular = DirectX::XMFLOAT4(50.f, 50.f, 50.f, 1.f);
 
 	//m_transform->DOMove(float3(0.f, 0.f, 0.f), 2.f)->OnComplete([state = m_state]() {
 	//	state->SetStateActive(PLAYER_STATE::TARGET_ON, true);
