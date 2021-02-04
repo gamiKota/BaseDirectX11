@@ -24,8 +24,10 @@ GameObject3D::GameObject3D(E_MODEL m_model, std::string name, std::string tag) :
 	m_material->m_emissive	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
 	m_material->m_diffuse	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
 	m_material->m_specular	= XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);	// 光沢
-
 	m_isLight = true;
+
+	m_vs = E_VS::VS_NORMAL;
+	m_ps = E_PS::PS_NORMAL;
 }
 
 
@@ -58,8 +60,8 @@ void GameObject3D::Draw() {
 	ShaderManager* shader = &ShaderManager::GetInstance();
 
 	// シェーダの適用
-	shader->BindVS(VS_NORMAL);
-	shader->BindPS(PS_NORMAL);
+	shader->BindVS(m_vs);
+	shader->BindPS(m_ps);
 	shader->BindGS(GS_NORMAL);
 
 	// シェーダの設定

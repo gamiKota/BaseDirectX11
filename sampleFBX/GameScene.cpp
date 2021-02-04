@@ -100,6 +100,7 @@ void GameScene::Init() {
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player", "Player");
 	m_object3D->m_transform->m_position = float3(0.f, 200.f, 200.f);
 	m_object3D->AddComponent<PlayerMgr>();
+	m_object3D->m_ps = E_PS::PS_PHONG;
 	m_listObject.push_back(m_object3D);
 
 	// “G‹@‰Šú‰»
@@ -113,8 +114,8 @@ void GameScene::Init() {
 		m_object3D->m_transform->m_position = vEnemyPos;
 		//m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 180, 0.f);
 		//m_object3D->m_transform->m_scale = float3(2.f, 2.f, 2.f);
-		m_object3D->m_transform->m_scale = float3(0.5f, 0.5f, 0.5f);
 		m_object3D->AddComponent<EnemyFixed>();
+		m_object3D->m_ps = E_PS::PS_PHONG;
 		m_listObject.push_back(m_object3D);
 	}
 

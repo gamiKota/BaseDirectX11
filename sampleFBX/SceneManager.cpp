@@ -14,7 +14,7 @@
 
 
 
-SceneManager::SceneManager() : m_scene(new DebugScene()) {
+SceneManager::SceneManager() : m_scene(new GameScene()) {
 
 }
 

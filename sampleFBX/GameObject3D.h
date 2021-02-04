@@ -23,9 +23,12 @@ class Material;
  */
 class GameObject3D : public GameObject {
 public:
-	E_MODEL		m_model;		//!< モデル(いつかコンポーネント化)
+	E_MODEL		m_model;		//!< モデル
 	Material*	m_material;		//!< マテリアル
 	bool		m_isLight;		//!< ライト設定
+
+	E_VS		m_vs;
+	E_PS		m_ps;
 
 public:
 	/**
