@@ -25,6 +25,7 @@ static const char* name[E_TEXTURE_MAX] = {
 	"data/texture/arrow001.tga",		// 画面外アイコン(大)
 	"data/texture/LockMain.tga",		// 画面内メインターゲット
 	"data/texture/LockSub.tga",			// 画面内サブターゲット
+	"data/texture/Target.png",			// ターゲット表示
 };
 
 

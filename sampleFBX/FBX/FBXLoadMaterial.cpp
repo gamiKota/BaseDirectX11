@@ -1,4 +1,5 @@
 #include "FBXLoadMaterial.h"
+#include "../System.h"
 
 namespace ggfbx {
 	

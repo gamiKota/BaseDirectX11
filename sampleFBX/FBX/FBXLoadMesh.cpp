@@ -1,5 +1,6 @@
 #include "FBXLoadMesh.h"
 #include <algorithm>
+#include "../System.h"
 
 namespace ggfbx {
 

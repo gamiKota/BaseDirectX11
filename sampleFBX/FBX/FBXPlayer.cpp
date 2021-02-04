@@ -5,6 +5,7 @@
 #include <Shlwapi.h>
 #include <DirectXMath.h>
 #include "../Texture.h"
+#include "../System.h"
 
 #pragma comment(lib, "Shlwapi.lib")
 

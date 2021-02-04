@@ -74,6 +74,7 @@ void GameScene::Init() {
 	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_ROCK_ICON_OUTCAMERA_ATTACK);
 	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_MAIN);
 	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_SUB);
+	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_ROCK_ICON_TARGET);
 
 	// TPSéãì_ÉJÉÅÉâ
 	m_empty = new GameObject("MainCamera");

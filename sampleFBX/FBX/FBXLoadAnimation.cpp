@@ -1,4 +1,5 @@
 #include "FBXLoadAnimation.h"
+#include "../System.h"
 
 namespace ggfbx {
 

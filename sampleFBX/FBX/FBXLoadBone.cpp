@@ -1,5 +1,6 @@
 #include "FBXLoadBone.h"
 #include <assert.h>
+#include "../System.h"
 
 namespace ggfbx {
 

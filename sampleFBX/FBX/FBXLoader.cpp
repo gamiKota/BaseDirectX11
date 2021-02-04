@@ -3,6 +3,7 @@
 #include "FBXLoadBone.h"
 #include "FBXLoadMaterial.h"
 #include "FBXLoadAnimation.h"
+#include "../System.h"
 
 namespace ggfbx
 {
