@@ -19,7 +19,10 @@ GameObjectUI::GameObjectUI(E_LAYER layer) : m_layer(layer), m_texture(E_TEXTURE_
 
 GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, std::string tag) :
 	m_layer(layer), m_texture(texture), GameObject(name, tag) {
-
+	// •Ï”‚Ì‰Šú‰»
+	m_transform->m_scale = { 100.f, 100.f, 0 };
+	m_color = float3(1.f, 1.f, 1.f);
+	m_alpha = 1.f;
 }
 
 
@@ -28,10 +31,6 @@ GameObjectUI::~GameObjectUI() {
 
 
 void GameObjectUI::Init() {
-	// •Ï”‚Ì‰Šú‰»
-	m_transform->m_scale = { 100.f, 100.f, 0 };
-	m_color = float3(1.f, 1.f, 1.f);
-	m_alpha = 1.f;
 
 	GameObject::Init();
 }

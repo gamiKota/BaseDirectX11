@@ -53,25 +53,21 @@ void TPCamera::Update() {
 		float3 forward = float3(mtx._31, mtx._32, mtx._33);
 
 
+		float3 targetPos;
+		targetPos = m_player->m_transform->m_position;
 		if (target != nullptr) {	// ターゲットオン
-			//m_transform->LookAt(target->m_transform);
 			m_transform->LookAt(target->m_transform, m_player->m_transform->m_up);
-			//SetLook(target->m_transform);
+			targetPos -= forward * 350.f;
 		}
 		else {	// ターゲットオフ
 			m_transform->LookAt(m_player->m_transform);
-			//SetLook(nullptr);
+			targetPos -= forward * 500.f;
 		}
-		float3 targetPos;
-		targetPos = m_player->m_transform->m_position;
-		targetPos -= forward * 500.f;
 		targetPos += up * 150.f;
 		m_transform->m_position = float3::Lerp(m_transform->m_position, targetPos, Frame::GetInstance().GetDeltaTime() * LerpCorrection);
 		// FoV値を上げる
 		float fovy = ValFovy + float3::Length(m_transform->m_position, targetPos) * FovyCorrection;
 		m_fFovy = XMConvertToRadians(fovy);
-
-		//CCamera::Get()->SetLook(m_player->m_transform);
 	}
 
 	CCamera::Update();

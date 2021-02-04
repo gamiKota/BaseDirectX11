@@ -28,6 +28,9 @@ enum class PLAYER_STATE {
 };
 
 
+class GameObjectUI;
+
+
 /**
  * @class PlayerState : inheritance StateMachine<template T>
  */
@@ -36,6 +39,7 @@ private:
 	GameObject*		m_target;		//!< ƒ^[ƒQƒbƒg(“G‚Æ‘ŠŒÝŠÇ—)
 	float3			m_rotate;		//!< ŒX‚«
 	float3			m_movement;		//!< ˆÚ“®—Ê(â‘Î‚±‚±‚É‚ ‚Á‚Ä—Ç‚¢•Ï”‚¶‚á‚È‚¢)
+	GameObjectUI* m_targetLogo;		//!< ƒ^[ƒQƒbƒgƒƒS
 
 public:
 	void Awake() { Initialize(); }

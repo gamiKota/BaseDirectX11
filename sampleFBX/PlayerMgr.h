@@ -28,6 +28,7 @@ public:
 	PlayerState* m_state;		//!< ó‘ÔŠÇ—
 	PlayerOperation* m_operate;	//!< ‘€ìŠÇ—
 
+
 public:
 	void Start();
 	void Update();

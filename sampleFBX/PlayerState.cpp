@@ -12,6 +12,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "GameObject3D.h"
+#include "GameObjectUI.h"
 // コンポーネント
 #include "Bullet.h"
 // システム
@@ -36,15 +37,17 @@ static const float MAX_ANGLE_Z = 30.f;
 
 // ステートマシンの初期化
 void PlayerState::Initialize() {
+	// 変数の初期化
+	m_rotate = float3();
+	m_targetLogo = new GameObjectUI(E_LAYER::UI, E_TEXTURE_ROCK_ICON_TARGET, "PlayerTargetLogo", "PlayerTargetLogo");
+	GameObject::Instantiate(m_targetLogo, float3(115.f, -55.f, 0.f), Quaternion::identity, float3(130.f, 40.f, 0.f));
+
 	// 状態の追加
 	StateMachine::AddState(new PlayerState::Idol(this), true);
 	StateMachine::AddState(new PlayerState::Move(this));
 	StateMachine::AddState(new PlayerState::TargetOn(this));
 	StateMachine::AddState(new PlayerState::TargetOff(this), true);
 	StateMachine::AddState(new PlayerState::AttackBullet(this));
-
-	// 変数の初期化
-	m_rotate = float3();
 }
 
 // 状態に依存しない共通処理
@@ -135,6 +138,7 @@ void PlayerState::Move::OnDestoy() {
 void PlayerState::TargetOn::Start() {
 	// 変数の初期化
 	main->m_target = nullptr;
+	main->m_targetLogo->m_alpha = 1.f;
 	m_cnt = 0;
 	// ターゲット処理
 	main->SetStateActive(PLAYER_STATE::TARGET_OFF, false);
@@ -177,6 +181,7 @@ void PlayerState::TargetOn::OnDestoy() {
  * @state ターゲットOFF
  *************************************************************************************************/
 void PlayerState::TargetOff::Start() {
+	main->m_targetLogo->m_alpha = 0.f;
 	main->SetStateActive(PLAYER_STATE::TARGET_ON, false);
 }
 
