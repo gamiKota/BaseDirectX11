@@ -5,7 +5,8 @@
 #include "System.h"
 
 void HPGauge::Start() {
-
+	m_transform->m_position = float3(135.f, -38.f, 0.f);
+	m_transform->m_scale = float3(110.f, 15.f, 0.f);
 }
 
 void HPGauge::Update() {
