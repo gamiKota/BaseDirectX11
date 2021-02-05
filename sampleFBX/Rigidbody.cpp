@@ -17,31 +17,31 @@
 static const float VAL_GRAVITY = 0.01f;
 
 
-Rigidbody::Rigidbody() : Component(), m_weight(E_WEIGHT::_0) {
+Collider::Collider() : Component(), m_weight(E_WEIGHT::_0) {
 
 }
 
 
-void Rigidbody::Uninit() {
+void Collider::Uninit() {
 
 }
 
 
-void Rigidbody::Update() {
+void Collider::Update() {
 
 }
 
 
-void Rigidbody::LastUpdate() {
+void Collider::LastUpdate() {
 
 }
 
 
-void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
+void Collider::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 
 
-	if (obj1->GetComponent<Rigidbody>()->m_weight > E_WEIGHT::_5 &&
-		obj1->GetComponent<Rigidbody>()->m_weight > E_WEIGHT::_5) {
+	if (obj1->GetComponent<Collider>()->m_weight > E_WEIGHT::_5 &&
+		obj1->GetComponent<Collider>()->m_weight > E_WEIGHT::_5) {
 		return;
 	}
 
@@ -51,7 +51,7 @@ void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 	};
 
 	// d‚³‚ªŒy‚¢•û‚ª“®‚­
-	if (obj1->GetComponent<Rigidbody>()->m_weight > obj2->GetComponent<Rigidbody>()->m_weight) {
+	if (obj1->GetComponent<Collider>()->m_weight > obj2->GetComponent<Collider>()->m_weight) {
 		obj[0] = obj2;
 		obj[1] = obj1;
 	}
@@ -69,12 +69,12 @@ void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 		//	MessageBox(NULL, L"Rigidbody", NULL, MB_OK);
 		//}
 
-		if (obj[1]->GetComponent<Rigidbody>()->m_weight == E_WEIGHT::_WALL) {
+		if (obj[1]->GetComponent<Collider>()->m_weight == E_WEIGHT::_WALL) {
 			// ­‚µ‚¸‚Â‚¸‚ç‚·
 			float3 v = obj[1]->m_transform->m_forward;
 			obj[0]->m_transform->m_position += v;
 		}
-		else if (obj[1]->GetComponent<Rigidbody>()->m_weight == E_WEIGHT::_LAND) {
+		else if (obj[1]->GetComponent<Collider>()->m_weight == E_WEIGHT::_LAND) {
 			// ­‚µ‚¸‚Â‚¸‚ç‚·
 			float3 v = obj[1]->m_transform->m_up;
 			obj[0]->m_transform->m_position += v;
@@ -104,7 +104,7 @@ void Rigidbody::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 }
 
 
-void Rigidbody::SetImGuiVal() {
+void Collider::SetImGuiVal() {
 #if _DEBUG
 #endif
 }

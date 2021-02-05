@@ -11,13 +11,14 @@
 #include "Collision.h"
 #include "Rigidbody.h"
 #include "GameObject.h"
+#include "System.h"
 
 
 void Character::Init() {
 	// キャラクターが標準で持つコンポーネントの追加
 	m_status = m_gameObject->AddComponent<Status>();
 	m_collision = m_gameObject->AddComponent<Collision>();
-	m_rigidbody = m_gameObject->AddComponent<Rigidbody>();
+	m_collider = m_gameObject->AddComponent<Collider>();
 }
 
 

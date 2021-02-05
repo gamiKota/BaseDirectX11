@@ -36,12 +36,12 @@ enum class E_WEIGHT {
 /**
  * @class Rigidbody : inheritance Component
  */
-class Rigidbody : public Component {
+class Collider : public Component {
 public:
 	E_WEIGHT m_weight;	//!< d‚³
 
 public:
-	Rigidbody();
+	Collider();
 	void Uninit();
 	void Update();
 	void LastUpdate();

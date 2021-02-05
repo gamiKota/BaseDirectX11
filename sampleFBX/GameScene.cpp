@@ -154,7 +154,7 @@ void GameScene::Init() {
 	m_object3D = new GameObject3D(E_MODEL_LAND, "Land", "Land");
 	GameObject::Instantiate(m_object3D, float3(0.f, -3000.f, 0.f), Quaternion::identity, float3(3.1f, 3.1f, 3.1f));
 	m_object3D->AddComponent<Collision>()->m_selfTag.push_back("Area");
-	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_LAND;
+	m_object3D->AddComponent<Collider>()->m_weight = E_WEIGHT::_LAND;
 	m_object3D->GetComponent<Collision>()->m_vCenter = float3(0.f, 0.f, 0.f);
 	m_object3D->GetComponent<Collision>()->m_vScale = float3(2000.f, 1.f, 2000.f);
 

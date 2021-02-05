@@ -16,6 +16,8 @@
 #include "Collision.h"
 #include "Rigidbody.h"
 #include "TargetCtr.h"
+#include "GameObjectMesh.h"
+#include "HPGauge.h"
 #include "Frame.h"
 #include "System.h"
 
@@ -30,17 +32,23 @@ void Enemy::Start() {
 	//m_operate = m_gameObject->AddComponent<EnemyOperation>();
 
 	// 変数の初期化(敵クラスのデフォルト値の設定)
-	m_rigidbody->m_weight = E_WEIGHT::_2;	// 二番目に軽い
+	m_collider->m_weight = E_WEIGHT::_2;	// 二番目に軽い
 
 	// ロックオンマーカーの追加(とりあえず今は表示しない)
 	GameObjectUI* obj = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_MAIN, "EnemyIcon");
 	obj->AddComponent<TargetCtr>()->m_target = m_gameObject;
 	m_LockIcon = GameObject::Instantiate(obj);
+
+	// HPゲージ
+	m_HPGauge = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_TREE, "HPGauge", "HPGauge");
+	m_HPGauge->AddComponent<HPGauge>()->m_pair = m_gameObject;
+	GameObject::Instantiate(m_HPGauge, float3(), Quaternion::identity, float3(100.f, 20.f, 0.f));
 }
 
 
 void Enemy::Uninit() {
 	Destroy(m_LockIcon);
+	Destroy(m_HPGauge);
 }
 
 

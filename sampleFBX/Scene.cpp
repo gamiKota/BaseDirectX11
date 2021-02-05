@@ -100,8 +100,8 @@ void Scene::Update() {
 					temp1->OnCollision(temp2);
 					temp2->OnCollision(temp1);
 					// 物理エンジン機能？
-					if (temp1->GetComponent<Rigidbody>() != nullptr && temp2->GetComponent<Rigidbody>() != nullptr) {
-						Rigidbody::ShiftCollision(temp1, temp2);
+					if (temp1->GetComponent<Collider>() != nullptr && temp2->GetComponent<Collider>() != nullptr) {
+						Collider::ShiftCollision(temp1, temp2);
 					}
 				}
 			}
@@ -125,8 +125,8 @@ void Scene::Update() {
 	buff = m_listObject;
 	for (auto obj : buff) {
 		if (obj->GetActive())	continue;
-		obj->Uninit();
-		m_listObject.remove(obj);
+ 		obj->Uninit();
+ 		m_listObject.remove(obj);
 		SAFE_DELETE(obj);
 	}
 
