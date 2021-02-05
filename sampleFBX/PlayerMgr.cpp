@@ -67,6 +67,15 @@ void PlayerMgr::Update() {
 	//m_transform->m_rotation = q1 * q2 * q3;
 	//m_transform->m_rotation = Quaternion::Euler(float3(-90.f, -90.f, -90.f));
 	PrintDebugProc("abcdefgHIGKLMNoPqRsTuVwXyZ123456789\n");
+	//float3::Length()
+}
+
+
+void PlayerMgr::LastUpdate() {
+	SHADER_PLAYER buf;
+	XMFLOAT4 pos = XMFLOAT4(m_transform->m_position.x, m_transform->m_position.y, m_transform->m_position.z, 0.f);
+	buf.vPos = XMLoadFloat4(&pos);
+	ShaderManager::GetInstance().UpdateBuffer("Player", &buf);
 }
 
 

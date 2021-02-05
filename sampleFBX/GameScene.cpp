@@ -100,26 +100,24 @@ void GameScene::Init() {
 	//--- オブジェクトの生成
 	// 自機
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player", "Player");
-	m_object3D->m_transform->m_position = float3(0.f, 200.f, 200.f);
+	GameObject::Instantiate(m_object3D, float3(), Quaternion::identity, float3() + 0.5f);
 	m_object3D->AddComponent<PlayerMgr>();
 	m_object3D->m_ps = E_PS::PS_PHONG;
-	m_listObject.push_back(m_object3D);
 
 	// 敵機初期化
 	float3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
+	float3 vPlayerPos = GameObject::FindGameObjectWithTag("Player")->m_transform->m_position;
 	for (int i = 0; i < MAX_ENEMY; ++i) {
 		m_object3D = new GameObject3D(E_MODEL_PLAYER, "EnemyFixed (" + std::to_string(i) + ")", "Enemy");
-
 		vEnemyPos.x = (float)GetRandom((int)(-1000.f + 30.f), (int)(1000.f - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
-
-		m_object3D->m_transform->m_position = vEnemyPos;
-		//m_object3D->m_transform->m_rotate = Quaternion::Euler(0.f, 180, 0.f);
-		//m_object3D->m_transform->m_scale = float3(2.f, 2.f, 2.f);
+		GameObject::Instantiate(m_object3D, vEnemyPos, Quaternion::LookRotation((vPlayerPos - vEnemyPos), float3(0.f, 1.f, 0.f)), float3() + 0.5f);
 		m_object3D->AddComponent<EnemyFixed>();
 		m_object3D->m_ps = E_PS::PS_PHONG;
-		m_listObject.push_back(m_object3D);
 	}
+
+	m_mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_TREE);
+	GameObject::Instantiate(m_mesh, float3(), Quaternion(), float3() + 100.f);
 
 	//// ボックス
 	//m_object3D = new GameObject3D(E_MODEL_NONE, "box", "box");
@@ -158,7 +156,7 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Collision>()->m_selfTag.push_back("Area");
 	m_object3D->AddComponent<Rigidbody>()->m_weight = E_WEIGHT::_LAND;
 	m_object3D->GetComponent<Collision>()->m_vCenter = float3(0.f, 0.f, 0.f);
-	m_object3D->GetComponent<Collision>()->m_vScale = float3(2000.f, 3.f, 2000.f);
+	m_object3D->GetComponent<Collision>()->m_vScale = float3(2000.f, 1.f, 2000.f);
 
 
 	// push_backの順番でUIの描画の描画順が変わる

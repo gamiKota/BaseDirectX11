@@ -718,6 +718,12 @@
     <FxCompile Include="ColorPS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="AreaWallPS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="HPGaugePS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="sampleFBX.rc">

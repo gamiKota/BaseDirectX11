@@ -10,15 +10,6 @@
 #include <vector>
 #include "ShaderBufferManager.h"
 
-
-enum E_PS {
-	PS_NORMAL,	// 通常描画
-	PS_2D,		// 2D
-	PS_COLOR,	// 色
-	PS_PHONG,	// フォン
-	PS_MAX
-};
-
 enum E_VS {
 	VS_NORMAL,	// 通常描画
 	VS_2D,		// 2D
@@ -30,6 +21,15 @@ enum E_GS {
 	GS_NORMAL,	// 通常描画
 	GS_LINE,	// ライン描画
 	GS_MAX,
+};
+
+enum E_PS {
+	PS_NORMAL,		// 通常描画
+	PS_2D,			// 2D
+	PS_COLOR,		// 色
+	PS_PHONG,		// フォン
+	PS_AREAWALL,	// 壁
+	PS_MAX
 };
 
 

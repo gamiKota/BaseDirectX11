@@ -35,11 +35,6 @@ public:
 public:
 	/**
 	 * @brief コンストラクタ
-	 */
-	GameObjectMesh(E_MESH_TYPE mesh);
-
-	/**
-	 * @brief コンストラクタ
 	 * @param[in] name
 	 * @param[in] tag
 	 */

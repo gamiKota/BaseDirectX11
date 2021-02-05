@@ -32,6 +32,7 @@ public:
 public:
 	void Start();
 	void Update();
+	void LastUpdate();
 	void Uninit();
 	void OnCollision(GameObject* obj);
 	void SetImGuiVal();

@@ -9,14 +9,13 @@ void ShaderBufferManager::Initialize() {
 	this->Create("MainLightSetting", sizeof(SHADER_LIGHT_SETTING), 2);
 	this->Create("MainWorld", sizeof(SHADER_WORLD), 3);
 	this->Create("Material", sizeof(SHADER_MATERIAL), 4);
-	this->Create("Bone", sizeof(SHADER_BONE), 5);
-	//m_bufferMap["World"]		= new ShaderBuffer();
-	//m_bufferMap["Material"]		= new ShaderBuffer();
-	//m_bufferMap["Bone"]			= new ShaderBuffer();
+	this->Create("Player", sizeof(SHADER_PLAYER), 5);
+	this->Create("Character", sizeof(SHADER_CHARACTER), 6);
 }
 
 void ShaderBufferManager::Terminate() {
-	delete m_bufferMap["Bone"];
+	delete m_bufferMap["Character"];
+	delete m_bufferMap["Player"];
 	delete m_bufferMap["Material"];
 	delete m_bufferMap["MainWorld"];
 	delete m_bufferMap["MainLightSetting"];

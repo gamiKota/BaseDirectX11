@@ -5,10 +5,11 @@
 
  // 頂点シェーダから渡されるデータ
 struct PS_IN {
-	float4 pos		: SV_POSITION;
-	float2 uv		: TEXCOORD0;
-	float3 normal	: NORMAL0;
-	float3 wPos		: TEXCOORD1;
+	float4 pos : SV_POSITION;
+	float2 uv : TEXCOORD0;
+	float3 normal : TEXCOORD1;
+	float4 color : TEXCOORD2;
+	float4 wPos : TEXCOORD3;
 };
 
 
@@ -47,21 +48,21 @@ float4 main(PS_IN PIN) : SV_Target{
 	// 影の計算
 	// 光源のベクトルと法線の内積から暗さを計算する
 	// 光源のベクトルを反転(-の値を掛ける)して、正しい見た目になるように計算する
-	float3 lightDir = normalize(-LightDir.xyz);
+	float3 L = normalize(-LightDir.xyz);
 	float3 N = normalize(PIN.normal);
 
 	// 内積
-	float d = dot(lightDir, N);
+	float d = dot(N, L);
 
 	// 1～0の範囲に補正する
 	d = d * 0.5f + 0.5f;
 
 	// 照り返し(反射の計算)
-	float3 V = PIN.wPos - cameraPos.xyz;
+	float3 V = PIN.wPos.xyz - cameraPos.xyz;
 	// reflect... 第二引数で渡した法線のベクトルから、第一引数のベクトルがどのように反射するか計算
 	float3 R = reflect(V, N);
 	R = normalize(R);
-	float s = dot(lightDir, R);
+	float s = dot(L, R);
 	// スペキュラーは1～0の範囲にない値を無視する
 	// saturate... 引数を0～1の範囲に丸める
 	s = saturate(s);

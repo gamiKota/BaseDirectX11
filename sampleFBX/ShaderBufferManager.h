@@ -50,14 +50,14 @@ struct SHADER_MATERIAL {
 };
 
 // シェーダに渡すボーン行列配列
-struct SHADER_BONE {
-	DirectX::XMMATRIX mBone[MAX_BONE_MATRIX];
-	SHADER_BONE()
-	{
-		for (int i = 0; i < MAX_BONE_MATRIX; i++) {
-			mBone[i] = DirectX::XMMatrixIdentity();
-		}
-	}
+struct SHADER_PLAYER {
+	DirectX::XMVECTOR vPos;
+};
+
+// ゲームキャラクター情報
+struct SHADER_CHARACTER {
+	float vHpRate;	//!< Hp/MaxHp
+	float dummy[3];
 };
 
 

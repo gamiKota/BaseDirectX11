@@ -7,14 +7,24 @@ struct PS_IN
 	float4 wPos : TEXCOORD3;
 };
 
+
+cbuffer Character : register(b6) {
+	float4	g_charHp;	// Hp‚ÌŠ„‡
+}
+
 Texture2D tex : register(t0);
 SamplerState samp : register(s0);
 
 float4 main(PS_IN PIN) : SV_Target
 {
-	float4 color;
-	color = tex.Sample(samp, PIN.uv);
-	color *= PIN.color;
+	float4 color = float4(0.3f, 0.3f, 1.f, 1.f);
+
+
+	if (PIN.uv.x >= g_charHp.x) {
+		discard;
+	}
 
 	return color;
 }
+
+// EOF
