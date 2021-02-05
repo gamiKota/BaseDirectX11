@@ -25,6 +25,7 @@ float4 main(PS_IN PIN) : SV_Target
 	if (PIN.uv.x > 0.5f - (PIN.uv.y * 0.1f) && PIN.uv.y > 0.5f) {
 		discard;
 	}
+
 	return color;
 }
 

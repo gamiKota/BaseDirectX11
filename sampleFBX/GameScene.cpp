@@ -55,11 +55,10 @@
 #include "Material.h"	// マテリアル
 #include "AreaWall.h"	// 壁
 // システム
-#include "EnemyManager.h"	// 敵管理
-#include "System.h"			// メモリ監視
+#include "System.h"		// メモリ監視
 
 
-static const int MAX_ENEMY = 1;
+static const int MAX_ENEMY = 2;
 static const float VAL_ENEMY_POS_Z = 800.f;
 static const float MAX_ENEMY_POS_Z = 1000.f;
 
@@ -106,8 +105,6 @@ void GameScene::Init() {
 	m_object3D->m_ps = E_PS::PS_PHONG;
 
 	// 敵機初期化
-	EnemyManager::GetInstance().Initialize();
-
 	float3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
 	float3 vPlayerPos = GameObject::FindGameObjectWithTag("Player")->m_transform->m_position;
 	for (int i = 0; i < MAX_ENEMY; ++i) {

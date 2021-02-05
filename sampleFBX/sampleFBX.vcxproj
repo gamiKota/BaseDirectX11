@@ -169,7 +169,6 @@
     <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="DrawBuffer.cpp" />
     <ClCompile Include="Drop.cpp" />
-    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="EnemyOperation.cpp" />
     <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="EnemyFixed.cpp" />
@@ -257,7 +256,6 @@
     <ClInclude Include="DomainShader.h" />
     <ClInclude Include="DrawBuffer.h" />
     <ClInclude Include="Drop.h" />
-    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="EnemyOperation.h" />
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="Explosion.h" />

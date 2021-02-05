@@ -14,6 +14,7 @@
 #include "GameObject3D.h"
 #include "GameObjectUI.h"
 // コンポーネント
+#include "Status.h"
 #include "Enemy.h"
 #include "Bullet.h"
 #include "HPGauge.h"
@@ -179,6 +180,9 @@ void PlayerState::TargetOn::Update() {
 	main->m_transform->LookAt(main->m_target->m_transform);
 
 	Character* enemy = dynamic_cast<Character*>(main->m_target->GetComponent<Character>());
+	HPGauge* hp = main->m_HPGauge->GetComponent<HPGauge>();
+	hp->m_HP = enemy->m_status->m_HP;
+	hp->m_maxHP = enemy->m_status->m_maxHP;
 }
 
 void PlayerState::TargetOn::OnDestoy() {
