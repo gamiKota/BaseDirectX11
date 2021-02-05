@@ -25,6 +25,9 @@ enum class E_LAYER {
 };
 
 
+class Material;
+
+
 /**
  * @class GameObjectUI : inheritance GameObject
  */
@@ -32,21 +35,15 @@ class GameObjectUI : public GameObject {
 public:
 	E_TEXTURE	m_texture;
 	E_LAYER		m_layer;
-	float3		m_color;
-	float		m_alpha;
 
-	float3 m_texPattern;						// テクスチャ座標
-	float3 m_texSize;							// テクスチャサイズ
+	float3		m_texPattern;	//!< テクスチャ座標
+	float3		m_texSize;		//!< テクスチャサイズ
+	Material*	m_material;		//!< マテリアル
 
 	E_VS		m_vs;
 	E_PS		m_ps;
 
 public:
-	/**
-	 * @brief コンストラクタ
-	 */
-	GameObjectUI(E_LAYER layer);
-
 	/**
 	 * @brief コンストラクタ
 	 * @param[in] name

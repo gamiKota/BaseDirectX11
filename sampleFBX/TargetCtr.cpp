@@ -17,6 +17,7 @@
 #include "GameObject3D.h"
 #include "PlayerState.h"
 #include "Collision.h"
+#include "Material.h"
 #include "System.h"
 
 
@@ -93,7 +94,7 @@ void TargetCtr::Update() {
 	m_transform->m_position = marker;
 
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
-	obj->m_alpha = 0.f;
+	obj->m_material->m_diffuse.w = 0.f;
 
 	// メモ
 	// メインターゲット以外のロックオンマーカーの表示は、
@@ -184,14 +185,13 @@ void TargetCtr::Update() {
 	else {	// 画面内
 		if (m_target == GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget()) {
 			obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_MAIN;
-			obj->m_color = float3(1.f, 0.f, 0.f);
 			m_transform->m_scale = float3(100.f, 100.f, 0.f);
 			obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 2);
-			obj->m_alpha = 1.f;
+			obj->m_material->m_diffuse = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
 		}
 		else {
 			obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_SUB;
-			obj->m_color = float3(1.f, 0.6f, 0.f);
+			obj->m_material->m_diffuse = XMFLOAT4(1.f, 0.6f, 0.f, 0.f);
 			m_transform->m_scale = float3(80.f, 80.f, 0.f);
 			obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 1);
 		}
