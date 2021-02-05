@@ -10,12 +10,12 @@ void HPGauge::Start() {
 }
 
 void HPGauge::Update() {
-	
+	m_maxHP = 0.f;
 }
 
 void HPGauge::LastUpdate() {
 	SHADER_CHARACTER Char;
-	Char.vHpRate = 1.f;
+	Char.vHpRate = (m_maxHP <= 0.f) ? 1.f : m_HP / m_maxHP;
 	ShaderManager::GetInstance().UpdateBuffer("Character", &Char);
 }
 

@@ -38,18 +38,11 @@ void Enemy::Start() {
 	GameObjectUI* obj = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_MAIN, "EnemyIcon");
 	obj->AddComponent<TargetCtr>()->m_target = m_gameObject;
 	m_LockIcon = GameObject::Instantiate(obj);
-
-	// HPƒQ[ƒW
-	m_HPGauge = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_TREE, "HPGauge", "HPGauge");
-	m_HPGauge->AddComponent<HPGauge>();
-	m_HPGauge->m_ps = E_PS::PS_HPGAUGE;
-	GameObject::Instantiate(m_HPGauge, float3(), Quaternion::identity, float3(100.f, 20.f, 0.f));
 }
 
 
 void Enemy::Uninit() {
 	Destroy(m_LockIcon);
-	Destroy(m_HPGauge);
 }
 
 
@@ -62,7 +55,6 @@ void Enemy::Update() {
 		}
 		Destroy(m_gameObject);
 	}
-
 }
 
 

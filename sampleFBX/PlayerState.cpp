@@ -14,7 +14,9 @@
 #include "GameObject3D.h"
 #include "GameObjectUI.h"
 // コンポーネント
+#include "Enemy.h"
 #include "Bullet.h"
+#include "HPGauge.h"
 // システム
 #include "input.h"
 #include "debugproc.h"
@@ -41,6 +43,11 @@ void PlayerState::Initialize() {
 	m_rotate = float3();
 	m_targetLogo = new GameObjectUI(E_LAYER::UI, E_TEXTURE_ROCK_ICON_TARGET, "PlayerTargetLogo", "PlayerTargetLogo");
 	GameObject::Instantiate(m_targetLogo, float3(115.f, -55.f, 0.f), Quaternion::identity, float3(130.f, 40.f, 0.f));
+	// HPゲージ
+	m_HPGauge = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_TREE, "HPGauge", "HPGauge");
+	m_HPGauge->AddComponent<HPGauge>();
+	m_HPGauge->m_ps = E_PS::PS_HPGAUGE;
+	GameObject::Instantiate(m_HPGauge);
 
 	// 状態の追加
 	StateMachine::AddState(new PlayerState::Idol(this), true);
@@ -170,6 +177,8 @@ void PlayerState::TargetOn::Update() {
 		return;
 	}
 	main->m_transform->LookAt(main->m_target->m_transform);
+
+	Character* enemy = dynamic_cast<Character*>(main->m_target->GetComponent<Character>());
 }
 
 void PlayerState::TargetOn::OnDestoy() {
