@@ -23,10 +23,10 @@ float4 main(PS_IN PIN) : SV_Target
 {
 	float4 color = float4(0.3f, 0.3f, 1.f, 1.f);
 
-	if (PIN.uv.x >= g_charHp.x - (PIN.uv.y * 0.1f)) {
+	if (PIN.uv.x >= g_charHp.x - (PIN.uv.y * 0.15f)) {
 		discard;
 	}
-	if (PIN.uv.x > 0.5f - (PIN.uv.y * 0.1f) && PIN.uv.y > 0.5f) {
+	if (PIN.uv.x > 0.5f - (PIN.uv.y * 0.15f) && PIN.uv.y > 0.5f) {
 		discard;
 	}
 
