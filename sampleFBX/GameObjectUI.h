@@ -15,6 +15,7 @@
 #include "polygon.h"
 #include "GameObject.h"
 #include "TextureManager.h"
+#include "ShaderManager.h"
 
 
 enum class E_LAYER {
@@ -33,6 +34,8 @@ public:
 	E_LAYER		m_layer;
 	float3		m_color;
 	float		m_alpha;
+	E_VS		m_vs;
+	E_PS		m_ps;
 
 public:
 	/**

@@ -23,6 +23,8 @@ GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, s
 	m_transform->m_scale = { 100.f, 100.f, 0 };
 	m_color = float3(1.f, 1.f, 1.f);
 	m_alpha = 1.f;
+	m_vs = VS_2D;
+	m_ps = PS_2D;
 }
 
 
@@ -52,6 +54,16 @@ void GameObjectUI::LastUpdate() {
 
 
 void GameObjectUI::Draw() {
+
+	ShaderManager* shader = &ShaderManager::GetInstance();
+
+	shader->BindVS(m_vs);
+	shader->BindPS(m_ps);
+	D3DClass::GetInstance().GetDeviceContext()->HSSetShader(NULL, NULL, 0);
+	D3DClass::GetInstance().GetDeviceContext()->DSSetShader(NULL, NULL, 0);
+	D3DClass::GetInstance().GetDeviceContext()->GSSetShader(NULL, NULL, 0);
+	D3DClass::GetInstance().GetDeviceContext()->CSSetShader(NULL, NULL, 0);
+
 	SetPolygonTexture(TextureManager::GetInstance().Get(m_texture));
 	SetPolygonPos(m_transform->m_position.x, m_transform->m_position.y);
 	SetPolygonSize(m_transform->m_scale.x, m_transform->m_scale.y);

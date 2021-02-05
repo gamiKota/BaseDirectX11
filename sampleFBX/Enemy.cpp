@@ -40,8 +40,9 @@ void Enemy::Start() {
 	m_LockIcon = GameObject::Instantiate(obj);
 
 	// HPƒQ[ƒW
-	m_HPGauge = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_TREE, "HPGauge", "HPGauge");
-	m_HPGauge->AddComponent<HPGauge>()->m_pair = m_gameObject;
+	m_HPGauge = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_TREE, "HPGauge", "HPGauge");
+	m_HPGauge->AddComponent<HPGauge>();
+	m_HPGauge->m_ps = E_PS::PS_HPGAUGE;
 	GameObject::Instantiate(m_HPGauge, float3(), Quaternion::identity, float3(100.f, 20.f, 0.f));
 }
 
@@ -61,6 +62,7 @@ void Enemy::Update() {
 		}
 		Destroy(m_gameObject);
 	}
+
 }
 
 

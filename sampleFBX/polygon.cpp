@@ -115,15 +115,9 @@ void DrawPolygon(ID3D11DeviceContext* pDeviceContext)
 	// 頂点バッファ更新
 	SetVertexPolygon();
 
-	pDeviceContext->HSSetShader(NULL, NULL, 0);
-	pDeviceContext->DSSetShader(NULL, NULL, 0);
-	pDeviceContext->GSSetShader(NULL, NULL, 0);
-	pDeviceContext->CSSetShader(NULL, NULL, 0);
+
 
 	ShaderManager* shader = &ShaderManager::GetInstance();
-
-	shader->BindVS(VS_2D);
-	shader->BindPS(PS_2D);
 
 	SHADER_WORLD world;
 	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&g_mWorld));

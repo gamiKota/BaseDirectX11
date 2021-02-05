@@ -29,6 +29,7 @@ const char* pPSPath[] =
 	"data/shader/Pixel2D.cso",
 	"data/shader/ColorPS.cso",
 	"data/shader/PhongPS.cso",
+	"data/shader/HPGaugePS.cso",
 	"data/shader/AreaWallPS.cso",
 };
 static_assert(!(PS_MAX < _countof(pPSPath)), "E_PS‚Ö‚Ì’è‹`’Ç‰Á–Y‚ê");

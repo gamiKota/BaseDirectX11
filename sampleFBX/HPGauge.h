@@ -8,7 +8,6 @@ public:
 	void LastUpdate();
 
 public:
-	GameObject* m_pair;	//!< 表示される自信のキャラクター
 };
 
 // EOF

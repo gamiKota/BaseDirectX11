@@ -28,6 +28,7 @@ enum E_PS {
 	PS_2D,			// 2D
 	PS_COLOR,		// 色
 	PS_PHONG,		// フォン
+	PS_HPGAUGE,		// 敵HPゲージ
 	PS_AREAWALL,	// 壁
 	PS_MAX
 };
