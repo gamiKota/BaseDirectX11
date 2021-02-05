@@ -99,6 +99,14 @@ void DrawPolygon(ID3D11DeviceContext* pDeviceContext)
 	}
 
 	ShaderManager* shader = &ShaderManager::GetInstance();
+	ID3D11DeviceContext* DC = D3DClass::GetInstance().GetDeviceContext();
+
+	shader->BindVS(VS_2D);
+	shader->BindPS(PS_2D);
+	DC->HSSetShader(NULL, NULL, 0);
+	DC->DSSetShader(NULL, NULL, 0);
+	DC->GSSetShader(NULL, NULL, 0);
+	DC->CSSetShader(NULL, NULL, 0);
 
 	SHADER_WORLD world;
 	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&g_mWorld));

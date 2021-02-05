@@ -91,18 +91,6 @@ void GameObjectUI::Draw() {
 
 	// •`‰æ
 	DrawPolygon();
-
-
-
-	//SetPolygonPos(m_transform->m_position.x, m_transform->m_position.y);
-	//SetPolygonSize(m_transform->m_scale.x, m_transform->m_scale.y);
-	//SetPolygonAngle(Quaternion::EulerAngle(m_transform->m_rotation).z);
-	//SetPolygonUV(0.f, 0.f);
-	//SetPolygonFrameSize(1.f, 1.f);
-	//SetPolygonColor(m_color.x, m_color.y, m_color.z);
-	//SetPolygonAlpha(m_alpha);
-	//DrawPolygon(D3DClass::GetInstance().GetDeviceContext());
-	
 	GameObject::Draw();
 }
 
