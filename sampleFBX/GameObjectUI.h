@@ -34,6 +34,10 @@ public:
 	E_LAYER		m_layer;
 	float3		m_color;
 	float		m_alpha;
+
+	float3 m_texPattern;						// テクスチャ座標
+	float3 m_texSize;							// テクスチャサイズ
+
 	E_VS		m_vs;
 	E_PS		m_ps;
 

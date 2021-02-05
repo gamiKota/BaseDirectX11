@@ -13,19 +13,11 @@
 #include "System.h"
 
 
-
-//*****************************************************************************
-// プロトタイプ宣言
-//*****************************************************************************
-static HRESULT MakeVertexPolygon(ID3D11Device* pDevice);
-static void SetVertexPolygon(void);
-
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 static ID3D11ShaderResourceView*	g_pTexture;				// テクスチャへのポインタ
 
-static VERTEX_2D					g_vertexWk[NUM_VERTEX];	// 頂点情報格納ワーク
 
 static XMFLOAT3						g_posPolygon;			// ポリゴンの移動量
 static XMFLOAT3						g_rotPolygon;			// ポリゴンの回転量

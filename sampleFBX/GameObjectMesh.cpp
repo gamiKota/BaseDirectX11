@@ -76,7 +76,6 @@ void GameObjectMesh::Draw() {
 	// テクスチャマトリックスの設定
 	XMStoreFloat4x4(&m_mesh.mtxTexture, mtxTexture);
 
-
 	// 描画
 	if (m_type == E_MESH_TYPE::BILLBORAD) {
 		DrawMesh(&m_mesh, TextureManager::GetInstance().Get(m_texture), &m_transform->GetMatrixBillboard());
