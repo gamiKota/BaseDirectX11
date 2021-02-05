@@ -29,7 +29,7 @@ void EnemyFixed::Start() {
 	m_collision->m_vScale = float3(130.f, 45.f, 125.f);
 
 	// ƒXƒe[ƒ^ƒX•Ï”‚Ì‰Šú‰»
-	m_status->m_HP = 500.f;
+	m_status->SetHP(1000.f);
 	m_status->m_AttakPower = 10.f;
 	m_status->m_deleteTime.max = 2.f;	// •bÁ–Å
 	m_status->m_bulletTime.max = 5.f;	// ’e”­ŽËŠÔŠu

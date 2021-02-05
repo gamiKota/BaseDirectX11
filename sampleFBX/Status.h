@@ -41,6 +41,7 @@ struct StatusVal {
 class Status : public Component {
 public:	// ステータス
 	float	m_HP;			//!< 体力
+	float	m_maxHP;		//!< 体力
 	float	m_AttakPower;	//!< 攻撃力
 
 public:
@@ -62,6 +63,8 @@ public:
 	void Start();
 	void Update();
 	void SetImGuiVal();
+
+	void SetHP(float HP) { m_HP = m_maxHP = HP; }
 };
 
 
