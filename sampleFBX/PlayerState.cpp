@@ -147,6 +147,7 @@ void PlayerState::TargetOn::Start() {
 	// 変数の初期化
 	main->m_target = nullptr;
 	main->m_targetLogo->m_alpha = 1.f;
+	main->m_HPGauge->m_alpha = 1.f;
 	m_cnt = 0;
 	// ターゲット処理
 	main->SetStateActive(PLAYER_STATE::TARGET_OFF, false);
@@ -195,6 +196,7 @@ void PlayerState::TargetOn::OnDestoy() {
  *************************************************************************************************/
 void PlayerState::TargetOff::Start() {
 	main->m_targetLogo->m_alpha = 0.f;
+	main->m_HPGauge->m_alpha = 0.f;
 	main->SetStateActive(PLAYER_STATE::TARGET_ON, false);
 }
 

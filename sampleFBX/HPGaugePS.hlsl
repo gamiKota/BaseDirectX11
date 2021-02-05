@@ -7,6 +7,10 @@ struct PS_IN
 	float4 wPos : TEXCOORD3;
 };
 
+cbuffer world : register(b3) {
+	matrix g_mWorld;
+	matrix g_mTexture;
+};
 
 cbuffer Character : register(b6) {
 	float4	g_charHp;	// Hp‚ÌŠ„‡
