@@ -9,6 +9,7 @@
 #include "Graphics.h"
 #include "D3DClass.h"
 #include "ShaderManager.h"
+#include "Geometory.h"
 #include "System.h"
 
 
@@ -35,8 +36,6 @@ static bool							g_bInvalidate;			// 頂点データ更新フラグ
 static XMFLOAT2						g_posTexFrame;			// UV座標
 static XMFLOAT2						g_sizTexFrame;			// テクスチャ抽出サイズ
 
-static ID3D11Buffer*				g_pVertexBuffer;		// 頂点バッファ
-
 static XMFLOAT4X4					g_mWorld;				// ワールド変換行列
 static XMFLOAT4X4					g_mTex;					// テクスチャ変換行列
 
@@ -62,9 +61,6 @@ HRESULT InitPolygon(ID3D11Device* pDevice)
 	g_posTexFrame = XMFLOAT2(0.0f, 0.0f);
 	g_sizTexFrame = XMFLOAT2(1.0f, 1.0f);
 
-	// 頂点情報の作成
-	hr = MakeVertexPolygon(pDevice);
-
 	return hr;
 }
 
@@ -73,8 +69,6 @@ HRESULT InitPolygon(ID3D11Device* pDevice)
 //=============================================================================
 void UninitPolygon(void)
 {
-	// 頂点バッファの解放
-	SAFE_RELEASE(g_pVertexBuffer);
 }
 
 //=============================================================================
@@ -112,11 +106,6 @@ void DrawPolygon(ID3D11DeviceContext* pDeviceContext)
 		g_mTex._44 = 0.0f;
 	}
 
-	// 頂点バッファ更新
-	SetVertexPolygon();
-
-
-
 	ShaderManager* shader = &ShaderManager::GetInstance();
 
 	SHADER_WORLD world;
@@ -126,84 +115,7 @@ void DrawPolygon(ID3D11DeviceContext* pDeviceContext)
 
 	shader->SetTexturePS(g_pTexture);
 
-	UINT stride = sizeof(VERTEX_2D);
-	UINT offset = 0;
-	pDeviceContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
-
-	// プリミティブ形状をセット
-	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	// ポリゴンの描画
-	pDeviceContext->Draw(NUM_VERTEX, 0);
-}
-
-//=============================================================================
-// 頂点の作成
-//=============================================================================
-HRESULT MakeVertexPolygon(ID3D11Device* pDevice)
-{
-	// 頂点座標の設定
-	g_vertexWk[0].vtx = XMFLOAT3(-0.5f,  0.5f, 0.0f);
-	g_vertexWk[1].vtx = XMFLOAT3( 0.5f,  0.5f, 0.0f);
-	g_vertexWk[2].vtx = XMFLOAT3(-0.5f, -0.5f, 0.0f);
-	g_vertexWk[3].vtx = XMFLOAT3( 0.5f, -0.5f, 0.0f);
-
-	// 拡散反射光の設定
-	g_vertexWk[0].diffuse = g_colPolygon;
-	g_vertexWk[1].diffuse = g_colPolygon;
-	g_vertexWk[2].diffuse = g_colPolygon;
-	g_vertexWk[3].diffuse = g_colPolygon;
-
-	// テクスチャ座標の設定
-	g_vertexWk[0].tex = XMFLOAT2(0.0f, 0.0f);
-	g_vertexWk[1].tex = XMFLOAT2(1.0f, 0.0f);
-	g_vertexWk[2].tex = XMFLOAT2(0.0f, 1.0f);
-	g_vertexWk[3].tex = XMFLOAT2(1.0f, 1.0f);
-
-	D3D11_BUFFER_DESC vbd;
-	ZeroMemory(&vbd, sizeof(vbd));
-	vbd.Usage = D3D11_USAGE_DYNAMIC;
-	vbd.ByteWidth = sizeof(g_vertexWk);
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vbd.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA initData;
-	ZeroMemory(&initData, sizeof(initData));
-	initData.pSysMem = &g_vertexWk[0];
-
-	HRESULT hr = pDevice->CreateBuffer(&vbd, &initData, &g_pVertexBuffer);
-
-	return hr;
-}
-
-//=============================================================================
-// 頂点座標の設定
-//=============================================================================
-void SetVertexPolygon(void)
-{
-	if (g_bInvalidate) {
-		//頂点バッファの中身を埋める
-		ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
-		HRESULT hr = S_OK;
-
-		// 頂点データの範囲をロックし、頂点バッファへのポインタを取得
-		D3D11_MAPPED_SUBRESOURCE msr;
-		hr = pDeviceContext->Map(g_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
-		if (SUCCEEDED(hr)) {
-			// 拡散反射光の設定
-			g_vertexWk[0].diffuse = g_colPolygon;
-			g_vertexWk[1].diffuse = g_colPolygon;
-			g_vertexWk[2].diffuse = g_colPolygon;
-			g_vertexWk[3].diffuse = g_colPolygon;
-			// 頂点データを上書き
-			memcpy_s(msr.pData, sizeof(g_vertexWk), g_vertexWk, sizeof(g_vertexWk));
-			// 頂点データをアンロックする
-			pDeviceContext->Unmap(g_pVertexBuffer, 0);
-			// フラグをクリア
-			g_bInvalidate = false;
-		}
-	}
+	DrawPolygon();
 }
 
 //=============================================================================
