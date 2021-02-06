@@ -16,7 +16,14 @@ cbuffer Material : register(b4) {
 Texture2D tex : register(t0);
 SamplerState samp : register(s0);
 
+// デバッグ用ヒットボックスはテクスチャが設定されてないので、
+// ディヒューズが反映されない
+
 float4 main(PS_IN PIN) : SV_Target
 {
-	return g_Diffuse;
+	float4 color = tex.Sample(samp, PIN.uv);
+	if (color.a > 0.f) {
+		color = g_Diffuse;
+	}
+	return color;
 }

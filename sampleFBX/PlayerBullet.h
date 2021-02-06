@@ -1,5 +1,16 @@
 #pragma once
 #include "Component.h"
-class PlayerBullet : public Component {
+
+enum class E_BULLET {
+	NORMAL,
+	LASER,
 };
 
+class PlayerBullet : public Component {
+public:
+	void Start();
+	void Update();
+	void shot();
+};
+
+// EOF

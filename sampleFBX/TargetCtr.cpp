@@ -79,7 +79,7 @@ void TargetCtr::Start() {
 	// •Ï”‰Šú‰»
 	m_transform->m_scale = float3(100.f, 100.f, 0.f);
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
-
+	obj->m_ps = E_PS::PS_COLOR;
 
 	if (m_target == nullptr) {
 		m_target = GameObject::FindGameObjectWithTag("Enemy");
@@ -191,7 +191,7 @@ void TargetCtr::Update() {
 		}
 		else {
 			obj->m_texture = E_TEXTURE_ROCK_ICON_INCAMERA_SUB;
-			obj->m_material->m_diffuse = XMFLOAT4(1.f, 0.6f, 0.f, 0.f);
+			obj->m_material->m_diffuse = XMFLOAT4(1.f, 0.6f, 0.f, 1.f);
 			m_transform->m_scale = float3(80.f, 80.f, 0.f);
 			obj->m_layer = (E_LAYER)((int)E_LAYER::UI + 1);
 		}

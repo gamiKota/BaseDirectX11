@@ -23,8 +23,6 @@ cbuffer Character : register(b6) {
 	float4	g_charHp;	// Hp‚ÌŠ„‡
 }
 
-Texture2D tex : register(t0);
-SamplerState samp : register(s0);
 
 float4 main(PS_IN PIN) : SV_Target
 {
