@@ -30,9 +30,16 @@ float4 main(PS_IN PIN) : SV_Target
 {
 	float4 color = float4(0.3f, 0.3f, 1.f, 1.f);
 	color *= g_Diffuse;
-
 	if (color.a <= 0.f ||
-		PIN.uv.x >= g_charHp.x - (PIN.uv.y * 0.15f) ||
+		(PIN.uv.x > 0.62f - (PIN.uv.y * 0.15f) && PIN.uv.y > 0.6f)) {
+		discard;
+	}
+	if (PIN.uv.x < 0.01f || PIN.uv.x > 0.94f ||
+		PIN.uv.y < 0.1f || PIN.uv.y > 0.9f ||
+		(PIN.uv.x > 0.6f - (PIN.uv.y * 0.15f) && PIN.uv.y > 0.5f)) {
+		color = 1.f;
+	}
+	else if (PIN.uv.x >= g_charHp.x - (PIN.uv.y * 0.15f) ||
 		PIN.uv.x > 0.6f - (PIN.uv.y * 0.15f) && PIN.uv.y > 0.5f) {
 		discard;
 	}

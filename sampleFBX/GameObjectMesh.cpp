@@ -9,6 +9,7 @@
 #include "GameObjectMesh.h"
 #include "D3DClass.h"
 #include "ShaderManager.h"
+#include "Material.h"
 #include "System.h"
 
 
@@ -24,6 +25,13 @@ GameObjectMesh::GameObjectMesh(E_MESH_TYPE mesh, E_TEXTURE texture, std::string 
 	m_mesh.light = true;
 	m_mesh.Zbuff = true;
 	m_mesh.isDraw = true;
+
+	// マテリアル
+	m_material = AddComponent<Material>();
+	m_material->m_ambient	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
+	m_material->m_emissive	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
+	m_material->m_diffuse	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
+	m_material->m_specular	= XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);	// 光沢
 }
 
 
@@ -75,6 +83,14 @@ void GameObjectMesh::Draw() {
 	mtxTexture = XMMatrixMultiply(mtxTexture, mtxTranslate);
 	// テクスチャマトリックスの設定
 	XMStoreFloat4x4(&m_mesh.mtxTexture, mtxTexture);
+
+	// マテリアル
+	SHADER_MATERIAL material;
+	material.vAmbient	= XMLoadFloat4(&m_material->m_ambient);
+	material.vDiffuse	= XMLoadFloat4(&m_material->m_diffuse);
+	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
+	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
+	shader->UpdateBuffer("Material", &material);
 
 	// 描画
 	if (m_type == E_MESH_TYPE::BILLBORAD) {
