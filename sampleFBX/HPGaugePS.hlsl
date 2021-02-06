@@ -28,7 +28,8 @@ SamplerState samp : register(s0);
 
 float4 main(PS_IN PIN) : SV_Target
 {
-	float4 color = float4(0.3f, 0.3f, 1.f, 1.f);
+	float4 color = float4(step(g_charHp.x, 0.6f), step(0.165f, g_charHp.x), 0.f, 1.f);
+
 	color *= g_Diffuse;
 	if (color.a <= 0.f ||
 		(PIN.uv.x > 0.62f - (PIN.uv.y * 0.15f) && PIN.uv.y > 0.6f)) {
