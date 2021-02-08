@@ -51,7 +51,6 @@ void GameObjectUI::Uninit() {
 
 
 void GameObjectUI::Update() {
-	m_text->Init();
 	GameObject::Update();
 }
 
@@ -107,7 +106,6 @@ void GameObjectUI::Draw() {
 	shader->BindVS(E_VS::VS_NORMAL);
 	shader->BindPS(E_PS::PS_NORMAL);
 	// ƒ}ƒeƒŠƒAƒ‹
-	SHADER_MATERIAL material;
 	material.vAmbient	= XMLoadFloat4(&m_material->m_ambient);
 	material.vDiffuse	= XMLoadFloat4(&m_material->m_diffuse);
 	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);

@@ -9,13 +9,11 @@
 #define FONT_WIDTH			16
 #define FONT_HEIGHT			16
 
-void Text::Init() {
-	m_szText[0] = '\0';
-}
-
 void Text::Set(const char *fmt, ...) {
 	va_list list;
 	char aBuf[256];
+
+	m_szText[0] = '\0';
 
 	va_start(list, fmt);
 	_vsprintf_p(aBuf, sizeof(aBuf), fmt, list);

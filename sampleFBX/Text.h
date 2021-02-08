@@ -7,7 +7,6 @@ public:
 	Text() {
 		m_szText[0] = '\0';
 	}
-	void Init();
 	void Set(const char *fmt, ...);
 	void Bind();
 };
