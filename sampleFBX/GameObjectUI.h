@@ -36,7 +36,6 @@ class GameObjectUI : public GameObject {
 public:
 	E_TEXTURE	m_texture;	//!< テクスチャ
 	E_LAYER		m_layer;	//!< レイヤー
-	Text*		m_text;		//!< テキスト
 
 	float3		m_texPattern;	//!< テクスチャ座標
 	float3		m_texSize;		//!< テクスチャサイズ

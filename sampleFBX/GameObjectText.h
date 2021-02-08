@@ -4,23 +4,13 @@
 
 class Material;
 
-class GameObjectText : GameObject{
+class GameObjectText : public GameObjectUI {
 private:
 	char m_szText[64];		//!< 文字情報
 	float m_fontSize[2];	//!< フォントサイズ
 
-	E_TEXTURE	m_texture;	//!< テクスチャ
-	E_LAYER		m_layer;	//!< レイヤー
-
-	float3		m_texPattern;	//!< テクスチャ座標
-	float3		m_texSize;		//!< テクスチャサイズ
-	Material*	m_material;		//!< マテリアル
-
-	E_VS		m_vs;	//!< 頂点シェーダ
-	E_PS		m_ps;	//!< ピクセルシェーダ
-
 public:
-/**
+	/**
 	 * @brief コンストラクタ
 	 * @param[in] name
 	 * @param[in] tag

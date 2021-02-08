@@ -19,7 +19,6 @@ GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, s
 	m_layer(layer), m_texture(texture), GameObject(name, tag) {
 	// 変数の初期化
 	m_transform->m_scale = { 100.f, 100.f, 0 };
-	m_text = new Text;
 	// テクスチャ設定
 	m_texPattern = float3(0.f, 0.f, 0.f);
 	m_texSize = float3(1.f, 1.f, 1.f);
@@ -32,8 +31,6 @@ GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, s
 	// シェーダ
 	m_vs = VS_2D;
 	m_ps = PS_2D;
-	// テキスト
-	m_text->SetFontSize(16.f);
 }
 
 
@@ -47,7 +44,6 @@ void GameObjectUI::Init() {
 
 void GameObjectUI::Uninit() {
 	GameObject::Uninit();
-	delete m_text;
 }
 
 
@@ -102,11 +98,6 @@ void GameObjectUI::Draw() {
 	// 描画
 	DrawPolygon();
 	GameObject::Draw();
-
-	// テキスト表示
-	shader->BindVS(E_VS::VS_2D);
-	shader->BindPS(E_PS::PS_2D);
-	m_text->Bind();
 }
 
 

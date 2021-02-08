@@ -73,6 +73,7 @@ void Text::Bind() {
 	XMFLOAT2 vPos(SCREEN_WIDTH * -0.5f + m_fontSize[0] * 0.5f,
 		SCREEN_HEIGHT * 0.5f - m_fontSize[1] * 0.5f);
 
+
 	for (char* pChr = &m_szText[0]; *pChr; ++pChr) {
 		if (*pChr == '\n') {
 			vPos.x = SCREEN_WIDTH * -0.5f + m_fontSize[0] * 0.5f;
