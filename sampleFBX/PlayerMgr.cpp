@@ -14,6 +14,7 @@
 #include "Rigidbody.h"
 #include "PlayerState.h"
 #include "PlayerOperation.h"
+#include "PlayerBullet.h"
 #include "Material.h"
 #include "Tween.h"
 #include "debugproc.h"
@@ -34,6 +35,7 @@ void PlayerMgr::Start() {
 	// プレイヤーに必要なコンポーネントの追加
 	m_state = m_gameObject->AddComponent<PlayerState>();
 	m_operate = m_gameObject->AddComponent<PlayerOperation>();
+	m_bullet = m_gameObject->AddComponent<PlayerBullet>();
 
 	// 変数の初期化
 	m_collider->m_weight = E_WEIGHT::_3;

@@ -16,9 +16,9 @@
 // コンポーネント
 #include "Status.h"
 #include "Enemy.h"
-#include "Bullet.h"
 #include "HPGauge.h"
 #include "Material.h"
+#include "PlayerBullet.h"
 // システム
 #include "input.h"
 #include "debugproc.h"
@@ -214,10 +214,8 @@ void PlayerState::TargetOff::OnDestoy() {
  * @state 射撃
  *************************************************************************************************/
 void PlayerState::AttackBullet::Start() {
-	GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "BulletPlayer");
-	Instantiate(obj, main->m_transform->m_position + main->m_transform->m_forward * 200.f, main->m_transform->m_rotation);
-	obj->AddComponent<Bullet>();
 	// Start関数で撃ち終わったので状態終了
+	main->m_gameObject->GetComponent<PlayerBullet>()->shot();
 	main->SetStateActive(PLAYER_STATE::ATTACK_BULLET, false);
 }
 

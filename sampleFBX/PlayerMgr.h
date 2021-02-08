@@ -17,6 +17,7 @@
 
 class PlayerState;
 class PlayerOperation;
+class PlayerBullet;
 
 
 /**
@@ -27,6 +28,7 @@ class PlayerMgr : public Character
 public:
 	PlayerState* m_state;		//!< ó‘ÔŠÇ—
 	PlayerOperation* m_operate;	//!< ‘€ìŠÇ—
+	PlayerBullet* m_bullet;		//!< ’eˆ—
 
 
 public:
