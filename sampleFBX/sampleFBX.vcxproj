@@ -181,6 +181,7 @@
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectMesh.cpp" />
     <ClCompile Include="GameObjectMeshBase.cpp" />
+    <ClCompile Include="GameObjectText.cpp" />
     <ClCompile Include="GameObjectUI.cpp" />
     <ClCompile Include="Geometory.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GameObjectMesh.h" />
     <ClInclude Include="GameObjectMeshBase.h" />
+    <ClInclude Include="GameObjectText.h" />
     <ClInclude Include="GameObjectUI.h" />
     <ClInclude Include="Geometory.h" />
     <ClInclude Include="GeometryShader.h" />

@@ -6,8 +6,11 @@
 #include "TextureManager.h"
 #include "Material.h"
 #include "ShaderManager.h"
+#include "Geometory.h"
 #include "System.h"
 
+static XMFLOAT4X4					g_mWorld;				// ワールド変換行列
+static XMFLOAT4X4					g_mTex;					// テクスチャ変換行列
 
 Text::Text() {
 	m_szText[0] = '\0';
@@ -52,25 +55,23 @@ void Text::SetFontSize(float w, float h) {
 
 void Text::Bind() {
 
+	ShaderManager* shader = &ShaderManager::GetInstance();
+	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
+
 	// マテリアル
 	SHADER_MATERIAL material;
 	material.vAmbient	= XMLoadFloat4(&m_material->m_ambient);
 	material.vDiffuse	= XMLoadFloat4(&m_material->m_diffuse);
 	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
 	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
-	ShaderManager::GetInstance().UpdateBuffer("Material", &material);
+	shader->UpdateBuffer("Material", &material);
 
-	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
+	// テクスチャのセット
+	shader->SetTexturePS(TextureManager::GetInstance().Get(E_TEXTURE_TEXT));
+
+
 	XMFLOAT2 vPos(SCREEN_WIDTH * -0.5f + m_fontSize[0] * 0.5f,
 		SCREEN_HEIGHT * 0.5f - m_fontSize[1] * 0.5f);
-	SetPolygonTexture(TextureManager::GetInstance().Get(E_TEXTURE_TEXT));
-	SetPolygonFrameSize(8.0f / 128.0f, 8.0f / 128.0f);
-	SetPolygonSize(m_fontSize[0], m_fontSize[1]);
-	SetPolygonAngle(0.f);
-	SetPolygonColor(1.0f, 1.0f, 1.0f);
-	SetPolygonAlpha(1.f);
-
-	//SetPolygonAlpha(0.5f);
 
 	for (char* pChr = &m_szText[0]; *pChr; ++pChr) {
 		if (*pChr == '\n') {
@@ -78,21 +79,59 @@ void Text::Bind() {
 			vPos.y -= m_fontSize[1];
 			continue;
 		}
-		SetPolygonPos(vPos.x, vPos.y);
 		int nChr = (BYTE)*pChr;
-		//if (g_bHiragana &&
-		//	(nChr >= 0xa6 && nChr <= 0xaf || nChr >= 0xb1 && nChr <= 0xdd))
-		//	nChr ^= 0x20;
-		SetPolygonUV((nChr & 15) / 16.0f, (nChr >> 4) / 16.0f);
-		UpdatePolygon();
-		DrawPolygon(pDeviceContext);
+		
+		// ワールド行列
+		XMMATRIX mWorld = XMMatrixScaling(m_fontSize[0], m_fontSize[1], 0.f);
+		mWorld *= XMMatrixRotationRollPitchYaw(0.f, 0.f, 0.f);
+		mWorld *= XMMatrixTranslation(vPos.x, vPos.y, 0.f);
+		XMStoreFloat4x4(&g_mWorld, mWorld);
+		// テクスチャ行列
+		mWorld = XMMatrixScaling(8.0f / 128.0f, 8.0f / 128.0f, 1.0f);
+		mWorld *= XMMatrixTranslation((nChr & 15) / 16.0f, (nChr >> 4) / 16.0f, 0.0f);
+		XMStoreFloat4x4(&g_mTex, mWorld);
+		// 定数バッファへ格納
+		SHADER_WORLD world;
+		world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&g_mWorld));
+		world.mTexture = XMMatrixTranspose(XMLoadFloat4x4(&g_mTex));
+		shader->UpdateBuffer("MainWorld", &world);
+		// ポリゴンの描画
+		DrawPolygon();
+
 		vPos.x += m_fontSize[0];
 	}
-	// テクスチャ設定を元に戻す
-	SetPolygonColor(1.0f, 1.0f, 1.0f);
-	SetPolygonAlpha(1.0f);
-	SetPolygonUV(0.0f, 0.0f);
-	SetPolygonFrameSize(1.0f, 1.0f);
 }
+
+
+
+/*
+if (*pChr == '\n') {
+			vPos.x = SCREEN_WIDTH * -0.5f + m_fontSize[0] * 0.5f;
+			vPos.y -= m_fontSize[1];
+			continue;
+		}
+
+		int nChr = (BYTE)*pChr;
+
+		// ワールド行列
+		XMMATRIX mWorld = XMMatrixScaling(m_fontSize[0], m_fontSize[1], 0.f);
+		mWorld *= XMMatrixRotationRollPitchYaw(0.f, 0.f, 0.f);
+		mWorld *= XMMatrixTranslation(vPos.x, vPos.y, 0.f);
+		XMStoreFloat4x4(&g_mWorld, mWorld);
+		// テクスチャ行列
+		mWorld = XMMatrixScaling(8.0f / 128.0f, 8.0f / 128.0f, 1.0f);
+		mWorld *= XMMatrixTranslation((nChr & 15) / 16.0f, (nChr >> 4) / 16.0f, 0.0f);
+		XMStoreFloat4x4(&g_mTex, mWorld);
+
+		SHADER_WORLD world;
+		world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&g_mWorld));
+		world.mTexture = XMMatrixTranspose(XMLoadFloat4x4(&g_mTex));
+		shader->UpdateBuffer("MainWorld", &world);
+
+		DrawPolygon(pDeviceContext);
+
+		vPos.x += m_fontSize[0];
+*/
+
 
 // EOF

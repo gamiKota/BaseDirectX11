@@ -6,7 +6,7 @@
 /**
  * @include
  */
-#include "GameObjectUI.h"
+#include "GameObjectText.h"
 #include "D3DClass.h"
 #include "polygon.h"
 #include "Geometory.h"
@@ -15,11 +15,10 @@
 #include "System.h"
 
 
-GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, std::string tag) :
+GameObjectText::GameObjectText(E_LAYER layer, E_TEXTURE texture, std::string name, std::string tag) :
 	m_layer(layer), m_texture(texture), GameObject(name, tag) {
 	// 変数の初期化
 	m_transform->m_scale = { 100.f, 100.f, 0 };
-	m_text = new Text;
 	// テクスチャ設定
 	m_texPattern = float3(0.f, 0.f, 0.f);
 	m_texSize = float3(1.f, 1.f, 1.f);
@@ -32,36 +31,40 @@ GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, s
 	// シェーダ
 	m_vs = VS_2D;
 	m_ps = PS_2D;
+
+
 	// テキスト
-	m_text->SetFontSize(16.f);
+	m_szText[0] = '\0';
+	m_fontSize[0] = 16;
+	m_fontSize[1] = 16;
+	SetFontSize(16.f);
 }
 
 
-GameObjectUI::~GameObjectUI() {}
+GameObjectText::~GameObjectText() {}
 
 
-void GameObjectUI::Init() {
+void GameObjectText::Init() {
 	GameObject::Init();
 }
 
 
-void GameObjectUI::Uninit() {
+void GameObjectText::Uninit() {
 	GameObject::Uninit();
-	delete m_text;
 }
 
 
-void GameObjectUI::Update() {
+void GameObjectText::Update() {
 	GameObject::Update();
 }
 
 
-void GameObjectUI::LastUpdate() {
+void GameObjectText::LastUpdate() {
 	GameObject::LastUpdate();
 }
 
 
-void GameObjectUI::Draw() {
+void GameObjectText::Draw() {
 
 	ShaderManager* shader = &ShaderManager::GetInstance();
 	ID3D11DeviceContext* DC = D3DClass::GetInstance().GetDeviceContext();
@@ -103,22 +106,33 @@ void GameObjectUI::Draw() {
 	DrawPolygon();
 	GameObject::Draw();
 
-	// テキスト表示
-	shader->BindVS(E_VS::VS_2D);
-	shader->BindPS(E_PS::PS_2D);
-	m_text->Bind();
+	// テキストの初期化
+	m_szText[0] = '\0';
 }
 
 
-bool GameObjectUISort(GameObject* obj1, GameObject* obj2) {
-	GameObjectUI* temp1 = dynamic_cast<GameObjectUI*>(obj1);
-	GameObjectUI* temp2 = dynamic_cast<GameObjectUI*>(obj2);
-	if (temp1 != nullptr && temp2 != nullptr) {
-		if (temp1->m_layer < temp2->m_layer) {
-			return true;
-		}
+
+void GameObjectText::SetText(const char *fmt, ...) {
+	va_list list;
+	char aBuf[256];
+
+	va_start(list, fmt);
+	_vsprintf_p(aBuf, sizeof(aBuf), fmt, list);
+	va_end(list);
+
+	// 連結
+	if ((strlen(m_szText) + strlen(aBuf)) < sizeof(m_szText) - 1) {
+		strcat_s(m_szText, sizeof(m_szText), aBuf);
 	}
-	return false;
+}
+
+void GameObjectText::SetFontSize(float size) {
+	SetFontSize(size, size);
+}
+
+void GameObjectText::SetFontSize(float w, float h) {
+	m_fontSize[0] = w;
+	m_fontSize[1] = h;
 }
 
 
