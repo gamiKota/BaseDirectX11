@@ -1,13 +1,19 @@
 #pragma once
 
-class Text {
-public:
-	char m_szText[64];	//!< 文字情報
+class Material;
 
-	Text() {
-		m_szText[0] = '\0';
-	}
-	void Set(const char *fmt, ...);
+class Text {
+private:
+	char m_szText[64];		//!< 文字情報
+	float m_fontSize[2];	//!< フォントサイズ
+	Material* m_material;	//!< マテリアル
+
+public:
+	Text();
+	~Text();
+	void SetText(const char *fmt, ...);
+	void SetFontSize(float size);
+	void SetFontSize(float w, float h);
 	void Bind();
 };
 

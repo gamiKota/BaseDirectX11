@@ -20,7 +20,6 @@ GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, s
 	// 変数の初期化
 	m_transform->m_scale = { 100.f, 100.f, 0 };
 	m_text = new Text;
-
 	// テクスチャ設定
 	m_texPattern = float3(0.f, 0.f, 0.f);
 	m_texSize = float3(1.f, 1.f, 1.f);
@@ -30,9 +29,11 @@ GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, s
 	m_material->m_emissive	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
 	m_material->m_diffuse	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
 	m_material->m_specular	= XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);	// 光沢
-
+	// シェーダ
 	m_vs = VS_2D;
 	m_ps = PS_2D;
+	// テキスト
+	m_text->SetFontSize(16.f);
 }
 
 
@@ -105,13 +106,6 @@ void GameObjectUI::Draw() {
 	// テキスト表示
 	shader->BindVS(E_VS::VS_NORMAL);
 	shader->BindPS(E_PS::PS_NORMAL);
-	// マテリアル
-	material.vAmbient	= XMLoadFloat4(&m_material->m_ambient);
-	material.vDiffuse	= XMLoadFloat4(&m_material->m_diffuse);
-	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
-	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
-	shader->UpdateBuffer("Material", &material);
-	m_text->Set("abcdefgHIGKLMNoPqRsTuVwXyZ123456789\n");
 	m_text->Bind();
 }
 

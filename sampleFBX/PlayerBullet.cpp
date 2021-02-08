@@ -6,12 +6,12 @@
 #include "System.h"
 
 void PlayerBullet::Start() {
-	m_ui = new GameObjectUI(E_LAYER::UI, E_TEXTURE_NUMBER, "PlayerBullet", "PlayerBullet");
+	m_ui = new GameObjectUI((E_LAYER)((int)E_LAYER::UI + 3), E_TEXTURE_NUMBER, "PlayerBullet", "PlayerBullet");
 	GameObject::Instantiate(m_ui, float3(450.f, -250.f, 0.f), Quaternion::identity, float3(200.f, 60.f, 0.f));
 }
 
 void PlayerBullet::Update() {
-	
+	m_ui->m_text->SetText("abcdefgHIGKLMNoPqRsTuVwXyZ123456789\n");
 }
 
 void PlayerBullet::shot(E_BULLET eBullet) {

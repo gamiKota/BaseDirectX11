@@ -43,10 +43,10 @@ static const float MAX_ANGLE_Z = 30.f;
 void PlayerState::Initialize() {
 	// •Ï”‚Ì‰Šú‰»
 	m_rotate = float3();
-	m_targetLogo = new GameObjectUI(E_LAYER::UI, E_TEXTURE_ROCK_ICON_TARGET, "PlayerTargetLogo", "PlayerTargetLogo");
+	m_targetLogo = new GameObjectUI((E_LAYER)((int)E_LAYER::UI + 3), E_TEXTURE_ROCK_ICON_TARGET, "PlayerTargetLogo", "PlayerTargetLogo");
 	GameObject::Instantiate(m_targetLogo, float3(115.f, -55.f, 0.f), Quaternion::identity, float3(130.f, 40.f, 0.f));
 	// HPƒQ[ƒW
-	m_HPGauge = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_TREE, "HPGauge", "HPGauge");
+	m_HPGauge = new GameObjectUI((E_LAYER)((int)E_LAYER::UI + 3), E_TEXTURE::E_TEXTURE_TREE, "HPGauge", "HPGauge");
 	m_HPGauge->AddComponent<HPGauge>();
 	m_HPGauge->m_ps = E_PS::PS_HPGAUGE;
 	GameObject::Instantiate(m_HPGauge);
