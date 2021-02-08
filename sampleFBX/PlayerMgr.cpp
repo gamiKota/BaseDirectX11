@@ -68,7 +68,7 @@ void PlayerMgr::Update() {
 	//Quaternion q3 = Quaternion::AngleAxis(-RotY,   float3(0.f, 1.f, 0.f));	// q2の状態からy軸に回転
 	//m_transform->m_rotation = q1 * q2 * q3;
 	//m_transform->m_rotation = Quaternion::Euler(float3(-90.f, -90.f, -90.f));
-	PrintDebugProc("abcdefgHIGKLMNoPqRsTuVwXyZ123456789\n");
+	//PrintDebugProc("abcdefgHIGKLMNoPqRsTuVwXyZ123456789\n");
 	//float3::Length()
 }
 

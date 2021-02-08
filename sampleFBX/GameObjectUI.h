@@ -12,10 +12,10 @@
 /**
  * @include
  */
-#include "polygon.h"
 #include "GameObject.h"
 #include "TextureManager.h"
 #include "ShaderManager.h"
+#include <string>
 
 
 enum class E_LAYER {
@@ -26,6 +26,7 @@ enum class E_LAYER {
 
 
 class Material;
+class Text;
 
 
 /**
@@ -33,15 +34,16 @@ class Material;
  */
 class GameObjectUI : public GameObject {
 public:
-	E_TEXTURE	m_texture;
-	E_LAYER		m_layer;
+	E_TEXTURE	m_texture;	//!< テクスチャ
+	E_LAYER		m_layer;	//!< レイヤー
+	Text*		m_text;		//!< テキスト
 
 	float3		m_texPattern;	//!< テクスチャ座標
 	float3		m_texSize;		//!< テクスチャサイズ
 	Material*	m_material;		//!< マテリアル
 
-	E_VS		m_vs;
-	E_PS		m_ps;
+	E_VS		m_vs;	//!< 頂点シェーダ
+	E_PS		m_ps;	//!< ピクセルシェーダ
 
 public:
 	/**

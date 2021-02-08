@@ -11,6 +11,7 @@
 #include "polygon.h"
 #include "Geometory.h"
 #include "Material.h"
+#include "Text.h"
 #include "System.h"
 
 
@@ -18,6 +19,7 @@ GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, s
 	m_layer(layer), m_texture(texture), GameObject(name, tag) {
 	// 変数の初期化
 	m_transform->m_scale = { 100.f, 100.f, 0 };
+	m_text = new Text;
 
 	// テクスチャ設定
 	m_texPattern = float3(0.f, 0.f, 0.f);
@@ -34,8 +36,7 @@ GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, s
 }
 
 
-GameObjectUI::~GameObjectUI() {
-}
+GameObjectUI::~GameObjectUI() {}
 
 
 void GameObjectUI::Init() {
@@ -45,10 +46,12 @@ void GameObjectUI::Init() {
 
 void GameObjectUI::Uninit() {
 	GameObject::Uninit();
+	delete m_text;
 }
 
 
 void GameObjectUI::Update() {
+	m_text->Init();
 	GameObject::Update();
 }
 
@@ -99,6 +102,19 @@ void GameObjectUI::Draw() {
 	// 描画
 	DrawPolygon();
 	GameObject::Draw();
+
+	// テキスト表示
+	shader->BindVS(E_VS::VS_NORMAL);
+	shader->BindPS(E_PS::PS_NORMAL);
+	// マテリアル
+	SHADER_MATERIAL material;
+	material.vAmbient	= XMLoadFloat4(&m_material->m_ambient);
+	material.vDiffuse	= XMLoadFloat4(&m_material->m_diffuse);
+	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
+	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
+	shader->UpdateBuffer("Material", &material);
+	m_text->Set("abcdefgHIGKLMNoPqRsTuVwXyZ123456789\n");
+	m_text->Bind();
 }
 
 

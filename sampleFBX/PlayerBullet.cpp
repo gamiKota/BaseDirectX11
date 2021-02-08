@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include "GameObject3D.h"
 #include "GameObjectUI.h"
+#include "Text.h"
 #include "System.h"
 
 void PlayerBullet::Start() {
@@ -10,7 +11,7 @@ void PlayerBullet::Start() {
 }
 
 void PlayerBullet::Update() {
-
+	
 }
 
 void PlayerBullet::shot(E_BULLET eBullet) {

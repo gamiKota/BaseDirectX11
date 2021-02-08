@@ -19,6 +19,7 @@ static const char* name[E_TEXTURE_MAX] = {
 	"tetuxre_none",
 	"data/texture/WaterSurface.jpg",	// 波
 	"data/texture/number000.png",		// 数字
+	"data/TEXTURE/PressStart2Ph.tga",	// 文字
 	"data/texture/tree000.png",			// 木
 	"data/texture/explosion000.png",	// 爆発エフェクト
 	"data/texture/OutCameraMin.tga",	// 画面外アイコン(小)

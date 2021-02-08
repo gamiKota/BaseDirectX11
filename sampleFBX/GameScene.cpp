@@ -70,6 +70,7 @@ void GameScene::Init() {
 	// このシーンで使用するテクスチャの読み込み
 	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_TREE);
 	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_NUMBER);
+	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_TEXT);
 	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_EXPLOSION);
 	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI);
 	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_ROCK_ICON_OUTCAMERA_ATTACK);

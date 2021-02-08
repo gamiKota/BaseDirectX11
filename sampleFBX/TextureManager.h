@@ -23,6 +23,7 @@ enum E_TEXTURE {
 	E_TEXTURE_NONE,							// テクスチャなし
 	E_TEXTURE_WATER_SURFACE,				// 波
 	E_TEXTURE_NUMBER,						// 数字
+	E_TEXTURE_TEXT,							// 文字
 	E_TEXTURE_TREE,							// 木
 	E_TEXTURE_EXPLOSION,					// 爆発エフェクト
 	E_TEXTURE_ROCK_ICON_OUTCAMERA_MINI,		// 画面外アイコン(小)
