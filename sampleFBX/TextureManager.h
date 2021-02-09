@@ -31,6 +31,7 @@ enum E_TEXTURE {
 	E_TEXTURE_ROCK_ICON_INCAMERA_MAIN,		// 画面内メインターゲット
 	E_TEXTURE_ROCK_ICON_INCAMERA_SUB,		// 画面内サブターゲット
 	E_TEXTURE_ROCK_ICON_TARGET,				// ターゲット表示
+	E_TEXTURE_WEAPONS,						// 弾(文字)
 	E_TEXTURE_MAX,							// テクスチャ最大値
 };
 

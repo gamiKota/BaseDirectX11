@@ -13,6 +13,7 @@ class PlayerBullet : public Component {
 public:
 	//GameObjectUI* m_ui;
 	GameObjectText* m_text;
+	GameObjectUI* m_weapon;
 
 	int m_numBullet;
 
