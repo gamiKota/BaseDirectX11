@@ -90,6 +90,7 @@ void GameObjectUI::Draw() {
 	material.vDiffuse	= XMLoadFloat4(&m_material->m_diffuse);
 	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
 	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
+	material.vInDiffuse = XMLoadFloat4(&m_material->m_inDiffuse);
 	shader->UpdateBuffer("Material", &material);
 
 	// テクスチャの反映

@@ -47,6 +47,9 @@ struct SHADER_MATERIAL {
 	DirectX::XMVECTOR	vDiffuse;	// ディフューズ色
 	DirectX::XMVECTOR	vSpecular;	// スペキュラ色
 	DirectX::XMVECTOR	vEmissive;	// エミッシブ色
+
+	// 内側色
+	DirectX::XMVECTOR	vInDiffuse;	// ディフューズ色
 };
 
 // シェーダに渡すボーン行列配列

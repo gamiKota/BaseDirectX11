@@ -9,6 +9,8 @@ public:
 	DirectX::XMFLOAT4	m_specular;		//!< Specular 'shininess'
 	DirectX::XMFLOAT4	m_emissive;		//!< Emissive color RGB
 
+	DirectX::XMFLOAT4 m_inDiffuse;
+
 public:
 	Material();
 	void SetImGuiVal();

@@ -5,7 +5,12 @@
 #include "GameObjectText.h"
 #include "Text.h"
 #include "Material.h"
+#include "Frame.h"
 #include "System.h"
+
+
+constexpr int MAX_BULLET = 10;
+
 
 void PlayerBullet::Start() {
 	// ’e”•\Ž¦
@@ -23,7 +28,12 @@ void PlayerBullet::Start() {
 	m_weapon->m_material->m_diffuse = DirectX::XMFLOAT4(0.f, 0.9f, 1.f, 1.f);
 
 	// •Ï”‚Ì‰Šú‰»
-	m_numBullet = 80;
+	m_numBullet = MAX_BULLET;
+	m_isReload = false;
+	m_isReloadTime = 0.f;
+
+	m_errorTime = 0.f;
+	m_isError = false;
 
 	// Žæ‚è‡‚¦‚¸‚±‚±
 	ShaderManager::GetInstance().SetTexturePS(TextureManager::GetInstance().Get(E_TEXTURE_FRAME), 3);
@@ -31,13 +41,38 @@ void PlayerBullet::Start() {
 
 void PlayerBullet::Update() {
 	m_text->SetText("%d", m_numBullet);
+	DirectX::XMFLOAT4 d = DirectX::XMFLOAT4(0.f, 0.9f, 1.f, 0.2f);
+	if (m_isReload) {
+		m_isReloadTime += Frame::GetInstance().GetDeltaTime();
+		if (m_isReloadTime > 2.f) {
+			m_isReloadTime = 0.f;
+			m_numBullet = MAX_BULLET;
+			m_isReload = false;
+
+			m_errorTime = 0.f;
+			m_isError = false;
+		}
+
+
+		else {
+			m_errorTime += Frame::GetInstance().GetDeltaTime();
+			if (m_errorTime > 0.1f) {
+				m_isError ^= true;
+				m_errorTime = 0.f;
+			}
+			d = (m_isError) ? d : DirectX::XMFLOAT4(1.f, 0.f, 0.f, 1.f);
+		}
+	}
+	m_weapon->m_material->m_inDiffuse = d;
 }
 
 void PlayerBullet::shot(E_BULLET eBullet) {
-	m_numBullet--;
+	if (m_isReload)	return;
 	GameObject* obj = new GameObject3D(E_MODEL_BULLET, "Bullet", "BulletPlayer");
 	Instantiate(obj, m_transform->m_position + m_transform->m_forward * 200.f, m_transform->m_rotation);
 	obj->AddComponent<Bullet>();
+	m_numBullet--;
+	m_isReload = (m_numBullet <= 0) ? true : false;
 }
 
 // EOF

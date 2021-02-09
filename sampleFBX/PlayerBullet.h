@@ -16,6 +16,11 @@ public:
 	GameObjectUI* m_weapon;
 
 	int m_numBullet;
+	bool m_isReload;
+	float m_isReloadTime;
+
+	float m_errorTime;
+	bool m_isError;
 
 public:
 	void Start();
