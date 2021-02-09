@@ -13,6 +13,13 @@ public:
 	Material();
 	void SetImGuiVal();
 
+	void Set(Material material) {
+		m_ambient = material.m_ambient;
+		m_diffuse = material.m_diffuse;
+		m_emissive = material.m_emissive;
+		m_specular = material.m_specular;
+	}
+
 public:
 };
 

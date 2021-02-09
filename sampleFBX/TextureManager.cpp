@@ -28,6 +28,7 @@ static const char* name[E_TEXTURE_MAX] = {
 	"data/texture/LockSub.tga",			// 画面内サブターゲット
 	"data/texture/Target.png",			// ターゲット表示
 	"data/texture/Weapons.png",			// 弾
+	"data/texture/frame.png",			// 枠
 };
 
 

@@ -748,6 +748,12 @@
     <FxCompile Include="HPGaugePS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="FramePS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="FrameVS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="sampleFBX.rc">

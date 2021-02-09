@@ -12,11 +12,13 @@ const char* pVSPath[] =
 {
 	"data/shader/VertexShader.cso",
 	"data/shader/Vertex2D.cso",
-	"data/shader/MeshVS.cso"
+	"data/shader/MeshVS.cso",
+	"data/shader/FrameVS.cso",
 };
 VertexShader::Layout Layouts[] =
 {
 	VertexShader::LAYOUT_PCUN,
+	VertexShader::LAYOUT_PCU,
 	VertexShader::LAYOUT_PCU,
 	VertexShader::LAYOUT_PCU,
 };
@@ -31,6 +33,7 @@ const char* pPSPath[] =
 	"data/shader/PhongPS.cso",
 	"data/shader/HPGaugePS.cso",
 	"data/shader/AreaWallPS.cso",
+	"data/shader/FramePS.cso",
 };
 static_assert(!(PS_MAX < _countof(pPSPath)), "E_PSへの定義追加忘れ");
 static_assert(!(PS_MAX > _countof(pPSPath)), L"PSPathへの読込ファイル追加忘れ");

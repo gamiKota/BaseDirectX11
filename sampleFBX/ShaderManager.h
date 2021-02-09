@@ -14,6 +14,7 @@ enum E_VS {
 	VS_NORMAL,	// 通常描画
 	VS_2D,		// 2D
 	VS_MESH,	// メッシュ
+	VS_2D_FRAME,// 枠付き
 	VS_MAX
 };
 
@@ -30,6 +31,7 @@ enum E_PS {
 	PS_PHONG,		// フォン
 	PS_HPGAUGE,		// 敵HPゲージ
 	PS_AREAWALL,	// 壁
+	PS_2D_FRAME,	// 枠付き
 	PS_MAX
 };
 
