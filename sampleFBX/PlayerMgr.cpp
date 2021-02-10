@@ -46,6 +46,8 @@ void PlayerMgr::Start() {
 	m_collision->m_vCenter = float3(0.f, 0.f, 38.f);
 	m_collision->m_vScale = float3(130.f, 45.f, 125.f);
 
+	m_status->SetHP(1000.f);
+
 	GameObject3D* obj = dynamic_cast<GameObject3D*>(m_gameObject);
 	obj->m_material->m_specular = DirectX::XMFLOAT4(50.f, 50.f, 50.f, 1.f);
 

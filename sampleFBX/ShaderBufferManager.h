@@ -52,7 +52,7 @@ struct SHADER_MATERIAL {
 	DirectX::XMVECTOR	vInDiffuse;	// ディフューズ色
 };
 
-// シェーダに渡すボーン行列配列
+// プレイヤー情報
 struct SHADER_PLAYER {
 	DirectX::XMVECTOR vPos;
 	float vHpRate;

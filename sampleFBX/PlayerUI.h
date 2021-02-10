@@ -19,6 +19,7 @@ private:
 	Material* m_material;
 
 public:
+	PlayerUI();
 	void Start();
 	void Update();
 
@@ -30,6 +31,7 @@ public:
 	}
 
 	std::function<void()> m_errorFunc;
+	bool m_type;
 };
 
 // EOF

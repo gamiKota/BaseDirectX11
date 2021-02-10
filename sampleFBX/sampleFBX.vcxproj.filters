@@ -430,7 +430,7 @@
       <Filter>ソース ファイル\02Game\Script\Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerHP.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\02Game\Script\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -699,7 +699,7 @@
       <Filter>ヘッダー ファイル\02Game\Script\Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerHP.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\02Game\Script\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -758,6 +758,9 @@
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="FrameVS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="FrameGaugePS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

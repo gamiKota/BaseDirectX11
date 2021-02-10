@@ -5,10 +5,15 @@
 #include "Frame.h"
 #include "System.h"
 
+
+PlayerUI::PlayerUI() {
+	m_type = true;
+}
+
 void PlayerUI::Start() {
 	GameObjectUI* obj = dynamic_cast<GameObjectUI*>(m_gameObject);
 	obj->m_vs = E_VS::VS_2D_FRAME;
-	obj->m_ps = E_PS::PS_2D_FRAME;
+	obj->m_ps = (m_type) ? E_PS::PS_2D_FRAME : E_PS::PS_2D_FRAME_GAUGE;
 	m_material = obj->m_material;
 	m_material->m_diffuse = PLAYER_UI_DIFFUSE;
 	m_material->m_inDiffuse = PLAYER_UI_IN_DIFFUSE;

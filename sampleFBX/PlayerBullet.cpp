@@ -16,14 +16,14 @@ constexpr float TIME_RELOAD = 2.f;
 void PlayerBullet::Start() {
 	// 弾数表示
 	m_text = new GameObjectText((E_LAYER)((int)E_LAYER::UI + 3), E_TEXTURE_TEXT, "PlayerBulletNum", "PlayerBulletNum");
-	GameObject::Instantiate(m_text, float3(580.f, -275.f, 0.f), Quaternion::identity, float3());
+	GameObject::Instantiate(m_text, float3(580.f, -285.f, 0.f), Quaternion::identity, float3());
 	//m_text->m_vs = E_VS::VS_2D_FRAME;
 	m_text->m_ps = E_PS::PS_COLOR;	// テキストはポリゴンの表示の仕方が特殊だから無理っぽい
 	m_text->m_material->m_diffuse = PLAYER_UI_DIFFUSE;
 	m_text->SetFontSize(24.f);
 	// 弾UI
 	m_weapon = new GameObjectUI((E_LAYER)((int)E_LAYER::UI + 3), E_TEXTURE_WEAPONS, "PlayerWeapon", "PlayerWeapon");
-	GameObject::Instantiate(m_weapon, float3(475.f, -275.f, 0.f), Quaternion::identity, float3(150.f, 40.f, 0.f));
+	GameObject::Instantiate(m_weapon, float3(475.f, -285.f, 0.f), Quaternion::identity, float3(150.f, 30.f, 0.f));
 	m_weapon->AddComponent<PlayerUI>();
 
 	// 変数の初期化

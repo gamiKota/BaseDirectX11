@@ -34,6 +34,7 @@ const char* pPSPath[] =
 	"data/shader/HPGaugePS.cso",
 	"data/shader/AreaWallPS.cso",
 	"data/shader/FramePS.cso",
+	"data/shader/FrameGaugePS.cso",
 };
 static_assert(!(PS_MAX < _countof(pPSPath)), "E_PSへの定義追加忘れ");
 static_assert(!(PS_MAX > _countof(pPSPath)), L"PSPathへの読込ファイル追加忘れ");

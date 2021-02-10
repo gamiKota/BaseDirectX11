@@ -25,13 +25,14 @@ enum E_GS {
 };
 
 enum E_PS {
-	PS_NORMAL,		// 通常描画
-	PS_2D,			// 2D
-	PS_COLOR,		// 色
-	PS_PHONG,		// フォン
-	PS_HPGAUGE,		// 敵HPゲージ
-	PS_AREAWALL,	// 壁
-	PS_2D_FRAME,	// 枠付き
+	PS_NORMAL,			// 通常描画
+	PS_2D,				// 2D
+	PS_COLOR,			// 色
+	PS_PHONG,			// フォン
+	PS_HPGAUGE,			// 敵HPゲージ
+	PS_AREAWALL,		// 壁
+	PS_2D_FRAME,		// 枠付き
+	PS_2D_FRAME_GAUGE,	// 枠付きゲージ
 	PS_MAX
 };
 
