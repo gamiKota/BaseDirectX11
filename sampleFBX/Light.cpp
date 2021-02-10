@@ -18,9 +18,9 @@
 #define LIGHT0_DIFFUSE	XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define LIGHT0_AMBIENT	XMFLOAT4(0.5f,0.5f,0.5f,1.0f)
 #define LIGHT0_SPECULAR	XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
-#define LIGHT0_DIR_X	(1.0f)
+#define LIGHT0_DIR_X	(0.0f)
 #define LIGHT0_DIR_Y	(-1.0f)
-#define LIGHT0_DIR_Z	(1.0f)
+#define LIGHT0_DIR_Z	(0.0f)
 
 
 Light* Light::m_pLight = nullptr;
@@ -35,8 +35,7 @@ Light::Light() :	m_diffuse(XMFLOAT4(1.f, 1.f, 1.f, 1.f)),
 
 
 void Light::Awake() {
-	XMStoreFloat3(&m_direction,
-		XMVector3Normalize(XMVectorSet(LIGHT0_DIR_X, LIGHT0_DIR_Y, LIGHT0_DIR_Z, 0.0f)));
+	m_direction = XMFLOAT3(LIGHT0_DIR_X, LIGHT0_DIR_Y, LIGHT0_DIR_Z);
 	m_diffuse	= LIGHT0_DIFFUSE;
 	m_ambient	= LIGHT0_AMBIENT;
 	m_specular	= LIGHT0_SPECULAR;

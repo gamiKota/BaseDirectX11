@@ -14,7 +14,7 @@ void PlayerHP::Start() {
 }
 
 void PlayerHP::Update() {
-
+	
 }
 
 // EOF
