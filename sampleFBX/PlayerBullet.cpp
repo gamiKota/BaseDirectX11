@@ -3,7 +3,6 @@
 #include "GameObject3D.h"
 #include "GameObjectUI.h"
 #include "GameObjectText.h"
-#include "Text.h"
 #include "Material.h"
 #include "Frame.h"
 #include "PlayerUI.h"

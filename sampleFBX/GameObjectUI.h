@@ -26,7 +26,6 @@ enum class E_LAYER {
 
 
 class Material;
-class Text;
 
 
 /**

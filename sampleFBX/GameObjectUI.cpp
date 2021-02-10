@@ -11,7 +11,6 @@
 #include "polygon.h"
 #include "Geometory.h"
 #include "Material.h"
-#include "Text.h"
 #include "System.h"
 
 

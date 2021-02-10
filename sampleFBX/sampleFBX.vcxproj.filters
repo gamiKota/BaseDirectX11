@@ -423,14 +423,11 @@
     <ClCompile Include="PlayerBullet.cpp">
       <Filter>ソース ファイル\02Game\Script\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjectText.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\System\Object</Filter>
     </ClCompile>
     <ClCompile Include="PlayerUI.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\02Game\Script\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -692,14 +689,11 @@
     <ClInclude Include="PlayerBullet.h">
       <Filter>ヘッダー ファイル\02Game\Script\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjectText.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\System\Object</Filter>
     </ClInclude>
     <ClInclude Include="PlayerUI.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\02Game\Script\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
