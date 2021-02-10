@@ -56,7 +56,7 @@ void TPCamera::Update() {
 		float3 targetPos;
 		targetPos = m_player->m_transform->m_position;
 		if (target != nullptr) {	// ターゲットオン
-			m_transform->LookAt(target->m_transform, float3::Normalize(m_player->m_transform->m_up));
+			m_transform->LookAt(target->m_transform, m_player->m_transform->m_up);
 			targetPos -= forward * 350.f;
 		}
 		else {	// ターゲットオフ
