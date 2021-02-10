@@ -204,6 +204,7 @@
     <ClCompile Include="PlayerBullet.cpp" />
     <ClCompile Include="PlayerOperation.cpp" />
     <ClCompile Include="PlayerState.cpp" />
+    <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderBuffer.cpp" />
@@ -293,6 +294,7 @@
     <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="PlayerOperation.h" />
     <ClInclude Include="PlayerState.h" />
+    <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderBuffer.h" />
