@@ -55,6 +55,8 @@ struct SHADER_MATERIAL {
 // シェーダに渡すボーン行列配列
 struct SHADER_PLAYER {
 	DirectX::XMVECTOR vPos;
+	float vHpRate;
+	float dummy[3];
 };
 
 // ゲームキャラクター情報

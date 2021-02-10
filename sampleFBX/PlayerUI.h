@@ -5,7 +5,7 @@
 class Material;
 
 constexpr DirectX::XMFLOAT4 PLAYER_UI_DIFFUSE = DirectX::XMFLOAT4(0.f, 0.9f, 1.f, 1.f);
-constexpr DirectX::XMFLOAT4 PLAYER_UI_IN_DIFFUSE = DirectX::XMFLOAT4(0.f, 0.9f, 1.f, 0.2f);
+constexpr DirectX::XMFLOAT4 PLAYER_UI_IN_DIFFUSE = DirectX::XMFLOAT4(0.f, 0.1f, 0.15f, 0.5f);
 constexpr DirectX::XMFLOAT4 PLAYER_UI_ERROR = DirectX::XMFLOAT4(1.f, 0.f, 0.f, 1.f);
 
 class PlayerUI : public Component {

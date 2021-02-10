@@ -202,6 +202,7 @@
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />
+    <ClCompile Include="PlayerHP.cpp" />
     <ClCompile Include="PlayerOperation.cpp" />
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerUI.cpp" />
@@ -291,6 +292,7 @@
     <ClInclude Include="MissionState.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PlayerBullet.h" />
+    <ClInclude Include="PlayerHP.h" />
     <ClInclude Include="PlayerOperation.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PlayerUI.h" />

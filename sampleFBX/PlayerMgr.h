@@ -18,6 +18,7 @@
 class PlayerState;
 class PlayerOperation;
 class PlayerBullet;
+class PlayerHP;
 
 
 /**
@@ -26,9 +27,10 @@ class PlayerBullet;
 class PlayerMgr : public Character
 {
 public:
-	PlayerState* m_state;		//!< ó‘ÔŠÇ—
-	PlayerOperation* m_operate;	//!< ‘€ìŠÇ—
-	PlayerBullet* m_bullet;		//!< ’eˆ—
+	PlayerState*		m_state;		//!< ó‘ÔŠÇ—
+	PlayerOperation*	m_operate;		//!< ‘€ìŠÇ—
+	PlayerBullet*		m_bullet;		//!< ’eˆ—
+	PlayerHP*			m_hp;			//!< ‘Ì—Íˆ—
 
 
 public:

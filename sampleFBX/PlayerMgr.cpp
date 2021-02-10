@@ -19,6 +19,8 @@
 #include "Tween.h"
 #include "debugproc.h"
 #include "imgui.h"
+#include "Status.h"
+#include "PlayerHP.h"
 #include "System.h"
 
 
@@ -36,6 +38,7 @@ void PlayerMgr::Start() {
 	m_state = m_gameObject->AddComponent<PlayerState>();
 	m_operate = m_gameObject->AddComponent<PlayerOperation>();
 	m_bullet = m_gameObject->AddComponent<PlayerBullet>();
+	m_gameObject->AddComponent<PlayerHP>();
 
 	// 変数の初期化
 	m_collider->m_weight = E_WEIGHT::_3;
@@ -77,6 +80,7 @@ void PlayerMgr::LastUpdate() {
 	SHADER_PLAYER buf;
 	XMFLOAT4 pos = XMFLOAT4(m_transform->m_position.x, m_transform->m_position.y, m_transform->m_position.z, 0.f);
 	buf.vPos = XMLoadFloat4(&pos);
+	buf.vHpRate = m_status->m_HP / m_status->m_maxHP;
 	ShaderManager::GetInstance().UpdateBuffer("Player", &buf);
 }
 
