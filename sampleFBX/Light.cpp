@@ -9,6 +9,7 @@
 #include "Light.h"
 #include "D3DClass.h"
 #include "ShaderManager.h"
+#include "input.h"
 #include "System.h"
 
 
@@ -48,7 +49,23 @@ void Light::Start() {
 
 
 void Light::Update() {
+	// ライトの更新
+	static float rad = 0.f;
 
+	if (Input::isPress(VK_LEFT)) {
+		rad -= (DirectX::XM_PI * 0.5f) / 60.f;
+	}
+	if (Input::isPress(VK_RIGHT)) {
+		rad += (DirectX::XM_PI * 0.5f) / 60.f;
+	}
+
+	m_direction.x = sinf(rad) * 50.f;
+	m_direction.z = -cosf(rad) * 50.f;
+	m_direction.y = 30.f;
+	DirectX::XMVECTOR vLightDir;
+	vLightDir = DirectX::XMLoadFloat3(&m_direction);
+	vLightDir = DirectX::XMVectorScale(vLightDir, -1);
+	DirectX::XMStoreFloat3(&m_direction, DirectX::XMVector3Normalize(vLightDir));
 }
 
 
