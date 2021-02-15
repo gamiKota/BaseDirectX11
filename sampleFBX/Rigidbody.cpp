@@ -89,13 +89,13 @@ void Collider::ShiftCollision(GameObject* obj1, GameObject* obj2) {
 		}
 
 		// 必要な情報の更新処理
-		obj[0]->GetComponent<Collision>()->LastUpdate();
+		obj[0]->GetComponent<CollisionBox>()->LastUpdate();
 		obj[0]->GetComponent<Transform>()->LastUpdate();
-		obj[1]->GetComponent<Collision>()->LastUpdate();
+		obj[1]->GetComponent<CollisionBox>()->LastUpdate();
 		obj[1]->GetComponent<Transform>()->LastUpdate();
 
 		// 当たらなくなったらループから出る
-		if (!Collision::OBB(*obj1->GetComponent<Collision>(), *obj2->GetComponent<Collision>())) {
+		if (!CollisionBox::OBB(*obj1->GetComponent<CollisionBox>(), *obj2->GetComponent<CollisionBox>())) {
 			break;
 		}
 

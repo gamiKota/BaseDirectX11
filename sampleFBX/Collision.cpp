@@ -32,32 +32,32 @@ struct VERTEX {
 };
 
 
-Collision::Collision() : m_bHit(false) {
+Collision::Collision() {
 	m_selfTag.clear();
 	m_material = new Material;
 	m_material->m_ambient	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
 	m_material->m_emissive	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
 	m_material->m_diffuse	= XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);	// 値を小さくするとモデルが薄くなる
 	m_material->m_specular	= XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);	// 光沢
+	m_vCenter = float3();
+	m_vScale = float3() + 100.f;
 }
-
-void Collision::Awake() {
-	GameObject3D* obj = dynamic_cast<GameObject3D*>(m_gameObject);
-	if (obj != nullptr) {	// 3Dオブジェクトのコリジョン
-		m_vScale = float3(100.f, 100.f, 100.f);	// ボックスの大きさ(基準値)
-	}
+Collision::~Collision() {
 }
-
-void Collision::Start() {
-	
-}
-
 void Collision::Uninit() {
 	m_selfTag.clear();
 	delete m_material;
 }
+void Collision::SetImGuiVal() {
+#if _DEBUG
+	ImGui::InputFloat3("m_vCenter", (float*)&m_vCenter);
+	ImGui::InputFloat3("m_vBBox", (float*)&m_vScale);
+#endif
+}
 
-void Collision::DebugDraw() {
+
+
+void CollisionBox::DebugDraw() {
 #if _DEBUG
 
 	//if (true) { return; }
@@ -95,7 +95,7 @@ void Collision::DebugDraw() {
 }
 
 
-bool Collision::AABB(Collision obj1, Collision obj2) {
+bool CollisionBox::AABB(CollisionBox obj1, CollisionBox obj2) {
 
 	bool hit = false;
 
@@ -127,7 +127,7 @@ bool Collision::AABB(Collision obj1, Collision obj2) {
 }
 
 
-bool Collision::OBB(Collision obj1, Collision obj2) {
+bool CollisionBox::OBB(CollisionBox obj1, CollisionBox obj2) {
 
 	// セルフタグ判定
 	for (auto tag1 = obj1.m_selfTag.begin(); tag1 != obj1.m_selfTag.end(); tag1++) {
@@ -210,7 +210,7 @@ bool Collision::OBB(Collision obj1, Collision obj2) {
 }
 
 
-DirectX::XMFLOAT4X4 Collision::GetWorld() {
+DirectX::XMFLOAT4X4 CollisionBox::GetWorld() {
 	// 大きさ関係がややこしい
 	// 最初のモデルのスケールを1と考えて、倍率で大きさを変更する
 	XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
@@ -221,14 +221,6 @@ DirectX::XMFLOAT4X4 Collision::GetWorld() {
 	matrix *= XMLoadFloat4x4(&m_transform->GetMatrix());
 	XMStoreFloat4x4(&world, matrix);
 	return world;
-}
-
-
-void Collision::SetImGuiVal() {
-#if _DEBUG
-	ImGui::InputFloat3("m_vCenter",		(float*)&m_vCenter);
-	ImGui::InputFloat3("m_vBBox",		(float*)&m_vScale);
-#endif
 }
 
 // EOF

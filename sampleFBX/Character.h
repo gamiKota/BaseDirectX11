@@ -19,7 +19,7 @@
  * @forward declaration
  */
 class Status;
-class Collision;
+class CollisionBox;
 class Collider;
 class GameObjectMesh;
 
@@ -33,7 +33,7 @@ public:
 
 public:
 	Status*		m_status;		//!< ステータス
-	Collision*	m_collision;	//!< 当たり判定
+	CollisionBox*	m_collision;	//!< 当たり判定
 	Collider*	m_collider;		//!< コライダー
 };
 

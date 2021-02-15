@@ -12,10 +12,10 @@ void AreaWall::Awake() {
 	obj->m_material->m_diffuse = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 	obj->m_ps = PS_AREAWALL;
 
-	m_gameObject->AddComponent<Collision>()->m_selfTag.push_back("Area");
+	m_gameObject->AddComponent<CollisionBox>()->m_selfTag.push_back("Area");
 	m_gameObject->AddComponent<Collider>()->m_weight = E_WEIGHT::_WALL;
 	
-	m_gameObject->GetComponent<Collision>()->m_vScale = float3(1.f, 1.f, 1.f);
+	m_gameObject->GetComponent<CollisionBox>()->m_vScale = float3(1.f, 1.f, 1.f);
 
 }
 

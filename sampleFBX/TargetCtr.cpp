@@ -89,7 +89,7 @@ void TargetCtr::Start() {
 
 void TargetCtr::Update() {
 	// ロックオンマーカー
-	float3 centerPos = m_target->GetComponent<Collision>()->m_vCenter;
+	float3 centerPos = m_target->GetComponent<CollisionBox>()->m_vCenter;
 	float3 marker = LockOnMarker(m_target->m_transform->m_position);
 	m_transform->m_position = marker;
 

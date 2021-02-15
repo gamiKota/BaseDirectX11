@@ -5,6 +5,8 @@
 #include "Transform.h"
 #include "EnemyState.h"
 #include "Rigidbody.h"
+#include "AI.h"
+#include "Frame.h"
 #include "System.h"
 
 void EnemyNormal::Start() {
@@ -36,11 +38,16 @@ void EnemyNormal::Update() {
 	// “G‚Ì‹¤’Êˆ—
 	Enemy::Update();
 
-	// ˆÚ“®
+	float len = float3::Length(m_transform->m_position, m_state->GetState<EnemyState::TargetOn>()->GetTarget()->m_transform->m_position);
+
+	//// ˆÚ“®
+	//if (len <= 1500.f) {
+	//	m_state->GetState<EnemyState::Move>()->m_movement = float3(0.f, 0.f, 1.f);
+	//}
+	//if (len)
 
 	// ŽËŒ‚UŒ‚
-	if (float3::Length(m_transform->m_position,
-		m_state->GetState<EnemyState::TargetOn>()->GetTarget()->m_transform->m_position) < 2000.f) {
+	if (len < 2000.f) {
 		if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
 			m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
 			m_status->m_bulletTime.InitData();

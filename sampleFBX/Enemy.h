@@ -25,9 +25,10 @@ class AI;
 class Enemy : public Character {
 protected:
 	EnemyState* m_state;		//!< 状態管理
+	AI* m_ai;					//!< AI管理
 	GameObject* m_LockIcon;		//!< ロックオンマーカー
-	AI* m_ai;
 
+	
 public:
 	void Start();
 	void Update();

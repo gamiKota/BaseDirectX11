@@ -91,8 +91,8 @@ void Scene::Update() {
 			GameObject *temp2 = *j;
 
 			// Colliison
-			if (temp1->GetComponent<Collision>() != nullptr && temp2->GetComponent<Collision>() != nullptr) {
-				if (Collision::OBB(*temp1->GetComponent<Collision>(), *temp2->GetComponent<Collision>())) {
+			if (temp1->GetComponent<CollisionBox>() != nullptr && temp2->GetComponent<CollisionBox>() != nullptr) {
+				if (CollisionBox::OBB(*temp1->GetComponent<CollisionBox>(), *temp2->GetComponent<CollisionBox>())) {
 					// デバッグ用Hit
 					//temp1->GetComponent<Collision>()->SetHit();
 					//temp2->GetComponent<Collision>()->SetHit();
