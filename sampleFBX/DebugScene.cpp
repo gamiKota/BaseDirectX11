@@ -17,8 +17,8 @@ void DebugScene::Init() {
 	m_listObject.push_back(m_empty);
 
 	// デバッグで見たいオブジェクト
-	m_object3D = new GameObject3D(E_MODEL_NONE, "DebugObject");
-	m_object3D->AddComponent<CollisionBox>();
+	m_object3D = new GameObject3D(E_MODEL_PLAYER, "DebugObject");
+	m_object3D->AddComponent<CollisionSphere>();
 	m_listObject.push_back(m_object3D);
 }
 

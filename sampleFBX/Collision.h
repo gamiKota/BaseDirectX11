@@ -33,6 +33,19 @@ public:
 	~Collision();
 	void Uninit();
 	void SetImGuiVal();
+
+	virtual void DebugDraw() {}
+};
+
+
+/**
+ * @class CollisionSphere : inheritance Collision
+ */
+class CollisionSphere : public Collision {
+public:
+	void DebugDraw();
+	DirectX::XMFLOAT4X4 GetWorld();
+	static bool Sphere2Sphere(CollisionSphere obj1, CollisionSphere obj2);
 };
 
 

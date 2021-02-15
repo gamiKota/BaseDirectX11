@@ -121,6 +121,9 @@ void ModelManager::Draw(E_MODEL model) {
 FBXPlayer* ModelManager::Get(E_MODEL model) {
 	return m_pModelData[model];
 }
+DrawBuffer* ModelManager::GetBuf(E_MODEL model) {
+	return m_pModelBuf[model];
+}
 
 
 // EOF

@@ -17,6 +17,8 @@
 #include "imgui.h"
 #include "Geometory.h"
 #include "Material.h"
+#include "FBX/FBXPlayer.h"
+#include "DrawBuffer.h"
 #include "System.h"
 
 
@@ -24,23 +26,12 @@ using namespace DirectX;
 
 
 
-// 構造体定義
-//----- 頂点座標
-struct VERTEX {
-	XMFLOAT3	position;
-	XMFLOAT3	normal;
-};
-
-
-Collision::Collision() {
+Collision::Collision() : m_material(new Material), m_vCenter(float3()), m_vScale(float3() + 100.f) {
 	m_selfTag.clear();
-	m_material = new Material;
 	m_material->m_ambient	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
 	m_material->m_emissive	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
 	m_material->m_diffuse	= XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);	// 値を小さくするとモデルが薄くなる
 	m_material->m_specular	= XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);	// 光沢
-	m_vCenter = float3();
-	m_vScale = float3() + 100.f;
 }
 Collision::~Collision() {
 }
@@ -49,6 +40,7 @@ void Collision::Uninit() {
 	delete m_material;
 }
 void Collision::SetImGuiVal() {
+
 #if _DEBUG
 	ImGui::InputFloat3("m_vCenter", (float*)&m_vCenter);
 	ImGui::InputFloat3("m_vBBox", (float*)&m_vScale);
@@ -56,15 +48,14 @@ void Collision::SetImGuiVal() {
 }
 
 
-
-void CollisionBox::DebugDraw() {
+//**************************************************************************************
+// スフィア
+//**************************************************************************************
+void CollisionSphere::DebugDraw() {
 #if _DEBUG
-
 	//if (true) { return; }
-
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
 	D3DClass::GetInstance().SetZWrite(true);
-
 	// シェーダ設定
 	ShaderManager* shader = &ShaderManager::GetInstance();
 	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
@@ -74,9 +65,77 @@ void CollisionBox::DebugDraw() {
 	pDeviceContext->DSSetShader(NULL, NULL, 0);
 	pDeviceContext->HSSetShader(NULL, NULL, 0);
 	pDeviceContext->CSSetShader(NULL, NULL, 0);
-
+	// テクスチャ
 	shader->SetTexturePS(NULL);
+	// ワールド
+	SHADER_WORLD WorldBuf;
+	WorldBuf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&GetWorld()));
+	shader->UpdateBuffer("MainWorld", &WorldBuf);
+	// マテリアル
+	SHADER_MATERIAL material;
+	material.vAmbient = XMLoadFloat4(&m_material->m_ambient);
+	material.vDiffuse = XMLoadFloat4(&m_material->m_diffuse);
+	material.vEmissive = XMLoadFloat4(&m_material->m_emissive);
+	material.vSpecular = XMLoadFloat4(&m_material->m_specular);
+	shader->UpdateBuffer("Material", &material);
+	// 描画
+	ModelManager* modelMgr = &ModelManager::GetInstance();
+	for (int i = 0; i < modelMgr->GetInstance().Get(E_MODEL_SKY)->GetMeshNum(); ++i) {
+		modelMgr->GetInstance().GetBuf(E_MODEL_SKY)[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
+#endif
+}
 
+bool CollisionSphere::Sphere2Sphere(CollisionSphere obj1, CollisionSphere obj2) {
+
+	bool hit = false;
+	float h1 = obj1.m_vScale.x;
+	float h2 = obj2.m_vScale.x;
+	float3 c1 = obj1.m_vCenter;
+	float3 c2 = obj2.m_vCenter;
+	// 球1 ： 中心点の座標P1(x1, y1, z1), 半径r1
+	// 球2 ： 中心点の座標P2(x2, y2, z2), 半径r2
+	// (x2 - x1) ^ 2 + (y2 - y1) ^ 2 + (z2 - z1) ^ 2 <= (r1 + r2) ^ 2
+	if ((c2.x - c1.x) * (c2.x - c1.x) + (c2.y - c1.y) * (c2.y - c1.y) + (c2.z - c1.z) * (c2.z - c1.z) <= (h1 + h2) * (h1 + h2)) {
+		hit = true;
+	}
+	return hit;
+}
+
+DirectX::XMFLOAT4X4 CollisionSphere::GetWorld() {
+	// 大きさ関係がややこしい
+	// 最初のモデルのスケールを1と考えて、倍率で大きさを変更する
+	XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
+	XMFLOAT4X4 world;
+	float3 scale = m_vScale * 0.002f;
+	matrix = XMMatrixMultiply(matrix, XMMatrixScaling(scale.x, scale.y, scale.z));
+	matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(m_vCenter.x, m_vCenter.y, m_vCenter.z));
+	matrix *= XMLoadFloat4x4(&m_transform->GetMatrix());
+	XMStoreFloat4x4(&world, matrix);
+	return world;
+}
+
+
+
+//**************************************************************************************
+// ボックス
+//**************************************************************************************
+void CollisionBox::DebugDraw() {
+#if _DEBUG
+	//if (true) { return; }
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング(裏を描かない)
+	D3DClass::GetInstance().SetZWrite(true);
+	// シェーダ設定
+	ShaderManager* shader = &ShaderManager::GetInstance();
+	ID3D11DeviceContext* pDeviceContext = D3DClass::GetInstance().GetDeviceContext();
+	shader->BindVS(E_VS::VS_NORMAL);
+	shader->BindGS(E_GS::GS_LINE);
+	shader->BindPS(E_PS::PS_COLOR);
+	pDeviceContext->DSSetShader(NULL, NULL, 0);
+	pDeviceContext->HSSetShader(NULL, NULL, 0);
+	pDeviceContext->CSSetShader(NULL, NULL, 0);
+	// テクスチャ
+	shader->SetTexturePS(NULL);
 	// ワールド
 	SHADER_WORLD WorldBuf;
 	WorldBuf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&GetWorld()));
@@ -88,12 +147,10 @@ void CollisionBox::DebugDraw() {
 	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
 	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
 	shader->UpdateBuffer("Material", &material);
-
+	// 描画
 	DrawCube();
-
 #endif
 }
-
 
 bool CollisionBox::AABB(CollisionBox obj1, CollisionBox obj2) {
 
@@ -102,30 +159,28 @@ bool CollisionBox::AABB(CollisionBox obj1, CollisionBox obj2) {
 	// 衝突判定(AABB)
 	XMFLOAT4X4 world1 = obj1.GetWorld();
 	XMFLOAT4X4 world2 = obj2.GetWorld();
+	// A
 	float& Ax = world1._41;
 	float& Ay = world1._42;
 	float& Az = world1._43;
 	float& Aw = obj1.m_vScale.x;
 	float& Ah = obj1.m_vScale.y;
 	float& Ad = obj1.m_vScale.z;
-	
+	// B
 	float& Bx = world2._41;
 	float& By = world2._42;
 	float& Bz = world2._43;
 	float& Bw = obj2.m_vScale.x;
 	float& Bh = obj2.m_vScale.y;
 	float& Bd = obj2.m_vScale.z;
-	
 	hit = Ax - Aw <= Bx + Bw &&
 		Bx - Bw <= Ax + Aw &&
 		Ay - Ah <= By + Bh &&
 		By - Bh <= Ay + Ah &&
 		Az - Ad <= Bz + Bd &&
 		Bz - Bd <= Az + Ad;
-
 	return hit;
 }
-
 
 bool CollisionBox::OBB(CollisionBox obj1, CollisionBox obj2) {
 

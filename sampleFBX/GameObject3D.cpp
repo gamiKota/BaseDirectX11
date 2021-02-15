@@ -84,8 +84,11 @@ void GameObject3D::Draw() {
 
 	// 前面カリング (FBXは表裏が反転するため)
 	ModelManager::GetInstance().Draw(m_model);
-	if (GetComponent<CollisionBox>()){
-		GetComponent<CollisionBox>()->DebugDraw();
+	for (auto com : m_listComponent) {
+		Collision* col = dynamic_cast<Collision*>(com);
+		if (col) {
+			col->DebugDraw();
+		}
 	}
 	//GameObject::Draw();
 }
