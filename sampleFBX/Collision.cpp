@@ -17,6 +17,7 @@
 #include "imgui.h"
 #include "Geometory.h"
 #include "Material.h"
+#include "debugproc.h"
 #include "FBX/FBXPlayer.h"
 #include "DrawBuffer.h"
 #include "System.h"
@@ -43,7 +44,7 @@ void Collision::SetImGuiVal() {
 
 #if _DEBUG
 	ImGui::InputFloat3("m_vCenter", (float*)&m_vCenter);
-	ImGui::InputFloat3("m_vBBox", (float*)&m_vScale);
+	ImGui::InputFloat3("m_vScale", (float*)&m_vScale);
 #endif
 }
 
@@ -69,7 +70,14 @@ void CollisionSphere::DebugDraw() {
 	shader->SetTexturePS(NULL);
 	// ワールド
 	SHADER_WORLD WorldBuf;
-	WorldBuf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&GetWorld()));
+	XMMATRIX matrix = XMMatrixIdentity();	// 行列変換
+	XMFLOAT4X4 world;
+	float3 scale = m_vScale * 0.002f;
+	matrix = XMMatrixMultiply(matrix, XMMatrixScaling(scale.x, scale.y, scale.z));
+	matrix = XMMatrixMultiply(matrix, XMMatrixTranslation(m_vCenter.x, m_vCenter.y, m_vCenter.z));
+	matrix *= XMLoadFloat4x4(&m_transform->GetMatrix());
+	XMStoreFloat4x4(&world, matrix);
+	WorldBuf.mWorld = DirectX::XMMatrixTranspose(XMLoadFloat4x4(&world));
 	shader->UpdateBuffer("MainWorld", &WorldBuf);
 	// マテリアル
 	SHADER_MATERIAL material;
@@ -91,12 +99,14 @@ bool CollisionSphere::Sphere2Sphere(CollisionSphere obj1, CollisionSphere obj2) 
 	bool hit = false;
 	float h1 = obj1.m_vScale.x;
 	float h2 = obj2.m_vScale.x;
-	float3 c1 = obj1.m_vCenter;
-	float3 c2 = obj2.m_vCenter;
+	float3 c1 = obj1.m_transform->m_position + obj1.m_vCenter;
+	float3 c2 = obj2.m_transform->m_position + obj2.m_vCenter;
 	// 球1 ： 中心点の座標P1(x1, y1, z1), 半径r1
 	// 球2 ： 中心点の座標P2(x2, y2, z2), 半径r2
 	// (x2 - x1) ^ 2 + (y2 - y1) ^ 2 + (z2 - z1) ^ 2 <= (r1 + r2) ^ 2
-	if ((c2.x - c1.x) * (c2.x - c1.x) + (c2.y - c1.y) * (c2.y - c1.y) + (c2.z - c1.z) * (c2.z - c1.z) <= (h1 + h2) * (h1 + h2)) {
+	float a = (c2.x - c1.x) * (c2.x - c1.x) + (c2.y - c1.y) * (c2.y - c1.y) + (c2.z - c1.z) * (c2.z - c1.z);
+	float b = (h1 + h2) * (h1 + h2);
+	if (a <= b) {
 		hit = true;
 	}
 	return hit;

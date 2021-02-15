@@ -59,7 +59,7 @@
 #include "System.h"		// ƒƒ‚ƒŠŠÄ‹
 
 
-static const int MAX_ENEMY = 2;
+static const int MAX_ENEMY = 1;
 static const float VAL_ENEMY_POS_Z = 800.f;
 static const float MAX_ENEMY_POS_Z = 1000.f;
 

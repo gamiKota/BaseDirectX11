@@ -27,7 +27,7 @@ void EnemyNormal::Start() {
 	// ó‘Ô‚Ì‰Šú‰»
 	// ˆÚ“®
 	m_state->SetStateActive(ENEMY_STATE::MOVE, true);
-	m_state->GetState<EnemyState::Move>()->m_movement.x = 1.f;
+	//m_state->GetState<EnemyState::Move>()->m_movement.x = 1.f;
 	// UŒ‚‘ÎÛ
 	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
 	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
@@ -46,13 +46,13 @@ void EnemyNormal::Update() {
 	//}
 	//if (len)
 
-	// ËŒ‚UŒ‚
-	if (len < 2000.f) {
-		if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
-			m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
-			m_status->m_bulletTime.InitData();
-		}
-	}
+	//// ËŒ‚UŒ‚
+	//if (len < 2000.f) {
+	//	if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
+	//		m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
+	//		m_status->m_bulletTime.InitData();
+	//	}
+	//}
 }
 
 // EOF

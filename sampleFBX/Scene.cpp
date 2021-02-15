@@ -90,19 +90,25 @@ void Scene::Update() {
 			GameObject *temp1 = *i;
 			GameObject *temp2 = *j;
 
-			// Colliison
+			// ColliisonBox
 			if (temp1->GetComponent<CollisionBox>() != nullptr && temp2->GetComponent<CollisionBox>() != nullptr) {
 				if (CollisionBox::OBB(*temp1->GetComponent<CollisionBox>(), *temp2->GetComponent<CollisionBox>())) {
-					// デバッグ用Hit
-					//temp1->GetComponent<Collision>()->SetHit();
-					//temp2->GetComponent<Collision>()->SetHit();
-					// 当たった時に呼ばれる関数
 					temp1->OnCollision(temp2);
 					temp2->OnCollision(temp1);
-					// 物理エンジン機能？
 					if (temp1->GetComponent<Collider>() != nullptr && temp2->GetComponent<Collider>() != nullptr) {
 						Collider::ShiftCollision(temp1, temp2);
 					}
+				}
+			}
+			// CollisionSphere
+			if (temp1->GetComponent<CollisionSphere>() != nullptr && temp2->GetComponent<CollisionSphere>() != nullptr) {
+				if (CollisionSphere::Sphere2Sphere(*temp1->GetComponent<CollisionSphere>(), *temp2->GetComponent<CollisionSphere>())) {
+					temp1->OnCollision(temp2);
+					temp2->OnCollision(temp1);
+					// OBB専用の作りになっているため、機能しない
+					//if (temp1->GetComponent<Collider>() != nullptr && temp2->GetComponent<Collider>() != nullptr) {
+					//	Collider::ShiftCollision(temp1, temp2);
+					//}
 				}
 			}
 
