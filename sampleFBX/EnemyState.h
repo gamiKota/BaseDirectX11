@@ -35,7 +35,8 @@ enum class ENEMY_STATE {
  */
 class EnemyState : public StateMachine<ENEMY_STATE> {
 public:
-	float3 m_rotate;	//!< ‰ñ“]—Ê‚Ì•ÛŽ
+	float3 m_rotate;		//!< ‰ñ“]—Ê‚Ì•ÛŽ
+	Quaternion m_lookAt;	//!< ƒ^[ƒQƒbƒgˆ—‚Ì‰ñ“]Žp¨
 
 public:
 	void Awake() { Initialize(); }

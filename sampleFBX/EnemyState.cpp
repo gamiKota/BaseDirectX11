@@ -28,7 +28,7 @@ using namespace DirectX;
 /**
  * @constant
  */
-static const float SPEED = 15.0f;	// ‘¬‚³
+static const float SPEED = 10.0f;	// ‘¬‚³
 static const float VAL_ANGLE_Z = 2.f;
 static const float MAX_ANGLE_Z = 30.f;
 
@@ -47,10 +47,11 @@ void EnemyState::Update() {
 	// ó‘Ô‚ÉˆË‘¶‚µ‚È‚¢‹¤’Êˆ—
 	StateMachine::Update();
 
-	Quaternion q = m_transform->m_rotation;
-	Quaternion qz = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
-	Quaternion qy = Quaternion::AngleAxis(m_rotate.y, float3(0.f, 1.f, 0.f));
-	m_transform->m_rotation = q * qy * qz;
+	//Quaternion q1 = m_transform->m_rotation;
+	//Quaternion q2 = Quaternion::AngleAxis(m_rotate.z, m_transform->m_forward);
+	Quaternion q3 = m_lookAt;
+	//Quaternion q = q1 * q2;
+	m_transform->m_rotation = q3;
 }
 
 
@@ -82,10 +83,9 @@ void EnemyState::Move::Start() {
 }
 
 void EnemyState::Move::Update() {
-	// ƒ‚ƒfƒ‹Žp¨‚ÉˆË‘¶‚µ‚È‚¢•½sˆÚ“®
+	// ƒ‚ƒfƒ‹Žp¨‚ÉˆË‘¶‚µ‚È‚¢•½sˆÚ“®(‰¡Ž²ˆÚ“®)
 	XMFLOAT4X4 mtx = XMFLOAT4X4();
 	float3 rotate = Quaternion::RadianAngle(m_main->m_transform->m_rotation);
-
 	XMStoreFloat4x4(&mtx, XMMatrixRotationRollPitchYaw(rotate.x, rotate.y, 0.f));
 	float3 right = float3(mtx._11, mtx._12, mtx._13);
 	float3 up = float3(mtx._21, mtx._22, mtx._23);
@@ -99,25 +99,33 @@ void EnemyState::Move::Update() {
 	if (m_movement.x != 0.f) {
 		m_main->m_transform->m_position += right * (SPEED * m_movement.x);
 		if (m_movement.x > 0.f) {
-			if (m_main->m_rotate.z >= -MAX_ANGLE_Z)
+			if (m_main->m_rotate.z >= -MAX_ANGLE_Z) {
 				m_main->m_rotate.z -= VAL_ANGLE_Z;
+				//m_main->m_transform->m_rotation = Quaternion::AngleAxis(m_main->m_rotate.z, forward);
+			}
 		}
 		else {
-			if (m_main->m_rotate.z <= MAX_ANGLE_Z)
+			if (m_main->m_rotate.z <= MAX_ANGLE_Z) {
 				m_main->m_rotate.z += VAL_ANGLE_Z;
+				//m_main->m_transform->m_rotation = Quaternion::AngleAxis(m_main->m_rotate.z, forward);
+			}
 		}
 	}
 	else {
 		if (m_main->m_rotate.z > 0.f) {
 			m_main->m_rotate.z -= VAL_ANGLE_Z * 0.5f;
+				//m_main->m_transform->m_rotation = Quaternion::AngleAxis(m_main->m_rotate.z, forward);
 		}
 		else if (m_main->m_rotate.z < 0.f) {
 			m_main->m_rotate.z += VAL_ANGLE_Z * 0.5f;
+				//m_main->m_transform->m_rotation = Quaternion::AngleAxis(m_main->m_rotate.z, forward);
 		}
+
 	}
 	// YŽ²ˆÚ“®(ƒ^[ƒQƒbƒg‚Ì•û‚ÉŒü‚¢‚Ä‚é‚Ì‚Åy—v‘f‚Å’¼ÚˆÚ“®ˆ—)
 	if (m_movement.y != 0.f) {
-		m_main->m_transform->m_position.y += (SPEED * m_movement.y);
+		m_main->m_transform->m_position.y += ((SPEED * 0.5f) * m_movement.y);
+		//m_main->m_transform->m_position += up * (SPEED * m_movement.y);
 	}
 }
 
@@ -147,7 +155,10 @@ void EnemyState::TargetOn::Update() {
 	Quaternion q1 = m_main->m_transform->m_rotation;
 	Quaternion q2 = Quaternion::LookRotation(v1);
 	// Œ»Ý‚Ì‰ñ“]î•ñ‚ÆAƒ^[ƒQƒbƒg•ûŒü‚Ì‰ñ“]î•ñ‚ðŠp“x§ŒÀ•t‚«‚Å•âŠÔ‚·‚é
-	m_main->m_transform->m_rotation = Quaternion::RotateTowards(q1, q2, m_maxAngle);
+	Quaternion p3 = Quaternion::RotateTowards(q1, q2, m_maxAngle);
+	m_main->m_lookAt = p3;
+
+	//m_main->m_transform->LookAt(m_target->m_transform);
 }
 
 void EnemyState::TargetOn::OnDestoy() {
@@ -163,7 +174,7 @@ void EnemyState::TargetOff::Start() {
 }
 
 void EnemyState::TargetOff::Update() {
-	m_main->m_rotate.y = 0.f;
+	//m_main->m_rotate.y = 0.f;
 }
 
 void EnemyState::TargetOff::OnDestoy() {

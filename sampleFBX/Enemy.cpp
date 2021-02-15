@@ -19,6 +19,7 @@
 #include "GameObjectMesh.h"
 #include "HPGauge.h"
 #include "Frame.h"
+#include "AI.h"
 #include "System.h"
 
 
@@ -29,6 +30,7 @@ void Enemy::Start() {
 	// 敵AIに必要なコンポーネントの追加
 	// 操作は各敵継承コンポーネントで行う
 	m_state = m_gameObject->AddComponent<EnemyState>();
+	m_ai = m_gameObject->AddComponent<AI>();
 	//m_operate = m_gameObject->AddComponent<EnemyOperation>();
 
 	// 変数の初期化(敵クラスのデフォルト値の設定)

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -169,6 +169,7 @@
     <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="DrawBuffer.cpp" />
     <ClCompile Include="Drop.cpp" />
+    <ClCompile Include="AI.cpp" />
     <ClCompile Include="EnemyOperation.cpp" />
     <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="EnemyFixed.cpp" />
@@ -199,6 +200,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshBullet.cpp" />
     <ClCompile Include="MissionState.cpp" />
+    <ClCompile Include="EnemyNormal.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />
@@ -260,6 +262,7 @@
     <ClInclude Include="DomainShader.h" />
     <ClInclude Include="DrawBuffer.h" />
     <ClInclude Include="Drop.h" />
+    <ClInclude Include="AI.h" />
     <ClInclude Include="EnemyOperation.h" />
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="Explosion.h" />
@@ -290,6 +293,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshBullet.h" />
     <ClInclude Include="MissionState.h" />
+    <ClInclude Include="EnemyNormal.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="PlayerHP.h" />

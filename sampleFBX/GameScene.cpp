@@ -42,18 +42,19 @@
 #include "GameObjectUI.h"	// UIオブジェクト
 #include "GameObjectMesh.h"	// メッシュオブジェクト
 // コンポーネント
-#include "TPCamera.h"	// TPSカメラ
-#include "ggCamera.h"	// ggカメラ
-#include "Light.h"		// ライト
-#include "Sky.h"		// スカイドーム
-#include "PlayerMgr.h"	// プレイヤーマネージャー
-#include "EnemyFixed.h"	// 固定敵
-#include "Collision.h"	// 当たり判定
-#include "Rigidbody.h"	// 物理エンジン機能
-#include "MeshBullet.h"	// メッシュ弾
-#include "TargetCtr.h"	// ロックオンマーカー
-#include "Material.h"	// マテリアル
-#include "AreaWall.h"	// 壁
+#include "TPCamera.h"		// TPSカメラ
+#include "ggCamera.h"		// ggカメラ
+#include "Light.h"			// ライト
+#include "Sky.h"			// スカイドーム
+#include "PlayerMgr.h"		// プレイヤーマネージャー
+#include "EnemyFixed.h"		// 固定敵
+#include "EnemyNormal.h"	// 通常敵
+#include "Collision.h"		// 当たり判定
+#include "Rigidbody.h"		// 物理エンジン機能
+#include "MeshBullet.h"		// メッシュ弾
+#include "TargetCtr.h"		// ロックオンマーカー
+#include "Material.h"		// マテリアル
+#include "AreaWall.h"		// 壁
 // システム
 #include "System.h"		// メモリ監視
 
@@ -115,7 +116,7 @@ void GameScene::Init() {
 		vEnemyPos.x = (float)GetRandom((int)(-1000.f + 30.f), (int)(1000.f - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 		GameObject::Instantiate(m_object3D, vEnemyPos, Quaternion::LookRotation((vPlayerPos - vEnemyPos), float3(0.f, 1.f, 0.f)), float3() + 0.5f);
-		m_object3D->AddComponent<EnemyFixed>();
+		m_object3D->AddComponent<EnemyNormal>();
 		m_object3D->m_ps = E_PS::PS_PHONG;
 	}
 
