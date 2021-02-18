@@ -432,11 +432,11 @@
     <ClCompile Include="PlayerHP.cpp">
       <Filter>ソース ファイル\02Game\Script\Player</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyNormal.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="AI.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyNormal.cpp">
+      <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

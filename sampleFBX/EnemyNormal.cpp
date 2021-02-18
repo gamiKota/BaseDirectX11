@@ -40,10 +40,14 @@ void EnemyNormal::Update() {
 
 	float len = float3::Length(m_transform->m_position, m_state->GetState<EnemyState::TargetOn>()->GetTarget()->m_transform->m_position);
 
-	//// ˆÚ“®
-	//if (len <= 1500.f) {
-	//	m_state->GetState<EnemyState::Move>()->m_movement = float3(0.f, 0.f, 1.f);
-	//}
+	// ˆÚ“®
+	if (len <= 1000.f) {	// ‹ß‚Ã‚©‚ê‚½‚ç—£‚ê‚é
+		m_state->SetStateActive(ENEMY_STATE::MOVE, true);
+		m_state->GetState<EnemyState::Move>()->m_movement = float3(0.f, 0.f, -1.f);
+		m_ai->StartUp(1.f, true)->OnComplete([state = m_state]() {
+				state->SetStateActive(ENEMY_STATE::IDOL, true);
+		});
+	}
 	//if (len)
 
 	//// ËŒ‚UŒ‚

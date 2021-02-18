@@ -4,9 +4,17 @@
 #include <functional>
 
 class AI : public Component {
-public:
+private:
+	float m_time;
+	float m_maxTime;
+	bool m_lock;
 
-	AI* StartUp(float waitTime = 2.f);
+public:
+	AI();
+	void Update();
+	void Init();
+
+	AI* StartUp(float waitTime = 2.f, bool lock = false);
 
 	void OnComplete(std::function<void()> func) { m_comp = func; }
 
