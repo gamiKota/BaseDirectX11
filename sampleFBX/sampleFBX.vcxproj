@@ -170,6 +170,7 @@
     <ClCompile Include="DrawBuffer.cpp" />
     <ClCompile Include="Drop.cpp" />
     <ClCompile Include="AI.cpp" />
+    <ClCompile Include="EnemyElite.cpp" />
     <ClCompile Include="EnemyOperation.cpp" />
     <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="EnemyFixed.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="DrawBuffer.h" />
     <ClInclude Include="Drop.h" />
     <ClInclude Include="AI.h" />
+    <ClInclude Include="EnemyElite.h" />
     <ClInclude Include="EnemyOperation.h" />
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="Explosion.h" />

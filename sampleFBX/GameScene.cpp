@@ -49,6 +49,7 @@
 #include "PlayerMgr.h"		// プレイヤーマネージャー
 #include "EnemyFixed.h"		// 固定敵
 #include "EnemyNormal.h"	// 通常敵
+#include "EnemyElite.h"		// エリート敵
 #include "Collision.h"		// 当たり判定
 #include "Rigidbody.h"		// 物理エンジン機能
 #include "MeshBullet.h"		// メッシュ弾
@@ -59,7 +60,7 @@
 #include "System.h"		// メモリ監視
 
 
-static const int MAX_ENEMY = 2;
+static const int MAX_ENEMY = 1;
 static const float VAL_ENEMY_POS_Z = 800.f;
 static const float MAX_ENEMY_POS_Z = 1000.f;
 
@@ -108,6 +109,12 @@ void GameScene::Init() {
 	m_object3D->AddComponent<PlayerMgr>();
 	m_object3D->m_ps = E_PS::PS_PHONG;
 
+	// 敵スポーン地点
+	m_object3D = new GameObject3D(E_MODEL_NONE, "EnemySpawn", "EnemySpawn");
+	GameObject::Instantiate(m_object3D, float3(0.f, 0.f, 200.f), Quaternion::identity, float3() + 15.f);
+	m_object3D->m_ps = E_PS::PS_COLOR;
+	m_object3D->m_material->m_diffuse = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
+
 	// 敵機初期化
 	float3 vEnemyPos(0.0f, 0.0f, VAL_ENEMY_POS_Z);
 	float3 vPlayerPos = GameObject::FindGameObjectWithTag("Player")->m_transform->m_position;
@@ -116,20 +123,9 @@ void GameScene::Init() {
 		vEnemyPos.x = (float)GetRandom((int)(-1000.f + 30.f), (int)(1000.f - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 		GameObject::Instantiate(m_object3D, vEnemyPos, Quaternion::LookRotation((vPlayerPos - vEnemyPos), float3(0.f, 1.f, 0.f)), float3() + 0.5f);
-		m_object3D->AddComponent<EnemyNormal>();
+		m_object3D->AddComponent<EnemyElite>();
 		m_object3D->m_ps = E_PS::PS_PHONG;
 	}
-
-	m_mesh = new GameObjectMesh(E_MESH_TYPE::NORMAL, E_TEXTURE::E_TEXTURE_TREE);
-	GameObject::Instantiate(m_mesh, float3(), Quaternion(), float3() + 100.f);
-
-	//// ボックス
-	//m_object3D = new GameObject3D(E_MODEL_NONE, "box", "box");
-	//m_object3D->m_transform->m_position = float3(0.f, 0.f, 100.f);
-	//m_object3D->AddComponent<Collision>();
-	//m_object3D->m_transform->m_scale = float3(20.f, 20.f, 100.f);
-	//m_object3D->m_material.Kd = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
-	//m_listObject.push_back(m_object3D);
 
 
 	//--- フィールドの生成

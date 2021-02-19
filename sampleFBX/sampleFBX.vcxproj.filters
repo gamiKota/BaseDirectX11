@@ -438,6 +438,9 @@
     <ClCompile Include="EnemyNormal.cpp">
       <Filter>ソース ファイル\02Game\Script\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyElite.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DClass.h">
@@ -711,6 +714,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="AI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyElite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
