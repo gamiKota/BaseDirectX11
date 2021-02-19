@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include <functional>
+#include <vector>
 
 class AI : public Component {
 private:
@@ -19,4 +20,7 @@ public:
 	void OnComplete(std::function<void()> func) { m_comp = func; }
 
 	std::function<void()> m_comp;
+
+	std::vector<std::function<void()>> m_table;
+	//std::function<AI*()> m_table;
 };
