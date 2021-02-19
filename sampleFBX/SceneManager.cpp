@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include "D3DClass.h"
 #include "input.h"
+#include <time.h>
 #include "System.h"
 
 
@@ -25,6 +26,9 @@ SceneManager::~SceneManager() {
 
 
 void SceneManager::Init() {
+	unsigned int now = (unsigned int)time(0);
+	srand(now);
+
 	TextureManager::GetInstance().Initialize();
 	ModelManager::GetInstance().Init();
 	m_scene->Init();

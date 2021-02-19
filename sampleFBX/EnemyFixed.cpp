@@ -16,7 +16,21 @@
 #include "EnemyState.h"
 #include "Rigidbody.h"
 #include "debugproc.h"
+#include "AI.h"
+#include "PlayerState.h"
 #include "System.h"
+
+
+void Fixed_AI_Idol(AI* ai, EnemyState* state) {
+	state->SetStateActive(ENEMY_STATE::IDOL, true);
+}
+void Fixed_AI_Move(AI* ai, EnemyState* state) {
+	state->SetStateActive(ENEMY_STATE::IDOL, true);
+}
+void Fixed_AI_Attack(AI* ai, EnemyState* state, Status* status) {
+	state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
+	status->m_bulletTime.InitData();
+}
 
 
 void EnemyFixed::Start() {

@@ -101,6 +101,9 @@ public:
 		void Update()	override;		// ó‘Ô‚ÌÅ’†
 		void OnDestoy() override;		// ó‘ÔI—¹
 	};
+
+
+	GameObject* GetTarget() { return GetState<TargetOn>()->m_target; }
 };
 
 

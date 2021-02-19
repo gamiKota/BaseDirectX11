@@ -6,6 +6,7 @@
 #include "EnemyState.h"
 #include "Rigidbody.h"
 #include "AI.h"
+#include "PlayerState.h"
 #include "System.h"
 
 
@@ -16,32 +17,47 @@ AI
 ランダム数秒ごとにランダムに移動(X軸、Y軸、さらに離れる移動)
 */
 
-void Idol(AI* ai, EnemyState* state) {
+
+enum class NoramalEnemyAI {
+	Idol,
+	Move,
+	Attack,
+};
+
+
+// 停止時の行動
+void Normal_AI_Idol(AI* ai, EnemyState* state) {
 	state->SetStateActive(ENEMY_STATE::IDOL, true);
 	// ここをランダム性にする(停止時間)
 }
-void Move(AI* ai, EnemyState* state) {
-	float len = float3::Length(
-		state->m_transform->m_position, state->GetState<EnemyState::TargetOn>()->GetTarget()->m_transform->m_position
-	);
+// 動作時の行動
+void Normal_AI_Move(AI* ai, EnemyState* state) {
+	float len = float3::Length(state->m_transform->m_position, state->GetTarget()->m_transform->m_position);
+	GameObject* player = GameObject::FindGameObjectWithTag("Player");
 	// プレイヤーに対する行動
-	if (state->GetState<EnemyState::TargetOn>()->GetTarget() == GameObject::FindGameObjectWithTag("Player")) {
+	if (state->GetState<EnemyState::TargetOn>()->GetTarget() == player) {
 		if (len <= 1000.f) {	// 近い場合
 			state->SetStateActive(ENEMY_STATE::MOVE, true);
 			state->GetState<EnemyState::Move>()->m_movement = float3(0.f, 0.f, -0.5f);
 		}
 		else {	// 十分な距離がとれてる場合
-			// ここをランダム性にする(移動方向)
-			state->SetStateActive(ENEMY_STATE::MOVE, true);
-			state->GetState<EnemyState::Move>()->m_movement = float3(0.4f, 0.f, 0.f);
+			if (player->GetComponent<PlayerState>()->GetTarget() == ai->m_gameObject) {
+				ai->StartUp(3.f, true)->OnStart([s = state] {
+					int move = rand() % 2;
+					s->SetStateActive(ENEMY_STATE::MOVE, true);
+					s->GetState<EnemyState::Move>()->m_movement = float3(move == 0 ? -0.4f : 0.4f, 0.f, 0.f);
+				});
+			}
+			else {
+				state->SetStateActive(ENEMY_STATE::IDOL, true);
+			}
 		}
 	}
 }
-void Attack(AI* ai, EnemyState* state, Status* status) {
-	if (status->m_bulletTime.data >= status->m_bulletTime.max) {
-		state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
-		status->m_bulletTime.InitData();
-	}
+// 攻撃時の行動
+void Normal_AI_Attack(AI* ai, EnemyState* state, Status* status) {
+	state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
+	status->m_bulletTime.InitData();
 }
 
 
@@ -70,21 +86,21 @@ void EnemyNormal::Start() {
 	m_state->GetState<EnemyState::TargetOn>()->SetMaxAngle(2.f);
 
 	// AIテーブル
-	m_ai->m_table.push_back([sub = this] { Idol(sub->m_ai, sub->m_state); });
-	m_ai->m_table.push_back([sub = this] { Move(sub->m_ai, sub->m_state); });
-	m_ai->m_table.push_back([sub = this] { });
-	m_ai->m_table.push_back([sub = this] { });
-	m_ai->m_table.push_back([sub = this] { Attack(sub->m_ai, sub->m_state, sub->m_status); });
+	m_ai->m_table[(int)NoramalEnemyAI::Idol] = [sub = this] { Normal_AI_Idol(sub->m_ai, sub->m_state); };
+	m_ai->m_table[(int)NoramalEnemyAI::Move] = [sub = this] { Normal_AI_Move(sub->m_ai, sub->m_state); };
+	m_ai->m_table[(int)NoramalEnemyAI::Attack] = [sub = this] { Normal_AI_Attack(sub->m_ai, sub->m_state, sub->m_status); };
 }
 
 void EnemyNormal::Update() {
 	// 敵の共通処理
 	Enemy::Update();
 
-	// 射撃
-	m_ai->m_table[(int)ENEMY_STATE::ATTACK_BULLET]();
-	// 移動
-	m_ai->m_table[(int)ENEMY_STATE::MOVE]();
+	//--- 射撃
+	if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
+		m_ai->m_table[(int)NoramalEnemyAI::Attack]();
+	}
+	//--- 移動
+	m_ai->m_table[(int)NoramalEnemyAI::Move]();
 }
 
 // EOF
