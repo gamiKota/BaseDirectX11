@@ -41,23 +41,29 @@ void Normal_AI_Move(AI* ai, EnemyState* state) {
 			state->GetState<EnemyState::Move>()->m_movement = float3(0.f, 0.f, -0.5f);
 		}
 		else {	// 十分な距離がとれてる場合
+			int move = rand() % 2;
 			if (player->GetComponent<PlayerState>()->GetTarget() == ai->m_gameObject) {
-				ai->StartUp(3.f, true)->OnStart([s = state] {
-					int move = rand() % 2;
+				ai->StartUp(3.f, true)->OnStart([s = state, _move = move] {
 					s->SetStateActive(ENEMY_STATE::MOVE, true);
-					s->GetState<EnemyState::Move>()->m_movement = float3(move == 0 ? -0.4f : 0.4f, 0.f, 0.f);
+					s->GetState<EnemyState::Move>()->m_movement = float3(_move == 0 ? -0.4f : 0.4f, 0.f, 0.f);
 				});
 			}
 			else {
-				state->SetStateActive(ENEMY_STATE::IDOL, true);
+				ai->StartUp(5.f, true)->OnStart([s = state, _move = move] {
+					int move = rand() % 2;
+					s->SetStateActive(ENEMY_STATE::MOVE, true);
+					s->GetState<EnemyState::Move>()->m_movement = float3(_move == 0 ? -0.2f : 0.2f, 0.f, 0.f);
+				});
 			}
 		}
 	}
 }
 // 攻撃時の行動
 void Normal_AI_Attack(AI* ai, EnemyState* state, Status* status) {
-	state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
-	status->m_bulletTime.InitData();
+	if (status->m_bulletTime.data >= status->m_bulletTime.max) {
+		state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
+		status->m_bulletTime.InitData();
+	}
 }
 
 
@@ -79,13 +85,12 @@ void EnemyNormal::Start() {
 	// 状態の初期化
 	// 移動
 	m_state->SetStateActive(ENEMY_STATE::MOVE, true);
-	//m_state->GetState<EnemyState::Move>()->m_movement.x = 1.f;
 	// 攻撃対象
 	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
 	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
 	m_state->GetState<EnemyState::TargetOn>()->SetMaxAngle(2.f);
 
-	// AIテーブル
+	// AIテーブル(もっと行動ルーチンを分けてもいいかもしれない)
 	m_ai->m_table[(int)NoramalEnemyAI::Idol] = [sub = this] { Normal_AI_Idol(sub->m_ai, sub->m_state); };
 	m_ai->m_table[(int)NoramalEnemyAI::Move] = [sub = this] { Normal_AI_Move(sub->m_ai, sub->m_state); };
 	m_ai->m_table[(int)NoramalEnemyAI::Attack] = [sub = this] { Normal_AI_Attack(sub->m_ai, sub->m_state, sub->m_status); };
@@ -96,10 +101,10 @@ void EnemyNormal::Update() {
 	Enemy::Update();
 
 	//--- 射撃
-	if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
-		m_ai->m_table[(int)NoramalEnemyAI::Attack]();
-	}
+	m_ai->m_table[(int)NoramalEnemyAI::Attack]();
 	//--- 移動
+	// ここでランダム性やイベント発行を出す
+	// 例) HPが下がったら移動早くする、もしくはAIテーブル自体の変更
 	m_ai->m_table[(int)NoramalEnemyAI::Move]();
 }
 
