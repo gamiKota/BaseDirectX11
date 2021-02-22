@@ -21,15 +21,23 @@
 #include "System.h"
 
 
-void Fixed_AI_Idol(AI* ai, EnemyState* state) {
-	state->SetStateActive(ENEMY_STATE::IDOL, true);
+enum class FixedEnemyAI {
+	Attack,
+	Delete,
+};
+
+AI* Fixed_AI_Attack(AI* ai, EnemyState* state, Status* status) {
+	if (status->m_bulletTime.data >= status->m_bulletTime.max) {
+		state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
+		status->m_bulletTime.InitData();
+	}
+	return ai;
 }
-void Fixed_AI_Move(AI* ai, EnemyState* state) {
-	state->SetStateActive(ENEMY_STATE::IDOL, true);
-}
-void Fixed_AI_Attack(AI* ai, EnemyState* state, Status* status) {
-	state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
-	status->m_bulletTime.InitData();
+AI* Fixed_AI_Delete(AI* ai, EnemyState* state) {
+	state->SetStateActive(ENEMY_STATE::DEFEATED, true);
+	state->GetState<EnemyState::Move>()->m_movement = float3(0.f, 0.f, -0.2f);
+	ai->StartUp(2.f, true)->OnComplete([obj = ai->m_gameObject]{ Enemy::EnemyDelete(obj); });
+	return ai;
 }
 
 
@@ -52,6 +60,10 @@ void EnemyFixed::Start() {
 	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
 	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
 	m_state->GetState<EnemyState::TargetOn>()->SetMaxAngle(1.f);
+
+	// AIテーブル
+	m_ai->m_table[(int)FixedEnemyAI::Attack] = [sub = this] { return Fixed_AI_Attack(sub->m_ai, sub->m_state, sub->m_status); };
+	m_ai->m_table[(int)FixedEnemyAI::Delete] = [sub = this] { return Fixed_AI_Delete(sub->m_ai, sub->m_state); };
 }
 
 
@@ -59,21 +71,14 @@ void EnemyFixed::Update() {
 	// 敵の共通処理
 	Enemy::Update();
 
-	// ターゲット方向に向く処理
-	// このコンポーネントはターゲットがプレイヤーから変わることはない
-	//if (!m_state->GetCurrentState(ENEMY_STATE::TARGET_ON)) {
-	//	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
-	//	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
-	//	m_state->GetState<EnemyState::TargetOn>()->SetAngle(1.f);
-	//}
-
-	// 射撃攻撃
-	if (float3::Length(m_transform->m_position,
-		m_state->GetState<EnemyState::TargetOn>()->GetTarget()->m_transform->m_position) < 2000.f) {
-		if (m_status->m_bulletTime.data >= m_status->m_bulletTime.max) {
-			m_state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
-			m_status->m_bulletTime.InitData();
-		}
+	// 死亡時
+	if (m_status->m_isDead) {
+		m_ai->m_table[(int)FixedEnemyAI::Delete]();
+	}
+	// 生存時
+	else {
+		//--- 射撃
+		m_ai->m_table[(int)FixedEnemyAI::Attack]();
 	}
 }
 

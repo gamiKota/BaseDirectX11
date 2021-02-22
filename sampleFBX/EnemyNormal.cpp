@@ -22,6 +22,7 @@ enum class NoramalEnemyAI {
 	Idol,
 	Move,
 	Attack,
+	Delete,
 };
 
 
@@ -68,6 +69,13 @@ AI* Normal_AI_Attack(AI* ai, EnemyState* state, Status* status) {
 	}
 	return ai;
 }
+// 攻撃時の行動
+AI* Normal_AI_Delete(AI* ai, EnemyState* state) {
+	state->SetStateActive(ENEMY_STATE::DEFEATED, true);
+	state->GetState<EnemyState::Move>()->m_movement = float3(0.f, 0.f, -0.2f);
+	ai->StartUp(2.f, true)->OnComplete([obj = ai->m_gameObject]{ Enemy::EnemyDelete(obj); });
+	return ai;
+}
 
 
 void EnemyNormal::Start() {
@@ -97,18 +105,26 @@ void EnemyNormal::Start() {
 	m_ai->m_table[(int)NoramalEnemyAI::Idol] = [sub = this] { return Normal_AI_Idol(sub->m_ai, sub->m_state); };
 	m_ai->m_table[(int)NoramalEnemyAI::Move] = [sub = this] { return Normal_AI_Move(sub->m_ai, sub->m_state); };
 	m_ai->m_table[(int)NoramalEnemyAI::Attack] = [sub = this] { return Normal_AI_Attack(sub->m_ai, sub->m_state, sub->m_status); };
+	m_ai->m_table[(int)NoramalEnemyAI::Delete] = [sub = this] { return Normal_AI_Delete(sub->m_ai, sub->m_state); };
 }
 
 void EnemyNormal::Update() {
 	// 敵の共通処理
 	Enemy::Update();
 
-	//--- 射撃
-	m_ai->m_table[(int)NoramalEnemyAI::Attack]();
-	//--- 移動
-	// ここでランダム性やイベント発行を出す
-	// 例) HPが下がったら移動早くする、もしくはAIテーブル自体の変更
-	m_ai->m_table[(int)NoramalEnemyAI::Move]();
+	// 死亡時
+	if (m_status->m_isDead) {
+		m_ai->m_table[(int)NoramalEnemyAI::Delete]();
+	}
+	// 生存時
+	else {
+		//--- 射撃
+		m_ai->m_table[(int)NoramalEnemyAI::Attack]();
+		//--- 移動
+		// ここでランダム性やイベント発行を出す
+		// 例) HPが下がったら移動早くする、もしくはAIテーブル自体の変更
+		m_ai->m_table[(int)NoramalEnemyAI::Move]();
+	}
 }
 
 // EOF

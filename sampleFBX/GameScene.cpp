@@ -123,7 +123,7 @@ void GameScene::Init() {
 		vEnemyPos.x = (float)GetRandom((int)(-1000.f + 30.f), (int)(1000.f - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 		GameObject::Instantiate(m_object3D, vEnemyPos, Quaternion::LookRotation((vPlayerPos - vEnemyPos), float3(0.f, 1.f, 0.f)), float3() + 0.5f);
-		m_object3D->AddComponent<EnemyElite>();
+		m_object3D->AddComponent<EnemyFixed>();
 		m_object3D->m_ps = E_PS::PS_PHONG;
 	}
 
