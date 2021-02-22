@@ -41,6 +41,7 @@ void EnemyState::Initialize() {
 	StateMachine::AddState(new EnemyState::TargetOn(this));
 	StateMachine::AddState(new EnemyState::TargetOff(this));
 	StateMachine::AddState(new EnemyState::AttackBullet(this));
+	StateMachine::AddState(new EnemyState::Defeated(this));
 }
 
 void EnemyState::Update() {
@@ -196,6 +197,21 @@ void EnemyState::AttackBullet::Update() {
 }
 
 void EnemyState::AttackBullet::OnDestoy() {
+}
+
+
+/**************************************************************************************************
+ * @state 被撃破
+ *************************************************************************************************/
+void EnemyState::Defeated::Start() {
+	// 各ステートの終了
+	m_main->SetStateActive(ENEMY_STATE::TARGET_ON, false);
+}
+
+void EnemyState::Defeated::Update() {
+}
+
+void EnemyState::Defeated::OnDestoy() {
 }
 
 

@@ -26,12 +26,13 @@ enum class NoramalEnemyAI {
 
 
 // 停止時の行動
-void Normal_AI_Idol(AI* ai, EnemyState* state) {
+AI* Normal_AI_Idol(AI* ai, EnemyState* state) {
 	state->SetStateActive(ENEMY_STATE::IDOL, true);
+	return ai;
 	// ここをランダム性にする(停止時間)
 }
 // 動作時の行動
-void Normal_AI_Move(AI* ai, EnemyState* state) {
+AI* Normal_AI_Move(AI* ai, EnemyState* state) {
 	float len = float3::Length(state->m_transform->m_position, state->GetTarget()->m_transform->m_position);
 	GameObject* player = GameObject::FindGameObjectWithTag("Player");
 	// プレイヤーに対する行動
@@ -57,13 +58,15 @@ void Normal_AI_Move(AI* ai, EnemyState* state) {
 			}
 		}
 	}
+	return ai;
 }
 // 攻撃時の行動
-void Normal_AI_Attack(AI* ai, EnemyState* state, Status* status) {
+AI* Normal_AI_Attack(AI* ai, EnemyState* state, Status* status) {
 	if (status->m_bulletTime.data >= status->m_bulletTime.max) {
 		state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
 		status->m_bulletTime.InitData();
 	}
+	return ai;
 }
 
 
@@ -91,9 +94,9 @@ void EnemyNormal::Start() {
 	m_state->GetState<EnemyState::TargetOn>()->SetMaxAngle(2.f);
 
 	// AIテーブル(もっと行動ルーチンを分けてもいいかもしれない)
-	m_ai->m_table[(int)NoramalEnemyAI::Idol] = [sub = this] { Normal_AI_Idol(sub->m_ai, sub->m_state); };
-	m_ai->m_table[(int)NoramalEnemyAI::Move] = [sub = this] { Normal_AI_Move(sub->m_ai, sub->m_state); };
-	m_ai->m_table[(int)NoramalEnemyAI::Attack] = [sub = this] { Normal_AI_Attack(sub->m_ai, sub->m_state, sub->m_status); };
+	m_ai->m_table[(int)NoramalEnemyAI::Idol] = [sub = this] { return Normal_AI_Idol(sub->m_ai, sub->m_state); };
+	m_ai->m_table[(int)NoramalEnemyAI::Move] = [sub = this] { return Normal_AI_Move(sub->m_ai, sub->m_state); };
+	m_ai->m_table[(int)NoramalEnemyAI::Attack] = [sub = this] { return Normal_AI_Attack(sub->m_ai, sub->m_state, sub->m_status); };
 }
 
 void EnemyNormal::Update() {

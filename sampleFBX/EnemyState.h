@@ -25,6 +25,7 @@ enum class ENEMY_STATE {
 	TARGET_ON,		// ターゲットON
 	TARGET_OFF,		// ターゲットOFF
 	ATTACK_BULLET,	// 射撃攻撃
+	DEFEATED,		// 被撃破
 
 	MAX,
 };
@@ -97,6 +98,15 @@ public:
 	struct AttackBullet : public State<ENEMY_STATE> {
 		EnemyState* m_main;
 		AttackBullet(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::ATTACK_BULLET), m_main(_main) {}
+		void Start()	override;		// 状態移行直後
+		void Update()	override;		// 状態の最中
+		void OnDestoy() override;		// 状態終了時
+	};
+
+	// 被撃破状態
+	struct Defeated : public State<ENEMY_STATE> {
+		EnemyState* m_main;
+		Defeated(EnemyState* _main) : State<ENEMY_STATE>(ENEMY_STATE::DEFEATED), m_main(_main) {}
 		void Start()	override;		// 状態移行直後
 		void Update()	override;		// 状態の最中
 		void OnDestoy() override;		// 状態終了時

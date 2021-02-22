@@ -27,12 +27,14 @@ protected:
 	EnemyState* m_state;		//!< 状態管理
 	AI* m_ai;					//!< AI管理
 	GameObject* m_LockIcon;		//!< ロックオンマーカー
-
+	float m_defaultTime;		//!< デフォルトの計測時間(生成されてから削除までをカウント)
 	
 public:
 	void Start();
 	void Update();
 	void Uninit();
+
+	static void EnemyDelete(GameObject* obj);
 };
 
 

@@ -24,6 +24,6 @@ public:
 	void OnComplete(std::function<void()> func) { m_comp = func; }
 	std::function<void()> m_comp;
 
-	std::map<int, std::function<void()>> m_table;
+	std::map<int, std::function<AI*()>> m_table;
 	//std::function<AI*()> m_table;
 };

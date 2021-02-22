@@ -20,8 +20,11 @@ AI
 
 enum class EliteEnemyAI {
 	Idol,
-	Move,
+	MoveBack,
+	MoveFront,
+	MoveSide,
 	Attack,
+	Delete,
 };
 
 
@@ -31,7 +34,7 @@ void Elite_AI_Idol(AI* ai, EnemyState* state) {
 	// ここをランダム性にする(停止時間)
 }
 // 動作時の行動
-void Elite_AI_Move(AI* ai, EnemyState* state) {
+void Elite_AI_Move_Back(AI* ai, EnemyState* state) {
 	float len = float3::Length(state->m_transform->m_position, state->GetTarget()->m_transform->m_position);
 	GameObject* player = GameObject::FindGameObjectWithTag("Player");
 	// プレイヤーに対する行動
@@ -40,13 +43,10 @@ void Elite_AI_Move(AI* ai, EnemyState* state) {
 			state->SetStateActive(ENEMY_STATE::MOVE, true);
 			state->GetState<EnemyState::Move>()->m_movement = float3(0.f, 0.f, -0.5f);
 		}
-		else {	// 十分な距離がとれてる場合
-			int move = rand() % 2;
-			ai->StartUp(2.f, true)->OnStart([s = state, _move = move] {
-				s->SetStateActive(ENEMY_STATE::MOVE, true);
-				s->GetState<EnemyState::Move>()->m_movement = float3(_move == 0 ? -1.f : 1.f, 0.f, 0.f);
-			});
-		}
+	}
+	// プレイヤー以外への行動
+	else {
+
 	}
 }
 // 攻撃時の行動
@@ -55,6 +55,12 @@ void Elite_AI_Attack(AI* ai, EnemyState* state, Status* status) {
 		state->SetStateActive(ENEMY_STATE::ATTACK_BULLET, true);
 		status->m_bulletTime.InitData();
 	}
+}
+// 被撃破時の行動
+void Elite_AI_Delete(AI* ai, EnemyState* state) {
+	state->SetStateActive(ENEMY_STATE::DEFEATED , true);
+	state->GetState<EnemyState::Move>()->m_movement = float3(0.f, 0.f, -0.2f);
+	ai->StartUp(5.f, true)->OnComplete([obj = ai->m_gameObject] { Enemy::EnemyDelete(obj); });
 }
 
 
@@ -74,29 +80,36 @@ void EnemyElite::Start() {
 	m_status->m_bulletTime.max = 3.f;	// 弾発射間隔
 
 	// 状態の初期化
-	// 移動
-	m_state->SetStateActive(ENEMY_STATE::MOVE, true);
 	// 攻撃対象
 	m_state->SetStateActive(ENEMY_STATE::TARGET_ON, true);
 	m_state->GetState<EnemyState::TargetOn>()->SetTarget(GameObject::Find("Player"));
 	m_state->GetState<EnemyState::TargetOn>()->SetMaxAngle(2.f);
 
 	// AIテーブル
-	m_ai->m_table[(int)EliteEnemyAI::Idol] = [sub = this] { Elite_AI_Idol(sub->m_ai, sub->m_state); };
-	m_ai->m_table[(int)EliteEnemyAI::Move] = [sub = this] { Elite_AI_Move(sub->m_ai, sub->m_state); };
-	m_ai->m_table[(int)EliteEnemyAI::Attack] = [sub = this] { Elite_AI_Attack(sub->m_ai, sub->m_state, sub->m_status); };
+	m_ai->m_table[(int)EliteEnemyAI::Idol] = [sub = this] { Elite_AI_Idol(sub->m_ai, sub->m_state); return sub->m_ai; };
+	m_ai->m_table[(int)EliteEnemyAI::MoveBack] = [sub = this] { Elite_AI_Move_Back(sub->m_ai, sub->m_state); return sub->m_ai; };
+	m_ai->m_table[(int)EliteEnemyAI::Attack] = [sub = this] { Elite_AI_Attack(sub->m_ai, sub->m_state, sub->m_status); return sub->m_ai; };
+	m_ai->m_table[(int)EliteEnemyAI::Delete] = [sub = this] { Elite_AI_Delete(sub->m_ai, sub->m_state); return sub->m_ai; };
 }
 
 void EnemyElite::Update() {
 	// 敵の共通処理
 	Enemy::Update();
 
-	//--- 射撃
-	m_ai->m_table[(int)EliteEnemyAI::Attack]();
-	//--- 移動
-	// ここでランダム性やイベント発行を出す
-	// 例) HPが下がったら移動早くする、もしくはAIテーブル自体の変更
-	m_ai->m_table[(int)EliteEnemyAI::Move]();
+	// 死亡時
+	if (m_status->m_isDead) {
+		m_ai->m_table[(int)EliteEnemyAI::Delete]();
+	}
+	// 生存時
+	else {
+		//--- 射撃
+		m_ai->m_table[(int)EliteEnemyAI::Attack]();
+		//--- 移動
+		// ここでランダム性やイベント発行を出す
+		// 例) HPが下がったら移動早くする、もしくはAIテーブル自体の変更
+		m_ai->m_table[(int)EliteEnemyAI::MoveBack]();
+	}
 }
+
 
 // EOF

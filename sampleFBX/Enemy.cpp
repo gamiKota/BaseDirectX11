@@ -40,6 +40,9 @@ void Enemy::Start() {
 	GameObjectUI* obj = new GameObjectUI(E_LAYER::UI, E_TEXTURE::E_TEXTURE_ROCK_ICON_INCAMERA_MAIN, "EnemyIcon");
 	obj->AddComponent<TargetCtr>()->m_target = m_gameObject;
 	m_LockIcon = GameObject::Instantiate(obj);
+
+	// 計測タイム
+	m_defaultTime = 0.f;
 }
 
 
@@ -49,14 +52,17 @@ void Enemy::Uninit() {
 
 
 void Enemy::Update() {
-	if (m_status->m_isDead) {
-		if (GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget() != nullptr &&
-			m_gameObject->GetInstanceID() == 
-			GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget()->GetInstanceID()) {	// 今自分がターゲットの場合
-			GameObject::Find("Player")->GetComponent<PlayerState>()->SetTarget();
-		}
-		Destroy(m_gameObject);
+	m_defaultTime += Frame::GetInstance().GetDeltaTime();
+}
+
+
+void Enemy::EnemyDelete(GameObject* obj) {
+	if (GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget() != nullptr &&
+		obj->GetInstanceID() ==
+		GameObject::Find("Player")->GetComponent<PlayerState>()->GetTarget()->GetInstanceID()) {	// 今自分がターゲットの場合
+		GameObject::Find("Player")->GetComponent<PlayerState>()->SetTarget();
 	}
+	GameObject::Destroy(obj);
 }
 
 

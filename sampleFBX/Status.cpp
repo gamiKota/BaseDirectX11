@@ -28,6 +28,7 @@ void Status::Start() {
 void Status::Update() {
 	if (m_HP <= 0.f || m_isDead) {
 		// HPが0になった時点でステータス関連の全ての情報の更新を遮断
+		//return;
 	}
 
 	// デルタタイム
@@ -35,12 +36,7 @@ void Status::Update() {
 
 	// 消滅関連の更新
 	if (m_HP <= 0.f && !m_isDead) {
-		if (m_deleteTime.data < m_deleteTime.max) {	// 設定した消滅時間に到達
-			m_deleteTime.data += deltaTime;
-		}
-		else {
-			m_isDead = true;
-		}
+		m_isDead = true;
 	}
 
 	// 遠距離攻撃関連の更新
