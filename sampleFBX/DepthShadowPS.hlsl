@@ -7,7 +7,7 @@ struct PS_IN
 };
 
 Texture2D tex : register(t0);
-Texture2D shadow : register(t1);
+Texture2D shadow : register(t8);
 SamplerState samp : register(s0);
 
 float4 main(PS_IN PIN) : SV_Target

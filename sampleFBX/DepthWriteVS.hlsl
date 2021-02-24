@@ -14,23 +14,33 @@ struct VS_OUT
 	float4 shadowPos : TEXCOORD1;
 };
 
-cbuffer World : register(b0)
+cbuffer camera : register(b0)
 {
-	float4x4 world;
-};
-cbuffer ViewProj : register(b1)
-{
+	float4	g_cameraPos;	// 視点座標(ワールド空間)
 	float4x4 view;
 	float4x4 proj;
+};
+cbuffer Light : register(b1) {
+	float4	LightDir;			// 光源方向
+	float4	LightAmbient;		// 光源色(アンビエント)
+	float4	LightDiffuse;		// 光源色(ディフューズ)
+	float4	LightSpecular;		// 光源色(スペキュラ)
+	float4x4 LightView;
+	float4x4 LightProj;
+	float4x4 LightScreenMat;
+};
+cbuffer World : register(b3) {
+	float4x4 mtxWorld;
+	float4x4 mtxTexture;
 };
 
 VS_OUT main(VS_IN VIN)
 {
 	VS_OUT VOUT;
 	VOUT.pos = float4(VIN.pos, 1);
-	VOUT.pos = mul(VOUT.pos, world);
-	VOUT.pos = mul(VOUT.pos, view);
-	VOUT.pos = mul(VOUT.pos, proj);
+	VOUT.pos = mul(VOUT.pos, mtxWorld);
+	VOUT.pos = mul(VOUT.pos, LightView);
+	VOUT.pos = mul(VOUT.pos, LightProj);
 	// 深度値はカメラから見た奥行きの情報のため、
 	// ワールド座標ではなく、ビュー座標を利用する
 	VOUT.shadowPos = VOUT.pos;

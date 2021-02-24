@@ -7,16 +7,23 @@
 
 
 #include <DirectXMath.h>
+#include <d3d11.h>
 #include "Component.h"
 
 
 /**
  * @class Light : inheritance Component
  */
-class Light : public Component
-{
+class Light : public Component {
 private:
 	static Light* m_pLight;	//!< ƒƒCƒ“ƒ‰ƒCƒg
+
+private:
+	ID3D11ShaderResourceView* m_pRTTex;
+	ID3D11RenderTargetView* m_pRTView;
+	ID3D11DepthStencilView* m_pDSView;
+	DirectX::XMFLOAT4X4 m_lightView;
+	int m_step;
 
 public:
 	DirectX::XMFLOAT4 m_diffuse;
@@ -26,7 +33,7 @@ public:
 
 public:
 	Light();
-
+	void Uninit();
 	void Awake();
 	void Start();
 	void Update();

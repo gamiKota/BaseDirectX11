@@ -91,23 +91,25 @@ void GameScene::Init() {
 #endif
 	m_listObject.push_back(m_empty);
 
-	// ライト(平行光源)
-	m_empty = new GameObject("MainLight");
-	Light::Set(m_empty->AddComponent<Light>());
-	m_listObject.push_back(m_empty);
-
 	// スカイドーム
 	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
 	m_object3D->AddComponent<SkyDome>();
 	m_object3D->m_isLight = false;
 	m_listObject.push_back(m_object3D);
 
+
+	// ライト(平行光源)
+	m_object3D = new GameObject3D(E_MODEL_NONE, "MainLight", "MainLight");
+	Light::Set(m_object3D->AddComponent<Light>());
+	GameObject::Instantiate(m_object3D, float3(), Quaternion::identity, float3() + 20.f);
+
 	//--- オブジェクトの生成
 	// 自機
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player", "Player");
 	GameObject::Instantiate(m_object3D, float3(), Quaternion::identity, float3() + 0.5f);
 	m_object3D->AddComponent<PlayerMgr>();
-	m_object3D->m_ps = E_PS::PS_PHONG;
+	m_object3D->m_vs = E_VS::VS_PROJSHADOW;
+	m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
 
 	// 敵スポーン地点
 	//m_object3D = new GameObject3D(E_MODEL_NONE, "EnemySpawn", "EnemySpawn");
@@ -124,7 +126,8 @@ void GameScene::Init() {
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 		GameObject::Instantiate(m_object3D, vEnemyPos, Quaternion::LookRotation((vPlayerPos - vEnemyPos), float3(0.f, 1.f, 0.f)), float3() + 0.5f);
 		m_object3D->AddComponent<EnemyFixed>();
-		m_object3D->m_ps = E_PS::PS_PHONG;
+		//m_object3D->m_vs = E_VS::VS_PROJSHADOW;
+		//m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
 	}
 
 
@@ -157,6 +160,8 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Collider>()->m_weight = E_WEIGHT::_LAND;
 	m_object3D->GetComponent<CollisionBox>()->m_vCenter = float3(0.f, 0.f, 0.f);
 	m_object3D->GetComponent<CollisionBox>()->m_vScale = float3(2000.f, 1.f, 2000.f);
+	//m_object3D->m_vs = E_VS::VS_PROJSHADOW;
+	//m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
 
 
 	// push_backの順番でUIの描画の描画順が変わる
