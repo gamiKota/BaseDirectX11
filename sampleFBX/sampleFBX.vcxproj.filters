@@ -781,6 +781,18 @@
     <FxCompile Include="FrameGaugePS.hlsl">
       <Filter>リソース ファイル\hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="DepthWritePS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="DepthWriteVS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="ProjShadowVS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="DepthShadowPS.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="sampleFBX.rc">

@@ -274,6 +274,28 @@ void D3DClass::SetCullMode(int nCullMode)
 }
 
 
+void D3DClass::SetRenderTarget(UINT width, UINT height, ID3D11RenderTargetView* pView, ID3D11DepthStencilView* pDepth, float* pColor) {
+	D3D11_VIEWPORT vp;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	vp.Width = (FLOAT)width;
+	vp.Height = (FLOAT)height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	m_pDeviceContext->RSSetViewports(1, &vp);
+
+	if (pView == NULL) { pView = m_pRenderTargetView; }
+	if (pDepth == NULL) { pDepth = m_pDepthStencilView; }
+	m_pDeviceContext->OMSetRenderTargets(1, &pView, pDepth);
+
+	if (pColor != NULL)
+	{
+		m_pDeviceContext->ClearRenderTargetView(pView, pColor);
+		m_pDeviceContext->ClearDepthStencilView(pDepth, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+}
+
+
 //=============================================================================
 // バックバッファ生成
 //=============================================================================

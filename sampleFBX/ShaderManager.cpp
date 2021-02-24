@@ -14,6 +14,8 @@ const char* pVSPath[] =
 	"data/shader/Vertex2D.cso",
 	"data/shader/MeshVS.cso",
 	"data/shader/FrameVS.cso",
+	"data/shader/ProjShadowVS.cso",
+	"data/shader/DepthWriteVS.cso",
 };
 VertexShader::Layout Layouts[] =
 {
@@ -21,6 +23,8 @@ VertexShader::Layout Layouts[] =
 	VertexShader::LAYOUT_PCU,
 	VertexShader::LAYOUT_PCU,
 	VertexShader::LAYOUT_PCU,
+	VertexShader::LAYOUT_PCUN,
+	VertexShader::LAYOUT_PCUN,
 };
 static_assert(!(VS_MAX < _countof(pVSPath)), "E_VSへの定義追加忘れ");
 static_assert(!(VS_MAX > _countof(pVSPath)), "VSPathへの読込ファイル追加忘れ");
@@ -35,6 +39,8 @@ const char* pPSPath[] =
 	"data/shader/AreaWallPS.cso",
 	"data/shader/FramePS.cso",
 	"data/shader/FrameGaugePS.cso",
+	"data/shader/DepthWritePS.cso",
+	"data/shader/DepthShadowPS.cso",
 };
 static_assert(!(PS_MAX < _countof(pPSPath)), "E_PSへの定義追加忘れ");
 static_assert(!(PS_MAX > _countof(pPSPath)), L"PSPathへの読込ファイル追加忘れ");

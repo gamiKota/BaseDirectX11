@@ -11,10 +11,12 @@
 #include "ShaderBufferManager.h"
 
 enum E_VS {
-	VS_NORMAL,	// 通常描画
-	VS_2D,		// 2D
-	VS_MESH,	// メッシュ
-	VS_2D_FRAME,// 枠付き
+	VS_NORMAL,		// 通常描画
+	VS_2D,			// 2D
+	VS_MESH,		// メッシュ
+	VS_2D_FRAME,	// 枠付き
+	VS_PROJSHADOW,	// 影
+	VS_DEPTHWRITE,	// 深度値
 	VS_MAX
 };
 
@@ -33,6 +35,8 @@ enum E_PS {
 	PS_AREAWALL,		// 壁
 	PS_2D_FRAME,		// 枠付き
 	PS_2D_FRAME_GAUGE,	// 枠付きゲージ
+	PS_DEPTHWRITE,		// 深度値
+	PS_DEPTHSHADOW,		// 影
 	PS_MAX
 };
 

@@ -122,11 +122,27 @@ public:
 	 */
 	void SetZWrite(bool bEnable);
 
-	
+	/**
+	 * @brief ブレンドモードの変更
+	 * @param[in] nBlendState EBlendState列挙
+	 */
 	void SetBlendState(int nBlendState);
 
-	
+	/**
+	 * @brief カリングモードの変更
+	 * @param[in] nCullMode ECullMode列挙
+	 */
 	void SetCullMode(int nCullMode);
+
+	/**
+	 * @brief レンダーターゲットの変更
+	 * @param[in] width　描画領域横幅
+	 * @param[in] height 描画領域縦幅
+	 * @param[in] pView 描画先
+	 * @param[in] pDepth 深度バッファ
+	 * @param[in] pColor 塗りつぶし色
+	 */
+	void SetRenderTarget(UINT width, UINT height, ID3D11RenderTargetView* pView, ID3D11DepthStencilView* pDepth, float* pColor = NULL);
 
 private:
 	ID3D11Device*				m_pDevice;						//!< デバイス

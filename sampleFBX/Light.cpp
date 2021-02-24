@@ -70,53 +70,52 @@ void Light::Update() {
 
 
 void Light::LastUpdate() {
-	/*
 	// 光源から見える景色を表示するためのカメラ作成
-	DirectX::XMVECTOR vLPos = DirectX::XMLoadFloat4(&value.pLight->GetPos());
-	DirectX::XMVECTOR vLDir = DirectX::XMLoadFloat4(&value.pLight->GetDir());
-	DirectX::XMVECTOR eye = vLPos;
-	DirectX::XMVECTOR focus = DirectX::XMVectorAdd(vLPos, DirectX::XMVectorScale(vLDir, viewD));
-	DirectX::XMMATRIX vView = DirectX::XMMatrixLookAtLH(eye, focus, DirectX::XMVectorSet(0, 1, 0, 0));
-	DirectX::XMMATRIX vProj = DirectX::XMMatrixOrthographicLH(10, 10, 0.1f, viewD);
-	DirectX::XMMATRIX vScreen =	DirectX::XMMatrixScaling(0.5f, -0.5f, 1.0f) * DirectX::XMMatrixTranslation(0.5f, 0.5f, 0.0f);
+	//DirectX::XMVECTOR vLPos = DirectX::XMLoadFloat4(&value.pLight->GetPos());
+	//DirectX::XMVECTOR vLDir = DirectX::XMLoadFloat4(&value.pLight->GetDir());
+	//DirectX::XMVECTOR eye = vLPos;
+	//DirectX::XMVECTOR focus = DirectX::XMVectorAdd(vLPos, DirectX::XMVectorScale(vLDir, viewD));
+	//DirectX::XMMATRIX vView = DirectX::XMMatrixLookAtLH(eye, focus, DirectX::XMVectorSet(0, 1, 0, 0));
+	//DirectX::XMMATRIX vProj = DirectX::XMMatrixOrthographicLH(10, 10, 0.1f, viewD);
+	//DirectX::XMMATRIX vScreen =	DirectX::XMMatrixScaling(0.5f, -0.5f, 1.0f) * DirectX::XMMatrixTranslation(0.5f, 0.5f, 0.0f);
 
-	// 描画先を変更
-	// 影を反映させたいオブジェクトの描画
-	float color[] = { 1, 1, 1, 0 };
-	SetRenderTarget(viewW, viewH, &m_pRTView, 1, m_pDSView, color);
-	{
-		// 光源に書き込む際のシェーダを設定
-		// シェーダを設定
-		BindVS(VS_DEPTHWRITE);
-		BindPS(PS_DEPTHWRITE);
-
-		// シェーダで利用するデータを設定
-		value.SB_World = DirectX::XMMatrixScaling(0.05f, 0.05f, 0.05f);
-		value.SB_VP->view = DirectX::XMMatrixTranspose(vView);
-		value.SB_VP->proj = DirectX::XMMatrixTranspose(vProj);
-
-		// 設定したデータをシェーダに渡す
-		value.SB_World.BindVS(0);
-		value.SB_VP.BindVS(1);
-
-		// モデルデータ描画(影つけ)
-		for (int i = 0; i < value.pModelData->GetMeshNum(); ++i)
-		{
-			SetTexturePS(value.pModelData[i].GetTexture(i));
-			value.pModelBuf[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		}
-
-		value.SB_World = XMMatrixTranspose(DirectX::XMMatrixScaling(0.05f, 0.05f, 0.05f) * DirectX::XMMatrixTranslation(1.f, 0.f, 1.f));
-		value.SB_World.BindVS(0);
-		for (int i = 0; i < value.pModelData->GetMeshNum(); ++i)
-		{
-			SetTexturePS(value.pModelData[i].GetTexture(i));
-			value.pModelBuf[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		}
-	}
+	//// 描画先を変更
+	//// 影を反映させたいオブジェクトの描画
+	//float color[] = { 1, 1, 1, 0 };
+	////D3DClass::GetInstance().SetRenderTarget(viewW, viewH, &m_pRTView, m_pDSView, color);
+	//{
+	//	// 光源に書き込む際のシェーダを設定
+	//	// シェーダを設定
+	//	ShaderManager::GetInstance().BindVS(VS_DEPTHWRITE);
+	//	ShaderManager::GetInstance().BindPS(PS_DEPTHWRITE);
+	//
+	//	// シェーダで利用するデータを設定
+	//	value.SB_World = DirectX::XMMatrixScaling(0.05f, 0.05f, 0.05f);
+	//	value.SB_VP->view = DirectX::XMMatrixTranspose(vView);
+	//	value.SB_VP->proj = DirectX::XMMatrixTranspose(vProj);
+	//
+	//	// 設定したデータをシェーダに渡す
+	//	value.SB_World.BindVS(0);
+	//	value.SB_VP.BindVS(1);
+	//
+	//	// モデルデータ描画(影つけ)
+	//	for (int i = 0; i < value.pModelData->GetMeshNum(); ++i)
+	//	{
+	//		ShaderManager::GetInstance().SetTexturePS(value.pModelData[i].GetTexture(i));
+	//		value.pModelBuf[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//	}
+	//
+	//	value.SB_World = XMMatrixTranspose(DirectX::XMMatrixScaling(0.05f, 0.05f, 0.05f) * DirectX::XMMatrixTranslation(1.f, 0.f, 1.f));
+	//	value.SB_World.BindVS(0);
+	//	for (int i = 0; i < value.pModelData->GetMeshNum(); ++i)
+	//	{
+	//		ShaderManager::GetInstance().SetTexturePS(value.pModelData[i].GetTexture(i));
+	//		value.pModelBuf[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//	}
+	//}
 	// 元の描画先に戻す
-	SetRenderTarget(viewW, viewH, nullptr, 1, nullptr);
-	*/
+	//D3DClass::GetInstance().SetRenderTarget(viewW, viewH, nullptr, nullptr);
+
 	if (this == m_pLight) {
 		SHADER_LIGHT buf;
 		buf.vLightDir = XMLoadFloat3(&m_pLight->m_direction);
