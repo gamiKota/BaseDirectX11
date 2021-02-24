@@ -41,49 +41,33 @@ SamplerState samp : register(s0);
 
 
 float4 main(PS_IN PIN) : SV_Target{
-
-	float4 color;
-	color = tex.Sample(samp, PIN.uv);
-
-	// 影の計算
-	// 光源のベクトルと法線の内積から暗さを計算する
-	// 光源のベクトルを反転(-の値を掛ける)して、正しい見た目になるように計算する
-	float3 L = normalize(-LightDir.xyz);
+	//! 必要な変数
+	float4 color = tex.Sample(samp, PIN.uv);
 	float3 N = normalize(PIN.normal);
-
-	// 内積
-	float d = dot(N, L);
-
-	// 1～0の範囲に補正する
-	d = d * 0.5f + 0.5f;
-
-	// 照り返し(反射の計算)
-	float3 V = PIN.wPos.xyz - cameraPos.xyz;
-	// reflect... 第二引数で渡した法線のベクトルから、第一引数のベクトルがどのように反射するか計算
+	float3 L = normalize(-LightDir.xyz);
+	float3 V = normalize(PIN.wPos.xyz - cameraPos.xyz);
 	float3 R = reflect(V, N);
-	R = normalize(R);
-	float s = dot(L, R);
-	// スペキュラーは1～0の範囲にない値を無視する
-	// saturate... 引数を0～1の範囲に丸める
+	// 法線ベクトルと光源ベクトルの内積と正規化
+	float d = dot(N, L);
+	d = d * 0.5f + 0.5f;
+	// 照り返し
+	float s = dot(N, L);
 	s = saturate(s);
-	// 照り返し部分はより強く際立つように計算結果を乗算する
 	s = pow(s, 50);
-
-
+	// 各マテリアル要素
 	float4 diffuseLight		= LightDiffuse;		//!< 光源の色
 	float4 ambientLight		= LightAmbient;		//!< 周りから反射した色
 	float4 specularLight	= LightSpecular;	//!< 輝いて見える光の色
 	float4 materialDiffuse	= g_Diffuse;		//!< 物体が跳ね返しやすい光
 	float4 materialAmbient	= g_Ambient;		//!< 物体が跳ね返しやすい環境光
 	float4 materialSpecular = g_Specular;		//!< 物体が金属っぽいか(反射光の係数)
-
 	// 光マテリアルを考慮した影つけ
 	float3 diffuse = (float3)(diffuseLight * materialDiffuse);
 	float3 ambient = (float3)(ambientLight * materialAmbient);
 	float3 specular = (float3)(specularLight * materialSpecular);
 	float3 lambert = diffuse * d + ambient;
 	float3 phong = specular * s;
-
+	// 最終的な色情報
 	color.rgb *= lambert + phong;
 
 	return color;
