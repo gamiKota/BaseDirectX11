@@ -143,6 +143,12 @@ public:
 	 * @param[in] pColor 塗りつぶし色
 	 */
 	void SetRenderTarget(UINT width, UINT height, ID3D11RenderTargetView* pView, ID3D11DepthStencilView* pDepth, float* pColor = NULL);
+	void SetRenderTarget(
+		UINT width, UINT height,
+		ID3D11RenderTargetView** ppView,
+		UINT numView,
+		ID3D11DepthStencilView* pDepth,
+		float* pColor = NULL);
 
 private:
 	ID3D11Device*				m_pDevice;						//!< デバイス

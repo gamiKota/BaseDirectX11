@@ -294,6 +294,38 @@ void D3DClass::SetRenderTarget(UINT width, UINT height, ID3D11RenderTargetView* 
 		m_pDeviceContext->ClearDepthStencilView(pDepth, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 }
+void D3DClass::SetRenderTarget(UINT width, UINT height, ID3D11RenderTargetView** ppView, UINT numView, ID3D11DepthStencilView* pDepth, float* pColor)
+{
+	D3D11_VIEWPORT vp;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	vp.Width = (FLOAT)width;
+	vp.Height = (FLOAT)height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	m_pDeviceContext->RSSetViewports(1, &vp);
+
+	// 引数がNULLの場合、デフォルトの描画先(画面)を指定する
+	if (ppView == NULL) {
+		ppView = &m_pRenderTargetView;
+		numView = 1;
+	}
+	if (pDepth == NULL) {
+		pDepth = m_pDepthStencilView;
+	}
+
+	// 描画先の設定
+	m_pDeviceContext->OMSetRenderTargets(numView, ppView, pDepth);
+
+	if (pColor != NULL)
+	{
+		// 全てのレンダーターゲットをクリア
+		for (UINT i = 0; i < numView; ++i) {
+			m_pDeviceContext->ClearRenderTargetView(ppView[i], pColor);;
+		}
+		m_pDeviceContext->ClearDepthStencilView(pDepth, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+}
 
 
 //=============================================================================

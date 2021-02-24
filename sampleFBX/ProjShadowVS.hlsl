@@ -22,21 +22,23 @@ cbuffer Light : register(b1) {
 	float4	LightAmbient;		// 光源色(アンビエント)
 	float4	LightDiffuse;		// 光源色(ディフューズ)
 	float4	LightSpecular;		// 光源色(スペキュラ)
-	float4x4 LightView;
-	float4x4 LightProj;
-	float4x4 LightScreenMat;
 };
 cbuffer world : register(b3) {
 	float4x4 g_mWorld;
 	float4x4 g_mTexture;
 };
+cbuffer LightScreen : register(b7) {
+	matrix LightView;
+	matrix LightProj;
+	matrix lightVPS;
+}
 
 VS_OUT main(VS_IN VIN)
 {
 	VS_OUT VOUT;
 	VOUT.pos = float4(VIN.pos, 1);
 	VOUT.pos = mul(VOUT.pos, g_mWorld);
-	VOUT.lightPos = mul(VOUT.pos, LightScreenMat);
+	VOUT.lightPos = mul(VOUT.pos, lightVPS);
 	VOUT.pos = mul(VOUT.pos, view);
 	VOUT.pos = mul(VOUT.pos, proj);
 

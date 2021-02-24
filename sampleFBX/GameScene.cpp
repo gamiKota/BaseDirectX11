@@ -91,11 +91,11 @@ void GameScene::Init() {
 #endif
 	m_listObject.push_back(m_empty);
 
-	// スカイドーム
-	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
-	m_object3D->AddComponent<SkyDome>();
-	m_object3D->m_isLight = false;
-	m_listObject.push_back(m_object3D);
+	//// スカイドーム
+	//m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
+	//m_object3D->AddComponent<SkyDome>();
+	//m_object3D->m_isLight = false;
+	//m_listObject.push_back(m_object3D);
 
 
 	// ライト(平行光源)
@@ -160,8 +160,8 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Collider>()->m_weight = E_WEIGHT::_LAND;
 	m_object3D->GetComponent<CollisionBox>()->m_vCenter = float3(0.f, 0.f, 0.f);
 	m_object3D->GetComponent<CollisionBox>()->m_vScale = float3(2000.f, 1.f, 2000.f);
-	//m_object3D->m_vs = E_VS::VS_PROJSHADOW;
-	//m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
+	m_object3D->m_vs = E_VS::VS_PROJSHADOW;
+	m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
 
 
 	// push_backの順番でUIの描画の描画順が変わる

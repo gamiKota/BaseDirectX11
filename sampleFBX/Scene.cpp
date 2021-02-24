@@ -18,6 +18,7 @@
 #include "Rigidbody.h"
 #include "debugproc.h"
 #include "Material.h"
+#include "Light.h"
 #include "System.h"
 
 
@@ -159,6 +160,7 @@ void Scene::Draw() {
 	D3DClass::GetInstance().SetZWrite(true);
 
 	// 3Dƒ‚ƒfƒ‹
+	Light::Get()->Shadow();
 	buff = m_listObject;
 	for (auto obj : buff) {
 		if (dynamic_cast<GameObject3D*>(obj) != nullptr)

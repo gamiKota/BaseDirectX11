@@ -41,6 +41,8 @@ public:
 
 	static void Set(Light* light) { m_pLight = light; }
 	static Light* Get() { return m_pLight; }
+
+	void Shadow();
 };
 
 
