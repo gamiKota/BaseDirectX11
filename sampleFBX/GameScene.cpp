@@ -101,7 +101,7 @@ void GameScene::Init() {
 	// ライト(平行光源)
 	m_object3D = new GameObject3D(E_MODEL_NONE, "MainLight", "MainLight");
 	Light::Set(m_object3D->AddComponent<Light>());
-	GameObject::Instantiate(m_object3D, float3(0.f, 4000.f, 0.f), Quaternion::identity, float3() + 20.f);
+	GameObject::Instantiate(m_object3D, float3(-4000.f, 4000.f, -4000.f), Quaternion::identity, float3() + 20.f);
 	// ライト(平行光源)
 	//m_empty = new GameObject("MainLight", "MainLight");
 	//Light::Set(m_empty->AddComponent<Light>());

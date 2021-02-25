@@ -44,6 +44,7 @@ public:
 	Tween* DOMove(float3 position, float time = 0.f);
 
 	void LookAt(Transform* target, float3 worldUp = float3(0.f, 1.f, 0.f));
+	void LookAt(float3 target, float3 worldUp = float3(0.f, 1.f, 0.f));
 
 	DirectX::XMFLOAT4X4 GetMatrixBillboard();
 

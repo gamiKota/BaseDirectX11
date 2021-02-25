@@ -15,6 +15,7 @@
 #include "Texture.h"
 #include "ModelManager.h"
 #include "GameObject.h"
+#include "imgui.h"
 #include "System.h"
 
 
@@ -24,11 +25,9 @@
 #define LIGHT0_DIFFUSE	XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define LIGHT0_AMBIENT	XMFLOAT4(0.5f,0.5f,0.5f,1.0f)
 #define LIGHT0_SPECULAR	XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
-#define LIGHT0_DIR_X	(1.0f)
-#define LIGHT0_DIR_Y	(-1.0f)
-#define LIGHT0_DIR_Z	(1.0f)
 
-const UINT TEX_SIZE = 8000;
+const float3 LIGHT_DIR = float3(1.f, -1.f, 1.f);
+const UINT TEX_SIZE = 10000;
 
 
 Light* Light::m_pLight = nullptr;
@@ -37,7 +36,7 @@ Light* Light::m_pLight = nullptr;
 Light::Light() :	m_diffuse(XMFLOAT4(0.f, 1.f, 0.f, 1.f)),
 					m_ambient(XMFLOAT4(0.f, 0.f, 0.f, 1.f)),
 					m_specular(XMFLOAT4(0.f, 0.f, 0.f, 1.f)),
-					m_direction(XMFLOAT3(0.f, 0.f, 0.f)),
+					m_direction(float3()),
 					m_step(0)
 {
 }
@@ -56,10 +55,12 @@ void Light::Awake() {
 	CreateRenderTexture(viewW, viewH, DXGI_FORMAT_R32_FLOAT, &m_pRTTex, &m_pRTView);
 	CreateDepthStencil(viewW, viewH, DXGI_FORMAT_D24_UNORM_S8_UINT, &m_pDSView);
 
-	m_direction = XMFLOAT3(LIGHT0_DIR_X, LIGHT0_DIR_Y, LIGHT0_DIR_Z);
+	m_direction = float3::Normalize(LIGHT_DIR);
 	m_diffuse	= LIGHT0_DIFFUSE;
 	m_ambient	= LIGHT0_AMBIENT;
 	m_specular	= LIGHT0_SPECULAR;
+
+
 }
 
 
@@ -86,6 +87,7 @@ void Light::Update() {
 	//vLightDir = DirectX::XMLoadFloat3(&m_direction);
 	//vLightDir = DirectX::XMVectorScale(vLightDir, -1);
 	//DirectX::XMStoreFloat3(&m_direction, DirectX::XMVector3Normalize(vLightDir));
+	m_transform->LookAt(float3(0.f, -3000.f, 0.f));	// 視線は地面
 }
 
 
@@ -109,7 +111,7 @@ void Light::Shadow() {
 
 	// 光源から見える景色を表示するためのカメラ作成
 	DirectX::XMVECTOR vLPos = DirectX::XMLoadFloat4(&XMFLOAT4(m_transform->m_position.x, m_transform->m_position.y, m_transform->m_position.z, 0.f));
-	DirectX::XMVECTOR vLDir = DirectX::XMLoadFloat4(&XMFLOAT4(m_direction.x, m_direction.y, m_direction.z, 0.f));
+	DirectX::XMVECTOR vLDir = DirectX::XMLoadFloat4(&XMFLOAT4(m_transform->m_forward.x, m_transform->m_forward.y, m_transform->m_forward.z, 0.f));
 	DirectX::XMVECTOR eye = vLPos;
 	DirectX::XMVECTOR focus = DirectX::XMVectorAdd(vLPos, vLDir);
 	DirectX::XMMATRIX vView = DirectX::XMMatrixLookAtLH(eye, focus, DirectX::XMVectorSet(0, 1, 0, 0));
@@ -147,6 +149,11 @@ void Light::Shadow() {
 	lightS.proj = DirectX::XMMatrixTranspose(vProj);
 	lightS.vVPS = DirectX::XMMatrixTranspose(vView * vProj * vScreen);
 	ShaderManager::GetInstance().UpdateBuffer("MainLightScreen", &lightS);
+}
+
+
+void Light::SetImGuiVal() {
+	ImGui::Image(m_pRTTex, { 300.f, 300.f });
 }
 
 

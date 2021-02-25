@@ -128,6 +128,9 @@ void Transform::LookAt(Transform* target, float3 worldUp) {
 	if (!target)	return;
 	m_rotation = Quaternion::LookRotation(target->m_position - m_position, worldUp);
 }
+void Transform::LookAt(float3 target, float3 worldUp) {
+	m_rotation = Quaternion::LookRotation(target - m_position, worldUp);
+}
 
 
 XMFLOAT4X4 Transform::GetMatrixBillboard() {
