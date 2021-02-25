@@ -21,11 +21,17 @@ float4 main(PS_IN PIN) : SV_Target
 	// テクスチャの深度値を取得
 	float shadowDepth = shadow.Sample(samp, shadowUV).r;
 
+
+	//// 影イメージテクスチャーから影情報を取得する
+	//float s = tex2Dproj(tex1, In.WVPTPos).r;
+	//// 適当に調整する(注意１)
+	//s = max(m_ShadowColor, s * s);
+
 	// 描画する深度値の方が大きい(カメラから遠い)なら影になる
 	// テクスチャの深度値と描画の深度値が似たような距離の場合、
 	// 計算の誤差で影にならない部分が影とみなされる(シャドウアクネ)。
 	// 誤差を考慮して深度値を補正してあげる(バイアス)
-	if (depth > shadowDepth + 0.0001f) {
+	if (depth > shadowDepth + 0.00001f) {
 		color.rgb *= 0.3f;
 	}
 

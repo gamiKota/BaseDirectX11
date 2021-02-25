@@ -28,9 +28,9 @@ cbuffer world : register(b3) {
 	float4x4 g_mTexture;
 };
 cbuffer LightScreen : register(b7) {
-	matrix LightView;
-	matrix LightProj;
-	matrix lightVPS;
+	float4x4 LightView;
+	float4x4 LightProj;
+	float4x4 lightVPS;
 }
 
 VS_OUT main(VS_IN VIN)
