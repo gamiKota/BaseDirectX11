@@ -3,7 +3,7 @@
 #include "System.h"
 
 
-GeometryShader::GeometryShader() {
+GeometryShader::GeometryShader() : m_pGeometryShader(NULL) {
 }
 
 

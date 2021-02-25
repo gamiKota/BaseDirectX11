@@ -80,11 +80,9 @@ void GameObject3D::Draw() {
 	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
 	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
 	shader->UpdateBuffer("Material", &material);
-	
-
-	// 前面カリング (FBXは表裏が反転するため)
-	if (m_model != E_MODEL::E_MODEL_PLAYER || m_model != E_MODEL::E_MODEL_LAND)
+	// モデルデータ描画
 	ModelManager::GetInstance().Draw(m_model);
+	// デバック表示
 	for (auto com : m_listComponent) {
 		Collision* col = dynamic_cast<Collision*>(com);
 		if (col) {

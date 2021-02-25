@@ -28,7 +28,7 @@
 #define LIGHT0_DIR_Y	(-1.0f)
 #define LIGHT0_DIR_Z	(1.0f)
 
-const float TEX_SIZE = 8000.f;
+const UINT TEX_SIZE = 8000;
 
 
 Light* Light::m_pLight = nullptr;
@@ -113,7 +113,7 @@ void Light::Shadow() {
 	DirectX::XMVECTOR eye = vLPos;
 	DirectX::XMVECTOR focus = DirectX::XMVectorAdd(vLPos, vLDir);
 	DirectX::XMMATRIX vView = DirectX::XMMatrixLookAtLH(eye, focus, DirectX::XMVectorSet(0, 1, 0, 0));
-	DirectX::XMMATRIX vProj = DirectX::XMMatrixOrthographicLH(viewW, viewH, 0.1f, viewD);
+	DirectX::XMMATRIX vProj = DirectX::XMMatrixOrthographicLH((float)viewW, (float)viewH, 0.1f, viewD);
 	DirectX::XMMATRIX vScreen = DirectX::XMMatrixScaling(0.5f, -0.5f, 1.0f) * DirectX::XMMatrixTranslation(0.5f, 0.5f, 0.0f);
 
 	// 描画先を変更
@@ -147,20 +147,6 @@ void Light::Shadow() {
 	lightS.proj = DirectX::XMMatrixTranspose(vProj);
 	lightS.vVPS = DirectX::XMMatrixTranspose(vView * vProj * vScreen);
 	ShaderManager::GetInstance().UpdateBuffer("MainLightScreen", &lightS);
-
-
-	ShaderManager::GetInstance().BindVS(E_VS::VS_PROJSHADOW);
-	ShaderManager::GetInstance().BindPS(E_PS::PS_DEPTHSHADOW);
-	SHADER_WORLD world;
-	// モデルデータ描画
-	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&GameObject::Find("Player")->m_transform->GetMatrix()));
-	ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
-	ModelManager::GetInstance().Draw(E_MODEL::E_MODEL_PLAYER);
-	
-	// モデルデータ描画
-	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&GameObject::Find("Land")->m_transform->GetMatrix()));
-	ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
-	ModelManager::GetInstance().Draw(E_MODEL::E_MODEL_LAND);
 }
 
 

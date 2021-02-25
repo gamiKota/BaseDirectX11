@@ -108,8 +108,8 @@ void ModelManager::Draw(E_MODEL model) {
 
 	d3dClass->SetBlendState(EBlendState::BS_NONE);	// ブレンド
 	d3dClass->SetCullMode(CULLMODE_CCW);			// カリング
-	//if (model != E_MODEL_SKY) { d3dClass->SetZWrite(true); }
-	//else { d3dClass->SetZWrite(false); }
+	if (model != E_MODEL_SKY) { d3dClass->SetZWrite(true); }
+	else { d3dClass->SetZWrite(false); }
 
 	for (int i = 0; i < m_pModelData[model]->GetMeshNum(); ++i) {
 		ShaderManager::GetInstance().SetTexturePS(m_pModelData[model][i].GetTexture(i));

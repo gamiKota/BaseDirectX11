@@ -75,7 +75,8 @@ void ShaderManager::Initialize() {
 	m_gsList.resize(GS_MAX);
 	for (int i = 0; i < GS_MAX; ++i) {
 		m_gsList[i] = new GeometryShader();
-		hr = m_gsList[i]->Create(pGSPath[i]);
+		if (i != GS_NORMAL)
+			hr = m_gsList[i]->Create(pGSPath[i]);
 		FnAssert(hr, "ジオメトリシェーダ読み込み失敗");
 	}
 }
