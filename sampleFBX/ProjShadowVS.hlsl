@@ -22,15 +22,15 @@ cbuffer Light : register(b1) {
 	float4	LightAmbient;		// 光源色(アンビエント)
 	float4	LightDiffuse;		// 光源色(ディフューズ)
 	float4	LightSpecular;		// 光源色(スペキュラ)
+	float4x4 LightView;
+	float4x4 LightProj;
+	float4x4 lightVPS;
 };
 cbuffer world : register(b3) {
 	float4x4 g_mWorld;
 	float4x4 g_mTexture;
 };
 cbuffer LightScreen : register(b7) {
-	float4x4 LightView;
-	float4x4 LightProj;
-	float4x4 lightVPS;
 }
 
 VS_OUT main(VS_IN VIN)

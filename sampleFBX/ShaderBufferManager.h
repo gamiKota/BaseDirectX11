@@ -25,6 +25,9 @@ struct SHADER_LIGHT {
 	DirectX::XMVECTOR	vLa;		// 光源色(アンビエント)
 	DirectX::XMVECTOR	vLd;		// 光源色(ディフューズ)
 	DirectX::XMVECTOR	vLs;		// 光源色(スペキュラ)
+	DirectX::XMMATRIX 	view;		// ビュー
+	DirectX::XMMATRIX	proj;		// プロジェクション
+	DirectX::XMMATRIX	vVPS;		// 光源の座標系に変換するための行列
 };
 
 // ライトのON/OFF(1/16)
@@ -65,11 +68,14 @@ struct SHADER_CHARACTER {
 	float dummy[3];
 };
 
-// ライトスクリーン
-struct SHADER_LIGHT_SCREEN {
-	DirectX::XMMATRIX 	view;	// ビュー
-	DirectX::XMMATRIX	proj;	// プロジェクション
-	DirectX::XMMATRIX	vVPS;	// 光源の座標系に変換するための行列
+// キャラクターインスタンシング
+struct SHADER_CHARACTER_WORLD {
+	DirectX::XMMATRIX mWorld[50];	// ワールド行列
+	SHADER_CHARACTER_WORLD() {
+		for (int i = 0; i < 50; i++) {
+			mWorld[i] = DirectX::XMMatrixIdentity();
+		}
+	}
 };
 
 

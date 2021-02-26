@@ -92,19 +92,6 @@ void Light::Update() {
 
 
 void Light::LastUpdate() {
-	if (this == m_pLight) {
-		// シェーダに渡すデータを設定
-		SHADER_LIGHT buf;
-		buf.vLightDir	= XMLoadFloat4(&XMFLOAT4(m_direction.x, m_direction.y, m_direction.z, 0.f));
-		buf.vLd			= XMLoadFloat4(&m_pLight->m_diffuse);
-		buf.vLa			= XMLoadFloat4(&m_pLight->m_ambient);
-		buf.vLs			= XMLoadFloat4(&m_pLight->m_specular);
-		ShaderManager::GetInstance().UpdateBuffer("MainLight", &buf);
-	}
-}
-
-
-void Light::Shadow() {
 	UINT viewW = TEX_SIZE;
 	UINT viewH = TEX_SIZE;
 	float viewD = 50000.0f;	// ファークリップ距離
@@ -115,8 +102,29 @@ void Light::Shadow() {
 	DirectX::XMVECTOR eye = vLPos;
 	DirectX::XMVECTOR focus = DirectX::XMVectorAdd(vLPos, vLDir);
 	DirectX::XMMATRIX vView = DirectX::XMMatrixLookAtLH(eye, focus, DirectX::XMVectorSet(0, 1, 0, 0));
-	DirectX::XMMATRIX vProj = DirectX::XMMatrixOrthographicLH((float)viewW, (float)viewH, 0.1f, viewD);
+	//DirectX::XMMATRIX vProj = DirectX::XMMatrixOrthographicLH((float)20000, (float)20000, 0.1f, viewD);
+	DirectX::XMMATRIX vProj = DirectX::XMMatrixOrthographicLH((float)viewW, (float)viewW, 0.1f, viewD);
 	DirectX::XMMATRIX vScreen = DirectX::XMMatrixScaling(0.5f, -0.5f, 1.0f) * DirectX::XMMatrixTranslation(0.5f, 0.5f, 0.0f);
+
+	if (this == m_pLight) {
+		// シェーダに渡すデータを設定
+		SHADER_LIGHT buf;
+		buf.vLightDir	= XMLoadFloat4(&XMFLOAT4(m_transform->m_forward.x, m_transform->m_forward.y, m_transform->m_forward.z, 0.f));
+		buf.vLd			= XMLoadFloat4(&m_pLight->m_diffuse);
+		buf.vLa			= XMLoadFloat4(&m_pLight->m_ambient);
+		buf.vLs			= XMLoadFloat4(&m_pLight->m_specular);
+		buf.view		= DirectX::XMMatrixTranspose(vView);
+		buf.proj		= DirectX::XMMatrixTranspose(vProj);
+		buf.vVPS		= DirectX::XMMatrixTranspose(vView * vProj * vScreen);
+		ShaderManager::GetInstance().UpdateBuffer("MainLight", &buf);
+	}
+}
+
+
+void Light::Shadow() {
+	UINT viewW = TEX_SIZE;
+	UINT viewH = TEX_SIZE;
+	float viewD = 50000.0f;	// ファークリップ距離
 
 	// 描画先を変更
 	// 影を反映させたいオブジェクトの描画
@@ -143,12 +151,6 @@ void Light::Shadow() {
 
 	// テクスチャ
 	ShaderManager::GetInstance().SetTexturePS(m_pRTTex, 7);
-	// ライトスクリーン
-	SHADER_LIGHT_SCREEN lightS;
-	lightS.view = DirectX::XMMatrixTranspose(vView);
-	lightS.proj = DirectX::XMMatrixTranspose(vProj);
-	lightS.vVPS = DirectX::XMMatrixTranspose(vView * vProj * vScreen);
-	ShaderManager::GetInstance().UpdateBuffer("MainLightScreen", &lightS);
 }
 
 
