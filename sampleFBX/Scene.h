@@ -14,6 +14,7 @@
  * @include
  */
 #include <list>
+#include <d3d11.h>
 
 
 /**
@@ -29,6 +30,12 @@ class GameObjectMesh;
  * @class Scene
  */
 class Scene {
+private:
+	ID3D11ShaderResourceView* m_pRTTex;
+	ID3D11RenderTargetView* m_pRTView;
+	ID3D11DepthStencilView* m_pDSView;
+	int m_step;
+
 protected:
 	bool			m_isUpdate;
 	std::string		m_name;		//!< 現在アクティブなシーンの名前

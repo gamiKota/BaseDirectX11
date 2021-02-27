@@ -8,7 +8,11 @@
 
 #include <DirectXMath.h>
 #include <d3d11.h>
+#include <list>
 #include "Component.h"
+
+
+class GameObject3D;
 
 
 /**
@@ -43,7 +47,7 @@ public:
 	static void Set(Light* light) { m_pLight = light; }
 	static Light* Get() { return m_pLight; }
 
-	void Shadow();
+	void Shadow(std::list<GameObject3D*> shadowObj);
 };
 
 

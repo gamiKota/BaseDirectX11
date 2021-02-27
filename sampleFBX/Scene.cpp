@@ -159,8 +159,18 @@ void Scene::Draw() {
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);
 	D3DClass::GetInstance().SetZWrite(true);
 
-	// 3Dƒ‚ƒfƒ‹
-	Light::Get()->Shadow();
+	//--- 3Dƒ‚ƒfƒ‹
+	// ‰e
+	std::list<GameObject3D*> shadow;
+	for (auto obj : m_listObject) {
+		GameObject3D* model = dynamic_cast<GameObject3D*>(obj);
+		if (model != nullptr && model->m_vs == VS_PROJSHADOW) {
+			if (model->m_model != E_MODEL::E_MODEL_LAND)
+				shadow.push_back(model);
+		}
+	}
+	Light::Get()->Shadow(shadow);
+	// ƒ‚ƒfƒ‹
 	buff = m_listObject;
 	for (auto obj : buff) {
 		if (dynamic_cast<GameObject3D*>(obj) != nullptr)

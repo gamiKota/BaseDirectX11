@@ -14,7 +14,7 @@
 #include "Graphics.h"
 #include "Texture.h"
 #include "ModelManager.h"
-#include "GameObject.h"
+#include "GameObject3D.h"
 #include "imgui.h"
 #include "System.h"
 
@@ -121,7 +121,7 @@ void Light::LastUpdate() {
 }
 
 
-void Light::Shadow() {
+void Light::Shadow(std::list<GameObject3D*> shadowObj) {
 	UINT viewW = TEX_SIZE;
 	UINT viewH = TEX_SIZE;
 	float viewD = 50000.0f;	// ファークリップ距離
@@ -142,9 +142,11 @@ void Light::Shadow() {
 	
 		// モデルデータ描画(影つけ)
 		SHADER_WORLD world;
-		world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&GameObject::Find("Player")->m_transform->GetMatrix()));
-		ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
-		ModelManager::GetInstance().Draw(E_MODEL::E_MODEL_PLAYER);
+		for (auto obj : shadowObj) {
+			world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&obj->m_transform->GetMatrix()));
+			ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
+			ModelManager::GetInstance().Draw(obj->m_model);
+		}
 	}
 	// 元の描画先に戻す
 	D3DClass::GetInstance().SetRenderTarget(SCREEN_WIDTH, SCREEN_HEIGHT, nullptr, 1, nullptr);
