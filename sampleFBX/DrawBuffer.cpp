@@ -130,6 +130,9 @@ void DrawBuffer::Draw(
 		// ｲﾝﾃﾞｯｸｽﾊﾞｯﾌｧを使用して描画
 		pContext->DrawIndexed(
 			m_idxCount, 0, 0);
+
+		// インスタンス用描画
+		//pContext->DrawIndexedInstanced(m_idxCount, INSTANCE_ID, 0, 0, 0);
 	}
 	else
 	{

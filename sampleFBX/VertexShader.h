@@ -14,6 +14,7 @@ public:
 		LAYOUT_PCUN,	// pos-color-uv-normal
 		LAYOUT_PCU,		// pos-color-uv
 		LAYOUT_PN,		// pos-normal
+		LAYOUT_SHADOW,	// ‰e—p
 		LAYOUT_MAX
 	};
 

@@ -24,7 +24,7 @@ VertexShader::Layout Layouts[] =
 	VertexShader::LAYOUT_PCU,
 	VertexShader::LAYOUT_PCU,
 	VertexShader::LAYOUT_PCUN,
-	VertexShader::LAYOUT_PCUN,
+	VertexShader::LAYOUT_SHADOW,
 };
 static_assert(!(VS_MAX < _countof(pVSPath)), "E_VSへの定義追加忘れ");
 static_assert(!(VS_MAX > _countof(pVSPath)), "VSPathへの読込ファイル追加忘れ");

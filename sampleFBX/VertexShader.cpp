@@ -58,10 +58,14 @@ HRESULT VertexShader::MakeShader(void* pData, UINT size)
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
+	static const D3D11_INPUT_ELEMENT_DESC Shadow[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+	};
 
 	// 頂点レイアウト作成
-	const D3D11_INPUT_ELEMENT_DESC* pDesc[] = { PosColorUvNormal, PosColorUv, PosNormal };
-	int dataNum[] = { _countof(PosColorUvNormal), _countof(PosColorUv), _countof(PosNormal), };
+	const D3D11_INPUT_ELEMENT_DESC* pDesc[] = { PosColorUvNormal, PosColorUv, PosNormal, Shadow };
+	int dataNum[] = { _countof(PosColorUvNormal), _countof(PosColorUv), _countof(PosNormal), _countof(Shadow) };
 
 	// CPU-GPU間でデータを行き来させるため
 	ID3D11Device *pDevice = D3DClass::GetInstance().GetDevice();

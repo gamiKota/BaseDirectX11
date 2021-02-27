@@ -1,8 +1,7 @@
 struct VS_IN
 {
 	float3 pos : POSITION0;
-	float4 color : COLOR0;
-	float2 uv : TEXCOORD0;
+	//uint InstanceId : SV_InstanceID;
 };
 struct VS_OUT
 {
@@ -33,9 +32,9 @@ cbuffer World : register(b3) {
 	float4x4 mtxWorld;
 	float4x4 mtxTexture;
 };
-cbuffer LightScreen : register(b7) {
-
-}
+cbuffer WorldInstancing  : register(b7) {
+	float4x4 CharWorld[50];
+};
 
 VS_OUT main(VS_IN VIN)
 {
@@ -48,7 +47,7 @@ VS_OUT main(VS_IN VIN)
 	// ワールド座標ではなく、ビュー座標を利用する
 	VOUT.shadowPos = VOUT.pos;
 
-	VOUT.uv = VIN.uv;
+	//VOUT.uv = VIN.uv;
 
 	return VOUT;
 }
