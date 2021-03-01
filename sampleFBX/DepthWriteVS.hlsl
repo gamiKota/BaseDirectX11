@@ -30,16 +30,14 @@ cbuffer Light : register(b1) {
 cbuffer World : register(b3) {
 	float4x4 mtxWorld;
 	float4x4 mtxTexture;
-};
-cbuffer WorldInstancing  : register(b7) {
-	float4x4 CharWorld[50];
+	float4x4 mtxWorldInstancing[50];
 };
 
 VS_OUT main(VS_IN VIN)
 {
 	VS_OUT VOUT;
 	VOUT.pos = float4(VIN.pos, 1);
-	VOUT.pos = mul(VOUT.pos, CharWorld[VIN.InstanceId]);
+	VOUT.pos = mul(VOUT.pos, mtxWorldInstancing[VIN.InstanceId]);
 	//VOUT.pos = mul(VOUT.pos, CharWorld[0]);
 	VOUT.pos = mul(VOUT.pos, LightView);
 	VOUT.pos = mul(VOUT.pos, LightProj);

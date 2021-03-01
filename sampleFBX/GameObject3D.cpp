@@ -17,17 +17,19 @@
 
 
 GameObject3D::GameObject3D(E_MODEL m_model, std::string name, std::string tag) : 
-	m_model(m_model), GameObject(name, tag) {
+	m_model(m_model)
+	, m_isLight(true)
+	, m_isInstancing(false)
+	, m_vs(VS_NORMAL)
+	, m_ps(PS_NORMAL)
+	, GameObject(name, tag)
+{
 	m_transform->m_scale = { 0.5f, 0.5f, 0.5f };
 	m_material = AddComponent<Material>();
 	m_material->m_ambient	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値はテクスチャrgbはモデル自体の色
 	m_material->m_emissive	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// a値を０にすると真っ白 
 	m_material->m_diffuse	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 値を小さくするとモデルが薄くなる
 	m_material->m_specular	= XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);	// 光沢
-	m_isLight = true;
-
-	m_vs = E_VS::VS_NORMAL;
-	m_ps = E_PS::PS_NORMAL;
 }
 
 
@@ -80,8 +82,17 @@ void GameObject3D::Draw() {
 	material.vEmissive	= XMLoadFloat4(&m_material->m_emissive);
 	material.vSpecular	= XMLoadFloat4(&m_material->m_specular);
 	shader->UpdateBuffer("Material", &material);
-	// モデルデータ描画
-	ModelManager::GetInstance().Draw(m_model);
+
+
+	if (m_isInstancing) {
+		INSTANCING_PARAMETER ip;
+		ip.mWorld = XMLoadFloat4x4(&m_transform->GetMatrix());
+		ModelManager::GetInstance().SetInstancingParamter(ip);
+	}
+	else {
+		// モデルデータ描画
+		ModelManager::GetInstance().Draw(m_model);
+	}
 	// デバック表示
 	for (auto com : m_listComponent) {
 		Collision* col = dynamic_cast<Collision*>(com);

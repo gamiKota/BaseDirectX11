@@ -42,6 +42,13 @@ struct SHADER_LIGHT_SETTING {
 struct SHADER_WORLD {
 	DirectX::XMMATRIX mWorld;	// ワールド行列
 	DirectX::XMMATRIX mTexture;	// テクスチャ行列
+
+	DirectX::XMMATRIX mWorldInstancing[50];
+	SHADER_WORLD() {
+		for (int i = 0; i < 50; i++) {
+			mWorldInstancing[i] = DirectX::XMMatrixIdentity();
+		}
+	}
 };
 
 // マテリアル情報
@@ -66,16 +73,6 @@ struct SHADER_PLAYER {
 struct SHADER_CHARACTER {
 	float vHpRate;	//!< Hp/MaxHp
 	float dummy[3];
-};
-
-// キャラクターインスタンシング
-struct SHADER_CHARACTER_WORLD {
-	DirectX::XMMATRIX mWorld[50];	// ワールド行列
-	SHADER_CHARACTER_WORLD() {
-		for (int i = 0; i < 50; i++) {
-			mWorld[i] = DirectX::XMMatrixIdentity();
-		}
-	}
 };
 
 

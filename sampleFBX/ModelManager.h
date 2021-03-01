@@ -15,6 +15,7 @@
  */
 #include "Singleton.h"
 #include <DirectXMath.h>
+#include <vector>
 
 
 class CFbxModel;
@@ -38,6 +39,25 @@ enum E_MODEL {
 };
 
 
+struct INSTANCING_PARAMETER {
+	DirectX::XMMATRIX mWorld;
+
+	INSTANCING_PARAMETER() {
+		mWorld = DirectX::XMMatrixIdentity();
+	}
+};
+
+struct INSTANCING_DATA {
+	INSTANCING_PARAMETER paramter[50];
+	int num;
+
+	INSTANCING_DATA() {
+		for (auto p : paramter) {
+			p = INSTANCING_PARAMETER();
+		}
+		num = 0;
+	}
+};
 
 
 /**
@@ -55,14 +75,17 @@ public:
 
 	void Update(E_MODEL model);
 	void Draw(E_MODEL model);
-	void DrawInstanced(E_MODEL model, int num, void* data);
+	void DrawInstanced(E_MODEL model);
+
+	void SetInstancingParamter(INSTANCING_PARAMETER ip);
 
 private:
 	FBXPlayer* m_pModelData[E_MODEL_MAX];
 	DrawBuffer* m_pModelBuf[E_MODEL_MAX];
 
-
 	DrawBuffer* m_pShadow;
+
+	INSTANCING_DATA m_instancingData;
 };
 
 

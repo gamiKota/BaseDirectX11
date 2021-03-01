@@ -138,7 +138,7 @@ void Scene::Update() {
 	}
 
 	// ソート
-	m_listObject.sort(GameObject3DKdSort);
+	//m_listObject.sort(GameObject3DKdSort);
 	m_listObject.sort(GameObjectUISort);
 }
 
@@ -176,6 +176,13 @@ void Scene::Draw() {
 		if (dynamic_cast<GameObject3D*>(obj) != nullptr)
 			obj->Draw();
 	}
+	ShaderManager::GetInstance().BindVS(VS_PROJSHADOW);
+	ShaderManager::GetInstance().BindPS(PS_DEPTHSHADOW);
+	ShaderManager::GetInstance().BindGS(GS_NORMAL);
+	D3DClass::GetInstance().SetBlendState(EBlendState::BS_NONE);	// ブレンド
+	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);			// カリング
+
+	ModelManager::GetInstance().DrawInstanced(E_MODEL_PLAYER);
 
 	// 前面カリング (FBXは表裏が反転するため)
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CW);

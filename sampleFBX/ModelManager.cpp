@@ -92,7 +92,7 @@ void ModelManager::Init() {
 			m_pModelData[E_MODEL_PLAYER]->GetIndexData(i),
 			sizeof(unsigned long),
 			m_pModelData[E_MODEL_PLAYER]->GetIndexCount(i));
-		m_pShadow[i].CreateInputBuffer(sizeof(DirectX::XMMATRIX), 5);
+		m_pShadow[i].CreateInputBuffer(sizeof(DirectX::XMMATRIX), 50);
 	}
 }
 
@@ -109,7 +109,7 @@ void ModelManager::Uninit() {
 
 
 void ModelManager::Update(E_MODEL model) {
-
+	
 }
 
 
@@ -134,18 +134,30 @@ void ModelManager::Draw(E_MODEL model) {
 }
 
 
-void ModelManager::DrawInstanced(E_MODEL model, int num, void* data) {
-	//for (int i = 0; i < m_pModelData[model]->GetMeshNum(); ++i) {
-	//	ShaderManager::GetInstance().SetTexturePS(m_pModelData[model][i].GetTexture(i));
-	//	//m_pModelBuf[model][i].Write(data);
-	//	m_pModelBuf[model][i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, true, num);
-	//}
+void ModelManager::DrawInstanced(E_MODEL model) {
+
+	// インスタンシング用の各定数バッファの設定
+	SHADER_WORLD world;
+	int instanceNum = m_instancingData.num;
+	for (int i = 0; i < instanceNum; i++) {
+		world.mWorldInstancing[i] = XMMatrixTranspose(m_instancingData.paramter[i].mWorld);
+	}
+	ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
+
 	for (int i = 0; i < m_pModelData[E_MODEL_PLAYER]->GetMeshNum(); ++i) {
 		ShaderManager::GetInstance().SetTexturePS(m_pModelData[E_MODEL_PLAYER][i].GetTexture(i));
-		//m_pModelBuf[model][i].Write(data);
-		m_pShadow[i].WriteInstanceng(data);
-		m_pShadow[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, num);
+		m_pShadow[i].WriteInstanceng(&world);
+		m_pShadow[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, instanceNum);
 	}
+
+	// もうようはない
+	m_instancingData = INSTANCING_DATA();
+}
+
+
+void ModelManager::SetInstancingParamter(INSTANCING_PARAMETER ip) {
+	m_instancingData.paramter[m_instancingData.num] = ip;
+	m_instancingData.num++;
 }
 
 

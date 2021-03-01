@@ -11,11 +11,9 @@ void ShaderBufferManager::Initialize() {
 	this->Create("Material", sizeof(SHADER_MATERIAL), 4);
 	this->Create("Player", sizeof(SHADER_PLAYER), 5);
 	this->Create("Character", sizeof(SHADER_CHARACTER), 6);
-	this->Create("CharacterWorld", sizeof(SHADER_CHARACTER_WORLD), 7);
 }
 
 void ShaderBufferManager::Terminate() {
-	delete m_bufferMap["CharacterWorld"];
 	delete m_bufferMap["Character"];
 	delete m_bufferMap["Player"];
 	delete m_bufferMap["Material"];

@@ -3,6 +3,7 @@ struct VS_IN
 	float3 pos : POSITION0;
 	float4 color : COLOR0;
 	float2 uv : TEXCOORD0;
+	uint InstanceId : SV_InstanceID;
 };
 struct VS_OUT
 {
@@ -29,15 +30,16 @@ cbuffer Light : register(b1) {
 cbuffer world : register(b3) {
 	float4x4 g_mWorld;
 	float4x4 g_mTexture;
+
+	float4x4 mtxWorldInstancing[50];
 };
-cbuffer LightScreen : register(b7) {
-}
+
 
 VS_OUT main(VS_IN VIN)
 {
 	VS_OUT VOUT;
 	VOUT.pos = float4(VIN.pos, 1);
-	VOUT.pos = mul(VOUT.pos, g_mWorld);
+	VOUT.pos = mul(VOUT.pos, mtxWorldInstancing[VIN.InstanceId]);
 	VOUT.lightPos = mul(VOUT.pos, lightVPS);
 	VOUT.pos = mul(VOUT.pos, view);
 	VOUT.pos = mul(VOUT.pos, proj);

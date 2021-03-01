@@ -60,9 +60,10 @@
 #include "System.h"		// メモリ監視
 
 
-static const int MAX_ENEMY = 10;
+
+static const int MAX_ENEMY = 20;
 static const float VAL_ENEMY_POS_Z = 800.f;
-static const float MAX_ENEMY_POS_Z = 1000.f;
+static const float MAX_ENEMY_POS_Z = 3000.f;
 
 static const float VAL_WALL_POS = 6000.f;
 
@@ -114,6 +115,7 @@ void GameScene::Init() {
 	m_object3D->AddComponent<PlayerMgr>();
 	m_object3D->m_vs = E_VS::VS_PROJSHADOW;
 	m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
+	m_object3D->m_isInstancing = true;
 
 	// 敵スポーン地点
 	//m_object3D = new GameObject3D(E_MODEL_NONE, "EnemySpawn", "EnemySpawn");
@@ -132,6 +134,7 @@ void GameScene::Init() {
 		m_object3D->AddComponent<EnemyFixed>();
 		m_object3D->m_vs = E_VS::VS_PROJSHADOW;
 		m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
+		m_object3D->m_isInstancing = true;
 	}
 
 
@@ -164,8 +167,9 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Collider>()->m_weight = E_WEIGHT::_LAND;
 	m_object3D->GetComponent<CollisionBox>()->m_vCenter = float3(0.f, 0.f, 0.f);
 	m_object3D->GetComponent<CollisionBox>()->m_vScale = float3(2000.f, 1.f, 2000.f);
-	m_object3D->m_vs = E_VS::VS_PROJSHADOW;
-	m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
+	//m_object3D->m_vs = E_VS::VS_PROJSHADOW;
+	//m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
+	//m_object3D->m_isInstancing = true;
 
 
 	// push_backの順番でUIの描画の描画順が変わる
