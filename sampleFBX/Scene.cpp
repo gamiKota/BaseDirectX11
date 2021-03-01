@@ -162,13 +162,13 @@ void Scene::Draw() {
 	//--- 3Dƒ‚ƒfƒ‹
 	// ‰e
 	std::list<GameObject3D*> shadow;
-	for (auto obj : m_listObject) {
-		GameObject3D* model = dynamic_cast<GameObject3D*>(obj);
-		if (model != nullptr && model->m_vs == VS_PROJSHADOW) {
-			if (model->m_model != E_MODEL::E_MODEL_LAND)
-				shadow.push_back(model);
-		}
-	}
+	//for (auto obj : m_listObject) {
+	//	GameObject3D* model = dynamic_cast<GameObject3D*>(obj);
+	//	if (model != nullptr && model->m_vs == VS_PROJSHADOW) {
+	//		if (model->m_model != E_MODEL::E_MODEL_LAND)
+	//			shadow.push_back(model);
+	//	}
+	//}
 	Light::Get()->Shadow(shadow);
 	// ƒ‚ƒfƒ‹
 	buff = m_listObject;

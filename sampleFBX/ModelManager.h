@@ -55,11 +55,14 @@ public:
 
 	void Update(E_MODEL model);
 	void Draw(E_MODEL model);
+	void DrawInstanced(E_MODEL model, int num, void* data);
 
 private:
-
 	FBXPlayer* m_pModelData[E_MODEL_MAX];
 	DrawBuffer* m_pModelBuf[E_MODEL_MAX];
+
+
+	DrawBuffer* m_pShadow;
 };
 
 

@@ -1,12 +1,11 @@
 struct VS_IN
 {
 	float3 pos : POSITION0;
-	//uint InstanceId : SV_InstanceID;
+	uint InstanceId : SV_InstanceID;
 };
 struct VS_OUT
 {
 	float4 pos : SV_POSITION;
-	float2 uv : TEXCOORD0;
 	// 深度値を書き込むためにはピクセルシェーダで処理しないといけない。
 	// でも、深度値(座標)の情報は頂点シェーダでしか扱ってないので、
 	// 渡せるようにする
@@ -40,14 +39,13 @@ VS_OUT main(VS_IN VIN)
 {
 	VS_OUT VOUT;
 	VOUT.pos = float4(VIN.pos, 1);
-	VOUT.pos = mul(VOUT.pos, mtxWorld);
+	VOUT.pos = mul(VOUT.pos, CharWorld[VIN.InstanceId]);
+	//VOUT.pos = mul(VOUT.pos, CharWorld[0]);
 	VOUT.pos = mul(VOUT.pos, LightView);
 	VOUT.pos = mul(VOUT.pos, LightProj);
 	// 深度値はカメラから見た奥行きの情報のため、
 	// ワールド座標ではなく、ビュー座標を利用する
 	VOUT.shadowPos = VOUT.pos;
-
-	//VOUT.uv = VIN.uv;
 
 	return VOUT;
 }

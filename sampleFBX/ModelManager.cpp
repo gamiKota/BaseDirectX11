@@ -40,6 +40,7 @@ static const char* name[E_MODEL_MAX] = {
 	"data/model/none.fbx",				// ボックス
 	//"data/model/Sword And Shield Idle.fbx",	// プレイヤー
 	"data/model/Squadron/X_wing.fbx",	// プレイヤー
+	//"data/model/none.fbx",				// 敵
 	"data/model/Squadron/X_wing.fbx",	// 敵
 	"data/model/FA-18/sparrow.fbx",		// ミサイル
 	"data/model/laser.fbx",				// レーザー
@@ -80,6 +81,19 @@ void ModelManager::Init() {
 				m_pModelData[model]->GetIndexCount(i));
 		}
 	}
+
+	m_pShadow = new DrawBuffer[m_pModelData[E_MODEL_PLAYER]->GetMeshNum()];
+	for (int i = 0; i < m_pModelData[E_MODEL_PLAYER]->GetMeshNum(); ++i) {
+		m_pShadow[i].CreateVertexBuffer(
+			m_pModelData[E_MODEL_PLAYER]->GetVertexData(i),
+			m_pModelData[E_MODEL_PLAYER]->GetVertexSize(i),
+			m_pModelData[E_MODEL_PLAYER]->GetVertexCount(i));
+		m_pShadow[i].CreateIndexBuffer(
+			m_pModelData[E_MODEL_PLAYER]->GetIndexData(i),
+			sizeof(unsigned long),
+			m_pModelData[E_MODEL_PLAYER]->GetIndexCount(i));
+		m_pShadow[i].CreateInputBuffer();
+	}
 }
 
 
@@ -88,6 +102,8 @@ void ModelManager::Uninit() {
 		delete[] m_pModelBuf[i];
 		delete m_pModelData[i];
 	}
+	delete[] m_pShadow;
+
 	ggfbx::Terminate();
 }
 
@@ -114,6 +130,21 @@ void ModelManager::Draw(E_MODEL model) {
 	for (int i = 0; i < m_pModelData[model]->GetMeshNum(); ++i) {
 		ShaderManager::GetInstance().SetTexturePS(m_pModelData[model][i].GetTexture(i));
 		m_pModelBuf[model][i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
+}
+
+
+void ModelManager::DrawInstanced(E_MODEL model, int num, void* data) {
+	//for (int i = 0; i < m_pModelData[model]->GetMeshNum(); ++i) {
+	//	ShaderManager::GetInstance().SetTexturePS(m_pModelData[model][i].GetTexture(i));
+	//	//m_pModelBuf[model][i].Write(data);
+	//	m_pModelBuf[model][i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, true, num);
+	//}
+	for (int i = 0; i < m_pModelData[E_MODEL_PLAYER]->GetMeshNum(); ++i) {
+		ShaderManager::GetInstance().SetTexturePS(m_pModelData[E_MODEL_PLAYER][i].GetTexture(i));
+		//m_pModelBuf[model][i].Write(data);
+		m_pShadow[i].WriteInstanceng(data);
+		m_pShadow[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, true, num);
 	}
 }
 

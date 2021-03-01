@@ -141,12 +141,28 @@ void Light::Shadow(std::list<GameObject3D*> shadowObj) {
 		D3DClass::GetInstance().GetDeviceContext()->CSSetShader(NULL, NULL, 0);
 	
 		// モデルデータ描画(影つけ)
-		SHADER_WORLD world;
-		for (auto obj : shadowObj) {
-			world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&obj->m_transform->GetMatrix()));
-			ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
-			ModelManager::GetInstance().Draw(obj->m_model);
+		// 使用する変数
+		D3DClass* d3dClass = &D3DClass::GetInstance();
+		
+		d3dClass->SetBlendState(EBlendState::BS_NONE);	// ブレンド
+		d3dClass->SetCullMode(CULLMODE_CCW);			// カリング
+
+		std::list<GameObject*> objList;
+		SHADER_CHARACTER_WORLD world;
+		int num = 0;
+		objList = GameObject::FindGameObjectsWithTag("Enemy");
+		for (auto obj : objList) {
+			world.mWorld[num] = XMMatrixTranspose(XMLoadFloat4x4(&obj->m_transform->GetMatrix()));
+			num++;
 		}
+		ShaderManager::GetInstance().UpdateBuffer("CharacterWorld", &world);
+		ModelManager::GetInstance().DrawInstanced(E_MODEL_PLAYER, num, &world);
+		//SHADER_WORLD world;
+		//for (auto obj : shadowObj) {
+		//	world.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&obj->m_transform->GetMatrix()));
+		//	ShaderManager::GetInstance().UpdateBuffer("MainWorld", &world);
+		//	ModelManager::GetInstance().Draw(obj->m_model);
+		//}
 	}
 	// 元の描画先に戻す
 	D3DClass::GetInstance().SetRenderTarget(SCREEN_WIDTH, SCREEN_HEIGHT, nullptr, 1, nullptr);

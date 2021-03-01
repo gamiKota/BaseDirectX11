@@ -44,18 +44,22 @@ public:
 		UINT count
 	);
 
+	// インスタンシング用バッファ
+	//HRESULT CreateInputBuffer(void* size, UINT count);
+	HRESULT CreateInputBuffer();
+
 	// バッファの描画
 	void Draw(
 		// ポリゴンの描画方法
-		D3D11_PRIMITIVE_TOPOLOGY primitive);
+		D3D11_PRIMITIVE_TOPOLOGY primitive, bool Instancing = false, int num = 1);
 
 	// 書き込み
 	HRESULT Write(void* pVtx);
+	HRESULT WriteInstanceng(void* data);
 
 private:
 	// 頂点バッファ
-	ID3D11Buffer*
-		m_pVertexBuffer;
+	ID3D11Buffer* m_pVertexBuffer;
 	// 頂点のデータサイズ
 	UINT m_vtxSize;
 	// 頂点の数
@@ -67,6 +71,38 @@ private:
 	UINT m_idxSize;
 	// インデックスの数
 	UINT m_idxCount;
+
+	// インスタンシングバッファ
+	ID3D11Buffer* m_pInputBuffer;
+	// インスタンシングサイズ
+	UINT m_iptSize;
+	// インスタンシングの数
+	UINT m_iptCount;
+};
+
+
+
+
+
+class InstancengBuffer
+{
+public:
+	InstancengBuffer();
+	~InstancengBuffer();
+
+	// インスタンシング用バッファ
+	HRESULT CreateInputBuffer(UINT size, UINT count);
+
+	// 書き込み
+	HRESULT Write(void* data);
+
+private:
+	// インスタンシングバッファ
+	ID3D11Buffer* m_pInputBuffer;
+	// インスタンシングサイズ
+	UINT m_iptSize;
+	// インスタンシングの数
+	UINT m_iptCount;
 };
 
 
