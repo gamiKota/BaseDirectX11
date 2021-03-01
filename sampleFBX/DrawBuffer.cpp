@@ -86,16 +86,16 @@ HRESULT DrawBuffer::CreateIndexBuffer(const void* pIdx, UINT size, UINT count)
 	return hr;
 }
 
-//HRESULT DrawBuffer::CreateInputBuffer(void* size, UINT count) {
-HRESULT DrawBuffer::CreateInputBuffer() {
+HRESULT DrawBuffer::CreateInputBuffer(UINT size, UINT count) {
+//HRESULT DrawBuffer::CreateInputBuffer() {
 
 	// 頂点バッファ インスタンシング用 作成
 	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
 	D3D11_BUFFER_DESC bufDesc = {};
 	HRESULT hr;
 
-	m_iptSize = sizeof(DirectX::XMMATRIX);
-	m_iptCount = 5;
+	m_iptSize = size;
+	m_iptCount = count;
 
 	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufDesc.ByteWidth = m_iptSize * m_iptCount;
@@ -108,7 +108,7 @@ HRESULT DrawBuffer::CreateInputBuffer() {
 }
 
 void DrawBuffer::Draw(
-	D3D11_PRIMITIVE_TOPOLOGY primitive, bool Instancing, int num)
+	D3D11_PRIMITIVE_TOPOLOGY primitive, int num)
 {
 	ID3D11DeviceContext* pContext = D3DClass::GetInstance().GetDeviceContext();
 	// 頂点一つ当たりの大きさ
@@ -124,20 +124,24 @@ void DrawBuffer::Draw(
 	// TriangleStrip ... 参照場所を一つずつずらし
 	//					 ながら描画
 	// 例) [0,1,2] [1,2,3] [2,3,4]
-	pContext->
-		IASetPrimitiveTopology(primitive);
+	pContext->IASetPrimitiveTopology(primitive);
 
-
+	// インスタンシングあり
 	if (m_pInputBuffer != NULL) {
 		// 描画に使用するバッファの設定
 		ID3D11Buffer* pBuf[2] = { m_pVertexBuffer, m_pInputBuffer };
 		UINT stride[2] = { m_vtxSize, m_iptSize };
 		UINT offset[2] = { 0, 0 };
 		pContext->IASetVertexBuffers(0, 2, pBuf, stride, offset);
-
-		pContext->DrawInstanced(m_vtxCount, num, 0, 0);
+		if (m_idxCount > 0) {
+			pContext->IASetIndexBuffer(m_pIndexBuffer, m_idxSize == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT, 0);
+			pContext->DrawIndexedInstanced(m_idxCount, num, 0, 0, 0);
+		}
+		else {
+			pContext->DrawInstanced(m_vtxCount, num, 0, 0);
+		}
 	}
-
+	// インスタンシングなし
 	else {
 		// 描画に使用するバッファの設定
 		pContext->IASetVertexBuffers(
@@ -163,21 +167,11 @@ void DrawBuffer::Draw(
 				m_idxSize == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT,
 				0);
 
-			if (Instancing == false) {	// ｲﾝﾃﾞｯｸｽﾊﾞｯﾌｧを使用して描画
-				pContext->DrawIndexed(m_idxCount, 0, 0);
-			}
-			else {	// インスタンス用描画
-				pContext->DrawIndexedInstanced(m_idxCount, num, 0, 0, 0);
-			}
+			pContext->DrawIndexed(m_idxCount, 0, 0);
 		}
 		else
 		{
-			//if (Instancing == false) {	// 頂点バッファのみで描画
 			pContext->Draw(m_vtxCount, 0);
-			//}
-			//else {	// インスタンス用描画
-			//	//pContext->DrawIndexedInstanced(m_vtxCount, num, 0, 0, 0);
-			//}
 		}
 	}
 }
@@ -212,9 +206,6 @@ HRESULT DrawBuffer::WriteInstanceng(void* data) {
 		rsize_t size = m_iptCount * m_iptSize;
 		memcpy_s(mapResource.pData, size, data, size);
 		pContext->Unmap(m_pVertexBuffer, 0);
-
-		//memcpy_s(mapResource.pData, mapResource.RowPitch, data, sizeof(data));
-		//pContext->Unmap(m_pInputBuffer, 0);
 	}
 	return hr;
 }
@@ -224,53 +215,53 @@ HRESULT DrawBuffer::WriteInstanceng(void* data) {
 
 
 
-InstancengBuffer::InstancengBuffer()
-	: m_pInputBuffer(NULL)
-	, m_iptSize(0)
-	, m_iptCount(0)
-{
-}
-InstancengBuffer::~InstancengBuffer() {
-	SAFE_RELEASE(m_pInputBuffer);
-}
-
-HRESULT InstancengBuffer::CreateInputBuffer(UINT size, UINT count) {
-	//// バッファの情報を設定
-	//D3D11_BUFFER_DESC bufDesc = {};
-	//bufDesc.ByteWidth = size * count;
-	//bufDesc.Usage = D3D11_USAGE_DEFAULT;
-	//bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	//// バッファの初期データ
-	//D3D11_SUBRESOURCE_DATA subResource = {};
-
-	// 頂点バッファ インスタンシング用 作成
-	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
-	D3D11_BUFFER_DESC bufDesc = {};
-	HRESULT hr;
-	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufDesc.ByteWidth = sizeof(size) * count;
-	bufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	bufDesc.MiscFlags = 0;
-	bufDesc.Usage = D3D11_USAGE_DYNAMIC;
-	hr = pDevice->CreateBuffer(&bufDesc, nullptr, &m_pInputBuffer);
-
-	return hr;
-}
-
-
-HRESULT InstancengBuffer::Write(void* data)
-{
-	HRESULT hr;
-	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
-	ID3D11DeviceContext* pContext = D3DClass::GetInstance().GetDeviceContext();
-	D3D11_MAPPED_SUBRESOURCE mapResource;
-
-	// データコピー
-	hr = pContext->Map(m_pInputBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapResource);
-	if (SUCCEEDED(hr))
-	{
-		memcpy_s(mapResource.pData, mapResource.RowPitch, data, sizeof(m_iptSize));
-		pContext->Unmap(m_pInputBuffer, 0);
-	}
-	return hr;
-}
+//InstancengBuffer::InstancengBuffer()
+//	: m_pInputBuffer(NULL)
+//	, m_iptSize(0)
+//	, m_iptCount(0)
+//{
+//}
+//InstancengBuffer::~InstancengBuffer() {
+//	SAFE_RELEASE(m_pInputBuffer);
+//}
+//
+//HRESULT InstancengBuffer::CreateInputBuffer(UINT size, UINT count) {
+//	//// バッファの情報を設定
+//	//D3D11_BUFFER_DESC bufDesc = {};
+//	//bufDesc.ByteWidth = size * count;
+//	//bufDesc.Usage = D3D11_USAGE_DEFAULT;
+//	//bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+//	//// バッファの初期データ
+//	//D3D11_SUBRESOURCE_DATA subResource = {};
+//
+//	// 頂点バッファ インスタンシング用 作成
+//	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
+//	D3D11_BUFFER_DESC bufDesc = {};
+//	HRESULT hr;
+//	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//	bufDesc.ByteWidth = sizeof(size) * count;
+//	bufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+//	bufDesc.MiscFlags = 0;
+//	bufDesc.Usage = D3D11_USAGE_DYNAMIC;
+//	hr = pDevice->CreateBuffer(&bufDesc, nullptr, &m_pInputBuffer);
+//
+//	return hr;
+//}
+//
+//
+//HRESULT InstancengBuffer::Write(void* data)
+//{
+//	HRESULT hr;
+//	ID3D11Device* pDevice = D3DClass::GetInstance().GetDevice();
+//	ID3D11DeviceContext* pContext = D3DClass::GetInstance().GetDeviceContext();
+//	D3D11_MAPPED_SUBRESOURCE mapResource;
+//
+//	// データコピー
+//	hr = pContext->Map(m_pInputBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapResource);
+//	if (SUCCEEDED(hr))
+//	{
+//		memcpy_s(mapResource.pData, mapResource.RowPitch, data, sizeof(m_iptSize));
+//		pContext->Unmap(m_pInputBuffer, 0);
+//	}
+//	return hr;
+//}

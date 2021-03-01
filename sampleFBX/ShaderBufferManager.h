@@ -70,9 +70,9 @@ struct SHADER_CHARACTER {
 
 // キャラクターインスタンシング
 struct SHADER_CHARACTER_WORLD {
-	DirectX::XMMATRIX mWorld[5];	// ワールド行列
+	DirectX::XMMATRIX mWorld[50];	// ワールド行列
 	SHADER_CHARACTER_WORLD() {
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 50; i++) {
 			mWorld[i] = DirectX::XMMatrixIdentity();
 		}
 	}

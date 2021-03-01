@@ -92,7 +92,7 @@ void ModelManager::Init() {
 			m_pModelData[E_MODEL_PLAYER]->GetIndexData(i),
 			sizeof(unsigned long),
 			m_pModelData[E_MODEL_PLAYER]->GetIndexCount(i));
-		m_pShadow[i].CreateInputBuffer();
+		m_pShadow[i].CreateInputBuffer(sizeof(DirectX::XMMATRIX), 5);
 	}
 }
 
@@ -144,7 +144,7 @@ void ModelManager::DrawInstanced(E_MODEL model, int num, void* data) {
 		ShaderManager::GetInstance().SetTexturePS(m_pModelData[E_MODEL_PLAYER][i].GetTexture(i));
 		//m_pModelBuf[model][i].Write(data);
 		m_pShadow[i].WriteInstanceng(data);
-		m_pShadow[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, true, num);
+		m_pShadow[i].Draw(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, num);
 	}
 }
 
