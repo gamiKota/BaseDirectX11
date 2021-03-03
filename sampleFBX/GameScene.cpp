@@ -61,7 +61,7 @@
 
 
 
-static const int MAX_ENEMY = 20;
+static const int MAX_ENEMY = 10;
 static const float VAL_ENEMY_POS_Z = 800.f;
 static const float MAX_ENEMY_POS_Z = 3000.f;
 
@@ -138,28 +138,28 @@ void GameScene::Init() {
 	}
 
 
-	////--- フィールドの生成
-	//float3 wallScale = float3(6000.f, 3000.f, 0.1f);
-	//// 壁
-	//m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall", "AreaWall");
-	//GameObject::Instantiate(m_object3D, float3(0.f, 0.f, VAL_WALL_POS), Quaternion::AngleAxis(180.f, float3(0.f, 1.f, 0.f)), wallScale);
-	//m_object3D->AddComponent<AreaWall>();
-	//// 壁
-	//m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall (2)", "AreaWall");
-	//GameObject::Instantiate(m_object3D, float3(-VAL_WALL_POS, 0.f, 0.f), Quaternion::AngleAxis(90.f, float3(0.f, 1.f, 0.f)), wallScale);
-	//m_object3D->AddComponent<AreaWall>();
-	//// 壁
-	//m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall (3)", "AreaWall");
-	//GameObject::Instantiate(m_object3D, float3(0.f, 0.f, -VAL_WALL_POS), Quaternion::identity, wallScale);
-	//m_object3D->AddComponent<AreaWall>();
-	//// 壁
-	//m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall (4)", "AreaWall");
-	//GameObject::Instantiate(m_object3D, float3(VAL_WALL_POS, 0.f, 0.f), Quaternion::AngleAxis(-90.f, float3(0.f, 1.f, 0.f)), wallScale);
-	//m_object3D->AddComponent<AreaWall>();
-	//// 壁
-	//m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall (5)", "AreaWall");
-	//GameObject::Instantiate(m_object3D, float3(0.f, 3000.f, 0.f), Quaternion::AngleAxis(90.f, float3(1.f, 0.f, 0.f)), float3(6000.f, 6000.f, 0.1f));
-	//m_object3D->AddComponent<AreaWall>();
+	//--- フィールドの生成
+	float3 wallScale = float3(6000.f, 3000.f, 0.1f);
+	// 壁
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall", "AreaWall");
+	GameObject::Instantiate(m_object3D, float3(0.f, 0.f, VAL_WALL_POS), Quaternion::AngleAxis(180.f, float3(0.f, 1.f, 0.f)), wallScale);
+	m_object3D->AddComponent<AreaWall>();
+	// 壁
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall (2)", "AreaWall");
+	GameObject::Instantiate(m_object3D, float3(-VAL_WALL_POS, 0.f, 0.f), Quaternion::AngleAxis(90.f, float3(0.f, 1.f, 0.f)), wallScale);
+	m_object3D->AddComponent<AreaWall>();
+	// 壁
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall (3)", "AreaWall");
+	GameObject::Instantiate(m_object3D, float3(0.f, 0.f, -VAL_WALL_POS), Quaternion::identity, wallScale);
+	m_object3D->AddComponent<AreaWall>();
+	// 壁
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall (4)", "AreaWall");
+	GameObject::Instantiate(m_object3D, float3(VAL_WALL_POS, 0.f, 0.f), Quaternion::AngleAxis(-90.f, float3(0.f, 1.f, 0.f)), wallScale);
+	m_object3D->AddComponent<AreaWall>();
+	// 壁
+	m_object3D = new GameObject3D(E_MODEL_NONE, "AreaWall (5)", "AreaWall");
+	GameObject::Instantiate(m_object3D, float3(0.f, 3000.f, 0.f), Quaternion::AngleAxis(90.f, float3(1.f, 0.f, 0.f)), float3(6000.f, 6000.f, 0.1f));
+	m_object3D->AddComponent<AreaWall>();
 	// 地面
 	m_object3D = new GameObject3D(E_MODEL_LAND, "Land", "Land");
 	GameObject::Instantiate(m_object3D, float3(0.f, -3000.f, 0.f), Quaternion::identity, float3(3.1f, 3.1f, 3.1f));
@@ -167,8 +167,8 @@ void GameScene::Init() {
 	m_object3D->AddComponent<Collider>()->m_weight = E_WEIGHT::_LAND;
 	m_object3D->GetComponent<CollisionBox>()->m_vCenter = float3(0.f, 0.f, 0.f);
 	m_object3D->GetComponent<CollisionBox>()->m_vScale = float3(2000.f, 1.f, 2000.f);
-	//m_object3D->m_vs = E_VS::VS_PROJSHADOW;
-	//m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
+	m_object3D->m_vs = E_VS::VS_PROJSHADOW;
+	m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
 	//m_object3D->m_isInstancing = true;
 
 

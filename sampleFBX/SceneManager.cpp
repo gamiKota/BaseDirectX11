@@ -2,6 +2,7 @@
 
 #include "SceneManager.h"
 #include "TitleScene.h"
+#include "SelectScene.h"
 #include "GameScene.h"
 #include "ResultScene.h"
 #include "DebugScene.h"
@@ -26,6 +27,7 @@ SceneManager::~SceneManager() {
 
 
 void SceneManager::Init() {
+	// —”
 	unsigned int now = (unsigned int)time(0);
 	srand(now);
 
@@ -51,6 +53,13 @@ void SceneManager::Update() {
 			m_scene->Uninit();
 			SAFE_DELETE(m_scene);
 			m_scene = new TitleScene();
+			m_scene->Init();
+			break;
+
+		case E_SCENE::SELECT:
+			m_scene->Uninit();
+			SAFE_DELETE(m_scene);
+			m_scene = new SelectScene();
 			m_scene->Init();
 			break;
 
@@ -83,9 +92,12 @@ void SceneManager::Update() {
 		LoadScene(E_SCENE::TITLE);
 	}
 	if (Input::isPress(VK_LSHIFT) && Input::isTrigger('2')) {
-		LoadScene(E_SCENE::GAME);
+		LoadScene(E_SCENE::SELECT);
 	}
 	if (Input::isPress(VK_LSHIFT) && Input::isTrigger('3')) {
+		LoadScene(E_SCENE::GAME);
+	}
+	if (Input::isPress(VK_LSHIFT) && Input::isTrigger('4')) {
 		LoadScene(E_SCENE::RESULT);
 	}
 	if (Input::isPress(VK_LSHIFT) && Input::isTrigger('0')) {

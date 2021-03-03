@@ -18,12 +18,22 @@
 #include <DirectXMath.h>
 #include "SceneManager.h"
 #include "Transform.h"
+#include "ShaderManager.h"
 
 
 /**
  * @forward declaration
  */
 class Component;
+
+
+enum class E_OBJECT {
+	EMPTY,
+	UI,
+	BACKGROUND,
+	MODEL,
+	MESH,
+};
 
 
 /**
@@ -33,10 +43,14 @@ class GameObject : public Object {
 private:
 	static std::list<GameObject*>	m_listFinds;		//!< 複数リスト取得用
 	std::string						m_tag;				//!< タグ
+	E_OBJECT						m_eObject;			//!< オブジェクトタグ
 
 public:
 	std::list<Component*>			m_listComponent;	//!< オブジェクトが持つコンポーネントリスト
 	Transform*						m_transform;		//!< トランスフォーム
+
+	E_VS		m_vs;
+	E_PS		m_ps;
 
 public:
 	/**
@@ -44,7 +58,7 @@ public:
 	 * @param[in] name
 	 * @param[in] tag
 	 */
-	GameObject(std::string name = "GameObject", std::string tag = "none");
+	GameObject(std::string name = "GameObject", std::string tag = "none", E_OBJECT obj = E_OBJECT::EMPTY);
 
 	/**
 	 * @brief デストラクタ
@@ -86,6 +100,13 @@ public:
 	 */
 	std::string GetTag() {
 		return m_tag;
+	}
+
+	/**
+	 * @brief GetEObject
+	 */
+	E_OBJECT GetEObject() {
+		return m_eObject;
 	}
 
 	/**

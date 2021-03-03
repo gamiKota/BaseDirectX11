@@ -147,13 +147,23 @@ void Light::Shadow(std::list<GameObject3D*> shadowObj) {
 		d3dClass->SetBlendState(EBlendState::BS_NONE);	// ブレンド
 		d3dClass->SetCullMode(CULLMODE_CCW);			// カリング
 
-		std::list<GameObject*> objList = GameObject::FindGameObjectsWithTag("Enemy");
+		
 		INSTANCING_PARAMETER ip;
-		for (auto obj : objList) {
-			ip.mWorld = XMLoadFloat4x4(&obj->m_transform->GetMatrix());
-			ModelManager::GetInstance().SetInstancingParamter(ip);
+		GameObject3D* yuka;
+		for (auto obj : shadowObj) {
+			if (obj->m_model == E_MODEL_PLAYER) {
+				ip.mWorld = XMLoadFloat4x4(&obj->m_transform->GetMatrix());
+				ModelManager::GetInstance().SetInstancingParamter(ip);
+			}
+			else if (obj->m_model == E_MODEL_LAND) {
+				yuka = obj;
+			}
 		}
 		ModelManager::GetInstance().DrawInstanced(E_MODEL_PLAYER);
+
+		//SHADER_WORLD world;
+		//world.mWorldInstancing[0] = XMLoadFloat4x4(&yuka->m_transform->GetMatrix());
+		//ModelManager::GetInstance().Draw(E_MODEL_LAND);
 	}
 	// 元の描画先に戻す
 	D3DClass::GetInstance().SetRenderTarget(SCREEN_WIDTH, SCREEN_HEIGHT, nullptr, 1, nullptr);

@@ -20,7 +20,7 @@ CCamera* CCamera::m_pCamera = nullptr;
 
 
 void CCamera::Start() {
-	m_transform->m_position	= float3(0.0f, 200.0f, -400.0f);
+	//m_transform->m_position	= float3(0.0f, 200.0f, -400.0f);
 	m_transform->m_scale = float3(0.1f, 0.1f, 0.1f);
 
 	m_fFovy = XMConvertToRadians(45);

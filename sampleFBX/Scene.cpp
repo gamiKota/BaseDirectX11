@@ -49,6 +49,7 @@ Scene::Scene() : m_isUpdate(false) {
 Scene::~Scene() {
 	for (auto obj : m_listObject) {
 		delete obj;
+		obj = nullptr;
 	}
 	m_listObject.clear();
 }
@@ -143,16 +144,13 @@ void Scene::Update() {
 }
 
 void Scene::Draw() {
-
 	D3DClass::GetInstance().SetCullMode(CULLMODE_CCW);	// 背面カリング (通常は表面のみ描画)
 	D3DClass::GetInstance().SetZBuffer(false);			// Zバッファ無効
 	// 背景などのUI
 	auto buff = m_listObject;
 	for (auto obj : buff) {
-		GameObjectUI* background = dynamic_cast<GameObjectUI*>(obj);
-		if (background != nullptr && background->m_layer < E_LAYER::UI) {
-			obj->Draw();
-		}
+		if (obj->GetEObject() != E_OBJECT::BACKGROUND) continue;
+		obj->Draw();
 	}
 
 	// 前面カリング (FBXは表裏が反転するため)
@@ -162,20 +160,19 @@ void Scene::Draw() {
 	//--- 3Dモデル
 	// 影
 	std::list<GameObject3D*> shadow;
-	//for (auto obj : m_listObject) {
-	//	GameObject3D* model = dynamic_cast<GameObject3D*>(obj);
-	//	if (model != nullptr && model->m_vs == VS_PROJSHADOW) {
-	//		if (model->m_model != E_MODEL::E_MODEL_LAND)
-	//			shadow.push_back(model);
-	//	}
-	//}
+	for (auto obj : m_listObject) {
+		if (obj->m_vs == VS_PROJSHADOW) {
+			shadow.push_back(dynamic_cast<GameObject3D*>(obj));
+		}
+	}
 	Light::Get()->Shadow(shadow);
 	// モデル
 	buff = m_listObject;
 	for (auto obj : buff) {
-		if (dynamic_cast<GameObject3D*>(obj) != nullptr)
-			obj->Draw();
+		if (obj->GetEObject() != E_OBJECT::MODEL)	continue;
+		obj->Draw();
 	}
+
 	ShaderManager::GetInstance().BindVS(VS_PROJSHADOW);
 	ShaderManager::GetInstance().BindPS(PS_DEPTHSHADOW);
 	ShaderManager::GetInstance().BindGS(GS_NORMAL);
@@ -189,8 +186,8 @@ void Scene::Draw() {
 	D3DClass::GetInstance().SetZBuffer(false);
 	buff = m_listObject;
 	for (auto obj : buff) {
-		if (dynamic_cast<GameObjectMeshBase*>(obj))
-			obj->Draw();
+		if (obj->GetEObject() != E_OBJECT::MESH)	continue;
+		obj->Draw();
 	}
 
 
@@ -200,10 +197,8 @@ void Scene::Draw() {
 	// 2DUI
 	buff = m_listObject;
 	for (auto obj : buff) {
-		GameObjectUI* UI = dynamic_cast<GameObjectUI*>(obj);
-		if (UI != nullptr && UI->m_layer >= E_LAYER::UI) {
-			obj->Draw();
-		}
+		if (obj->GetEObject() != E_OBJECT::UI)	continue;
+		obj->Draw();
 	}
 }
 

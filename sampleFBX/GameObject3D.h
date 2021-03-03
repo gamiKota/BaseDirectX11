@@ -28,9 +28,6 @@ public:
 	bool		m_isLight;		//!< ライト設定
 	bool		m_isInstancing;	//!< インスタンシング描画
 
-	E_VS		m_vs;
-	E_PS		m_ps;
-
 public:
 	/**
 	 * @brief コンストラクタ

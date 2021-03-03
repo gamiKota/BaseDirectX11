@@ -22,7 +22,7 @@ using namespace DirectX;
 std::list<GameObject*>	GameObject::m_listFinds = std::list<GameObject*>();		//!< •¡”ƒŠƒXƒgŽæ“¾—p
 
 
-GameObject::GameObject(std::string name, std::string tag) : Object(name), m_tag(tag) {
+GameObject::GameObject(std::string name, std::string tag, E_OBJECT obj) : Object(name), m_tag(tag), m_eObject(obj) {
 	m_transform = AddComponent<Transform>();
 	m_transform->m_scale = float3(1.f, 1.f, 1.f);
 }

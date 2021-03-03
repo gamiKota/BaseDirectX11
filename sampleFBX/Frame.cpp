@@ -50,7 +50,6 @@ DWORD Frame::GetPassageTime() {
 	return m_nowTime - m_startTime;
 }
 
-static float time;
 
 void Frame::DrawFPS() {
 	//PrintDebugProc("FPS:%d\n\n", m_Frame);

@@ -40,9 +40,6 @@ public:
 	float3		m_texSize;		//!< テクスチャサイズ
 	Material*	m_material;		//!< マテリアル
 
-	E_VS		m_vs;	//!< 頂点シェーダ
-	E_PS		m_ps;	//!< ピクセルシェーダ
-
 public:
 	/**
 	 * @brief コンストラクタ

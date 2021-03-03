@@ -21,7 +21,9 @@
  */
 enum E_TEXTURE {
 	E_TEXTURE_NONE,							// テクスチャなし
+	E_TEXTURE_TITLE,						// タイトル
 	E_TEXTURE_WATER_SURFACE,				// 波
+	E_TEXTURE_SELECT01,						// 殲滅作戦ロゴ
 	E_TEXTURE_NUMBER,						// 数字
 	E_TEXTURE_TEXT,							// 文字
 	E_TEXTURE_TREE,							// 木

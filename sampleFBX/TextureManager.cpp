@@ -17,7 +17,9 @@
  */
 static const char* name[E_TEXTURE_MAX] = {
 	"tetuxre_none",
+	"data/texture/Title.png",			// ƒ^ƒCƒgƒ‹
 	"data/texture/WaterSurface.jpg",	// ”g
+	"data/texture/Select01.png",		// Ÿr–ÅìíƒƒS
 	"data/texture/number000.png",		// ”š
 	"data/TEXTURE/PressStart2Ph.tga",	// •¶š
 	"data/texture/tree000.png",			// –Ø

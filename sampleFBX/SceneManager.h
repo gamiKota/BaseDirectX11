@@ -7,6 +7,7 @@ class GameObject;
 
 enum class E_SCENE {
 	TITLE,
+	SELECT,
 	GAME,
 	RESULT,
 	DEGUG,

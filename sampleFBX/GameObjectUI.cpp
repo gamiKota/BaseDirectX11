@@ -15,7 +15,7 @@
 
 
 GameObjectUI::GameObjectUI(E_LAYER layer, E_TEXTURE texture, std::string name, std::string tag) :
-	m_layer(layer), m_texture(texture), GameObject(name, tag) {
+	m_layer(layer), m_texture(texture), GameObject(name, tag, E_OBJECT::UI) {
 	// 変数の初期化
 	m_transform->m_scale = { 100.f, 100.f, 0 };
 	// テクスチャ設定

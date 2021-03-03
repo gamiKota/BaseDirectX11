@@ -210,6 +210,7 @@
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
+    <ClCompile Include="SelectScene.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderBuffer.cpp" />
     <ClCompile Include="ShaderBufferManager.cpp" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Status.cpp" />
     <ClCompile Include="TargetCtr.cpp" />
     <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="TitlePlayer.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
@@ -303,6 +305,7 @@
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="Rigidbody.h" />
+    <ClInclude Include="SelectScene.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderBuffer.h" />
     <ClInclude Include="ShaderBufferManager.h" />
@@ -311,6 +314,7 @@
     <ClInclude Include="Status.h" />
     <ClInclude Include="TargetCtr.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="TitlePlayer.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
