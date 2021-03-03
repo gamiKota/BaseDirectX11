@@ -219,6 +219,8 @@
     <ClCompile Include="Status.cpp" />
     <ClCompile Include="TargetCtr.cpp" />
     <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="TitleCamera.cpp" />
+    <ClCompile Include="TitleManager.cpp" />
     <ClCompile Include="TitlePlayer.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -314,6 +316,8 @@
     <ClInclude Include="Status.h" />
     <ClInclude Include="TargetCtr.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="TitleCamera.h" />
+    <ClInclude Include="TitleManager.h" />
     <ClInclude Include="TitlePlayer.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Camera.h" />

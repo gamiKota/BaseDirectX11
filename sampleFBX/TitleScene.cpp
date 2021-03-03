@@ -23,24 +23,28 @@
 // コンポーネント
 #include "Camera.h"
 #include "ggCamera.h"
+#include "TitleCamera.h"
 #include "Light.h"
 #include "Sky.h"
 #include "Collision.h"
 #include "Rigidbody.h"
 #include "PlayerMgr.h"
 #include "TitlePlayer.h"
+#include "TitleManager.h"
 // システム
 #include "System.h"
 
 
 void TitleScene::Init() {
 
-	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_TITLE);
+	TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_SELECT01);
+	//TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_TITLE);
 	//TextureManager::GetInstance().Load(E_TEXTURE::E_TEXTURE_WATER_SURFACE);
 
 	// カメラ
 	m_empty = new GameObject("MainCamera");
-	CCamera::Set(m_empty->AddComponent<CCamera>());
+	//CCamera::Set(m_empty->AddComponent<CCamera>());
+	CCamera::Set(m_empty->AddComponent<TitleCamera>());
 	GameObject::Instantiate(m_empty, float3(-3000.f, -2724.f, -3000.f), Quaternion::Euler(25.f, 45.f, 0.f));
 
 	// ライト(平行光源)
@@ -54,9 +58,10 @@ void TitleScene::Init() {
 	m_object3D->m_isLight = false;
 	m_listObject.push_back(m_object3D);
 
-	// 殲滅作戦ロゴ
-	m_UI = new GameObjectUI(E_LAYER::UI, E_TEXTURE_TITLE, "title", "title");
-	GameObject::Instantiate(m_UI, float3(), Quaternion::identity, float3(200.f, 70.f, 0.f));
+	// タイトル操作
+	m_empty = new GameObject("TitleManager", "TitleManager");
+	GameObject::Instantiate(m_empty);
+	m_empty->AddComponent<TitleManager>();
 
 	// 自機
 	m_object3D = new GameObject3D(E_MODEL_PLAYER, "Player", "Player");
