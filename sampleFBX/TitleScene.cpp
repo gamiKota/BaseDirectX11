@@ -78,6 +78,9 @@ void TitleScene::Init() {
 
 	// Ç®ëOÇÕç≈å„
 	Scene::Init();
+
+
+	// ÇøÇÒÇ±
 }
 
 
