@@ -33,9 +33,9 @@ void SelectScene::Init() {
 	m_object3D->m_isLight = false;
 	m_listObject.push_back(m_object3D);
 
-	// Ÿr–ÅìíƒƒS
-	m_UI = new GameObjectUI(E_LAYER::UI, E_TEXTURE_SELECT01, "button01", "button");
-	GameObject::Instantiate(m_UI, float3(), Quaternion::identity, float3(200.f, 70.f, 0.f));
+	//// Ÿr–ÅìíƒƒS
+	//m_UI = new GameObjectUI(E_LAYER::UI, E_TEXTURE_SELECT01, "button01", "button");
+	//GameObject::Instantiate(m_UI, float3(), Quaternion::identity, float3(200.f, 70.f, 0.f));
 
 	// ‚¨‘O‚ÍÅŒã
 	Scene::Init();
