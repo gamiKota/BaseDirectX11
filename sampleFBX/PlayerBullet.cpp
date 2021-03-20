@@ -9,7 +9,7 @@
 #include "System.h"
 
 
-constexpr int MAX_BULLET = 10;
+constexpr int MAX_BULLET = 50;
 constexpr float TIME_RELOAD = 2.f;
 
 

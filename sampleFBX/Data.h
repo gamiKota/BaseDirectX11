@@ -43,9 +43,17 @@ public:
 		return data;
 	}
 
-	static float Dot(float3 data1, float3 data2);
+	static float Dot(float3 data1, float3 data2) {
+		return (float)(data1.x * data2.x + data1.y * data2.y + data1.z * data2.z);
+	}
 
-	static float3 Cross(float3 data1, float3 data2);
+	static float3 Cross(float3 data1, float3 data2) {
+		float3 out = float3();
+		out.x = data1.y * data2.z - data1.z * data2.y;
+		out.y = data1.z * data2.x - data1.x * data2.z;
+		out.z = data1.x * data2.y - data1.y * data2.x;
+		return out;
+	}
 
 	static float Length(float3 pos1, float3 pos2) {
 		return sqrtf((pos2.x - pos1.x) * (pos2.x - pos1.x) +

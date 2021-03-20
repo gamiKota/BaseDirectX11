@@ -1,5 +1,6 @@
 /**
  * @file Data.cpp
+ * @brief Dataå^íËã`
  */
 
 
@@ -16,6 +17,9 @@ using namespace DirectX;
 const Quaternion Quaternion::identity = Quaternion(0.f, 0.f, 0.f, 1.f);
 
 
+/**
+ * @brief åÎç∑åüím
+ */
 bool AlmostEqualRelative(float A, float B, float maxRelDiff = FLT_EPSILON) {
 	// Calculate the difference.
 	float diff = fabsf(A - B);
@@ -31,13 +35,15 @@ bool AlmostEqualRelative(float A, float B, float maxRelDiff = FLT_EPSILON) {
 	return false;
 }
 
+
+
 Quaternion __GetRotation(XMFLOAT4X4 m)
 {
 	float elem[4];
-	elem[0] = m._11 - m._22 - m._33 + 1.0f;
+	elem[0] =  m._11 - m._22 - m._33 + 1.0f;
 	elem[1] = -m._11 + m._22 - m._33 + 1.0f;
 	elem[2] = -m._11 - m._22 + m._33 + 1.0f;
-	elem[3] = m._11 + m._22 + m._33 + 1.0f;
+	elem[3] =  m._11 + m._22 + m._33 + 1.0f;
 
 	int biggestIdx = 0;
 	for (int i = 0; i < 4; i++)
@@ -50,7 +56,6 @@ Quaternion __GetRotation(XMFLOAT4X4 m)
 
 	if (elem[biggestIdx] < 0)
 	{
-		//Debug.Log("Wrong matrix.");
 		return Quaternion(0.f, 0.f, 0.f, 0.f);
 	}
 
@@ -84,21 +89,6 @@ Quaternion __GetRotation(XMFLOAT4X4 m)
 	}
 
 	return Quaternion(q[0], q[1], q[2], q[3]);
-}
-
-
-
-
-float3 float3::Cross(float3 data1, float3 data2) {
-	float3 out = float3();
-	out.x = data1.y * data2.z - data1.z * data2.y;
-	out.y = data1.z * data2.x - data1.x * data2.z;
-	out.z = data1.x * data2.y - data1.y * data2.x;
-	return out;
-}
-
-float float3::Dot(float3 data1, float3 data2) {
-	return (float)(data1.x * data2.x + data1.y * data2.y + data1.z * data2.z);
 }
 
 

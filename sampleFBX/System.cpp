@@ -120,7 +120,7 @@ void System::Run() {
 				ImGui_ImplWin32_NewFrame();
 				ImGui::NewFrame();
 
-				ImGui::Begin("[inspector]");
+				ImGui::Begin("[hierarchy]");
 				
 				ImGui::Text("FPS : %.1f", ImGui::GetIO().Framerate);
 #endif

@@ -27,11 +27,11 @@ void SelectScene::Init() {
 	Light::Set(m_empty->AddComponent<Light>());
 	m_listObject.push_back(m_empty);
 
-	// スカイドーム
-	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
-	m_object3D->AddComponent<SkyDome>();
-	m_object3D->m_isLight = false;
-	m_listObject.push_back(m_object3D);
+	//// スカイドーム
+	//m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
+	//m_object3D->AddComponent<SkyDome>();
+	//m_object3D->m_isLight = false;
+	//m_listObject.push_back(m_object3D);
 
 	//// 殲滅作戦ロゴ
 	//m_UI = new GameObjectUI(E_LAYER::UI, E_TEXTURE_SELECT01, "button01", "button");

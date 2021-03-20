@@ -61,9 +61,9 @@
 
 
 
-static const int MAX_ENEMY = 2;
+static const int MAX_ENEMY = 1;
 static const float VAL_ENEMY_POS_Z = 800.f;
-static const float MAX_ENEMY_POS_Z = 3000.f;
+static const float MAX_ENEMY_POS_Z = 1000.f;
 
 static const float VAL_WALL_POS = 6000.f;
 
@@ -92,21 +92,21 @@ void GameScene::Init() {
 #endif
 	m_listObject.push_back(m_empty);
 
-	//// スカイドーム
-	//m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
-	//m_object3D->AddComponent<SkyDome>();
-	//m_object3D->m_isLight = false;
-	//m_listObject.push_back(m_object3D);
+	// スカイドーム
+	m_object3D = new GameObject3D(E_MODEL_SKY, "Sky", "Sky");
+	m_object3D->AddComponent<SkyDome>();
+	m_object3D->m_isLight = false;
+	m_listObject.push_back(m_object3D);
 
 
 	// ライト(平行光源)
-	m_object3D = new GameObject3D(E_MODEL_NONE, "MainLight", "MainLight");
-	Light::Set(m_object3D->AddComponent<Light>());
-	GameObject::Instantiate(m_object3D, float3(-4000.f, 4000.f, -4000.f), Quaternion::identity, float3() + 20.f);
+	//m_object3D = new GameObject3D(E_MODEL_NONE, "MainLight", "MainLight");
+	//Light::Set(m_object3D->AddComponent<Light>());
+	//GameObject::Instantiate(m_object3D, float3(-4000.f, 4000.f, -4000.f), Quaternion::identity, float3() + 20.f);
 	// ライト(平行光源)
-	//m_empty = new GameObject("MainLight", "MainLight");
-	//Light::Set(m_empty->AddComponent<Light>());
-	//GameObject::Instantiate(m_empty, float3(-20.f, 60.f, -20.f));
+	m_empty = new GameObject("MainLight", "MainLight");
+	Light::Set(m_empty->AddComponent<Light>());
+	GameObject::Instantiate(m_empty, float3(-4000.f, 4000.f, -4000.f), Quaternion::identity, float3() + 20.f);
 
 	//--- オブジェクトの生成
 	// 自機
@@ -131,7 +131,7 @@ void GameScene::Init() {
 		vEnemyPos.x = (float)GetRandom((int)(-1000.f + 30.f), (int)(1000.f - 30.f));
 		vEnemyPos.z = (float)GetRandom((int)VAL_ENEMY_POS_Z, (int)MAX_ENEMY_POS_Z);
 		GameObject::Instantiate(m_object3D, vEnemyPos, Quaternion::LookRotation((vPlayerPos - vEnemyPos), float3(0.f, 1.f, 0.f)), float3() + 0.5f);
-		m_object3D->AddComponent<EnemyNormal>();
+		m_object3D->AddComponent<EnemyFixed>();
 		m_object3D->m_vs = E_VS::VS_PROJSHADOW;
 		m_object3D->m_ps = E_PS::PS_DEPTHSHADOW;
 		m_object3D->m_isInstancing = true;

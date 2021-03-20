@@ -78,7 +78,7 @@ void EnemyFixed::Update() {
 	// ¶‘¶Žž
 	else {
 		//--- ŽËŒ‚
-		m_ai->m_table[(int)FixedEnemyAI::Attack]();
+		//m_ai->m_table[(int)FixedEnemyAI::Attack]();
 	}
 }
 
