@@ -120,6 +120,12 @@ void EnemyNormal::Update() {
 	else {
 		//--- 射撃
 		m_ai->m_table[(int)NoramalEnemyAI::Attack]();
+		//	->OnComplete(
+		//	[sub = this]
+		//	{
+		//		sub->Start();
+		//	}
+		//);
 		//--- 移動
 		// ここでランダム性やイベント発行を出す
 		// 例) HPが下がったら移動早くする、もしくはAIテーブル自体の変更

@@ -301,10 +301,10 @@ public:
 		_data.w = 0.f;
 		return Quaternion::Normalize(*this * _data);
 	}
-	Quaternion operator * (float data) {
-		return Quaternion::Normalize(
-			Quaternion(this->x * data, this->y * data, this->z * data, this->w * data));
-	}
+	//Quaternion operator * (float data) {
+	//	return Quaternion::Normalize(
+	//		Quaternion(this->x * data, this->y * data, this->z * data, this->w * data));
+	//}
 
 	Quaternion operator / (float data) {
 		return Quaternion::Normalize(
